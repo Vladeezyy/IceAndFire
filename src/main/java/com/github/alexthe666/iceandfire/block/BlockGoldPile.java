@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -45,7 +46,7 @@ public class BlockGoldPile extends Block {
     }
 
     @Override
-    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(@NotNull BlockState state, PathComputationType type) {
         switch (type) {
             case LAND:
                 return state.getValue(LAYERS) < 5;
@@ -117,7 +118,7 @@ public class BlockGoldPile extends Block {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player playerIn, @NotNull InteractionHand handIn, @NotNull BlockHitResult resultIn) {
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player playerIn, @NotNull InteractionHand handIn, @NotNull BlockHitResult resultIn) {
         ItemStack item = playerIn.getInventory().getSelected();
 
         if (!item.isEmpty()) {
@@ -135,12 +136,12 @@ public class BlockGoldPile extends Block {
                                     playerIn.getInventory().setItem(playerIn.getInventory().selected, item);
                                 }
                             }
-                            return InteractionResult.SUCCESS;
+                            return ItemInteractionResult.SUCCESS;
                         }
                     }
                 }
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

@@ -275,11 +275,6 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
         return 30;
     }
 
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.UNDEAD;
-    }
-
     public void forcePreyToLook(LivingEntity mob) {
         if (mob instanceof Mob) {
             Mob mobEntity = (Mob) mob;

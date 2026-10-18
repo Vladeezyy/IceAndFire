@@ -104,9 +104,4 @@ public class EntityDreadHorse extends SkeletonHorse implements IDreadMob {
             return null;
         }
     }
-
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.UNDEAD;
-    }
 }

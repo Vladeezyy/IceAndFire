@@ -171,11 +171,6 @@ public class EntityDreadScuttler extends EntityDreadMob implements IAnimatedEnti
     }
 
     @Override
-    public MobType getMobType() {
-        return MobType.ARTHROPOD;
-    }
-
-    @Override
     public boolean canBeAffected(MobEffectInstance potioneffectIn) {
         return potioneffectIn.getEffect() != MobEffects.POISON && super.canBeAffected(potioneffectIn);
     }

@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.block;
 
+import org.jetbrains.annotations.NotNull;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -9,6 +11,13 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 
 public class BlockFallingGeneric extends FallingBlock {
+    public static final MapCodec<BlockFallingGeneric> CODEC = simpleCodec(BlockFallingGeneric::new);
+
+    @Override
+    protected @NotNull MapCodec<? extends BlockFallingGeneric> codec() {
+        return CODEC;
+    }
+
     public Item itemBlock;
 
 /*    public BlockFallingGeneric(float hardness, float resistance, SoundType sound) {

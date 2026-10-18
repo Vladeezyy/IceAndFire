@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.tags.EntityTypeTags;
 import com.github.alexthe666.iceandfire.entity.util.IDreadMob;
 import com.github.alexthe666.iceandfire.entity.util.IHumanoid;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +32,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
 
     public static Entity necromancyEntity(LivingEntity entity) {
         Entity lichSummoned = null;
-        if (entity.getMobType() == MobType.ARTHROPOD) {
+        if (entity.getType().is(EntityTypeTags.ARTHROPOD)) {
             lichSummoned = new EntityDreadScuttler(IafEntityRegistry.DREAD_SCUTTLER.get(), entity.level());
             float readInScale = (entity.getBbWidth() / 1.5F);
             if (entity.level()instanceof ServerLevelAccessor) {
@@ -49,7 +50,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             ((EntityDreadGhoul) lichSummoned).setSize(readInScale);
             return lichSummoned;
         }
-        if (entity.getMobType() == MobType.UNDEAD || entity instanceof AbstractSkeleton || entity instanceof Player) {
+        if (entity.getType().is(EntityTypeTags.UNDEAD) || entity instanceof AbstractSkeleton || entity instanceof Player) {
             lichSummoned = new EntityDreadThrall(IafEntityRegistry.DREAD_THRALL.get(), entity.level());
             EntityDreadThrall thrall = (EntityDreadThrall) lichSummoned;
             if (entity.level()instanceof ServerLevelAccessor) {
@@ -188,10 +189,5 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             lich.setMinionCount(lich.getMinionCount() - 1);
         }
         super.remove(reason);
-    }
-
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.UNDEAD;
     }
 }

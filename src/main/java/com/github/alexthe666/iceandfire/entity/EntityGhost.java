@@ -153,12 +153,6 @@ public class EntityGhost extends Monster implements IAnimatedEntity, IVillagerFe
         this.entityData.set(WAS_FROM_CHEST, moving);
     }
 
-
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.UNDEAD;
-    }
-
     @Override
     public boolean isPushable() {
         return false;

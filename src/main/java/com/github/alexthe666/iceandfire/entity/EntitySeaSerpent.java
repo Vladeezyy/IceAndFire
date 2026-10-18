@@ -182,11 +182,6 @@ public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultip
 
     }
 
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.WATER;
-    }
-
     public static AttributeSupplier.Builder bakeAttributes() {
         return Mob.createMobAttributes()
             //HEALTH

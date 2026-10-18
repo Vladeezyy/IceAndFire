@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityPixieHouse;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +28,13 @@ import java.util.function.Consumer;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.PIXIE_HOUSE;
 
 public class BlockPixieHouse extends BaseEntityBlock {
+    public static final MapCodec<BlockPixieHouse> CODEC = simpleCodec(properties -> new BlockPixieHouse());
+
+    @Override
+    protected @NotNull MapCodec<? extends BlockPixieHouse> codec() {
+        return CODEC;
+    }
+
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
 
     public BlockPixieHouse() {

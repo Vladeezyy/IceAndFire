@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -50,10 +51,10 @@ public class IafBlockRegistry {
     public static final DeferredBlock<Block> GOLD_PILE = register("gold_pile", BlockGoldPile::new);
     public static final DeferredBlock<Block> SILVER_PILE = register("silver_pile", BlockGoldPile::new);
     public static final DeferredBlock<Block> COPPER_PILE = register("copper_pile", BlockGoldPile::new);
-    public static final DeferredBlock<Block> SILVER_ORE = register("silver_ore", () -> new DropExperienceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3, 3).requiresCorrectToolForDrops()));
-    public static final DeferredBlock<Block> DEEPSLATE_SILVER_ORE = register("deepslate_silver_ore", () -> new DropExperienceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(3,3).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> SILVER_ORE = register("silver_ore", () -> new DropExperienceBlock(ConstantInt.of(0), BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3, 3).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> DEEPSLATE_SILVER_ORE = register("deepslate_silver_ore", () -> new DropExperienceBlock(ConstantInt.of(0), BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(3,3).requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> SILVER_BLOCK = register("silver_block", () -> BlockGeneric.builder(3.0F, 5.0F, SoundType.METAL, MapColor.METAL, null, null, false));
-    public static final DeferredBlock<Block> SAPPHIRE_ORE = register("sapphire_ore", () -> new DropExperienceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(4,3).requiresCorrectToolForDrops(), UniformInt.of(3,7)));
+    public static final DeferredBlock<Block> SAPPHIRE_ORE = register("sapphire_ore", () -> new DropExperienceBlock(UniformInt.of(3,7), BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(4,3).requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> SAPPHIRE_BLOCK = register("sapphire_block", () -> BlockGeneric.builder(3.0F, 6.0F, SoundType.METAL, MapColor.METAL, null, null, false));
     public static final DeferredBlock<Block> RAW_SILVER_BLOCK = register("raw_silver_block", () -> BlockGeneric.builder(3.0F, 5.0F, SoundType.STONE, MapColor.METAL, NoteBlockInstrument.BASEDRUM, null, false));
     public static final DeferredBlock<Block> CHARRED_DIRT = register("chared_dirt", () -> BlockReturningState.builder(0.5F, 0.0F, SoundType.GRAVEL, MapColor.DIRT, null, null, false, Blocks.DIRT.defaultBlockState()));
@@ -95,7 +96,7 @@ public class IafBlockRegistry {
     public static final DeferredBlock<Block> DRAGON_SCALE_BLACK = register("dragonscale_black", () -> new BlockDragonScales(EnumDragonEgg.BLACK));
 
     public static final DeferredBlock<Block> DRAGON_BONE_BLOCK = register("dragon_bone_block", BlockDragonBone::new);
-    public static final DeferredBlock<Block> DRAGON_BONE_BLOCK_WALL = register("dragon_bone_wall", () -> new BlockDragonBoneWall(BlockBehaviour.Properties.copy(IafBlockRegistry.DRAGON_BONE_BLOCK.get())));
+    public static final DeferredBlock<Block> DRAGON_BONE_BLOCK_WALL = register("dragon_bone_wall", () -> new BlockDragonBoneWall(BlockBehaviour.Properties.ofFullCopy(IafBlockRegistry.DRAGON_BONE_BLOCK.get())));
     public static final DeferredBlock<Block> DRAGONFORGE_FIRE_BRICK = register(BlockDragonforgeBricks.name(0), () -> new BlockDragonforgeBricks(0));
     public static final DeferredBlock<Block> DRAGONFORGE_ICE_BRICK = register(BlockDragonforgeBricks.name(1), () -> new BlockDragonforgeBricks(1));
     public static final DeferredBlock<Block> DRAGONFORGE_LIGHTNING_BRICK = register(BlockDragonforgeBricks.name(2), () -> new BlockDragonforgeBricks(2));

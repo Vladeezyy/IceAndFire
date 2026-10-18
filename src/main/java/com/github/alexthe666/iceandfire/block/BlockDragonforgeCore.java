@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.block;
 
+import com.mojang.serialization.MapCodec;
+import net.minecraft.world.ItemInteractionResult;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.DragonType;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDragonforge;
@@ -29,6 +31,13 @@ import javax.annotation.Nullable;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.DRAGONFORGE_CORE;
 
 public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProof, INoTab {
+
+    // Built from mod parameters, not data: the codec only hands out this block
+    @Override
+    protected @NotNull MapCodec<? extends BlockDragonforgeCore> codec() {
+        return MapCodec.unit(this);
+    }
+
     private static boolean keepInventory;
     private final int isFire;
     private final boolean activated;
@@ -94,7 +103,7 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!player.isShiftKeyDown()) {
             if (worldIn.isClientSide) {
                 IceAndFire.PROXY.setRefrencedTE(worldIn.getBlockEntity(pos));
@@ -104,9 +113,9 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
                     player.openMenu(inamedcontainerprovider);
                 }
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 
     public ItemStack getItem(Level worldIn, BlockPos pos, BlockState state) {

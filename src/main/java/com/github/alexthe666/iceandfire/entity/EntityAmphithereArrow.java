@@ -28,7 +28,7 @@ public class EntityAmphithereArrow extends AbstractArrow {
     }
 
     public EntityAmphithereArrow(EntityType type, LivingEntity shooter, Level worldIn) {
-        super(type, shooter, worldIn);
+        super(type, shooter, worldIn, new ItemStack(IafItemRegistry.AMPHITHERE_ARROW.get()), null);
         this.setBaseDamage(2.5F);
     }
 
@@ -91,7 +91,7 @@ public class EntityAmphithereArrow extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return new ItemStack(IafItemRegistry.AMPHITHERE_ARROW.get());
     }
 }

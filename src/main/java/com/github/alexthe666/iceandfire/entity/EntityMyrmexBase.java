@@ -355,11 +355,6 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         this.entityData.set(VARIANT, isJungle);
     }
 
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.ARTHROPOD;
-    }
-
     public boolean isBesideClimbableBlock() {
         return (this.entityData.get(CLIMBING).byteValue() & 1) != 0;
     }

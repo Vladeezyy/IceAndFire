@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -15,6 +16,13 @@ import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockFallingReturningState extends FallingBlock {
+
+    // Built from mod parameters, not data: the codec only hands out this block
+    @Override
+    protected @NotNull MapCodec<? extends BlockFallingReturningState> codec() {
+        return MapCodec.unit(this);
+    }
+
     public static final BooleanProperty REVERTS = BooleanProperty.create("revert");
     public Item itemBlock;
     private final BlockState returnState;

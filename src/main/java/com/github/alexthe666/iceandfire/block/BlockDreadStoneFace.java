@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +18,13 @@ import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockDreadStoneFace extends HorizontalDirectionalBlock implements IDreadBlock, IDragonProof {
+    public static final MapCodec<BlockDreadStoneFace> CODEC = simpleCodec(properties -> new BlockDreadStoneFace());
+
+    @Override
+    protected @NotNull MapCodec<? extends BlockDreadStoneFace> codec() {
+        return CODEC;
+    }
+
     public static final BooleanProperty PLAYER_PLACED = BooleanProperty.create("player_placed");
 
     public BlockDreadStoneFace() {

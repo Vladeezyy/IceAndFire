@@ -154,11 +154,6 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     }
 
     @Override
-    public @NotNull MobType getMobType() {
-        return MobType.WATER;
-    }
-
-    @Override
     public boolean isPushedByFluid(FluidType fluid) {
         return false;
     }

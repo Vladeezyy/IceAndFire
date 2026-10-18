@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
@@ -19,6 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class BlockElementalFlower extends BushBlock {
+    public static final MapCodec<BlockElementalFlower> CODEC = simpleCodec(properties -> new BlockElementalFlower());
+
+    @Override
+    protected @NotNull MapCodec<? extends BlockElementalFlower> codec() {
+        return CODEC;
+    }
+
     public Item itemBlock;
     protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
 
@@ -54,7 +62,7 @@ public class BlockElementalFlower extends BushBlock {
         if (this == IafBlockRegistry.FIRE_LILY.get()) {
             return soil.is(BlockTags.SAND) || soil.is(Blocks.NETHERRACK);
         } else if (this == IafBlockRegistry.LIGHTNING_LILY.get()) {
-            return soil.is(BlockTags.DIRT) || soil.is(Blocks.GRASS);
+            return soil.is(BlockTags.DIRT) || soil.is(Blocks.SHORT_GRASS);
         } else {
             return soil.is(BlockTags.ICE) || soil.is(BlockTags.SNOW) || soil.is(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON);
         }

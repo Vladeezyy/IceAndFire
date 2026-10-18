@@ -26,7 +26,7 @@ public class EntityStymphalianArrow extends AbstractArrow {
     }
 
     public EntityStymphalianArrow(EntityType t, Level worldIn, LivingEntity shooter) {
-        super(t, shooter, worldIn);
+        super(t, shooter, worldIn, new ItemStack(IafItemRegistry.STYMPHALIAN_ARROW.get()), null);
         this.setBaseDamage(3.5F);
     }
 
@@ -45,7 +45,7 @@ public class EntityStymphalianArrow extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return new ItemStack(IafItemRegistry.STYMPHALIAN_ARROW.get());
     }
 }

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDreadPortal;
 import com.github.alexthe666.iceandfire.entity.util.DragonUtils;
@@ -24,6 +25,13 @@ import javax.annotation.Nullable;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.DREAD_PORTAL;
 
 public class BlockDreadPortal extends BaseEntityBlock implements IDreadBlock {
+    public static final MapCodec<BlockDreadPortal> CODEC = simpleCodec(properties -> new BlockDreadPortal());
+
+    @Override
+    protected @NotNull MapCodec<? extends BlockDreadPortal> codec() {
+        return CODEC;
+    }
+
 
     public BlockDreadPortal() {
         super(

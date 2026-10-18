@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "iceandfire:dread_scuttler",
+    "iceandfire:myrmex_queen",
+    "iceandfire:myrmex_royal",
+    "iceandfire:myrmex_sentinel",
+    "iceandfire:myrmex_soldier",
+    "iceandfire:myrmex_swarmer",
+    "iceandfire:myrmex_worker"
+  ]
+}

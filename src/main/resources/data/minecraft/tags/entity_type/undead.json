@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "iceandfire:dread_beast",
+    "iceandfire:dread_ghoul",
+    "iceandfire:dread_horse",
+    "iceandfire:dread_knight",
+    "iceandfire:dread_lich",
+    "iceandfire:dread_thrall",
+    "iceandfire:ghost",
+    "iceandfire:gorgon"
+  ]
+}

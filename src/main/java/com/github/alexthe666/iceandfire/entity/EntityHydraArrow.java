@@ -35,7 +35,7 @@ public class EntityHydraArrow extends AbstractArrow {
     }
 
     public EntityHydraArrow(EntityType t, Level worldIn, LivingEntity shooter) {
-        super(t, shooter, worldIn);
+        super(t, shooter, worldIn, new ItemStack(IafItemRegistry.HYDRA_ARROW.get()), null);
         this.setBaseDamage(5F);
     }
 
@@ -88,7 +88,7 @@ public class EntityHydraArrow extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return new ItemStack(IafItemRegistry.HYDRA_ARROW.get());
     }
 }

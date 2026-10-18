@@ -26,7 +26,7 @@ public class EntityStymphalianFeather extends AbstractArrow {
     }
 
     public EntityStymphalianFeather(EntityType<? extends AbstractArrow> t, Level worldIn, LivingEntity shooter) {
-        super(t, shooter, worldIn);
+        super(t, shooter, worldIn, new ItemStack(IafItemRegistry.STYMPHALIAN_BIRD_FEATHER.get()), null);
         this.setBaseDamage(IafConfig.stymphalianBirdFeatherAttackStength);
     }
 
@@ -90,7 +90,7 @@ public class EntityStymphalianFeather extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return new ItemStack(IafItemRegistry.STYMPHALIAN_BIRD_FEATHER.get());
     }
 }

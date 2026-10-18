@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
 
+import net.minecraft.core.particles.ParticleTypes;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.enums.EnumParticles;
 import net.minecraft.core.BlockPos;
@@ -17,8 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockDreadTorch extends TorchBlock implements IDreadBlock, IWallBlock {
 
     public BlockDreadTorch() {
-        super(
-            Properties
+        super(ParticleTypes.SMOKE, Properties
                 .of()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
@@ -27,9 +27,7 @@ public class BlockDreadTorch extends TorchBlock implements IDreadBlock, IWallBlo
                 .sound(SoundType.STONE)
                 .noOcclusion()
                 .dynamicShape()
-                .noCollission(),
-            DustParticleOptions.REDSTONE
-        );
+                .noCollission());
     }
 
     @Override
