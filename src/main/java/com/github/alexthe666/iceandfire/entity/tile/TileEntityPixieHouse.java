@@ -127,7 +127,7 @@ public class TileEntityPixieHouse extends BlockEntity {
         this.hasPixie = false;
         this.pixieType = 0;
         pixie.ticksUntilHouseAI = 500;
-        pixie.setTame(this.tamedPixie);
+        pixie.setTame(this.tamedPixie, true);
         pixie.setOwnerUUID(this.pixieOwnerUUID);
         if (!level.isClientSide) {
             IceAndFire.sendMSGToAll(new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));

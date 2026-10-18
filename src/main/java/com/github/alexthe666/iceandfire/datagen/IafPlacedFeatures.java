@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.datagen;
 import com.github.alexthe666.iceandfire.world.CustomBiomeFilter;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +48,7 @@ public final class IafPlacedFeatures {
     private static List<PlacementModifier> commonOrePlacement(int pCount, PlacementModifier pHeightRange) {
         return orePlacement(CountPlacement.of(pCount), pHeightRange);
     }
-    public static void bootstrap(BootstapContext<PlacedFeature> context) {
+    public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> features = context.lookup(Registries.CONFIGURED_FEATURE);
 
         // Surface

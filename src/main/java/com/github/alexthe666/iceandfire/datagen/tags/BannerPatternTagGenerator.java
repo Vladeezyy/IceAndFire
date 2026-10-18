@@ -41,25 +41,25 @@ public class BannerPatternTagGenerator extends TagsProvider<BannerPattern> {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(FIRE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FIRE.getKey());
-        this.tag(ICE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_ICE.getKey());
-        this.tag(LIGHTNING_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_LIGHTNING.getKey());
-        this.tag(FIRE_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FIRE_HEAD.getKey());
-        this.tag(ICE_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_ICE_HEAD.getKey());
-        this.tag(LIGHTNING_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_LIGHTNING_HEAD.getKey());
-        this.tag(AMPHITHERE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_AMPHITHERE.getKey());
-        this.tag(BIRD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_BIRD.getKey());
-        this.tag(EYE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_EYE.getKey());
-        this.tag(FAE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FAE.getKey());
-        this.tag(FEATHER_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FEATHER.getKey());
-        this.tag(GORGON_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_GORGON.getKey());
-        this.tag(HIPPOCAMPUS_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_HIPPOCAMPUS.getKey());
-        this.tag(HIPPOGRYPH_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_HIPPOGRYPH_HEAD.getKey());
-        this.tag(MERMAID_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_MERMAID.getKey());
-        this.tag(SEA_SERPENT_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_SEA_SERPENT.getKey());
-        this.tag(TROLL_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_TROLL.getKey());
-        this.tag(WEEZER_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_WEEZER.getKey());
-        this.tag(DREAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_DREAD.getKey());
+        this.tag(FIRE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FIRE);
+        this.tag(ICE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_ICE);
+        this.tag(LIGHTNING_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_LIGHTNING);
+        this.tag(FIRE_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FIRE_HEAD);
+        this.tag(ICE_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_ICE_HEAD);
+        this.tag(LIGHTNING_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_LIGHTNING_HEAD);
+        this.tag(AMPHITHERE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_AMPHITHERE);
+        this.tag(BIRD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_BIRD);
+        this.tag(EYE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_EYE);
+        this.tag(FAE_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FAE);
+        this.tag(FEATHER_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_FEATHER);
+        this.tag(GORGON_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_GORGON);
+        this.tag(HIPPOCAMPUS_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_HIPPOCAMPUS);
+        this.tag(HIPPOGRYPH_HEAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_HIPPOGRYPH_HEAD);
+        this.tag(MERMAID_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_MERMAID);
+        this.tag(SEA_SERPENT_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_SEA_SERPENT);
+        this.tag(TROLL_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_TROLL);
+        this.tag(WEEZER_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_WEEZER);
+        this.tag(DREAD_BANNER_PATTERN).add(IafBannerPatterns.PATTERN_DREAD);
     }
 
     private static TagKey<BannerPattern> create(String name) {

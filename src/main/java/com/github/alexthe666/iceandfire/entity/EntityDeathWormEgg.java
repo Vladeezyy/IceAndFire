@@ -73,7 +73,7 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile implements IEnti
 
             EntityDeathWorm deathworm = new EntityDeathWorm(IafEntityRegistry.DEATH_WORM.get(), this.level());
             deathworm.setVariant(random.nextInt(3));
-            deathworm.setTame(true);
+            deathworm.setTame(true, true);
             deathworm.setWormHome(blockPosition());
             deathworm.setWormAge(1);
             deathworm.setDeathWormScale(giant ? (wormSize * 4) : wormSize);

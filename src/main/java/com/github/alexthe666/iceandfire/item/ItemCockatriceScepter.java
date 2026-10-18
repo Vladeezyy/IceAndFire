@@ -50,7 +50,7 @@ public class ItemCockatriceScepter extends Item {
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity livingEntity, int timeLeft) {
         if (specialWeaponDmg > 0) {
-            stack.hurtAndBreak(specialWeaponDmg, livingEntity, player -> player.broadcastBreakEvent(livingEntity.getUsedItemHand()));
+            stack.hurtAndBreak(specialWeaponDmg, livingEntity, LivingEntity.getSlotForHand(livingEntity.getUsedItemHand()));
             specialWeaponDmg = 0;
         }
 

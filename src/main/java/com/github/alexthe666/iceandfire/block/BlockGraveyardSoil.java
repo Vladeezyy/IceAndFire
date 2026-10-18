@@ -43,7 +43,7 @@ public class BlockGraveyardSoil extends Block {
                     ghost.absMoveTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F,
                         ThreadLocalRandom.current().nextFloat() * 360F, 0);
                     if (!worldIn.isClientSide) {
-                        ghost.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null);
+                        ghost.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null);
                         worldIn.addFreshEntity(ghost);
                     }
                     ghost.setAnimation(EntityGhost.ANIMATION_SCARE);

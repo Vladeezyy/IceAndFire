@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.datagen;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
@@ -61,7 +61,7 @@ public final class IafConfiguredFeatures {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath("iceandfire", name));
     }
 
-    public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
+    public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         context.register(FIRE_DRAGON_ROOST, new ConfiguredFeature<>(IafWorldRegistry.FIRE_DRAGON_ROOST.get(), FeatureConfiguration.NONE));
         context.register(ICE_DRAGON_ROOST, new ConfiguredFeature<>(IafWorldRegistry.ICE_DRAGON_ROOST.get(), FeatureConfiguration.NONE));
         context.register(LIGHTNING_DRAGON_ROOST, new ConfiguredFeature<>(IafWorldRegistry.LIGHTNING_DRAGON_ROOST.get(), FeatureConfiguration.NONE));

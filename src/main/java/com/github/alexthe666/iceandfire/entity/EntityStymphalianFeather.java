@@ -73,12 +73,10 @@ public class EntityStymphalianFeather extends AbstractArrow {
             ItemStack copyBeforeUse = entity.getUseItem().copy();
             int i = 1 + Mth.floor(damage);
             InteractionHand Hand = entity.getUsedItemHand();
-            copyBeforeUse.hurtAndBreak(i, entity, (player1) -> {
-                player1.broadcastBreakEvent(Hand);
-            });
+            entity.getUseItem().hurtAndBreak(i, entity, LivingEntity.getSlotForHand(Hand));
             if (entity.getUseItem().isEmpty()) {
                 if (entity instanceof Player) {
-                    net.minecraftforge.event.EventHooks.onPlayerDestroyItem((Player) entity, copyBeforeUse, Hand);
+                    net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem((Player) entity, copyBeforeUse, Hand);
                 }
 
                 if (Hand == net.minecraft.world.InteractionHand.MAIN_HAND) {

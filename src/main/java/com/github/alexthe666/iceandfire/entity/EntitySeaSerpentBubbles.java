@@ -65,7 +65,7 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
         if (this.level().isClientSide || (shootingEntity == null || !shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
             this.baseTick();
             HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-            if (raytraceresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
+            if (raytraceresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }
 

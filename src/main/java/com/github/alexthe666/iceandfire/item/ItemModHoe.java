@@ -22,7 +22,7 @@ public class ItemModHoe extends HoeItem implements DragonSteelOverrides<ItemModH
     private double dragonsteelDamage;
 
     public ItemModHoe(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 5, -3.0F));
+        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 5, -3.0F)));
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -75,7 +75,7 @@ public class GorgonTempleStructure extends IafStructure {
         return IafStructureTypes.GORGON_TEMPLE.get();
     }
 
-    public static GorgonTempleStructure buildStructureConfig(BootstapContext<Structure> context) {
+    public static GorgonTempleStructure buildStructureConfig(BootstrapContext<Structure> context) {
         HolderGetter<StructureTemplatePool> templatePoolHolderGetter = context.lookup(Registries.TEMPLATE_POOL);
         Holder<StructureTemplatePool> graveyardHolder = templatePoolHolderGetter.getOrThrow(IafStructurePieces.GORGON_TEMPLE_START);
 

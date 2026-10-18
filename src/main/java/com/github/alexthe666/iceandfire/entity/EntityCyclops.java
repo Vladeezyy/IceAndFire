@@ -68,7 +68,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
 
     public EntityCyclops(EntityType<EntityCyclops> type, Level worldIn) {
         super(type, worldIn);
-        this.setMaxUpStep(2.5F);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(2.5F);
         this.setPathfindingMalus(PathType.WATER, -1.0F);
         this.setPathfindingMalus(PathType.FENCE, 0.0F);
         ANIMATION_STOMP = Animation.create(27);
@@ -330,8 +330,8 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setVariant(this.getRandom().nextInt(4));
         return spawnDataIn;
     }

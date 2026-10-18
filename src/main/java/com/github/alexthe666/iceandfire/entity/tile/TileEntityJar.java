@@ -140,7 +140,7 @@ public class TileEntityJar extends BlockEntity {
         this.hasPixie = false;
         this.pixieType = 0;
         pixie.ticksUntilHouseAI = 500;
-        pixie.setTame(this.tamedPixie);
+        pixie.setTame(this.tamedPixie, true);
         pixie.setOwnerUUID(this.pixieOwnerUUID);
 
         if (!level.isClientSide) {

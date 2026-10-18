@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -74,7 +74,7 @@ public class GraveyardStructure extends IafStructure {
         return IafStructureTypes.GRAVEYARD.get();
     }
 
-    public static GraveyardStructure buildStructureConfig(BootstapContext<Structure> context) {
+    public static GraveyardStructure buildStructureConfig(BootstrapContext<Structure> context) {
         HolderGetter<StructureTemplatePool> templatePoolHolderGetter = context.lookup(Registries.TEMPLATE_POOL);
         Holder<StructureTemplatePool> graveyardHolder = templatePoolHolderGetter.getOrThrow(IafStructurePieces.GRAVEYARD_START);
 

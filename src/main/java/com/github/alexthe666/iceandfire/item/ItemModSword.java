@@ -22,7 +22,7 @@ public class ItemModSword extends SwordItem implements DragonSteelOverrides<Item
     private double dragonsteelDamage;
 
     public ItemModSword(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F));
+        super(toolmaterial, new Item.Properties().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F)));
     }
 
     @Override

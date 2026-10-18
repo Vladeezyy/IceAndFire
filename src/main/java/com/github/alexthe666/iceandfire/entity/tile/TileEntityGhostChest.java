@@ -35,7 +35,7 @@ public class TileEntityGhostChest extends ChestBlockEntity {
             ghost.absMoveTo(this.worldPosition.getX() + 0.5F, this.worldPosition.getY() + 0.5F, this.worldPosition.getZ() + 0.5F,
                 ThreadLocalRandom.current().nextFloat() * 360F, 0);
             if (!this.level.isClientSide) {
-                ghost.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(this.worldPosition), MobSpawnType.SPAWNER, null, null);
+                ghost.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(this.worldPosition), MobSpawnType.SPAWNER, null);
                 if (!player.isCreative()) {
                     ghost.setTarget(player);
                 }

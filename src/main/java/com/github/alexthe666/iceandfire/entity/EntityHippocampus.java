@@ -94,7 +94,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
         ANIMATION_SPEAK = Animation.create(15);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.moveControl = new EntityHippocampus.HippoMoveControl(this);
-        this.setMaxUpStep(1F);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1F);
         if (worldIn.isClientSide) {
             tail_buffer = new ChainBuffer();
         }
@@ -523,8 +523,8 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setVariant(this.getRandom().nextInt(6));
         return data;
     }

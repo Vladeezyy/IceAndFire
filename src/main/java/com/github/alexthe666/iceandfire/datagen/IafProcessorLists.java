@@ -7,7 +7,7 @@ import com.github.alexthe666.iceandfire.world.gen.processor.GraveyardProcessor;
 import com.github.alexthe666.iceandfire.world.gen.processor.VillageHouseProcessor;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
@@ -25,11 +25,11 @@ public class IafProcessorLists {
         return ResourceKey.create(Registries.PROCESSOR_LIST, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
-    private static void register(BootstapContext<StructureProcessorList> pContext, ResourceKey<StructureProcessorList> pKey, List<StructureProcessor> pProcessors) {
+    private static void register(BootstrapContext<StructureProcessorList> pContext, ResourceKey<StructureProcessorList> pKey, List<StructureProcessor> pProcessors) {
         pContext.register(pKey, new StructureProcessorList(pProcessors));
     }
 
-    public static void bootstrap(BootstapContext<StructureProcessorList> pContext) {
+    public static void bootstrap(BootstrapContext<StructureProcessorList> pContext) {
         register(pContext, GRAVEYARD_PROCESSORS, ImmutableList.of(GraveyardProcessor.INSTANCE));
         register(pContext, MAUSOLEUM_PROCESSORS, ImmutableList.of(DreadRuinProcessor.INSTANCE));
         register(pContext, GORGON_TEMPLE_PROCESSORS, ImmutableList.of(GorgonTempleProcessor.INSTANCE));

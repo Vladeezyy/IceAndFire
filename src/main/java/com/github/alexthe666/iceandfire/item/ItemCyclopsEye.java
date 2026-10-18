@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
@@ -52,8 +53,10 @@ public class ItemCyclopsEye extends Item {
                     }
                 }
                 if (ItemNbt.view(stack).getInt("HurtingTicks") > 120) {
-                    stack.hurtAndBreak(1, (LivingEntity) entity, (p_220017_1_) -> {
-                    });
+                    if (world instanceof ServerLevel serverLevel) {
+                        stack.hurtAndBreak(1, serverLevel, (LivingEntity) entity, item -> {
+                        });
+                    }
                     ItemNbt.update(stack, tag -> tag.putInt("HurtingTicks", 0));
                 }
             }

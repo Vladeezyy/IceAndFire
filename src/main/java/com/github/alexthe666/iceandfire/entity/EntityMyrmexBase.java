@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
@@ -225,7 +226,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     @Override
     public void tick() {
         super.tick();
-        this.setMaxUpStep(1);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1);
         if (level().getDifficulty() == Difficulty.PEACEFUL && this.getTarget() instanceof Player) {
             this.setTarget(null);
         }
@@ -521,8 +522,8 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setHive(MyrmexWorldData.get(level()).getNearestHive(this.blockPosition(), 400));
         if (this.getHive() != null) {
             this.setJungleVariant(isJungleBiome(level(), this.getHive().getCenter()));

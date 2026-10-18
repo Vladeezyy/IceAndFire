@@ -190,7 +190,7 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
                 dragon.setCustomName(getCustomName());
             }
 
-            dragon.setTame(true);
+            dragon.setTame(true, true);
             dragon.setOwnerUUID(getOwnerId());
 
             if (dragonType == DragonType.LIGHTNING) {

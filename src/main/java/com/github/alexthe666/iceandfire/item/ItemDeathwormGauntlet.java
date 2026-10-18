@@ -94,7 +94,7 @@ public class ItemDeathwormGauntlet extends Item implements IafClientItem {
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity LivingEntity, int timeLeft) {
         if (specialDamage > 0) {
-            stack.hurtAndBreak(specialDamage, LivingEntity, player -> player.broadcastBreakEvent(LivingEntity.getUsedItemHand()));
+            stack.hurtAndBreak(specialDamage, LivingEntity, LivingEntity.getSlotForHand(LivingEntity.getUsedItemHand()));
             specialDamage = 0;
         }
 

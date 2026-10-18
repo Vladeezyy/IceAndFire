@@ -35,7 +35,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             lichSummoned = new EntityDreadScuttler(IafEntityRegistry.DREAD_SCUTTLER.get(), entity.level());
             float readInScale = (entity.getBbWidth() / 1.5F);
             if (entity.level()instanceof ServerLevelAccessor) {
-                ((EntityDreadScuttler) lichSummoned).finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                ((EntityDreadScuttler) lichSummoned).finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
             }
             ((EntityDreadScuttler) lichSummoned).setSize(readInScale);
             return lichSummoned;
@@ -44,7 +44,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             lichSummoned = new EntityDreadGhoul(IafEntityRegistry.DREAD_GHOUL.get(), entity.level());
             float readInScale = (entity.getBbWidth() / 0.6F);
             if (entity.level()instanceof ServerLevelAccessor) {
-                ((EntityDreadGhoul) lichSummoned).finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                ((EntityDreadGhoul) lichSummoned).finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
             }
             ((EntityDreadGhoul) lichSummoned).setSize(readInScale);
             return lichSummoned;
@@ -53,7 +53,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             lichSummoned = new EntityDreadThrall(IafEntityRegistry.DREAD_THRALL.get(), entity.level());
             EntityDreadThrall thrall = (EntityDreadThrall) lichSummoned;
             if (entity.level()instanceof ServerLevelAccessor) {
-                thrall.finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                thrall.finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
             }
             thrall.setCustomArmorHead(false);
             thrall.setCustomArmorChest(false);
@@ -72,7 +72,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             lichSummoned = new EntityDreadBeast(IafEntityRegistry.DREAD_BEAST.get(), entity.level());
             float readInScale = (entity.getBbWidth() / 1.2F);
             if (entity.level()instanceof ServerLevelAccessor) {
-                ((EntityDreadBeast) lichSummoned).finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                ((EntityDreadBeast) lichSummoned).finalizeSpawn((ServerLevelAccessor) entity.level(), entity.level().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
             }
             ((EntityDreadBeast) lichSummoned).setSize(readInScale);
             return lichSummoned;

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.world.entity.LivingEntity;
 import com.github.alexthe666.iceandfire.entity.EntityDreadLichSkull;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import net.minecraft.sounds.SoundEvents;
@@ -43,9 +44,7 @@ public class ItemLichStaff extends Item {
             worldIn.addFreshEntity(charge);
             charge.shoot(d2, d3, d4, 1, 1);
             playerIn.playSound(SoundEvents.ZOMBIE_INFECT, 1F, 0.75F + 0.5F * playerIn.getRandom().nextFloat());
-            itemStackIn.hurtAndBreak(1, playerIn, (player) -> {
-                player.broadcastBreakEvent(hand);
-            });
+            itemStackIn.hurtAndBreak(1, playerIn, LivingEntity.getSlotForHand(hand));
             playerIn.getCooldowns().addCooldown(this, 4);
         }
         return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, itemStackIn);

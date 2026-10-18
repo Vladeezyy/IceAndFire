@@ -63,7 +63,7 @@ public class WorldGenPixieVillage extends Feature<NoneFeatureConfiguration> impl
                         default -> houseState;
                     };
                     EntityPixie pixie = IafEntityRegistry.PIXIE.get().create(worldIn.getLevel());
-                    pixie.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(buildPosition2.above()), MobSpawnType.SPAWNER, null, null);
+                    pixie.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(buildPosition2.above()), MobSpawnType.SPAWNER, null);
                     pixie.setPos(buildPosition2.getX(), buildPosition2.getY() + 2, buildPosition2.getZ());
                     pixie.setPersistenceRequired();
                     worldIn.addFreshEntity(pixie);

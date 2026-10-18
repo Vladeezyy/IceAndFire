@@ -42,7 +42,7 @@ public class TileEntityEggInIce extends BlockEntity {
                 dragon.setPos(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
                 dragon.setVariant(entityEggInIce.type.ordinal() - 4);
                 dragon.setGender(ThreadLocalRandom.current().nextBoolean());
-                dragon.setTame(true);
+                dragon.setTame(true, true);
                 dragon.setHunger(50);
                 dragon.setOwnerUUID(entityEggInIce.ownerUUID);
                 level.addFreshEntity(dragon);

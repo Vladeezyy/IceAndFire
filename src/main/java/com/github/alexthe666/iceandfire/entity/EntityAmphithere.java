@@ -106,7 +106,7 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
             pitch_buffer = new IFChainBuffer();
             tail_buffer = new IFChainBuffer();
         }
-        this.setMaxUpStep(1F);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1F);
         switchNavigator(0);
     }
 
@@ -921,8 +921,8 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setVariant(this.getRandom().nextInt(5));
         return spawnDataIn;
     }

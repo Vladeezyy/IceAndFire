@@ -90,7 +90,7 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
         if (worldIn.isClientSide) {
             tail_buffer = new ChainBuffer();
         }
-        this.setMaxUpStep(1F);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1F);
     }
 
     @Override
@@ -470,8 +470,8 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setHairColor(this.getRandom().nextInt(3));
         this.setSingingPose(this.getRandom().nextInt(3));
         return spawnDataIn;

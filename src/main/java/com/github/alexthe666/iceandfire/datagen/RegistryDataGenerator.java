@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.datagen;
 
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -19,7 +20,7 @@ public class RegistryDataGenerator extends DatapackBuiltinEntriesProvider {
             .add(Registries.STRUCTURE_SET, IafStructureSets::bootstrap)
             .add(Registries.PROCESSOR_LIST, IafProcessorLists::bootstrap)
             .add(Registries.TEMPLATE_POOL, IafStructurePieces::bootstrap)
-            .add(Registries.BIOME_MODIFIERS, IafBiomeModifierSerializers::bootstrap);
+            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, IafBiomeModifierSerializers::bootstrap);
 
     public RegistryDataGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
         super(output, provider, BUILDER, Set.of("minecraft", IceAndFire.MODID));

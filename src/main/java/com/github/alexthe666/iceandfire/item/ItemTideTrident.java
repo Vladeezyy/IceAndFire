@@ -65,9 +65,7 @@ public class ItemTideTrident extends TridentItem implements IafClientItem {
                 int lvt_7_1_ = EnchantmentHelper.getRiptide(stack);
                 if (lvt_7_1_ <= 0 || lvt_5_1_.isInWaterOrRain()) {
                     if (!worldIn.isClientSide) {
-                        stack.hurtAndBreak(1, lvt_5_1_, (player) -> {
-                            player.broadcastBreakEvent(entityLiving.getUsedItemHand());
-                        });
+                        stack.hurtAndBreak(1, lvt_5_1_, LivingEntity.getSlotForHand(entityLiving.getUsedItemHand()));
                         if (lvt_7_1_ == 0) {
                             EntityTideTrident lvt_8_1_ = new EntityTideTrident(worldIn, lvt_5_1_, stack);
                             lvt_8_1_.shootFromRotation(lvt_5_1_, lvt_5_1_.getXRot(), lvt_5_1_.getYRot(), 0.0F, 2.5F + (float) lvt_7_1_ * 0.5F, 1.0F);

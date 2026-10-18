@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class IafBiomeTagGenerator extends BiomeTagsProvider {
-    public static final TagKey<Biome> HAS_GORGON_TEMPLE = TagKey.create(ForgeRegistries.BIOMES.getRegistryKey(), ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/gorgon_temple"));
-    public static final TagKey<Biome> HAS_MAUSOLEUM = TagKey.create(ForgeRegistries.BIOMES.getRegistryKey(), ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/mausoleum"));
-    public static final TagKey<Biome> HAS_GRAVEYARD = TagKey.create(ForgeRegistries.BIOMES.getRegistryKey(), ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/graveyard"));
+    public static final TagKey<Biome> HAS_GORGON_TEMPLE = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/gorgon_temple"));
+    public static final TagKey<Biome> HAS_MAUSOLEUM = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/mausoleum"));
+    public static final TagKey<Biome> HAS_GRAVEYARD = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/graveyard"));
 
 
     public IafBiomeTagGenerator(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {

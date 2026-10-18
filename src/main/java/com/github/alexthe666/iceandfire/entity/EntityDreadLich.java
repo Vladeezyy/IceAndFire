@@ -152,8 +152,8 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAnimation(ANIMATION_SPAWN);
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
         this.setVariant(random.nextInt(5));
@@ -270,7 +270,7 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
             minion.setTarget(target);
             Level currentLevel = level();
             if (currentLevel instanceof ServerLevelAccessor) {
-                minion.finalizeSpawn((ServerLevelAccessor) currentLevel, currentLevel.getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+                minion.finalizeSpawn((ServerLevelAccessor) currentLevel, currentLevel.getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
             }
             if (minion instanceof EntityDreadMob) {
                 ((EntityDreadMob) minion).setCommanderId(this.getUUID());

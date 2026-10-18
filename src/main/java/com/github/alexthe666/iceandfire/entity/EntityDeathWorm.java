@@ -105,7 +105,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         if (worldIn.isClientSide) {
             tail_buffer = new ChainBuffer();
         }
-        this.setMaxUpStep(1F);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1F);
         this.switchNavigator(false);
     }
 
@@ -390,8 +390,8 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setVariant(this.getRandom().nextInt(3));
         float size = 0.25F + (float) (Math.random() * 0.35F);
         this.setDeathWormScale(this.getRandom().nextInt(20) == 0 ? size * 4 : size);

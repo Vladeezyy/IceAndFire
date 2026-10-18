@@ -108,7 +108,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
         ANIMATION_SCRATCH = Animation.create(25);
         ANIMATION_BITE = Animation.create(20);
         initHippogryphInv();
-        this.setMaxUpStep(1);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1);
     }
 
     public static int getIntFromArmor(ItemStack stack) {
@@ -639,8 +639,8 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setEnumVariant(EnumHippogryphTypes.getBiomeType(worldIn.getBiome(this.blockPosition())));
         return data;
     }

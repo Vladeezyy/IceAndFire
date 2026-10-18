@@ -38,17 +38,13 @@ public class DataGenerators {
         generator.addProvider(event.includeServer(), datapackProvider);
         generator.addProvider(event.includeServer(), new BannerPatternTagGenerator(output, provider, helper));
         generator.addProvider(event.includeServer(), new POITagGenerator(output, provider, helper));
-        generator.addProvider(true, new PackMetadataGenerator(output).add(PackMetadataSection.TYPE, new PackMetadataSection(
-                Component.literal("Resources for Ice and Fire"),
-                DetectedVersion.BUILT_IN.getPackVersion(PackType.CLIENT_RESOURCES),
-                Arrays.stream(PackType.values()).collect(Collectors.toMap(Function.identity(), DetectedVersion.BUILT_IN::getPackVersion)))));
         generator.addProvider(event.includeServer(), new IafBiomeTagGenerator(output, lookupProvider, helper));
-        generator.addProvider(event.includeClient(), new AtlasGenerator(output, helper));
+        generator.addProvider(event.includeClient(), new AtlasGenerator(output, provider, helper));
         BlockTagsProvider blocktags  = new IafBlockTags(output, provider, helper);
         generator.addProvider(event.includeServer(), blocktags);
         generator.addProvider(event.includeServer(), new IafItemTags(output, provider, blocktags.contentsGetter(), helper));
         generator.addProvider(event.includeServer(), new IafEntityTags(output, provider, helper));
-        generator.addProvider(event.includeServer(), new IafRecipes(output));
+        generator.addProvider(event.includeServer(), new IafRecipes(output, provider));
 
     }
 }

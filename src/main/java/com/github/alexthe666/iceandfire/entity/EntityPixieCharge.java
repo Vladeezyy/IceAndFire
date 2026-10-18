@@ -83,7 +83,7 @@ public class EntityPixieCharge extends Fireball {
 
             ++this.ticksInAir;
             HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-            if (raytraceresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
+            if (raytraceresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }
 

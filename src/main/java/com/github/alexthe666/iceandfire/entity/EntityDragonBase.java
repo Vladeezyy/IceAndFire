@@ -757,7 +757,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         this.setGender(compound.getBoolean("Gender"));
         this.setVariant(compound.getInt("Variant"));
         this.setInSittingPose(compound.getBoolean("Sleeping"));
-        this.setTame(compound.getBoolean("TamedDragon"));
+        this.setTame(compound.getBoolean("TamedDragon"), false);
         this.setBreathingFire(compound.getBoolean("FireBreathing"));
         this.usingGroundAttack = compound.getBoolean("AttackDecision");
         this.setHovering(compound.getBoolean("Hovering"));
@@ -1148,7 +1148,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         }
         if (!this.isModelDead()) {
             if (stack.getItem() == IafItemRegistry.CREATIVE_DRAGON_MEAL.get()) {
-                this.setTame(true);
+                this.setTame(true, true);
                 this.tame(player);
                 this.setHunger(this.getHunger() + 20);
                 this.heal(Math.min(this.getHealth(), (int) (this.getMaxHealth() / 2)));
@@ -1644,8 +1644,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setGender(this.getRandom().nextBoolean());
         final int age = this.getRandom().nextInt(80) + 1;
         this.growDragon(age);
@@ -1721,7 +1721,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         updateParts();
         this.prevDragonPitch = getDragonPitch();
         level().getProfiler().push("dragonLogic");
-        this.setMaxUpStep(getStepHeight());
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(getStepHeight());
         isOverAir = isOverAirLogic();
         logic.updateDragonCommon();
         if (this.isModelDead()) {

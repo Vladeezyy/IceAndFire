@@ -42,7 +42,7 @@ public class ItemGhostSword extends SwordItem {
         EntityGhostSword shot = new EntityGhostSword(IafEntityRegistry.GHOST_SWORD.get(), playerEntity.level(), playerEntity, totalDmg * 0.5F);
         shot.shootFromRotation(playerEntity, playerEntity.getXRot(), playerEntity.getYRot(), 0.0F, 1, 0.5f);
         playerEntity.level().addFreshEntity(shot);
-        stack.hurtAndBreak(1, playerEntity, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        stack.hurtAndBreak(1, playerEntity, EquipmentSlot.MAINHAND);
         playerEntity.getCooldowns().addCooldown(stack.getItem(), 10);
     }
 

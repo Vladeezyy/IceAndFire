@@ -22,7 +22,7 @@ public class ItemModShovel extends ShovelItem implements DragonSteelOverrides<It
     private double dragonsteelDamage;
 
     public ItemModShovel(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1.5F, -3.0F));
+        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1.5F, -3.0F)));
     }
 
     @Override

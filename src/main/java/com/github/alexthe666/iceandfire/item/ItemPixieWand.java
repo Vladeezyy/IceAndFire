@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.world.entity.LivingEntity;
 import com.github.alexthe666.iceandfire.entity.EntityPixieCharge;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.misc.IafSoundRegistry;
@@ -56,9 +57,7 @@ public class ItemPixieWand extends Item {
                 worldIn.addFreshEntity(charge);
             }
             playerIn.playSound(IafSoundRegistry.PIXIE_WAND, 1F, 0.75F + 0.5F * playerIn.getRandom().nextFloat());
-            itemstack.hurtAndBreak(1, playerIn, (player) -> {
-                player.broadcastBreakEvent(playerIn.getUsedItemHand());
-            });
+            itemstack.hurtAndBreak(1, playerIn, LivingEntity.getSlotForHand(playerIn.getUsedItemHand()));
             playerIn.getCooldowns().addCooldown(this, 5);
         }
         return new InteractionResultHolder<ItemStack>(InteractionResult.PASS, itemStackIn);

@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.datagen;
 
+import net.minecraft.core.HolderLookup;
+import java.util.concurrent.CompletableFuture;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.datagen.tags.IafItemTags;
@@ -29,18 +31,18 @@ import java.util.function.Consumer;
  */
 public class IafRecipes extends RecipeProvider {
 
-    public IafRecipes(PackOutput output) {
-        super(output);
+    public IafRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(RecipeOutput consumer) {
         createShaped(consumer);
         createShapeless(consumer);
 
     }
 
-    private void createShaped(@NotNull final Consumer<FinishedRecipe> consumer) {
+    private void createShaped(@NotNull final RecipeOutput consumer) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, IafItemRegistry.AMPHITHERE_ARROW.get(), 4)
                 .pattern("X")
                 .pattern("#")
@@ -631,7 +633,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void createShapeless(@NotNull final Consumer<FinishedRecipe> consumer) {
+    private void createShapeless(@NotNull final RecipeOutput consumer) {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, IafItemRegistry.AMBROSIA.get())
                 .requires(IafItemRegistry.PIXIE_DUST.get())
                 .requires(Items.BOWL)
@@ -745,7 +747,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer, location("ghost_sword"));
     }
 
-    private void compact(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike unpacked, final ItemLike packed) {
+    private void compact(@NotNull final RecipeOutput consumer, final ItemLike unpacked, final ItemLike packed) {
         String packedPath = BuiltInRegistries.ITEM.getKey(packed.asItem()).getPath();
         String unpackedPath = BuiltInRegistries.ITEM.getKey(unpacked.asItem()).getPath();
 
@@ -755,23 +757,23 @@ public class IafRecipes extends RecipeProvider {
                 , locationString(packedPath + "_to_" + unpackedPath), null);
     }
 
-    private void toolSet(@NotNull final Consumer<FinishedRecipe> consumer, final TagKey<Item> material, final TagKey<Item> handle, final ItemLike... items) {
+    private void toolSet(@NotNull final RecipeOutput consumer, final TagKey<Item> material, final TagKey<Item> handle, final ItemLike... items) {
         toolSet(consumer, Ingredient.of(material), Ingredient.of(handle), items);
     }
 
-    private void toolSet(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike material, final TagKey<Item> handle, final ItemLike... items) {
+    private void toolSet(@NotNull final RecipeOutput consumer, final ItemLike material, final TagKey<Item> handle, final ItemLike... items) {
         toolSet(consumer, Ingredient.of(material), Ingredient.of(handle), items);
     }
 
-    private void toolSet(@NotNull final Consumer<FinishedRecipe> consumer, final TagKey<Item> material, final ItemLike handle, final ItemLike... items) {
+    private void toolSet(@NotNull final RecipeOutput consumer, final TagKey<Item> material, final ItemLike handle, final ItemLike... items) {
         toolSet(consumer, Ingredient.of(material), Ingredient.of(handle), items);
     }
 
-    private void toolSet(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike material, final ItemLike handle, final ItemLike... items) {
+    private void toolSet(@NotNull final RecipeOutput consumer, final ItemLike material, final ItemLike handle, final ItemLike... items) {
         toolSet(consumer, Ingredient.of(material), Ingredient.of(handle), items);
     }
 
-    private void toolSet(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient material, final Ingredient handle, final ItemLike... results) {
+    private void toolSet(@NotNull final RecipeOutput consumer, final Ingredient material, final Ingredient handle, final ItemLike... results) {
         for (ItemLike result : results) {
             Item item = result.asItem();
 
@@ -791,15 +793,15 @@ public class IafRecipes extends RecipeProvider {
         }
     }
 
-    private void armorSet(@NotNull final Consumer<FinishedRecipe> consumer, final TagKey<Item> tag, final ItemLike... results) {
+    private void armorSet(@NotNull final RecipeOutput consumer, final TagKey<Item> tag, final ItemLike... results) {
         armorSet(consumer, Ingredient.of(tag), results);
     }
 
-    private void armorSet(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike item, final ItemLike... results) {
+    private void armorSet(@NotNull final RecipeOutput consumer, final ItemLike item, final ItemLike... results) {
         armorSet(consumer, Ingredient.of(item), results);
     }
 
-    private void armorSet(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike... results) {
+    private void armorSet(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike... results) {
         for (ItemLike result : results) {
             if (result.asItem() instanceof ArmorItem armorItem) {
                 switch (armorItem.getType()) {
@@ -815,7 +817,7 @@ public class IafRecipes extends RecipeProvider {
         }
     }
 
-    private void helmet(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void helmet(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("###")
                 .pattern("# #")
@@ -824,7 +826,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void chestPlate(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void chestPlate(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("# #")
                 .pattern("###")
@@ -834,7 +836,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void leggings(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void leggings(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("###")
                 .pattern("# #")
@@ -844,7 +846,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void boots(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void boots(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("# #")
                 .pattern("# #")
@@ -853,7 +855,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void sword(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
+    private void sword(@NotNull final RecipeOutput consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result)
                 .pattern("M")
                 .pattern("M")
@@ -864,7 +866,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void pickaxe(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
+    private void pickaxe(@NotNull final RecipeOutput consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result)
                 .pattern("MMM")
                 .pattern(" H ")
@@ -875,7 +877,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void axe(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
+    private void axe(@NotNull final RecipeOutput consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result)
                 .pattern("MM")
                 .pattern("MH")
@@ -886,7 +888,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void shovel(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
+    private void shovel(@NotNull final RecipeOutput consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result)
                 .pattern("M")
                 .pattern("H")
@@ -897,7 +899,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void hoe(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
+    private void hoe(@NotNull final RecipeOutput consumer, final Ingredient material, final Ingredient handle, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result)
                 .pattern("MM")
                 .pattern(" H")
@@ -908,15 +910,15 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void dragonArmorSet(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike material, final ItemLike... results) {
+    private void dragonArmorSet(@NotNull final RecipeOutput consumer, final ItemLike material, final ItemLike... results) {
         dragonArmorSet(consumer, Ingredient.of(material), results);
     }
 
-    private void dragonArmorSet(@NotNull final Consumer<FinishedRecipe> consumer, final TagKey<Item> tag, final ItemLike... results) {
+    private void dragonArmorSet(@NotNull final RecipeOutput consumer, final TagKey<Item> tag, final ItemLike... results) {
         dragonArmorSet(consumer, Ingredient.of(tag), results);
     }
 
-    private void dragonArmorSet(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike... results) {
+    private void dragonArmorSet(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike... results) {
         for (ItemLike result : results) {
             if (result instanceof ItemDragonArmor dragonArmor) {
                 switch (dragonArmor.dragonSlot) {
@@ -933,7 +935,7 @@ public class IafRecipes extends RecipeProvider {
         }
     }
 
-    private void dragonHead(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void dragonHead(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("   ")
                 .pattern(" ##")
@@ -943,7 +945,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void dragonNeck(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void dragonNeck(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("   ")
                 .pattern("###")
@@ -953,7 +955,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void dragonBody(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void dragonBody(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("###")
                 .pattern("###")
@@ -963,7 +965,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void dragonTail(@NotNull final Consumer<FinishedRecipe> consumer, final Ingredient ingredient, final ItemLike result) {
+    private void dragonTail(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result)
                 .pattern("   ")
                 .pattern("  #")
@@ -973,7 +975,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void forgeBrick(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike brick, final TagKey<Item> scales, final ItemLike result) {
+    private void forgeBrick(@NotNull final RecipeOutput consumer, final ItemLike brick, final TagKey<Item> scales, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, result, 4)
                 .pattern("SBS")
                 .pattern("BSB")
@@ -984,7 +986,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void forgeCore(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike brick, final ItemLike heart, final ItemLike result) {
+    private void forgeCore(@NotNull final RecipeOutput consumer, final ItemLike brick, final ItemLike heart, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, result)
                 .pattern("BBB")
                 .pattern("BHB")
@@ -995,7 +997,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void forgeInput(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike brick, final TagKey<Item> material, final ItemLike result) {
+    private void forgeInput(@NotNull final RecipeOutput consumer, final ItemLike brick, final TagKey<Item> material, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, result)
                 .pattern("BIB")
                 .pattern("I I")
@@ -1006,7 +1008,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
 
-    private void podium(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike planks, final ItemLike slab, final ItemLike result) {
+    private void podium(@NotNull final RecipeOutput consumer, final ItemLike planks, final ItemLike slab, final ItemLike result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, result)
                 .pattern("SPS")
                 .pattern(" P ")

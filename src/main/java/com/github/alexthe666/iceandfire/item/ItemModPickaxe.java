@@ -22,7 +22,7 @@ public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<
     private double dragonsteelDamage;
 
     public ItemModPickaxe(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1, -2.8F));
+        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1, -2.8F)));
     }
 
     @Override
