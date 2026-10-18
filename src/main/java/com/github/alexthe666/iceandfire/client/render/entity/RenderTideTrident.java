@@ -30,7 +30,7 @@ public class RenderTideTrident extends EntityRenderer<EntityTideTrident> {
         VertexConsumer ivertexbuilder = net.minecraft.client.renderer.entity.ItemRenderer.getFoilBuffer(bufferIn, this.tridentModel.renderType(this.getTextureLocation(entityIn)), false, entityIn.isFoil());
         this.tridentModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
-        super.render(entityIn, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     /**

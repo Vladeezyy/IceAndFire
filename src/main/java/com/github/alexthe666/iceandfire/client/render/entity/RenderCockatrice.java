@@ -65,12 +65,12 @@ public class RenderCockatrice extends MobRenderer<EntityCockatrice, AdvancedEnti
         } else {
             model = ADULT_MODEL;
         }
-        super.render(entityIn, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         LivingEntity livingentity = entityIn.getTargetedEntity();
         boolean blindness = entityIn.hasEffect(MobEffects.BLINDNESS) || livingentity != null && livingentity.hasEffect(MobEffects.BLINDNESS);
         if (!blindness && livingentity != null && EntityGorgon.isEntityLookingAt(entityIn, livingentity, EntityCockatrice.VIEW_RADIUS) && EntityGorgon.isEntityLookingAt(livingentity, entityIn, EntityCockatrice.VIEW_RADIUS)) {
             if (livingentity != null) {
-                CockatriceBeamRender.render(entityIn, FastColor.ARGB32.colorFromFloat(partialTicks, livingentity, matrixStackIn, bufferIn));
+                CockatriceBeamRender.render(entityIn, livingentity, matrixStackIn, bufferIn, partialTicks);
             }
         }
 

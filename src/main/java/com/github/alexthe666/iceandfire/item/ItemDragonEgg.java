@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.entity.EntityDragonEgg;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
@@ -50,7 +51,7 @@ public class ItemDragonEgg extends Item {
         egg.setEggType(type);
         egg.moveTo(offset.getX() + 0.5, offset.getY(), offset.getZ() + 0.5, 0, 0);
         egg.onPlayerPlace(context.getPlayer());
-        if (itemstack.hasCustomHoverName()) {
+        if (itemstack.has(DataComponents.CUSTOM_NAME)) {
             egg.setCustomName(itemstack.getHoverName());
         }
         if (!context.getLevel().isClientSide) {

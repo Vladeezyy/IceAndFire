@@ -148,7 +148,6 @@ public class EntityGhostSword extends AbstractArrow {
     private List<Entity> hitEntities;
     private int knockbackStrength;
 
-    @Override
     public void setKnockback(int knockbackStrengthIn) {
         this.knockbackStrength = knockbackStrengthIn;
     }

@@ -27,15 +27,13 @@ public class ItemGenericFood extends Item {
     public static final FoodProperties createFood(int amount, float saturation, boolean isWolfFood, boolean eatFast, boolean alwaysEdible, MobEffectInstance potion) {
         FoodProperties.Builder builder = new FoodProperties.Builder();
         builder.nutrition(amount);
-        builder.saturationMod(saturation);
-        if (isWolfFood) {
-            builder.meat();
-        }
+        builder.saturationModifier(saturation);
+        // Meat is the minecraft:meat item tag since 1.20.5
         if (eatFast) {
             builder.fast();
         }
         if (alwaysEdible) {
-            builder.alwaysEat();
+            builder.alwaysEdible();
         }
         if (potion != null) {
             builder.effect(potion, 1.0F);

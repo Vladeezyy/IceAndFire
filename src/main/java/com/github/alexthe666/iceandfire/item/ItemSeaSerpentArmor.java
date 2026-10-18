@@ -65,8 +65,12 @@ public class ItemSeaSerpentArmor extends ArmorItem implements IafClientItem {
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
-        super.onArmorTick(stack, world, player);
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+        if (!(entity instanceof Player player) || player.getItemBySlot(this.getEquipmentSlot()) != stack) {
+            return;
+        }
+        
         player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 50, 0, false, false));
         if (player.isInWaterOrRain()) {
             int headMod = player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ItemSeaSerpentArmor ? 1 : 0;

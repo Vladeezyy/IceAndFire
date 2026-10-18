@@ -142,7 +142,7 @@ public class LayerDragonRider extends RenderLayer<EntityDragonBase, AdvancedEnti
 
             if (render != null) {
                 try {
-                    render.render(entityIn, 0, FastColor.ARGB32.colorFromFloat(packedLight, partialTicks, matrixStack, bufferIn));
+                    render.render(entityIn, 0, partialTicks, matrixStack, bufferIn, packedLight);
                 } catch (Throwable throwable1) {
                     throw new ReportedException(CrashReport.forThrowable(throwable1, "Rendering entity in world"));
                 }

@@ -24,11 +24,11 @@ public class HideableModelRenderer extends AdvancedModelBox {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void render(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
         if (invisible) {
-            invisibleRender(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+            invisibleRender(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         } else {
-            super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, FastColor.ARGB32.colorFromFloat(alpha, red, green, blue));
+            super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         }
 
     }

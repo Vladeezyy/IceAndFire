@@ -40,7 +40,7 @@ public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
             matrixStackIn.popPose();
         }
 
-        super.render(entity, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     private float interpolateValue(float start, float end, float pct) {

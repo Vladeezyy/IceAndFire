@@ -290,17 +290,17 @@ public class IafItemTags extends ItemTagsProvider {
             } else if (item instanceof HoeItem) {
                 tag(ItemTags.HOES).add(item);
             } else if (item instanceof BowItem) {
-                tag(Tags.Items.TOOLS_BOWS).add(item);
+                tag(Tags.Items.TOOLS_BOW).add(item);
             } else if (item instanceof TridentItem) {
-                tag(Tags.Items.TOOLS_TRIDENTS).add(item);
+                tag(Tags.Items.TOOLS_SPEAR).add(item);
             } else if (item instanceof ArmorItem armorItem) {
                 tag(Tags.Items.ARMORS).add(item);
 
                 switch (armorItem.getType()) {
-                    case HELMET -> tag(Tags.Items.ARMORS_HELMETS).add(item);
-                    case CHESTPLATE -> tag(Tags.Items.ARMORS_CHESTPLATES).add(item);
-                    case LEGGINGS -> tag(Tags.Items.ARMORS_LEGGINGS).add(item);
-                    case BOOTS -> tag(Tags.Items.ARMORS_BOOTS).add(item);
+                    case HELMET -> tag(ItemTags.HEAD_ARMOR).add(item);
+                    case CHESTPLATE -> tag(ItemTags.CHEST_ARMOR).add(item);
+                    case LEGGINGS -> tag(ItemTags.LEG_ARMOR).add(item);
+                    case BOOTS -> tag(ItemTags.FOOT_ARMOR).add(item);
                 }
             } else if (item instanceof ItemMobSkull) {
                 tag(MOB_SKULLS).add(item);
@@ -310,7 +310,7 @@ public class IafItemTags extends ItemTagsProvider {
                 tag(Tags.Items.TOOLS).add(item);
 
                 if (item instanceof TridentItem) {
-                    tag(ItemTags.TOOLS).add(item);
+                    tag(Tags.Items.TOOLS).add(item);
                 }
             }
         });

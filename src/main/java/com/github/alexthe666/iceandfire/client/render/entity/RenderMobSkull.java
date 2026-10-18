@@ -54,7 +54,7 @@ public class RenderMobSkull extends EntityRenderer<EntityMobSkull> {
 
     @Override
     public void render(@NotNull EntityMobSkull entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        super.render(entity, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         matrixStackIn.pushPose();
         matrixStackIn.mulPose(Axis.XP.rotationDegrees(-180.0F));
         matrixStackIn.mulPose(Axis.YN.rotationDegrees(180.0F - entity.getYaw()));

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.gui;
 
+import net.minecraft.client.Minecraft;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityLectern;
 import com.github.alexthe666.iceandfire.enums.EnumBestiaryPages;
@@ -204,7 +205,6 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
 
     @Override
     public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(ms);
         super.render(ms, mouseX, mouseY, partialTicks);
         this.renderTooltip(ms, mouseX, mouseY);
         boolean flag = this.getMinecraft().player.isCreative();
@@ -269,7 +269,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
         this.open = Mth.clamp(this.open, 0.0F, 1.0F);
         float f1 = (this.flipT - this.flip) * 0.4F;
         if (flapTimer > 0) {
-            f1 = (ticks + this.getMinecraft().getFrameTime()) * 0.5F;
+            f1 = (ticks + this.getMinecraft().getTimer().getGameTimeDeltaPartialTick(false)) * 0.5F;
             flapTimer--;
         }
         f1 = Mth.clamp(f1, -0.2F, 0.2F);

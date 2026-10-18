@@ -326,11 +326,9 @@ public class WorldRenderMacros extends UiRenderMacros
         final float maxZ2 = maxZ - lineWidth;
 
         final Matrix4f m = ps.last().pose();
-        buffer.defaultColor(red, green, blue, alpha);
+        final VertexConsumer colored = new DefaultColorVertexConsumer(buffer, red, green, blue, alpha);
 
-        populateRenderLineBox(minX, minY, minZ, minX2, minY2, minZ2, maxX, maxY, maxZ, maxX2, maxY2, maxZ2, m, buffer);
-
-        buffer.unsetDefaultColor();
+        populateRenderLineBox(minX, minY, minZ, minX2, minY2, minZ2, maxX, maxY, maxZ, maxX2, maxY2, maxZ2, m, colored);
     }
 
     // TODO: ebo this, does vanilla have any ebo things?
@@ -797,11 +795,9 @@ public class WorldRenderMacros extends UiRenderMacros
         final float maxZ = Math.max(posA.getZ(), posB.getZ()) + 1;
 
         final Matrix4f m = ps.last().pose();
-        buffer.defaultColor(red, green, blue, alpha);
+        final VertexConsumer colored = new DefaultColorVertexConsumer(buffer, red, green, blue, alpha);
 
-        populateCuboid(minX, minY, minZ, maxX, maxY, maxZ, m, buffer);
-
-        buffer.unsetDefaultColor();
+        populateCuboid(minX, minY, minZ, maxX, maxY, maxZ, m, colored);
     }
 
     public static void populateCuboid(final float minX,
@@ -1125,11 +1121,8 @@ public class WorldRenderMacros extends UiRenderMacros
 
         private AlwaysDepthTestStateShard()
         {
-            super("true_always", -1);
-            setupState = () -> {
-                RenderSystem.enableDepthTest();
-                RenderSystem.depthFunc(GL11.GL_ALWAYS);
-            };
+            // Vanilla handles GL_ALWAYS by switching the depth test off; setupState became final in 1.21
+            super("true_always", GL11.GL_ALWAYS);
         }
     }
 }

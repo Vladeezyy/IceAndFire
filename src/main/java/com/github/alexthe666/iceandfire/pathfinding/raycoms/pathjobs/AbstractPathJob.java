@@ -1308,8 +1308,8 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
                 // TODO: I'd be cool if dragons could squash multiple snow layers when walking over them
                 if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.125 && !isLiquid((block)) && (block.getBlock() != Blocks.SNOW || block.getValue(SnowLayerBlock.LAYERS) == 1)) {
-                    final PathType pathType = block.getBlockPathType(world, pos, null);
-                    return pathType == null || pathType.getDanger() == null;
+                    // Forge's BlockPathTypes#getDanger was null for every vanilla type
+                    return true;
                 }
                 return false;
             }

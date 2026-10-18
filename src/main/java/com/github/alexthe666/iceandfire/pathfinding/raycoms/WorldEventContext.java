@@ -35,7 +35,7 @@ public class WorldEventContext {
     {
         bufferSource = WorldRenderMacros.getBufferSource();
         poseStack = event.getPoseStack();
-        partialTicks = event.getPartialTick();
+        partialTicks = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         clientLevel = Minecraft.getInstance().level;
         clientPlayer = Minecraft.getInstance().player;
         mainHandItem = clientPlayer.getMainHandItem();

@@ -36,10 +36,8 @@ public class FireDragonForgeDrawable implements IDrawable {
     }
 
     public void drawTexturedModalRect(GuiGraphics ms, int x, int y, int textureX, int textureY, int width, int height) {
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuilder();
         Matrix4f matrix4f = ms.pose().last().pose();
-        bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.addVertex(matrix4f, x, y + height, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
         bufferbuilder.addVertex(matrix4f, x + width, y + height, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
         bufferbuilder.addVertex(matrix4f, x + width, y, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY) * 0.00390625F);

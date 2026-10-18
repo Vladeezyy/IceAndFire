@@ -213,7 +213,7 @@ public class IceAndFireMainMenu extends TitleScreen {
             this.renderables.get(i).render(ms, mouseX, mouseY, partialTicks);
         }
         for (int i = 0; i < this.renderables.size(); i++) {
-            renderables.get(i).render(ms, mouseX, mouseY, getMinecraft().getFrameTime());
+            renderables.get(i).render(ms, mouseX, mouseY, getMinecraft().getTimer().getGameTimeDeltaPartialTick(false));
         }
     }
 

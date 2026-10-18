@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client;
 
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.github.alexthe666.citadel.client.model.TabulaModel;
@@ -193,13 +194,13 @@ public class IafClientSetup {
         ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DREAD_SPAWNER.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DREAD_TORCH_WALL.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.BURNT_TORCH_WALL.get(), RenderType.cutout());
-        ItemPropertyFunction pulling = ItemProperties.getProperty(Items.BOW, ResourceLocation.parse("pulling"));
+        ItemPropertyFunction pulling = ItemProperties.getProperty(new ItemStack(Items.BOW), ResourceLocation.parse("pulling"));
         ItemPropertyFunction pull = (stack, worldIn, entity, p) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
                 ItemDragonBow item = ((ItemDragonBow) stack.getItem());
-                return entity.getUseItem() != stack ? 0.0F : (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
+                return entity.getUseItem() != stack ? 0.0F : (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / 20.0F;
             }
         };
 

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.gui;
 
+import net.minecraft.client.gui.components.Renderable;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.ClientProxy;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
@@ -101,8 +102,8 @@ public class GuiMyrmexAddRoom extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics ms) {
-        super.renderBackground(ms);
+    public void renderBackground(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+        super.renderBackground(ms, mouseX, mouseY, partialTicks);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.getMinecraft().getTextureManager().bindForSetup(jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE);
         int i = (this.width - 248) / 2;
@@ -112,11 +113,14 @@ public class GuiMyrmexAddRoom extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(ms);
+        this.renderBackground(ms, mouseX, mouseY, partialTicks);
         init();
         int i = (this.width - 248) / 2 + 10;
         int j = (this.height - 166) / 2 + 8;
-        super.render(ms, mouseX, mouseY, partialTicks);
+        // Screen#render would draw the background a second time (and blur twice, which throws in 1.21)
+        for (Renderable renderable : this.renderables) {
+            renderable.render(ms, mouseX, mouseY, partialTicks);
+        }
         int color = this.jungle ? 0X35EA15 : 0XFFBF00;
         if (ClientProxy.getReferedClientHive() != null) {
             if (!ClientProxy.getReferedClientHive().colonyName.isEmpty()) {

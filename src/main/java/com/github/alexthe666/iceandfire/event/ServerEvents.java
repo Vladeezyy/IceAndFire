@@ -1,5 +1,10 @@
 package com.github.alexthe666.iceandfire.event;
 
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import com.github.alexthe666.iceandfire.util.EnchantmentLevels;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -130,7 +135,7 @@ public class ServerEvents {
     }
 
     private static boolean isInEntityTag(ResourceLocation loc, EntityType<?> type) {
-        return type.is(Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.tags()).createTagKey(loc));
+        return type.is(TagKey.create(Registries.ENTITY_TYPE, loc));
     }
 
     public static boolean isLivestock(Entity entity) {
@@ -245,7 +250,7 @@ public class ServerEvents {
 
 
     @SubscribeEvent
-    public void onEntityDamage(LivingHurtEvent event) {
+    public void onEntityDamage(LivingIncomingDamageEvent event) {
         if (event.getSource().is(DamageTypeTags.IS_PROJECTILE)) {
             float multi = 1;
             if (event.getEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ItemTrollArmor) {
@@ -316,7 +321,7 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public void onLivingAttacked(final LivingAttackEvent event) {
+    public void onLivingAttacked(final LivingIncomingDamageEvent event) {
         if (event.getSource() != null && event.getSource().getEntity() != null) {
             Entity attacker = event.getSource().getEntity();
 
@@ -339,7 +344,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void onLivingSetTarget(LivingChangeTargetEvent event) {
-        final LivingEntity target = event.getOriginalTarget();
+        final LivingEntity target = event.getOriginalAboutToBeSetTarget();
         if (target != null) {
             final LivingEntity attacker = event.getEntity();
             if (isChicken(target)) {
@@ -373,7 +378,7 @@ public class ServerEvents {
                 ItemStack stack = event.getEntity().getMainHandItem();
                 event.getTarget().playSound(SoundEvents.STONE_BREAK, 2, 0.5F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 0.5F);
 
-                if (stack.getItem().isCorrectToolForDrops(Blocks.STONE.defaultBlockState()) || stack.getItem().getDescriptionId().contains("pickaxe")) {
+                if (stack.isCorrectToolForDrops(Blocks.STONE.defaultBlockState()) || stack.getItem().getDescriptionId().contains("pickaxe")) {
                     event.setCanceled(true);
                     statue.setCrackAmount(statue.getCrackAmount() + 1);
 
@@ -474,8 +479,11 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public void onEntityUpdate(LivingEvent.LivingTickEvent event) {
-        if (AiDebug.isEnabled() && event.getEntity() instanceof Mob && AiDebug.contains((Mob) event.getEntity())) {
+    public void onEntityUpdate(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity living)) {
+            return;
+        }
+        if (AiDebug.isEnabled() && living instanceof Mob && AiDebug.contains((Mob) living)) {
             AiDebug.logData();
         }
     }
@@ -616,7 +624,7 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public void onEntityJoinWorld(MobSpawnEvent.FinalizeSpawn event) {
+    public void onEntityJoinWorld(FinalizeSpawnEvent event) {
         Mob mob = event.getEntity();
         try {
             if (isSheep(mob) && mob instanceof Animal animal) {

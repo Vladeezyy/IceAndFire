@@ -47,7 +47,7 @@ public class IceAndFireTEISR extends BlockEntityWithoutLevelRenderer {
         }
         if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof BlockPixieHouse) {
             PIXIE_HOUSE_RENDERER.metaOverride = (BlockItem) stack.getItem();
-            PIXIE_HOUSE_RENDERER.render(null, 0, FastColor.ARGB32.colorFromFloat(combinedOverlayIn, stackIn, bufferIn, combinedLightIn));
+            PIXIE_HOUSE_RENDERER.render(null, 0, stackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
 
     }

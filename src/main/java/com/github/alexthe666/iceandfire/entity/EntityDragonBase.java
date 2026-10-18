@@ -1712,7 +1712,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         updateParts();
         this.prevDragonPitch = getDragonPitch();
         level().getProfiler().push("dragonLogic");
-        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(getStepHeight());
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(maxUpStep());
         isOverAir = isOverAirLogic();
         logic.updateDragonCommon();
         if (this.isModelDead()) {

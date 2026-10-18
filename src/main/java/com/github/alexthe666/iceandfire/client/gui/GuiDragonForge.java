@@ -79,7 +79,6 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(pGuiGraphics, mouseX, mouseY);
     }

@@ -36,7 +36,6 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
 
     @Override
     public void render(GuiGraphics pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(pGuiGraphics);
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
         super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
@@ -54,7 +53,7 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
             if (hippo.isChested()) {
                 pGuiGraphics.blit(TEXTURE, i + 79, j + 17, 0, this.imageHeight, 5 * 18, 54);
             }
-            InventoryScreen.renderEntityInInventoryFollowsMouse(pGuiGraphics,i + 51, j + 60, 17, i + 51 - this.mousePosx, j + 75 - 50 - this.mousePosY,
+            GuiEntityRenderUtil.renderEntityFollowsMouse(pGuiGraphics,i + 51, j + 60, 17, i + 51 - this.mousePosx, j + 75 - 50 - this.mousePosY,
                 hippo);
         }
     }

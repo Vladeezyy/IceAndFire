@@ -142,7 +142,7 @@ public class GuiBestiary extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(ms);
+        this.renderBackground(ms, mouseX, mouseY, partialTicks);
         for (Renderable widget : this.renderables) {
             if (widget instanceof IndexPageButton) {
                 IndexPageButton button = (IndexPageButton) widget;
@@ -159,7 +159,10 @@ public class GuiBestiary extends Screen {
         int cornerY = (height - Y) / 2;
         ms.blit(TEXTURE, cornerX, cornerY, 0, 0, X, Y, 390, 390);
         RenderSystem.disableDepthTest();
-        super.render(ms, mouseX, mouseY, partialTicks);
+        // Screen#render would draw the background a second time (and blur twice, which throws in 1.21)
+        for (Renderable renderable : this.renderables) {
+            renderable.render(ms, mouseX, mouseY, partialTicks);
+        }
         ms.pose().pushPose();
         ms.pose().translate(cornerX, cornerY, 0.0F);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

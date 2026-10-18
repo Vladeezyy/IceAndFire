@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.event;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -81,11 +82,14 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
+    public void onLivingUpdate(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity living)) {
+            return;
+        }
         Minecraft mc = Minecraft.getInstance();
-        if (event.getEntity() instanceof ICustomMoveController) {
-            Entity entity = event.getEntity();
-            ICustomMoveController moveController = ((Entity & ICustomMoveController) event.getEntity());
+        if (living instanceof ICustomMoveController) {
+            Entity entity = living;
+            ICustomMoveController moveController = ((Entity & ICustomMoveController) living);
             if (entity.getVehicle() != null && entity.getVehicle() == mc.player) {
                 byte previousState = moveController.getControlState();
                 moveController.dismount(mc.options.keyShift.isDown());
@@ -95,7 +99,7 @@ public class ClientEvents {
                 }
             }
         }
-        if (event.getEntity() instanceof Player player) {
+        if (living instanceof Player player) {
             if (player.level().isClientSide) {
 
                 if (player.getVehicle() instanceof ICustomMoveController) {
@@ -164,9 +168,6 @@ public class ClientEvents {
 
     @SubscribeEvent
     public void onPostRenderLiving(RenderLivingEvent.Post event) {
-        if (shouldCancelRender(event.getEntity())) {
-            event.setCanceled(true);
-        }
 
         LivingEntity entity = event.getEntity();
 

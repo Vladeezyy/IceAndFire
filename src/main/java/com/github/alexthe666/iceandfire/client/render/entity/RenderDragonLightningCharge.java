@@ -63,7 +63,7 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
         MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
 
-        super.render(entity, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     private float interpolateValue(float start, float end, float pct) {

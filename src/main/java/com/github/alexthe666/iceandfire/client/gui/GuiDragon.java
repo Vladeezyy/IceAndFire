@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.gui;
 
+import org.joml.Vector3f;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.StatCollector;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
@@ -33,7 +34,6 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
 
     @Override
     public void render(@NotNull GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
     }
@@ -50,7 +50,7 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
             EntityDragonBase dragon = (EntityDragonBase) entity;
             float dragonScale = 1F / Math.max(0.0001F, dragon.getScale());
             Quaternionf quaternionf = (new Quaternionf()).rotateY((float) Mth.lerp((float) mouseX / this.width, 0, Math.PI)).rotateZ((float) Mth.lerp((float) mouseY / this.width, Math.PI, Math.PI + 0.2));
-            InventoryScreen.renderEntityInInventory(matrixStack, k + 88, l + (int) (0.5F * (dragon.flyProgress)) + 55, (int) (dragonScale * 23F), quaternionf, null, dragon);
+            InventoryScreen.renderEntityInInventory(matrixStack, k + 88, l + (int) (0.5F * (dragon.flyProgress)) + 55, (int) (dragonScale * 23F), new Vector3f(), quaternionf, null, dragon);
         }
         if (entity instanceof EntityDragonBase) {
             EntityDragonBase dragon = (EntityDragonBase) entity;

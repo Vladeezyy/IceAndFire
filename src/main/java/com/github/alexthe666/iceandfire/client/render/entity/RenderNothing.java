@@ -18,7 +18,7 @@ public class RenderNothing<T extends Entity> extends EntityRenderer<T> {
 
     @Override
     public void render(@NotNull T entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        super.render(entityIn, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     // Only render if the debug bboxes are enabled

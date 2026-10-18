@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PathfindingDebugRenderer {
-    public static final RenderBuffers renderBuffers = new RenderBuffers();
+    public static final RenderBuffers renderBuffers = new RenderBuffers(1);
     private static final MultiBufferSource.BufferSource renderBuffer = renderBuffers.bufferSource();
     /**
      * Set of visited nodes.

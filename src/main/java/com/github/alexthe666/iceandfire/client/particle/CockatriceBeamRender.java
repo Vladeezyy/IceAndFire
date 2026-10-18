@@ -18,7 +18,7 @@ public class CockatriceBeamRender {
 
     public static final RenderType TEXTURE_BEAM = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/cockatrice/beam.png"));
 
-    private static void vertex(VertexConsumer p_229108_0_, Matrix4f p_229108_1_, Matrix3f p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
+    private static void vertex(VertexConsumer p_229108_0_, Matrix4f p_229108_1_, PoseStack.Pose p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
         p_229108_0_.addVertex(p_229108_1_, p_229108_3_, p_229108_4_, p_229108_5_).setColor(p_229108_6_, p_229108_7_, p_229108_8_, 255).setUv(p_229108_9_, p_229108_10_).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(p_229108_2_, 0.0F, 1.0F, 0.0F);
     }
 
@@ -72,7 +72,7 @@ public class CockatriceBeamRender {
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(TEXTURE_BEAM);
         PoseStack.Pose matrixstack$entry = matrixStackIn.last();
         Matrix4f matrix4f = matrixstack$entry.pose();
-        Matrix3f matrix3f = matrixstack$entry.normal();
+        PoseStack.Pose matrix3f = matrixstack$entry;
         vertex(ivertexbuilder, matrix4f, matrix3f, f19, f4, f20, j, k, l, 0.4999F, f30);
         vertex(ivertexbuilder, matrix4f, matrix3f, f19, 0.0F, f20, j, k, l, 0.4999F, f29);
         vertex(ivertexbuilder, matrix4f, matrix3f, f21, 0.0F, f22, j, k, l, 0.0F, f29);

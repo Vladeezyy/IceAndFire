@@ -35,7 +35,7 @@ public class RenderMyrmexBase extends MobRenderer<EntityMyrmexBase, AdvancedEnti
         } else {
             model = adultModel;
         }
-        super.render(entityIn, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 
     }
 

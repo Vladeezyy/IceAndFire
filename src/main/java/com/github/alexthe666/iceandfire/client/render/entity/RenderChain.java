@@ -69,7 +69,7 @@ public class RenderChain {
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(getTexture()));
         PoseStack.Pose matrixstack$entry = matrixStackIn.last();
         Matrix4f matrix4f = matrixstack$entry.pose();
-        Matrix3f matrix3f = matrixstack$entry.normal();
+        PoseStack.Pose matrix3f = matrixstack$entry;
         matrixStackIn.pushPose();
         vertex(ivertexbuilder, matrix4f, matrix3f, f19, f4, f20, j, k, l, 0.4999F, f30, lightIn);
         vertex(ivertexbuilder, matrix4f, matrix3f, f19, 0.0F, f20, j, k, l, 0.4999F, f29, lightIn);
@@ -84,7 +84,7 @@ public class RenderChain {
         matrixStackIn.popPose();
     }
 
-    private static void vertex(VertexConsumer p_229108_0_, Matrix4f p_229108_1_, Matrix3f p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_, int packedLight) {
+    private static void vertex(VertexConsumer p_229108_0_, Matrix4f p_229108_1_, PoseStack.Pose p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_, int packedLight) {
         p_229108_0_.addVertex(p_229108_1_, p_229108_3_, p_229108_4_, p_229108_5_).setColor(p_229108_6_, p_229108_7_, p_229108_8_, 255).setUv(p_229108_9_, p_229108_10_).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(p_229108_2_, 0.0F, 1.0F, 0.0F);
     }
 

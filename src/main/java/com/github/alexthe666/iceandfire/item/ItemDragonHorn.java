@@ -58,7 +58,7 @@ public class ItemDragonHorn extends Item {
 
     @Override
     public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
-        ItemNbt.setTag(ItemNbt, itemStack, null);
+        ItemNbt.setTag(itemStack, null);
     }
 
 
@@ -73,7 +73,7 @@ public class ItemDragonHorn extends Item {
             newTag.put("EntityTag", entityTag);
 
             newTag.putString("DragonHornEntityID", BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString());
-            ItemNbt.setTag(ItemNbt, trueStack, newTag);
+            ItemNbt.setTag(trueStack, newTag);
 
             playerIn.swing(hand);
             playerIn.level().playSound(playerIn, playerIn.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
@@ -110,7 +110,7 @@ public class ItemDragonHorn extends Item {
                     stackTag.remove("DragonHornEntityID");
                     stackTag.remove("EntityTag");
                     stackTag.remove("EntityUUID");
-                    ItemNbt.setTag(ItemNbt, stack, stackTag);
+                    ItemNbt.setTag(stack, stackTag);
                     stack.remove(DataComponents.ENTITY_DATA);
                 }
             }

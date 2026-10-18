@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.iceandfire.entity.EntityMobSkull;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.enums.EnumSkullType;
@@ -37,7 +38,7 @@ public class ItemMobSkull extends Item {
         if (!context.getLevel().isClientSide) {
             context.getLevel().addFreshEntity(skull);
         }
-        if (stack.hasCustomHoverName()) {
+        if (stack.has(DataComponents.CUSTOM_NAME)) {
             skull.setCustomName(stack.getHoverName());
         }
         if (!player.isCreative()) {

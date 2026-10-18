@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
@@ -204,9 +206,10 @@ public class EntityDreadKnight extends EntityDreadMob implements IAnimatedEntity
         return true;
     }
 
+    // getMyRidingOffset() of 1.20.1 returned -0.6
     @Override
-    public double getMyRidingOffset() {
-        return -0.6D;
+    public @NotNull Vec3 getVehicleAttachmentPoint(@NotNull Entity vehicle) {
+        return new Vec3(0, 0.6D, 0);
     }
 
     @Override

@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.entity.props.SyncEntityData;
 import com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry;
 import com.github.alexthe666.iceandfire.inventory.IafContainerRegistry;
 import com.github.alexthe666.iceandfire.item.IafArmorMaterials;
-import com.github.alexthe666.iceandfire.item.IafDataComponents;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.IafTabRegistry;
 import com.github.alexthe666.iceandfire.loot.IafLootRegistry;
@@ -65,7 +64,6 @@ public class IceAndFire {
         biomeModifiers.register("iaf_mob_spawns", IafMobSpawnBiomeModifier::makeCodec);
         biomeModifiers.register("iaf_features", IafFeatureBiomeModifier::makeCodec);
 
-        IafDataComponents.COMPONENTS.register(modBus);
         IafArmorMaterials.MATERIALS.register(modBus);
         IafAttachments.ATTACHMENTS.register(modBus);
         IafItemRegistry.ITEMS.register(modBus);

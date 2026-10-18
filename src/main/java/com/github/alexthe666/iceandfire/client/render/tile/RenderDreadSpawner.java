@@ -25,7 +25,7 @@ public class RenderDreadSpawner<T extends TileEntityDreadSpawner> implements Blo
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5D, 0.0D, 0.5D);
         BaseSpawner abstractspawner = tileEntityIn.getSpawner();
-        Entity entity = abstractspawner.getOrCreateDisplayEntity(tileEntityIn.getLevel(), RandomSource.create(), tileEntityIn.getBlockPos());
+        Entity entity = abstractspawner.getOrCreateDisplayEntity(tileEntityIn.getLevel(), tileEntityIn.getBlockPos());
         if (entity != null) {
             float f = 0.53125F;
             float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
@@ -38,7 +38,7 @@ public class RenderDreadSpawner<T extends TileEntityDreadSpawner> implements Blo
             matrixStackIn.translate(0.0D, -0.2F, 0.0D);
             matrixStackIn.mulPose(Axis.XP.rotationDegrees(-30.0F));
             matrixStackIn.scale(f, f, f);
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, FastColor.ARGB32.colorFromFloat(combinedLightIn, partialTicks, matrixStackIn, bufferIn));
+            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
         }
 
         matrixStackIn.popPose();

@@ -36,8 +36,8 @@ public class TileEntityDreadSpawner extends SpawnerBlockEntity {
 
         @Override
         @javax.annotation.Nullable
-        public net.minecraft.world.level.block.entity.BlockEntity getSpawnerBlockEntity() {
-            return TileEntityDreadSpawner.this;
+        public com.mojang.datafixers.util.Either<net.minecraft.world.level.block.entity.BlockEntity, net.minecraft.world.entity.Entity> getOwner() {
+            return com.mojang.datafixers.util.Either.left(TileEntityDreadSpawner.this);
         }
     };
 
@@ -74,7 +74,7 @@ public class TileEntityDreadSpawner extends SpawnerBlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-        CompoundTag compoundtag = this.save(new CompoundTag());
+        CompoundTag compoundtag = this.saveWithoutMetadata(registries);
         compoundtag.remove("SpawnPotentials");
         return compoundtag;
     }

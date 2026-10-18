@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import com.github.alexthe666.iceandfire.entity.EntityGhostSword;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.google.common.collect.Multimap;
@@ -33,10 +34,11 @@ public class ItemGhostSword extends SwordItem {
             return;
         if (playerEntity.getItemInHand(InteractionHand.MAIN_HAND) != stack)
             return;
-        final Multimap<Attribute, AttributeModifier> dmg = stack.getAttributeModifiers(EquipmentSlot.MAINHAND);
         double totalDmg = 0D;
-        for (AttributeModifier modifier : dmg.get(Attributes.ATTACK_DAMAGE)) {
-            totalDmg += modifier.getAmount();
+        for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
+            if (entry.attribute().is(Attributes.ATTACK_DAMAGE) && entry.slot().test(EquipmentSlot.MAINHAND)) {
+                totalDmg += entry.modifier().amount();
+            }
         }
         playerEntity.playSound(SoundEvents.ZOMBIE_INFECT, 1, 1);
         EntityGhostSword shot = new EntityGhostSword(IafEntityRegistry.GHOST_SWORD.get(), playerEntity.level(), playerEntity, totalDmg * 0.5F);
