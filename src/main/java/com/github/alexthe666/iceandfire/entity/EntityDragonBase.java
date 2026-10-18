@@ -100,7 +100,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class EntityDragonBase extends TamableAnimal implements IPassabilityNavigator, ISyncMount, IFlyingMount, IMultipartEntity, IAnimatedEntity, IDragonFlute, IDeadMob, IVillagerFear, IAnimalFear, IDropArmor, IHasCustomizableAttributes, ICustomSizeNavigator, ICustomMoveController, ContainerListener {
 
     public static final int FLIGHT_CHANCE_PER_TICK = 1500;
-    protected static final EntityDataAccessor<Boolean> SWIMMING = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.BOOLEAN);
+    // SWIMMING was declared but never defined: 1.21 refuses entities with undefined data ids
     // The UUID of the original as id: dragons of 1.20 worlds have the modifier as minecraft:<uuid> after the upgrade
     private static final ResourceLocation ARMOR_MODIFIER_ID = ResourceLocation.withDefaultNamespace("556e1665-8b10-40c8-8f9d-cf9b1667f295");
     private static final EntityDataAccessor<Integer> HUNGER = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.INT);

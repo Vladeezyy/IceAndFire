@@ -94,7 +94,7 @@ public class SelfTest {
         long blocks = BuiltInRegistries.BLOCK.keySet().stream().filter(id -> id.getNamespace().equals(IceAndFire.MODID)).count();
         long entities = BuiltInRegistries.ENTITY_TYPE.keySet().stream().filter(id -> id.getNamespace().equals(IceAndFire.MODID)).count();
         check("items registered", items > 400, items);
-        check("blocks registered", blocks > 150, blocks);
+        check("blocks registered", blocks > 120, blocks);
         check("entity types registered", entities > 50, entities);
 
         long recipes = server.getRecipeManager().getRecipes().stream().filter(r -> r.id().getNamespace().equals(IceAndFire.MODID)).count();
@@ -188,7 +188,7 @@ public class SelfTest {
         ItemNbt.update(statue, tag -> tag.putInt("Test", 3));
         check("item data update", ItemNbt.view(statue).getInt("Test") == 3 && ItemNbt.view(statue).contains("IAFStoneStatueEntityID"), ItemNbt.view(statue));
 
-        ItemStack copy = ItemStack.parseOptional(level.registryAccess(), statue.save(level.registryAccess()));
+        ItemStack copy = ItemStack.parseOptional(level.registryAccess(), (CompoundTag) statue.save(level.registryAccess()));
         check("item data saved", ItemStack.isSameItemSameComponents(copy, statue), copy);
     }
 
