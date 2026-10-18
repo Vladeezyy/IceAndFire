@@ -943,7 +943,9 @@ public class GuiBestiary extends Screen {
         }
         ms.pose().pushPose();
         String s = StatCollector.translateToLocal("bestiary." + this.pageType.toString().toLowerCase(Locale.ROOT));
-        float scale = font.width(s) <= 100 ? 2 : font.width(s) * 0.0125F;
+        // Twice the size, smaller for a long title: it ends before the binding (192.7). The old formula grew the scale
+        // with the width of a title over 100 px ("Огненные драконы" ran over the binding)
+        float scale = Math.min(2F, 190F / (10 + font.width(s)));
         ms.pose().scale(scale, scale, scale);
         font.drawInBatch(s, 10, 2, 0X7A756A, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
         ms.pose().popPose();
