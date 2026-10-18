@@ -151,6 +151,8 @@ public final class DevScene {
         if (lastCloseUp != null) {
             lastCloseUp.discard();
         }
+        // Trolls turn into stone statues in daylight (a feature of the mod): clear whatever the last creature left
+        level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(6), e -> !(e instanceof ServerPlayer)).forEach(Entity::discard);
         List<String> others = new ArrayList<>();
         for (Entity e : level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(64), e -> !(e instanceof ServerPlayer))) {
             others.add(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()) + "@" + e.blockPosition().subtract(stage).toShortString());
