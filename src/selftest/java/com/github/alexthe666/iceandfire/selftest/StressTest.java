@@ -116,7 +116,11 @@ public class StressTest {
                     cycle++;
                     parts(level, "after reload " + cycle);
                 }
-            } else if (cycle >= 5) {
+            } else if (cycle >= 5 && hiveStart == 0) {
+                hiveStart = tick;
+            } else if (hiveStart > 0 && !hiveDone) {
+                hive(server, level, tick - hiveStart);
+            } else if (hiveDone) {
                 Runtime runtime = Runtime.getRuntime();
                 IceAndFire.LOGGER.info("[stress] memory {} MB used of {} MB", (runtime.totalMemory() - runtime.freeMemory()) >> 20, runtime.maxMemory() >> 20);
                 IceAndFire.LOGGER.info("[stress] DONE ok={} fail={}", ok, fail);
@@ -146,6 +150,33 @@ public class StressTest {
             phaseStart = tick;
             Runtime runtime = Runtime.getRuntime();
             IceAndFire.LOGGER.info("[stress] memory after generation {} MB used", (runtime.totalMemory() - runtime.freeMemory()) >> 20);
+        }
+    }
+
+    /**
+     * The myrmex hive of #5197 over a long time: a hive with its queen in another chunk of the generated area, about
+     * five Minecraft hours run with /tick sprint (workers dig, forage and wander), the queen must still be at home.
+     */
+    private static final ChunkPos HIVE = new ChunkPos(ARENA.x + 12, ARENA.z + 12);
+    private static final int HIVE_TICKS = 6000;
+    private static int hiveStart;
+    private static boolean hiveDone;
+    private static TestHive testHive;
+
+    private static void hive(MinecraftServer server, ServerLevel level, int t) {
+        if (t == 1) {
+            TestHive.forceArea(level, HIVE, true);
+        } else if (t == 40) {
+            testHive = TestHive.place(level, HIVE);
+        } else if (t == 140) {
+            check("myrmex queen in her hive", testHive.queenAtHome(level), testHive.state(level));
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput().withPermission(4), "tick sprint " + HIVE_TICKS);
+        } else if (t > 140 && t < 140 + HIVE_TICKS && (t - 140) % 1000 == 0) {
+            IceAndFire.LOGGER.info("[stress] hive after {} ticks: {}", t - 140, testHive.state(level));
+        } else if (t == 160 + HIVE_TICKS) {
+            check("myrmex queen still in her hive after " + HIVE_TICKS + " ticks (#5197)", testHive.queenAtHome(level), testHive.state(level));
+            TestHive.forceArea(level, HIVE, false);
+            hiveDone = true;
         }
     }
 

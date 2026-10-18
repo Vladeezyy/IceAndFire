@@ -27,10 +27,16 @@ Please report bugs of this port here, not to the original author.
   player nearby; a likely cause of the riding lag on servers ([#5192](https://github.com/AlexModGuy/Ice_and_Fire/issues/5192),
   [#5208](https://github.com/AlexModGuy/Ice_and_Fire/issues/5208)), which could not be reproduced directly.
 - Light gray banner patterns showed their raw translation key.
+- The bestiary's contents could not be read: white entry names on the light parchment buttons; now dark ink like the
+  pages.
 - Server crash when a myrmex swarmer (or a death worm / troll of an unknown kind) died.
 - Network: clients could deal any damage to any entity nearby, saddle and armor any hippogryph, teleport ridden
   creatures, rewrite any myrmex hive, add any bestiary page on any lectern, make any dragon breathe fire anywhere.
 - Every right click with a myrmex staff added an empty hive to the world data.
+- The myrmex queen left her hive whenever she "saw the sky", also through water (a water entrance above her, a broken
+  ceiling): she dug a new nest and moved there ([#5197](https://github.com/AlexModGuy/Ice_and_Fire/issues/5197), [#4297](https://github.com/AlexModGuy/Ice_and_Fire/issues/4297)).
+- Block updates (podium, lectern, dragon forge, jar, pixie house) went to every player of every dimension, the dragon
+  forge's cook time every tick while a dragon breathed on it; now only to the players near the block.
 - Hippogryphs and amphitheres taking off in caves below y 0, dragon corpses floating there.
 - Only one hydra neck had a hitbox; deathworm armor repaired with the wrong chitin; Stymphalian feathers and hydra
   arrows damaged the wrong item.
@@ -43,7 +49,6 @@ adult dragon; load test with 30 adult dragons and 100 creatures, 4096 generated 
 
 ## Known issues
 
-- The myrmex queen can still leave her hive ([#5197](https://github.com/AlexModGuy/Ice_and_Fire/issues/5197), not reproduced).
 - Lightning dragon head twitch while flying ([#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768)) not looked at.
 
 ## License

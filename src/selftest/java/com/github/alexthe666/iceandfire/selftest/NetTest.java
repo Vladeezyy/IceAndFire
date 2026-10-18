@@ -90,6 +90,7 @@ public class NetTest {
         // Client
         private static int riddenTicks = -1;
         private static int clientTicks;
+        private static boolean joinTried;
         private static long tickStart;
         private static double tickMsSum;
         private static double tickMsMax;
@@ -147,6 +148,14 @@ public class NetTest {
             tickMsMax = Math.max(tickMsMax, ms);
             clientTicks++;
             if (mc.player == null || mc.level == null || mc.getConnection() == null) {
+                // --quickPlayMultiplayer does not always join (seen on macOS): after 10 s on the title screen join from here
+                if (!joinTried && clientTicks > 200 && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen) {
+                    joinTried = true;
+                    IceAndFire.LOGGER.info("[nettest] quick play did not join, connecting from the title screen");
+                    String address = "localhost:25570";
+                    net.minecraft.client.gui.screens.ConnectScreen.startConnecting(mc.screen, mc, net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
+                        new net.minecraft.client.multiplayer.ServerData("nettest", address, net.minecraft.client.multiplayer.ServerData.Type.OTHER), false, null);
+                }
                 return;
             }
             mc.options.pauseOnLostFocus = false;

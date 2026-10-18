@@ -80,17 +80,18 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
-## Current state (2026-10-18 evening, resume here)
+## Current state (2026-10-18 night, resume here)
 
-- After 2.1.13-beta.1: queen fix (#5197) tested by the self-test (29/29, check "myrmex queen stays in her hive under a
-  water entrance"). `sendMSGToAll` → tracking players: **compiles, not yet run** (run selftest, nettest, scene).
-- Started: long hive simulation in the stress test. `src/selftest/.../TestHive.java` builds a hive with its queen
-  (SelfTest has its own copy of that code, switch it to TestHive). To do in `StressTest`: after the reload cycles
-  place a `TestHive` near the arena (other chunk, `forceArea`), after 100 ticks check `queenAtHome`, run
-  `tick sprint 6000` (`server.getCommands().performPrefixedCommand(...)`), log `state()` every 1000 ticks, check
-  `queenAtHome` at the end, then DONE.
-- Then: README "Fixed bugs" (#5197, block updates per dimension), release 2.1.13-beta.2, KB note.
+- 2.1.13-beta.2: myrmex queen (#5197) and block updates per dimension; tested on macOS: self-test 29/29, stress test
+  12/12 with the long hive simulation (a hive with its queen, `tick sprint 6000`: the queen stays at home; note: the
+  test hive has no workers, so it checks the queen, not a busy hive), net test (riding an adult dragon on a dedicated
+  server, 0 failed checks), client scene (every creature, 0 failed checks).
+- Test scripts run on Windows (Git Bash) and macOS: `tools/common.sh` (process cleanup, time limit, server.properties,
+  own port 25581, narrator onboarding off on a fresh `run/`).
+- The self-test schedule waits for the world generation and for the dragon chunk to be entity ticking (failed on a
+  slower machine).
 
 ## TODO
 
-- Long hive simulation in the stress test (see Current state).
+- A busy test hive (workers, soldiers) for the long simulation.
+- Lightning dragon head twitch (#4768).
