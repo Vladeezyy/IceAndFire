@@ -188,6 +188,20 @@ public class SelfTest {
         int frozen = EntityDataProvider.getCapability(loaded).map(data -> data.frozenData.frozenTicks).orElse(-1);
         check("entity data saved", frozen == 120, frozen);
 
+        // Every creature dies once: death events, drops and loot tables (a null loot table crashes 1.21)
+        List<String> deathFailed = new ArrayList<>();
+        for (Entity entity : SPAWNED) {
+            if (entity instanceof net.minecraft.world.entity.LivingEntity living && living.isAlive()) {
+                try {
+                    living.hurt(level.damageSources().genericKill(), Float.MAX_VALUE);
+                } catch (Throwable throwable) {
+                    deathFailed.add(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getPath() + ": " + throwable);
+                    IceAndFire.LOGGER.error("[selftest] death of {}", entity, throwable);
+                }
+            }
+        }
+        check("every creature can die", deathFailed.isEmpty(), deathFailed);
+
         SPAWNED.forEach(e -> level.setChunkForced(e.chunkPosition().x, e.chunkPosition().z, false));
         SPAWNED.forEach(Entity::discard);
         SPAWNED.clear();

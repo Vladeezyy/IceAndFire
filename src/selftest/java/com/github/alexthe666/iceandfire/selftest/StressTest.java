@@ -82,6 +82,8 @@ public class StressTest {
             if (tick == 20) {
                 genIndex = 0;
                 genStart = now;
+                // A slow generation depends on the world: SEED=<seed> tools/stresstest.sh repeats it
+                IceAndFire.LOGGER.info("[stress] seed {}", level.getSeed());
             }
             if (genIndex >= 0) {
                 generate(level, now);
@@ -132,6 +134,10 @@ public class StressTest {
         int total = GEN_SIDE * GEN_SIDE;
         for (int n = 0; n < 16 && genIndex < total; n++, genIndex++) {
             level.getChunk(ARENA.x - GEN_SIDE / 2 + genIndex % GEN_SIDE, ARENA.z - GEN_SIDE / 2 + genIndex / GEN_SIDE);
+        }
+        if (genIndex % 256 == 0) {
+            double seconds = (System.nanoTime() - genStart) / 1.0E9;
+            IceAndFire.LOGGER.info("[stress] generated {} chunks in {} s", genIndex, String.format("%.0f", seconds));
         }
         if (genIndex >= total) {
             double seconds = (now - genStart) / 1.0E9;

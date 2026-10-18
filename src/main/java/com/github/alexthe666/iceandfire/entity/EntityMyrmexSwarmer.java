@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -225,9 +226,9 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     @Override
-    @Nullable
     protected ResourceKey<LootTable> getDefaultLootTable() {
-        return null;
+        // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
+        return BuiltInLootTables.EMPTY;
     }
 
     @Override

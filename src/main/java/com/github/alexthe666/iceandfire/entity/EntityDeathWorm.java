@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -276,7 +277,6 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     }
 
     @Override
-    @Nullable
     protected ResourceKey<LootTable> getDefaultLootTable() {
         switch (this.getVariant()) {
             case 0:
@@ -286,7 +286,8 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             case 2:
                 return this.getScale() > 3 ? WHITE_GIANT_LOOT : WHITE_LOOT;
         }
-        return null;
+        // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
+        return BuiltInLootTables.EMPTY;
     }
 
     @Nullable

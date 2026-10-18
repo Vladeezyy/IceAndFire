@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -224,7 +225,6 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     @Override
-    @Nullable
     protected ResourceKey<LootTable> getDefaultLootTable() {
         switch (this.getTrollType()) {
             case MOUNTAIN:
@@ -234,7 +234,8 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
             case FOREST:
                 return FOREST_LOOT;
         }
-        return null;
+        // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
+        return BuiltInLootTables.EMPTY;
     }
 
     @Override

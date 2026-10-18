@@ -25,6 +25,7 @@ Please report bugs of this port here, not to the original author.
   player nearby; a likely cause of the riding lag on servers ([#5192](https://github.com/AlexModGuy/Ice_and_Fire/issues/5192),
   [#5208](https://github.com/AlexModGuy/Ice_and_Fire/issues/5208)), which could not be reproduced directly.
 - Light gray banner patterns showed their raw translation key.
+- Server crash when a myrmex swarmer (or a death worm / troll of an unknown kind) died.
 - Network: clients could deal any damage to any entity nearby, saddle and armor any hippogryph, teleport ridden
   creatures, rewrite any myrmex hive, add any bestiary page on any lectern, make any dragon breathe fire anywhere.
 - Every right click with a myrmex staff added an empty hive to the world data.
