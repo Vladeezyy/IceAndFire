@@ -485,6 +485,10 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
         this.setSaddled(compound.getBoolean("Saddled"));
         this.setHovering(compound.getBoolean("Hovering"));
         this.setFlying(compound.getBoolean("Flying"));
+        if (!this.isFlying() && !this.isHovering()) {
+            // Stuck in the air by #5064 in a 1.20.1 world
+            this.setNoGravity(false);
+        }
         this.setArmor(compound.getInt("Armor"));
         feedings = compound.getInt("Feedings");
         if (hippogryphInventory != null) {
@@ -954,7 +958,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
             this.setHovering(false);
             this.setFlying(false);
         }
-        if ((!level().isClientSide && this.getRandom().nextInt(FLIGHT_CHANCE_PER_TICK) == 0 && !this.isOrderedToSit() && !this.isFlying() && this.getPassengers().isEmpty() && !this.isBaby() && !this.isHovering() && !this.isOrderedToSit() && this.canMove() && !this.isOverAir() || this.getY() < -1)) {
+        if ((!level().isClientSide && this.getRandom().nextInt(FLIGHT_CHANCE_PER_TICK) == 0 && !this.isOrderedToSit() && !this.isFlying() && this.getPassengers().isEmpty() && !this.isBaby() && !this.isHovering() && !this.isOrderedToSit() && this.canMove() && !this.isOverAir() || this.getY() < this.level().getMinBuildHeight() - 1)) {
             this.setHovering(true);
             this.hoverTicks = 0;
             this.flyTicks = 0;
@@ -1068,6 +1072,9 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
 
     protected void switchNavigator(boolean onLand) {
         if (onLand) {
+            // FlyingMoveControl (hovers in place) turned the gravity off and nothing turned it back on: hippogryphs
+            // folded their wings and stayed in the air (#5064, #5251)
+            this.setNoGravity(false);
             this.moveControl = new MoveControl(this);
             this.navigation = createNavigator(level(), AdvancedPathNavigate.MovementType.CLIMBING);
             this.isLandNavigator = true;

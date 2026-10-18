@@ -349,7 +349,8 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
             if (this.isOrderedToSit() && (this.getCommand() != 1 || this.getControllingPassenger() != null)) {
                 this.setOrderedToSit(false);
             }
-            if (!this.isOrderedToSit() && this.getCommand() == 1 && this.getControllingPassenger() == null) {
+            // "Stay" again after the rider got off: only on the ground, not in the air (#5157)
+            if (!this.isOrderedToSit() && this.getCommand() == 1 && this.getControllingPassenger() == null && (this.onGround() || this.isInWater())) {
                 this.setOrderedToSit(true);
             }
             if (this.isOrderedToSit()) {
@@ -398,7 +399,7 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
         } else {
             this.ticksStill = 0;
         }
-        if (!this.isFlying() && !this.isBaby() && ((this.onGround() && this.random.nextInt(200) == 0 && flightCooldown == 0 && this.getPassengers().isEmpty() && !this.isNoAi() && canMove()) || this.getY() < -1)) {
+        if (!this.isFlying() && !this.isBaby() && ((this.onGround() && this.random.nextInt(200) == 0 && flightCooldown == 0 && this.getPassengers().isEmpty() && !this.isNoAi() && canMove()) || this.getY() < this.level().getMinBuildHeight() - 1)) {
             this.setDeltaMovement(this.getDeltaMovement().x, this.getDeltaMovement().y + 0.5D, this.getDeltaMovement().z);
             this.setFlying(true);
         }
