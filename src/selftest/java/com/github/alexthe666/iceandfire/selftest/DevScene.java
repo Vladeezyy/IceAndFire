@@ -188,6 +188,10 @@ public final class DevScene {
         Entity entity = place(level, type, stage.offset(0, 0, 0), 200);
         lastCloseUp = entity;
         float size = Math.max(entity.getBbWidth(), entity.getBbHeight());
+        if (entity instanceof com.github.alexthe666.iceandfire.entity.EntitySeaSerpent serpent) {
+            // The body (its parts) is about 4.5 times its scale long, the hitbox is the head only: the camera was inside
+            size = Math.max(size, serpent.getSeaSerpentScale() * 4.5F);
+        }
         int distance = Math.max(4, (int) Math.ceil(size * 2.2F));
         look(player, stage.offset(distance / 3, Math.max(2, (int) (entity.getBbHeight() * 0.8F) + 1), distance), stage.offset(0, (int) (entity.getBbHeight() / 2), 0));
     }
