@@ -46,7 +46,7 @@ public class RenderTideTridentItem extends BlockEntityWithoutLevelRenderer {
             VertexConsumer glintVertexBuilder = ItemRenderer.getFoilBufferDirect(bufferIn, RenderType.entityCutoutNoCull(RenderTideTrident.TRIDENT), false, stack.hasFoil());
             MODEL.renderToBuffer(stackIn,
                 glintVertexBuilder, combinedLightIn,
-                combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+                combinedOverlayIn, -1);
             stackIn.popPose();
         }
 

@@ -341,11 +341,11 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
-        this.entityData.define(HEAD_COUNT, 3);
-        this.entityData.define(SEVERED_HEAD, -1);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+        builder.define(HEAD_COUNT, 3);
+        builder.define(SEVERED_HEAD, -1);
     }
 
     @Override

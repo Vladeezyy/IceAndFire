@@ -76,7 +76,7 @@ public interface DragonSteelOverrides<T extends TieredItem> {
             }
         }
         if (isDragonsteelFire(item.getTier()) && IafConfig.dragonWeaponFireAbility) {
-            target.setSecondsOnFire(15);
+            target.igniteForSeconds(15);
             target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
         }
         if (isDragonsteelIce(item.getTier()) && IafConfig.dragonWeaponIceAbility) {

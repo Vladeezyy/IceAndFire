@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
+import net.minecraft.util.FastColor;
 import com.github.alexthe666.iceandfire.block.BlockPixieHouse;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDreadPortal;
@@ -46,7 +47,7 @@ public class IceAndFireTEISR extends BlockEntityWithoutLevelRenderer {
         }
         if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof BlockPixieHouse) {
             PIXIE_HOUSE_RENDERER.metaOverride = (BlockItem) stack.getItem();
-            PIXIE_HOUSE_RENDERER.render(null, 0, stackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+            PIXIE_HOUSE_RENDERER.render(null, 0, FastColor.ARGB32.colorFromFloat(combinedOverlayIn, stackIn, bufferIn, combinedLightIn));
         }
 
     }

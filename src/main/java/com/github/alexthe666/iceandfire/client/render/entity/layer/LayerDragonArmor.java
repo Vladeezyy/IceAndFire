@@ -62,7 +62,7 @@ public class LayerDragonArmor extends RenderLayer<EntityDragonBase, AdvancedEnti
                 LAYERED_ARMOR_CACHE.put(armorTexture, resourcelocation);
             }
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(resourcelocation));
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
     }
 }

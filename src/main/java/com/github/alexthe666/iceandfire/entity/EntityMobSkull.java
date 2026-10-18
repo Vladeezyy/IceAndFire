@@ -71,10 +71,10 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(SKULL_DIRECTION, 0F);
-        this.getEntityData().define(SKULL_ENUM, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SKULL_DIRECTION, 0F);
+        builder.define(SKULL_ENUM, 0);
     }
 
     public float getYaw() {

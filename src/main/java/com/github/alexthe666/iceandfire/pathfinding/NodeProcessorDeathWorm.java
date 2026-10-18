@@ -7,7 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Target;
@@ -28,18 +28,18 @@ public class NodeProcessorDeathWorm extends NodeEvaluator {
     }
 
     @Override
-    public @NotNull BlockPathTypes getBlockPathType(@NotNull BlockGetter blockaccessIn, int x, int y, int z, @NotNull Mob entitylivingIn) {
+    public @NotNull PathType getBlockPathType(@NotNull BlockGetter blockaccessIn, int x, int y, int z, @NotNull Mob entitylivingIn) {
         return this.getBlockPathType(blockaccessIn, x, y, z);
     }
 
     @Override
-    public @NotNull BlockPathTypes getBlockPathType(BlockGetter worldIn, int x, int y, int z) {
+    public @NotNull PathType getBlockPathType(BlockGetter worldIn, int x, int y, int z) {
         BlockPos blockpos = new BlockPos(x, y, z);
         BlockState blockstate = worldIn.getBlockState(blockpos);
         if (!isPassable(worldIn, blockpos.below()) && (blockstate.isAir() || isPassable(worldIn, blockpos))) {
-            return BlockPathTypes.BREACH;
+            return PathType.BREACH;
         } else {
-            return isPassable(worldIn, blockpos) ? BlockPathTypes.WATER : BlockPathTypes.BLOCKED;
+            return isPassable(worldIn, blockpos) ? PathType.WATER : PathType.BLOCKED;
         }
     }
 
@@ -59,18 +59,18 @@ public class NodeProcessorDeathWorm extends NodeEvaluator {
 
     @Nullable
     private Node getSandNode(int p_186328_1_, int p_186328_2_, int p_186328_3_) {
-        BlockPathTypes pathnodetype = this.isFree(p_186328_1_, p_186328_2_, p_186328_3_);
-        return pathnodetype != BlockPathTypes.BREACH && pathnodetype != BlockPathTypes.WATER ? null : this.getNode(p_186328_1_, p_186328_2_, p_186328_3_);
+        PathType pathnodetype = this.isFree(p_186328_1_, p_186328_2_, p_186328_3_);
+        return pathnodetype != PathType.BREACH && pathnodetype != PathType.WATER ? null : this.getNode(p_186328_1_, p_186328_2_, p_186328_3_);
     }
 
-    private BlockPathTypes isFree(int p_186327_1_, int p_186327_2_, int p_186327_3_) {
+    private PathType isFree(int p_186327_1_, int p_186327_2_, int p_186327_3_) {
         BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
         for (int i = p_186327_1_; i < p_186327_1_ + this.entityWidth; ++i) {
             for (int j = p_186327_2_; j < p_186327_2_ + this.entityHeight; ++j) {
                 for (int k = p_186327_3_; k < p_186327_3_ + this.entityDepth; ++k) {
                     BlockState blockstate = this.level.getBlockState(blockpos$mutable.set(i, j, k));
                     if (!isPassable(this.level, blockpos$mutable.below()) && (blockstate.isAir() || isPassable(this.level, blockpos$mutable))) {
-                        return BlockPathTypes.BREACH;
+                        return PathType.BREACH;
                     }
 
                 }
@@ -78,7 +78,7 @@ public class NodeProcessorDeathWorm extends NodeEvaluator {
         }
 
         BlockState blockstate1 = this.level.getBlockState(blockpos$mutable);
-        return isPassable(blockstate1) ? BlockPathTypes.WATER : BlockPathTypes.BLOCKED;
+        return isPassable(blockstate1) ? PathType.WATER : PathType.BLOCKED;
     }
 
 

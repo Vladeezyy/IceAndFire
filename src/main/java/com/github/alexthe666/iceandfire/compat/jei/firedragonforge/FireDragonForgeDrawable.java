@@ -39,10 +39,10 @@ public class FireDragonForgeDrawable implements IDrawable {
         BufferBuilder bufferbuilder = tessellator.getBuilder();
         Matrix4f matrix4f = ms.pose().last().pose();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.vertex(matrix4f, x, y + height, 0).uv((float) (textureX) * 0.00390625F, (float) (textureY + height) * 0.00390625F).endVertex();
-        bufferbuilder.vertex(matrix4f, x + width, y + height, 0).uv((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F).endVertex();
-        bufferbuilder.vertex(matrix4f, x + width, y, 0).uv((float) (textureX + width) * 0.00390625F, (float) (textureY) * 0.00390625F).endVertex();
-        bufferbuilder.vertex(matrix4f, x, y, 0).uv((float) (textureX) * 0.00390625F, (float) (textureY) * 0.00390625F).endVertex();
+        bufferbuilder.addVertex(matrix4f, x, y + height, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
+        bufferbuilder.addVertex(matrix4f, x + width, y + height, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
+        bufferbuilder.addVertex(matrix4f, x + width, y, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY) * 0.00390625F);
+        bufferbuilder.addVertex(matrix4f, x, y, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY) * 0.00390625F);
         tessellator.end();
     }
 }

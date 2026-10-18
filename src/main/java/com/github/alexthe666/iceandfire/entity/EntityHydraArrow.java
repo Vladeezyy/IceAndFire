@@ -19,8 +19,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityHydraArrow extends AbstractArrow {
@@ -35,16 +33,6 @@ public class EntityHydraArrow extends AbstractArrow {
         this.setPos(x, y, z);
         this.setBaseDamage(5F);
     }
-
-    public EntityHydraArrow(PlayMessages.SpawnEntity spawnEntity, Level worldIn) {
-        this(IafEntityRegistry.HYDRA_ARROW.get(), worldIn);
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
 
     public EntityHydraArrow(EntityType t, Level worldIn, LivingEntity shooter) {
         super(t, shooter, worldIn);

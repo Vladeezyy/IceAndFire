@@ -56,7 +56,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.NeoForge;
@@ -97,9 +97,9 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
 
     public EntityDeathWorm(EntityType<EntityDeathWorm> type, Level worldIn) {
         super(type, worldIn);
-        setPathfindingMalus(BlockPathTypes.OPEN, 2.0f); // FIXME :: Death worms are trying to go upwards -> figure out why (or if this really helps)
-        setPathfindingMalus(BlockPathTypes.WATER, 4.0f);
-        setPathfindingMalus(BlockPathTypes.WATER_BORDER, 4.0f);
+        setPathfindingMalus(PathType.OPEN, 2.0f); // FIXME :: Death worms are trying to go upwards -> figure out why (or if this really helps)
+        setPathfindingMalus(PathType.WATER, 4.0f);
+        setPathfindingMalus(PathType.WATER_BORDER, 4.0f);
         this.lookHelper = new IAFLookHelper(this);
         this.noCulling = true;
         if (worldIn.isClientSide) {
@@ -202,7 +202,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return this.getScale() > 3 ? 20 : 10;
     }
 
@@ -283,14 +283,14 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
-        this.entityData.define(SCALE, 1F);
-        this.entityData.define(CONTROL_STATE, (byte) 0);
-        this.entityData.define(WORM_AGE, 10);
-        this.entityData.define(HOME, BlockPos.ZERO);
-        this.entityData.define(JUMP_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+        builder.define(SCALE, 1F);
+        builder.define(CONTROL_STATE, (byte) 0);
+        builder.define(WORM_AGE, 10);
+        builder.define(HOME, BlockPos.ZERO);
+        builder.define(JUMP_TICKS, 0);
     }
 
     @Override

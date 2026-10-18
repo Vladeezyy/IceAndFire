@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
+import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityDragonEgg;
 import com.github.alexthe666.iceandfire.entity.EntityIceDragon;
@@ -55,7 +56,7 @@ public class TileEntityEggInIce extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         if (type != null) {
             tag.putByte("Color", (byte) type.ordinal());
         } else {
@@ -70,8 +71,8 @@ public class TileEntityEggInIce extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.loadAdditional(tag, registries);
         type = EnumDragonEgg.values()[tag.getByte("Color")];
         age = tag.getInt("Age");
         UUID s = null;
@@ -91,12 +92,12 @@ public class TileEntityEggInIce extends BlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag parentNBTTagCompound) {
-        this.load(parentNBTTagCompound);
+    public void handleUpdateTag(CompoundTag parentNBTTagCompound, HolderLookup.@NotNull Provider registries) {
+        this.loadAdditional(parentNBTTagCompound, registries);
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
         CompoundTag nbtTagCompound = new CompoundTag();
         saveAdditional(nbtTagCompound);
         return nbtTagCompound;
@@ -111,8 +112,8 @@ public class TileEntityEggInIce extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        load(pkt.getTag());   // read from the nbt in the packet
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider registries) {
+        loadAdditional(pkt.getTag(), registries);   // read from the nbt in the packet
     }
 
     public void spawnEgg() {

@@ -46,6 +46,6 @@ public class LayerPixieGlow extends RenderLayer<EntityPixie, ModelPixie> {
         }
         RenderType eyes = RenderType.eyes(texture);
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(eyes);
-        this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
     }
 }

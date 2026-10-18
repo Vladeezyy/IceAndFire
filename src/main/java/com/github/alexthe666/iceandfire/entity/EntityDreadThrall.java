@@ -90,13 +90,13 @@ public class EntityDreadThrall extends EntityDreadMob implements IAnimatedEntity
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CUSTOM_ARMOR_INDEX, Integer.valueOf(0));
-        this.entityData.define(CUSTOM_ARMOR_HEAD, Boolean.valueOf(false));
-        this.entityData.define(CUSTOM_ARMOR_CHEST, Boolean.valueOf(false));
-        this.entityData.define(CUSTOM_ARMOR_LEGS, Boolean.valueOf(false));
-        this.entityData.define(CUSTOM_ARMOR_FEET, Boolean.valueOf(false));
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CUSTOM_ARMOR_INDEX, Integer.valueOf(0));
+        builder.define(CUSTOM_ARMOR_HEAD, Boolean.valueOf(false));
+        builder.define(CUSTOM_ARMOR_CHEST, Boolean.valueOf(false));
+        builder.define(CUSTOM_ARMOR_LEGS, Boolean.valueOf(false));
+        builder.define(CUSTOM_ARMOR_FEET, Boolean.valueOf(false));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class LayerTrollEyes extends RenderLayer<EntityTroll, ModelTroll> {
         if (!EntityGorgon.isStoneMob(troll)) {
             RenderType tex = RenderType.eyes(troll.getTrollType().TEXTURE_EYES);
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(tex);
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
 
         }
     }

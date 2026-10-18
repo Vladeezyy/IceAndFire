@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
+import net.minecraft.util.FastColor;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDreadSpawner;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -37,7 +38,7 @@ public class RenderDreadSpawner<T extends TileEntityDreadSpawner> implements Blo
             matrixStackIn.translate(0.0D, -0.2F, 0.0D);
             matrixStackIn.mulPose(Axis.XP.rotationDegrees(-30.0F));
             matrixStackIn.scale(f, f, f);
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, FastColor.ARGB32.colorFromFloat(combinedLightIn, partialTicks, matrixStackIn, bufferIn));
         }
 
         matrixStackIn.popPose();

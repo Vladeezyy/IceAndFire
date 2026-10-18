@@ -171,7 +171,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return (this.getCasteImportance() * 7) + this.level().random.nextInt(3);
     }
 
@@ -214,11 +214,11 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CLIMBING, (byte) 0);
-        this.entityData.define(GROWTH_STAGE, 2);
-        this.entityData.define(VARIANT, Boolean.FALSE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CLIMBING, (byte) 0);
+        builder.define(GROWTH_STAGE, 2);
+        builder.define(VARIANT, Boolean.FALSE);
     }
 
     @Override

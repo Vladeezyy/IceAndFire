@@ -93,11 +93,11 @@ public class EntityDreadGhoul extends EntityDreadMob implements IAnimatedEntity,
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
-        this.entityData.define(SCREAMS, 0);
-        this.entityData.define(SCALE, 1F);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+        builder.define(SCREAMS, 0);
+        builder.define(SCALE, 1F);
     }
 
     public float getSize() {

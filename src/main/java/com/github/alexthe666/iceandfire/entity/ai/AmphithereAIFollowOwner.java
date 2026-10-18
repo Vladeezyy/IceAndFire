@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 import java.util.EnumSet;
 
@@ -68,15 +68,15 @@ public class AmphithereAIFollowOwner extends Goal {
     @Override
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.ampithere.getPathfindingMalus(BlockPathTypes.WATER);
-        this.ampithere.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.oldWaterCost = this.ampithere.getPathfindingMalus(PathType.WATER);
+        this.ampithere.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     @Override
     public void stop() {
         this.owner = null;
         this.ampithere.getNavigation().stop();
-        this.ampithere.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+        this.ampithere.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
     }
 
     @Override

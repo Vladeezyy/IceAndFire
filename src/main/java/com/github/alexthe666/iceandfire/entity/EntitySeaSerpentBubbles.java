@@ -17,8 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjectile {
@@ -31,11 +29,6 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
                                    double posY, double posZ, double accelX, double accelY, double accelZ) {
         super(t, posX, posY, posZ, accelX, accelY, accelZ, worldIn);
     }
-
-    public EntitySeaSerpentBubbles(PlayMessages.SpawnEntity spawnEntity, Level world) {
-        this(IafEntityRegistry.SEA_SERPENT_BUBBLES.get(), world);
-    }
-
 
     public EntitySeaSerpentBubbles(EntityType<? extends Fireball> t, Level worldIn,
                                    EntitySeaSerpent shooter, double accelX, double accelY, double accelZ) {
@@ -51,10 +44,6 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
         return false;
     }
 
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     @Override
     protected boolean shouldBurn() {

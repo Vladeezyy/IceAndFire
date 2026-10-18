@@ -257,7 +257,7 @@ public class IafDragonDestructionManager {
 
     private static void applyDragonEffect(final LivingEntity target, final EntityDragonBase dragon, int statusDuration) {
         if (dragon.dragonType == DragonType.FIRE) {
-            target.setSecondsOnFire(statusDuration);
+            target.igniteForSeconds(statusDuration);
         } else if (dragon.dragonType == DragonType.ICE) {
             EntityDataProvider.getCapability(target).ifPresent(data -> data.frozenData.setFrozen(target, statusDuration));
         } else if (dragon.dragonType == DragonType.LIGHTNING) {

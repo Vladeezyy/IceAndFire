@@ -592,13 +592,13 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
-        this.entityData.define(FLYING, false);
-        this.entityData.define(FLAP_TICKS, 0);
-        this.entityData.define(CONTROL_STATE, (byte) 0);
-        this.entityData.define(COMMAND, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+        builder.define(FLYING, false);
+        builder.define(FLAP_TICKS, 0);
+        builder.define(CONTROL_STATE, (byte) 0);
+        builder.define(COMMAND, 0);
     }
 
     @Override
@@ -915,7 +915,7 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 10;
     }
 

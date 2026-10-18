@@ -26,7 +26,7 @@ public class LayerSeaSerpentAncient extends RenderLayer<EntitySeaSerpent, Advanc
         if (serpent.isAncient()) {
             RenderType tex = RenderType.entityNoOutline(serpent.isBlinking() ? TEXTURE_BLINK : TEXTURE);
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(tex);
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
 
         }
     }

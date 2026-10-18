@@ -26,7 +26,7 @@ public class LayerGorgonEyes extends RenderLayer<EntityGorgon, ModelGorgon> {
         if (entity.getAnimation() == EntityGorgon.ANIMATION_SCARE || entity.getAnimation() == EntityGorgon.ANIMATION_HIT) {
             RenderType eyes = RenderType.eyes(TEXTURE);
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(eyes);
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
+import net.minecraft.util.FastColor;
 import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
 import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
 import com.github.alexthe666.citadel.client.model.TabulaModel;
@@ -141,7 +142,7 @@ public class LayerDragonRider extends RenderLayer<EntityDragonBase, AdvancedEnti
 
             if (render != null) {
                 try {
-                    render.render(entityIn, 0, partialTicks, matrixStack, bufferIn, packedLight);
+                    render.render(entityIn, 0, FastColor.ARGB32.colorFromFloat(packedLight, partialTicks, matrixStack, bufferIn));
                 } catch (Throwable throwable1) {
                     throw new ReportedException(CrashReport.forThrowable(throwable1, "Rendering entity in world"));
                 }

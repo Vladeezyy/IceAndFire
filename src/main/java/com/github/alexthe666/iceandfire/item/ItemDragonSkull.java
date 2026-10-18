@@ -57,7 +57,7 @@ public class ItemDragonSkull extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         String iceorfire = "dragon." + getType(dragonType);
         tooltip.add(Component.translatable(iceorfire).withStyle(ChatFormatting.GRAY));
         if (stack.getTag() != null) {

@@ -71,14 +71,14 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 20;
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HASMADEHOME, Boolean.TRUE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HASMADEHOME, Boolean.TRUE);
     }
 
     @Override

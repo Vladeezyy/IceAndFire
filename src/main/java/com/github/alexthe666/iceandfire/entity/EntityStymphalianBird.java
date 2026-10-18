@@ -106,14 +106,14 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(VICTOR_ENTITY, Optional.empty());
-        this.entityData.define(FLYING, Boolean.FALSE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VICTOR_ENTITY, Optional.empty());
+        builder.define(FLYING, Boolean.FALSE);
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 10;
     }
 

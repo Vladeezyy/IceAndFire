@@ -83,8 +83,8 @@ public class RenderJar<T extends TileEntityJar> implements BlockEntityRenderer<T
                 matrixStackIn.mulPose(Axis.YP.rotationDegrees(this.interpolateRotation(entity.prevRotationYaw, entity.rotationYaw, partialTicks)));
                 matrixStackIn.scale(0.50F, 0.50F, 0.50F);
                 MODEL_PIXIE.animateInJar(entity.hasProduced, entity, 0);
-                MODEL_PIXIE.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
-                MODEL_PIXIE.renderToBuffer(matrixStackIn, bufferIn.getBuffer(typeGlow), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+                MODEL_PIXIE.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);
+                MODEL_PIXIE.renderToBuffer(matrixStackIn, bufferIn.getBuffer(typeGlow), combinedLightIn, combinedOverlayIn, -1);
             }
             matrixStackIn.popPose();
             matrixStackIn.popPose();

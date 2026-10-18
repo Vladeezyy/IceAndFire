@@ -73,7 +73,7 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 8;
     }
 
@@ -179,9 +179,9 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
 
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HIDING, Boolean.FALSE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HIDING, Boolean.FALSE);
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {

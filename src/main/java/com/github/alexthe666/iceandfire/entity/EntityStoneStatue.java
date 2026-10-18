@@ -69,14 +69,14 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(TRAPPED_ENTITY_TYPE, "minecraft:pig");
-        this.entityData.define(TRAPPED_ENTITY_DATA, new CompoundTag());
-        this.entityData.define(TRAPPED_ENTITY_WIDTH, 0.5F);
-        this.entityData.define(TRAPPED_ENTITY_HEIGHT, 0.5F);
-        this.entityData.define(TRAPPED_ENTITY_SCALE, 1F);
-        this.entityData.define(CRACK_AMOUNT, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TRAPPED_ENTITY_TYPE, "minecraft:pig");
+        builder.define(TRAPPED_ENTITY_DATA, new CompoundTag());
+        builder.define(TRAPPED_ENTITY_WIDTH, 0.5F);
+        builder.define(TRAPPED_ENTITY_HEIGHT, 0.5F);
+        builder.define(TRAPPED_ENTITY_SCALE, 1F);
+        builder.define(CRACK_AMOUNT, 0);
     }
 
     public EntityType getTrappedEntityType() {

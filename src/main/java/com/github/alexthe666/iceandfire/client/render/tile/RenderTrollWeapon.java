@@ -28,7 +28,7 @@ public class RenderTrollWeapon extends BlockEntityWithoutLevelRenderer {
 
         stackIn.pushPose();
         stackIn.translate(0.5F, -0.75F, 0.5F);
-        MODEL.renderToBuffer(stackIn, bufferIn.getBuffer(RenderType.entityCutout(weapon.TEXTURE)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+        MODEL.renderToBuffer(stackIn, bufferIn.getBuffer(RenderType.entityCutout(weapon.TEXTURE)), combinedLightIn, combinedOverlayIn, -1);
         stackIn.popPose();
     }
 }

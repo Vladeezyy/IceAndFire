@@ -57,7 +57,7 @@ public class IafRecipes extends RecipeProvider {
                 .pattern("OSO")
                 .define('X', ItemTags.PLANKS)
                 .define('S', Tags.Items.RODS_WOODEN)
-                .define('O', Tags.Items.OBSIDIAN)
+                .define('O', Tags.Items.OBSIDIANS)
                 .define('F', IafItemRegistry.AMPHITHERE_FEATHER.get())
                 .unlockedBy("has_item", has(IafItemRegistry.AMPHITHERE_FEATHER.get()))
                 .save(consumer);
@@ -72,9 +72,9 @@ public class IafRecipes extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, IafItemRegistry.BLINDFOLD.get())
                 .pattern("SLS")
-                .define('L', Tags.Items.LEATHER)
-                .define('S', Tags.Items.STRING)
-                .unlockedBy("has_item", has(Tags.Items.LEATHER))
+                .define('L', Tags.Items.LEATHERS)
+                .define('S', Tags.Items.STRINGS)
+                .unlockedBy("has_item", has(Tags.Items.LEATHERS))
                 .save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, IafItemRegistry.CHAIN.get())
@@ -284,7 +284,7 @@ public class IafRecipes extends RecipeProvider {
                 .pattern(" DS")
                 .pattern("W S")
                 .pattern(" DS")
-                .define('S', Tags.Items.STRING)
+                .define('S', Tags.Items.STRINGS)
                 .define('W', IafItemTags.BONES_WITHER)
                 .define('D', IafItemRegistry.DRAGON_BONE.get())
                 .unlockedBy("has_item", has(IafItemRegistry.DRAGON_BONE.get()))
@@ -433,7 +433,7 @@ public class IafRecipes extends RecipeProvider {
                 .pattern("DDD")
                 .pattern("DSD")
                 .pattern("DDD")
-                .define('S', Tags.Items.STONE)
+                .define('S', Tags.Items.STONES)
                 .define('D', IafItemRegistry.DREAD_SHARD.get())
                 .unlockedBy("has_item", has(IafItemRegistry.DREAD_SHARD.get()))
                 .save(consumer);
@@ -649,7 +649,7 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, IafItemRegistry.CHAIN_STICKY.get())
-                .requires(Tags.Items.SLIMEBALLS)
+                .requires(Tags.Items.SLIME_BALLS)
                 .requires(IafItemRegistry.CHAIN.get())
                 .unlockedBy("has_item", has(IafItemRegistry.CHAIN.get()))
                 .save(consumer);

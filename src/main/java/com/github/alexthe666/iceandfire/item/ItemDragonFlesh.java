@@ -30,7 +30,7 @@ public class ItemDragonFlesh extends ItemGenericFood {
     public void onFoodEaten(ItemStack stack, Level worldIn, LivingEntity livingEntity) {
         if (!worldIn.isClientSide) {
             if (dragonType == 0) {
-                livingEntity.setSecondsOnFire(5);
+                livingEntity.igniteForSeconds(5);
             } else if (dragonType == 1) {
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
             } else {

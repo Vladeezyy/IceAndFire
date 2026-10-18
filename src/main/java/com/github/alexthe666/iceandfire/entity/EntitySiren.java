@@ -47,7 +47,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -124,7 +124,7 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 8;
     }
 
@@ -155,8 +155,8 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     @Override
-    public float getPathfindingMalus(@NotNull BlockPathTypes nodeType) {
-        return nodeType == BlockPathTypes.WATER ? 0F : super.getPathfindingMalus(nodeType);
+    public float getPathfindingMalus(@NotNull PathType nodeType) {
+        return nodeType == PathType.WATER ? 0F : super.getPathfindingMalus(nodeType);
     }
 
     private void switchNavigator(boolean onLand) {
@@ -457,15 +457,15 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HAIR_COLOR, 0);
-        this.entityData.define(SING_POSE, 0);
-        this.entityData.define(AGGRESSIVE, Boolean.FALSE);
-        this.entityData.define(SINGING, Boolean.FALSE);
-        this.entityData.define(SWIMMING, Boolean.FALSE);
-        this.entityData.define(CHARMED, Boolean.FALSE);
-        this.entityData.define(CLIMBING, (byte) 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HAIR_COLOR, 0);
+        builder.define(SING_POSE, 0);
+        builder.define(AGGRESSIVE, Boolean.FALSE);
+        builder.define(SINGING, Boolean.FALSE);
+        builder.define(SWIMMING, Boolean.FALSE);
+        builder.define(CHARMED, Boolean.FALSE);
+        builder.define(CLIMBING, (byte) 0);
     }
 
     @Override

@@ -41,13 +41,13 @@ public class WorldGenLightningDragonRoosts extends WorldGenDragonRoosts {
             block = IafBlockRegistry.CRACKLED_GRASS.get();
         } else if (state.is(Blocks.DIRT_PATH)) {
             block = IafBlockRegistry.CRACKLED_DIRT_PATH.get();
-        } else if (state.is(Tags.Blocks.GRAVEL)) {
+        } else if (state.is(Tags.Blocks.GRAVELS)) {
             block = IafBlockRegistry.CRACKLED_GRAVEL.get();
         } else if (state.is(BlockTags.DIRT)) {
             block = IafBlockRegistry.CRACKLED_DIRT.get();
-        } else if (state.is(Tags.Blocks.STONE)) {
+        } else if (state.is(Tags.Blocks.STONES)) {
             block = IafBlockRegistry.CRACKLED_STONE.get();
-        } else if (state.is(Tags.Blocks.COBBLESTONE)) {
+        } else if (state.is(Tags.Blocks.COBBLESTONES)) {
             block = IafBlockRegistry.CRACKLED_COBBLESTONE.get();
         } else if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS)) {
             block = IafBlockRegistry.ASH.get();

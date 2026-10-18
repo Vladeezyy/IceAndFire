@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model.util;
 
+import net.minecraft.util.FastColor;
 import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
 import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
 import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
@@ -27,7 +28,7 @@ public class HideableModelRenderer extends AdvancedModelBox {
         if (invisible) {
             invisibleRender(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         } else {
-            super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+            super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, FastColor.ARGB32.colorFromFloat(alpha, red, green, blue));
         }
 
     }
@@ -47,7 +48,7 @@ public class HideableModelRenderer extends AdvancedModelBox {
                 matrixStackIn.scale(1.0F / Math.max(this.scaleX, 1.0E-4F), 1.0F / Math.max(this.scaleY, 1.0E-4F), 1.0F / Math.max(this.scaleZ, 1.0E-4F));
             }
             for (BasicModelPart renderer : this.childModels) {
-                renderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+                renderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, FastColor.ARGB32.colorFromFloat(alpha, red, green, blue));
             }
 
             matrixStackIn.popPose();

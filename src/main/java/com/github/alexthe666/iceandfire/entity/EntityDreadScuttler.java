@@ -94,10 +94,10 @@ public class EntityDreadScuttler extends EntityDreadMob implements IAnimatedEnti
 
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CLIMBING, Byte.valueOf((byte) 0));
-        this.entityData.define(SCALE, Float.valueOf(1F));
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CLIMBING, Byte.valueOf((byte) 0));
+        builder.define(SCALE, Float.valueOf(1F));
     }
 
     public float getSize() {

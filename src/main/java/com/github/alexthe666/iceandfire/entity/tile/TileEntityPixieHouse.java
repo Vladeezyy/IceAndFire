@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
+import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.EntityPixie;
@@ -70,7 +71,7 @@ public class TileEntityPixieHouse extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         compound.putInt("HouseType", houseType);
         compound.putBoolean("HasPixie", hasPixie);
         compound.putInt("PixieType", pixieType);
@@ -78,7 +79,7 @@ public class TileEntityPixieHouse extends BlockEntity {
         if (pixieOwnerUUID != null) {
             compound.putUUID("PixieOwnerUUID", pixieOwnerUUID);
         }
-        ContainerHelper.saveAllItems(compound, this.pixieItems);
+        ContainerHelper.saveAllItems(compound, this.pixieItems, registries);
     }
 
     @Override
@@ -87,8 +88,8 @@ public class TileEntityPixieHouse extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-        load(packet.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
+        loadAdditional(packet.getTag(), registries);
         if (!level.isClientSide) {
             IceAndFire.sendMSGToAll(
                 new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getInt("HouseType")));
@@ -96,12 +97,12 @@ public class TileEntityPixieHouse extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        return this.saveWithFullMetadata();
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
+        return this.saveWithFullMetadata(registries);
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         houseType = compound.getInt("HouseType");
         hasPixie = compound.getBoolean("HasPixie");
         pixieType = compound.getInt("PixieType");
@@ -110,8 +111,8 @@ public class TileEntityPixieHouse extends BlockEntity {
             pixieOwnerUUID = compound.getUUID("PixieOwnerUUID");
         }
         this.pixieItems = NonNullList.withSize(1, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, pixieItems);
-        super.load(compound);
+        ContainerHelper.loadAllItems(compound, pixieItems, registries);
+        super.loadAdditional(compound, registries);
     }
 
     public void releasePixie() {

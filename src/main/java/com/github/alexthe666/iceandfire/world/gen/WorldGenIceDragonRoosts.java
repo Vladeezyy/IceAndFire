@@ -41,13 +41,13 @@ public class WorldGenIceDragonRoosts extends WorldGenDragonRoosts {
             block = IafBlockRegistry.FROZEN_GRASS.get();
         } else if (state.is(Blocks.DIRT_PATH)) {
             block = IafBlockRegistry.FROZEN_DIRT_PATH.get();
-        } else if (state.is(Tags.Blocks.GRAVEL)) {
+        } else if (state.is(Tags.Blocks.GRAVELS)) {
             block = IafBlockRegistry.FROZEN_GRAVEL.get();
         } else if (state.is(BlockTags.DIRT)) {
             block = IafBlockRegistry.FROZEN_DIRT.get();
-        } else if (state.is(Tags.Blocks.STONE)) {
+        } else if (state.is(Tags.Blocks.STONES)) {
             block = IafBlockRegistry.FROZEN_STONE.get();
-        } else if (state.is(Tags.Blocks.COBBLESTONE)) {
+        } else if (state.is(Tags.Blocks.COBBLESTONES)) {
             block = IafBlockRegistry.FROZEN_COBBLESTONE.get();
         } else if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS)) {
             block = IafBlockRegistry.FROZEN_SPLINTERS.get();

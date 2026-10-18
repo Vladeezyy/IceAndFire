@@ -17,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityStymphalianFeather extends AbstractArrow {
@@ -30,15 +28,6 @@ public class EntityStymphalianFeather extends AbstractArrow {
     public EntityStymphalianFeather(EntityType<? extends AbstractArrow> t, Level worldIn, LivingEntity shooter) {
         super(t, shooter, worldIn);
         this.setBaseDamage(IafConfig.stymphalianBirdFeatherAttackStength);
-    }
-
-    public EntityStymphalianFeather(PlayMessages.SpawnEntity spawnEntity, Level world) {
-        this(IafEntityRegistry.STYMPHALIAN_FEATHER.get(), world);
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

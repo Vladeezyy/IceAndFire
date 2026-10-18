@@ -112,7 +112,7 @@ public class EntityCockatrice extends TamableAnimal implements IAnimatedEntity, 
     }
 
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         return 10;
     }
 
@@ -256,14 +256,14 @@ public class EntityCockatrice extends TamableAnimal implements IAnimatedEntity, 
 
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HEN, Boolean.FALSE);
-        this.entityData.define(STARING, Boolean.FALSE);
-        this.entityData.define(TARGET_ENTITY, 0);
-        this.entityData.define(TAMING_PLAYER, 0);
-        this.entityData.define(TAMING_LEVEL, 0);
-        this.entityData.define(COMMAND, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HEN, Boolean.FALSE);
+        builder.define(STARING, Boolean.FALSE);
+        builder.define(TARGET_ENTITY, 0);
+        builder.define(TAMING_PLAYER, 0);
+        builder.define(TAMING_LEVEL, 0);
+        builder.define(COMMAND, 0);
     }
 
     public boolean hasTargetedEntity() {

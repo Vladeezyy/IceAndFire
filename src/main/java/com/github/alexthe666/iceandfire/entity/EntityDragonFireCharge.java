@@ -9,7 +9,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PlayMessages;
 
 import javax.annotation.Nullable;
 
@@ -17,10 +16,6 @@ public class EntityDragonFireCharge extends EntityDragonCharge {
 
     public EntityDragonFireCharge(EntityType<? extends Fireball> type, Level worldIn) {
         super(type, worldIn);
-    }
-
-    public EntityDragonFireCharge(PlayMessages.SpawnEntity spawnEntity, Level worldIn) {
-        this(IafEntityRegistry.FIRE_DRAGON_CHARGE.get(), worldIn);
     }
 
     public EntityDragonFireCharge(EntityType<? extends Fireball> type, Level worldIn, double posX,
@@ -46,7 +41,7 @@ public class EntityDragonFireCharge extends EntityDragonCharge {
             remove(RemovalReason.DISCARDED);
         }
         if (this.shouldBurn()) {
-            this.setSecondsOnFire(1);
+            this.igniteForSeconds(1);
         }
         super.tick();
     }

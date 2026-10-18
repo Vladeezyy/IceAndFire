@@ -41,7 +41,7 @@ public class ItemMyrmexEgg extends Item {
     }*/
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         String caste;
         CompoundTag tag = stack.getTag();
         int eggOrdinal = 0;

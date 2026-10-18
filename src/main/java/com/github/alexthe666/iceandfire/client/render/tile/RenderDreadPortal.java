@@ -44,10 +44,10 @@ public class RenderDreadPortal<T extends TileEntityDreadPortal> implements Block
         float g = 1.0F;
         float b = 1.0F;
         if (p_173695_.shouldRenderFace(p_173706_)) {
-            p_173697_.vertex(p_173696_, p_173698_, p_173700_, p_173702_).color(r, g, b, 1.0F).endVertex();
-            p_173697_.vertex(p_173696_, p_173699_, p_173700_, p_173703_).color(r, g, b, 1.0F).endVertex();
-            p_173697_.vertex(p_173696_, p_173699_, p_173701_, p_173704_).color(r, g, b, 1.0F).endVertex();
-            p_173697_.vertex(p_173696_, p_173698_, p_173701_, p_173705_).color(r, g, b, 1.0F).endVertex();
+            p_173697_.addVertex(p_173696_, p_173698_, p_173700_, p_173702_).setColor(r, g, b, 1.0F);
+            p_173697_.addVertex(p_173696_, p_173699_, p_173700_, p_173703_).setColor(r, g, b, 1.0F);
+            p_173697_.addVertex(p_173696_, p_173699_, p_173701_, p_173704_).setColor(r, g, b, 1.0F);
+            p_173697_.addVertex(p_173696_, p_173698_, p_173701_, p_173705_).setColor(r, g, b, 1.0F);
         }
     }
 

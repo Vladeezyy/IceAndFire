@@ -23,10 +23,10 @@ public class GUIColoredBlit {
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.vertex(p_93113_, (float) p_93114_, (float) p_93117_, (float) p_93118_).uv(p_93119_, p_93122_).color(1.0F, 1.0F, 1.0F, alpha).endVertex();
-        bufferbuilder.vertex(p_93113_, (float) p_93115_, (float) p_93117_, (float) p_93118_).uv(p_93120_, p_93122_).color(1.0F, 1.0F, 1.0F, alpha).endVertex();
-        bufferbuilder.vertex(p_93113_, (float) p_93115_, (float) p_93116_, (float) p_93118_).uv(p_93120_, p_93121_).color(1.0F, 1.0F, 1.0F, alpha).endVertex();
-        bufferbuilder.vertex(p_93113_, (float) p_93114_, (float) p_93116_, (float) p_93118_).uv(p_93119_, p_93121_).color(1.0F, 1.0F, 1.0F, alpha).endVertex();
+        bufferbuilder.addVertex(p_93113_, (float) p_93114_, (float) p_93117_, (float) p_93118_).setUv(p_93119_, p_93122_).setColor(1.0F, 1.0F, 1.0F, alpha);
+        bufferbuilder.addVertex(p_93113_, (float) p_93115_, (float) p_93117_, (float) p_93118_).setUv(p_93120_, p_93122_).setColor(1.0F, 1.0F, 1.0F, alpha);
+        bufferbuilder.addVertex(p_93113_, (float) p_93115_, (float) p_93116_, (float) p_93118_).setUv(p_93120_, p_93121_).setColor(1.0F, 1.0F, 1.0F, alpha);
+        bufferbuilder.addVertex(p_93113_, (float) p_93114_, (float) p_93116_, (float) p_93118_).setUv(p_93119_, p_93121_).setColor(1.0F, 1.0F, 1.0F, alpha);
         bufferbuilder.end();
         BufferUploader.reset();
     }

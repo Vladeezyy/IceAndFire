@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
+import net.minecraft.util.FastColor;
 import com.github.alexthe666.iceandfire.client.model.ModelDreadLichSkull;
 import com.github.alexthe666.iceandfire.entity.EntityDragonLightningCharge;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -39,7 +40,7 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw - 180.0F));
         matrixStackIn.mulPose(Axis.XP.rotationDegrees(f * 20.0F));
         matrixStackIn.translate(0F, 0.25F, 0F);
-        MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder2, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder2, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
 
         matrixStackIn.pushPose();
@@ -49,7 +50,7 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
         matrixStackIn.mulPose(Axis.XP.rotationDegrees(f * 15.0F));
         matrixStackIn.translate(0F, 0.25F, 0F);
         matrixStackIn.scale(1.5F, 1.5F, 1.5F);
-        MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
 
         matrixStackIn.pushPose();
@@ -59,10 +60,10 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
         matrixStackIn.mulPose(Axis.XP.rotationDegrees(f * 10.0F));
         matrixStackIn.translate(0F, 0.75F, 0F);
         matrixStackIn.scale(2.5F, 2.5F, 2.5F);
-        MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
 
-        super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        super.render(entity, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
     }
 
     private float interpolateValue(float start, float end, float pct) {

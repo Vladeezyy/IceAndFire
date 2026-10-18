@@ -11,8 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityAmphithereArrow extends AbstractArrow {
@@ -29,20 +27,12 @@ public class EntityAmphithereArrow extends AbstractArrow {
         this.setBaseDamage(2.5F);
     }
 
-    public EntityAmphithereArrow(PlayMessages.SpawnEntity spawnEntity, Level world) {
-        this(IafEntityRegistry.AMPHITHERE_ARROW.get(), world);
-    }
-
     public EntityAmphithereArrow(EntityType type, LivingEntity shooter, Level worldIn) {
         super(type, shooter, worldIn);
         this.setBaseDamage(2.5F);
     }
 
 
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     @Override
     public void tick() {
