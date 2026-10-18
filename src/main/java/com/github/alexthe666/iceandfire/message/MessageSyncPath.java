@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -19,7 +20,7 @@ import java.util.Set;
  */
 public class MessageSyncPath implements CustomPacketPayload {
     public static final Type<MessageSyncPath> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "sync_path"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSyncPath> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageSyncPath::read);
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSyncPath> CODEC = StreamCodec.of((buf, message) -> message.write(buf), MessageSyncPath::read);
 
     @Override
     public Type<MessageSyncPath> type() {
@@ -93,7 +94,7 @@ public class MessageSyncPath implements CustomPacketPayload {
     public boolean handle(IPayloadContext context) {
         context.enqueueWork(() -> {
 
-            if (context.getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
+            if (context.flow() == PacketFlow.CLIENTBOUND) {
                 PathfindingDebugRenderer.lastDebugNodesVisited = lastDebugNodesVisited;
                 PathfindingDebugRenderer.lastDebugNodesNotVisited = lastDebugNodesNotVisited;
                 PathfindingDebugRenderer.lastDebugNodesPath = lastDebugNodesPath;

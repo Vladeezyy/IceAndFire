@@ -1424,7 +1424,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public void breakBlock(final BlockPos position) {
-        if (NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, position.getX(), position.getY(), position.getZ()))) {
+        if (NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, position.getX(), position.getY(), position.getZ())).isCanceled()) {
             return;
         }
 

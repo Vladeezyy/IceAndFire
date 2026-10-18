@@ -123,29 +123,29 @@ public class IceAndFire {
 
     private static void registerPayloads(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(MODID).versioned(PROTOCOL_VERSION);
-        registrar.playBidirectional(MessageDaytime.TYPE, MessageDaytime.CODEC, MessageDaytime.Handler::handle);
-        registrar.playBidirectional(MessageDeathWormHitbox.TYPE, MessageDeathWormHitbox.CODEC, MessageDeathWormHitbox.Handler::handle);
-        registrar.playBidirectional(MessageDragonControl.TYPE, MessageDragonControl.CODEC, MessageDragonControl.Handler::handle);
-        registrar.playBidirectional(MessageDragonSetBurnBlock.TYPE, MessageDragonSetBurnBlock.CODEC, MessageDragonSetBurnBlock.Handler::handle);
+        // One direction per message: the original accepted every message from both sides, so a client could, for
+        // example, put any item on any podium with MessageUpdatePodium
+        registrar.playToClient(MessageDeathWormHitbox.TYPE, MessageDeathWormHitbox.CODEC, MessageDeathWormHitbox.Handler::handle);
+        registrar.playToClient(MessageDragonSetBurnBlock.TYPE, MessageDragonSetBurnBlock.CODEC, MessageDragonSetBurnBlock.Handler::handle);
+        registrar.playToClient(MessageSetMyrmexHiveNull.TYPE, MessageSetMyrmexHiveNull.CODEC, MessageSetMyrmexHiveNull.Handler::handle);
+        registrar.playToClient(MessageSirenSong.TYPE, MessageSirenSong.CODEC, MessageSirenSong.Handler::handle);
+        registrar.playToClient(MessageSpawnParticleAt.TYPE, MessageSpawnParticleAt.CODEC, MessageSpawnParticleAt.Handler::handle);
+        registrar.playToClient(MessageUpdateDragonforge.TYPE, MessageUpdateDragonforge.CODEC, MessageUpdateDragonforge.Handler::handle);
+        registrar.playToClient(MessageUpdatePixieHouse.TYPE, MessageUpdatePixieHouse.CODEC, MessageUpdatePixieHouse.Handler::handle);
+        registrar.playToClient(MessageUpdatePixieHouseModel.TYPE, MessageUpdatePixieHouseModel.CODEC, MessageUpdatePixieHouseModel.Handler::handle);
+        registrar.playToClient(MessageUpdatePixieJar.TYPE, MessageUpdatePixieJar.CODEC, MessageUpdatePixieJar.Handler::handle);
+        registrar.playToClient(MessageUpdatePodium.TYPE, MessageUpdatePodium.CODEC, MessageUpdatePodium.Handler::handle);
+        registrar.playToServer(MessageDragonControl.TYPE, MessageDragonControl.CODEC, MessageDragonControl.Handler::handle);
+        registrar.playToServer(MessageHippogryphArmor.TYPE, MessageHippogryphArmor.CODEC, MessageHippogryphArmor.Handler::handle);
+        registrar.playToServer(MessageMultipartInteract.TYPE, MessageMultipartInteract.CODEC, MessageMultipartInteract.Handler::handle);
+        registrar.playToServer(MessagePlayerHitMultipart.TYPE, MessagePlayerHitMultipart.CODEC, MessagePlayerHitMultipart.Handler::handle);
+        registrar.playToServer(MessageSwingArm.TYPE, MessageSwingArm.CODEC, MessageSwingArm.Handler::handle);
         registrar.playBidirectional(MessageDragonSyncFire.TYPE, MessageDragonSyncFire.CODEC, MessageDragonSyncFire.Handler::handle);
         registrar.playBidirectional(MessageGetMyrmexHive.TYPE, MessageGetMyrmexHive.CODEC, MessageGetMyrmexHive.Handler::handle);
-        registrar.playBidirectional(MessageMyrmexSettings.TYPE, MessageMyrmexSettings.CODEC, MessageMyrmexSettings.Handler::handle);
-        registrar.playBidirectional(MessageHippogryphArmor.TYPE, MessageHippogryphArmor.CODEC, MessageHippogryphArmor.Handler::handle);
-        registrar.playBidirectional(MessageMultipartInteract.TYPE, MessageMultipartInteract.CODEC, MessageMultipartInteract.Handler::handle);
-        registrar.playBidirectional(MessagePlayerHitMultipart.TYPE, MessagePlayerHitMultipart.CODEC, MessagePlayerHitMultipart.Handler::handle);
-        registrar.playBidirectional(MessageSetMyrmexHiveNull.TYPE, MessageSetMyrmexHiveNull.CODEC, MessageSetMyrmexHiveNull.Handler::handle);
-        registrar.playBidirectional(MessageSirenSong.TYPE, MessageSirenSong.CODEC, MessageSirenSong.Handler::handle);
-        registrar.playBidirectional(MessageSpawnParticleAt.TYPE, MessageSpawnParticleAt.CODEC, MessageSpawnParticleAt.Handler::handle);
         registrar.playBidirectional(MessageStartRidingMob.TYPE, MessageStartRidingMob.CODEC, MessageStartRidingMob.Handler::handle);
-        registrar.playBidirectional(MessageUpdatePixieHouse.TYPE, MessageUpdatePixieHouse.CODEC, MessageUpdatePixieHouse.Handler::handle);
-        registrar.playBidirectional(MessageUpdatePixieHouseModel.TYPE, MessageUpdatePixieHouseModel.CODEC, MessageUpdatePixieHouseModel.Handler::handle);
-        registrar.playBidirectional(MessageUpdatePixieJar.TYPE, MessageUpdatePixieJar.CODEC, MessageUpdatePixieJar.Handler::handle);
-        registrar.playBidirectional(MessageUpdatePodium.TYPE, MessageUpdatePodium.CODEC, MessageUpdatePodium.Handler::handle);
-        registrar.playBidirectional(MessageUpdateDragonforge.TYPE, MessageUpdateDragonforge.CODEC, MessageUpdateDragonforge.Handler::handle);
         registrar.playBidirectional(MessageUpdateLectern.TYPE, MessageUpdateLectern.CODEC, MessageUpdateLectern.Handler::handle);
-        registrar.playBidirectional(MessageSyncPath.TYPE, MessageSyncPath.CODEC, MessageSyncPath::handle);
-        registrar.playBidirectional(MessageSyncPathReached.TYPE, MessageSyncPathReached.CODEC, MessageSyncPathReached::handle);
-        registrar.playBidirectional(MessageSwingArm.TYPE, MessageSwingArm.CODEC, MessageSwingArm.Handler::handle);
+        registrar.playToClient(MessageSyncPath.TYPE, MessageSyncPath.CODEC, MessageSyncPath::handle);
+        registrar.playToClient(MessageSyncPathReached.TYPE, MessageSyncPathReached.CODEC, MessageSyncPathReached::handle);
         registrar.playToClient(SyncEntityData.TYPE, SyncEntityData.CODEC, SyncEntityData::handle);
     }
 

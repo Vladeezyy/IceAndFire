@@ -20,8 +20,7 @@ import net.neoforged.bus.api.ICancellableEvent;
  * <br>
  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
  **/
-@Cancelable
-public class GenericGriefEvent extends LivingEvent {
+public class GenericGriefEvent extends LivingEvent implements ICancellableEvent {
     private final double targetX;
     private final double targetY;
     private final double targetZ;

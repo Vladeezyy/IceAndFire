@@ -144,7 +144,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
             if (this.getAnimationTick() == 42) {
                 int down = Math.max(15, this.blockPosition().getY() - 20 + this.getRandom().nextInt(10));
                 BlockPos genPos = new BlockPos(this.getBlockX(), down, this.getBlockZ());
-                if (!NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, genPos.getX(), genPos.getY(), genPos.getZ()))) {
+                if (!NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, genPos.getX(), genPos.getY(), genPos.getZ())).isCanceled()) {
                     WorldGenMyrmexHive hiveGen = new WorldGenMyrmexHive(true, this.isJungle(), NoneFeatureConfiguration.CODEC);
                     if (!level().isClientSide && level() instanceof ServerLevel) {
                         hiveGen.placeSmallGen((ServerLevel) level(), this.getRandom(), genPos);

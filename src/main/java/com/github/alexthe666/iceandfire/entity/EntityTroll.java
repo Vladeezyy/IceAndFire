@@ -393,7 +393,7 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
                 float weaponZ = (float) (getZ() + 1.9F * Mth.sin((float) ((yBodyRot + 90) * Math.PI / 180)));
                 float weaponY = (float) (getY() + (this.getEyeHeight() / 2));
                 Explosion explosion = new Explosion(level(), this, weaponX, weaponY, weaponZ, 1F + this.getRandom().nextFloat(), new ArrayList<>());
-                if (!NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, weaponX, weaponY, weaponZ))) {
+                if (!NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, weaponX, weaponY, weaponZ)).isCanceled()) {
                     explosion.explode();
                     explosion.finalizeExplosion(true);
                 }

@@ -64,13 +64,7 @@ public class MessageUpdateLectern implements CustomPacketPayload {
         }
 
         public static void handle(MessageUpdateLectern message, IPayloadContext context) {
-            ctx.get().enqueueWork(() ->
-                    DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> MessageUpdateLectern.Handler.handlePacket(message, ctx))
-            );
-            ctx.get().enqueueWork(() ->
-                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MessageUpdateLectern.Handler.handlePacket(message, ctx))
-            );
-            ctx.get().setPacketHandled(true);
+            handlePacket(message, context);
         }
 
         public static void handlePacket(final MessageUpdateLectern message, final IPayloadContext context) {

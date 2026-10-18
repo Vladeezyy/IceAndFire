@@ -36,13 +36,13 @@ public class MessageUpdatePodium implements CustomPacketPayload {
     public MessageUpdatePodium() {
     }
 
-    public static MessageUpdatePodium read(FriendlyByteBuf buf) {
-        return new MessageUpdatePodium(buf.readLong(), PacketBufferUtils.readItemStack(buf));
+    public static MessageUpdatePodium read(RegistryFriendlyByteBuf buf) {
+        return new MessageUpdatePodium(buf.readLong(), ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
     }
 
-    public static void write(MessageUpdatePodium message, FriendlyByteBuf buf) {
+    public static void write(MessageUpdatePodium message, RegistryFriendlyByteBuf buf) {
         buf.writeLong(message.blockPos);
-        PacketBufferUtils.writeItemStack(buf, message.heldStack);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, message.heldStack);
     }
 
     public static class Handler {

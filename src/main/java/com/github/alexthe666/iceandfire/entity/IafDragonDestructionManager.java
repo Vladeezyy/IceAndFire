@@ -26,7 +26,7 @@ import net.neoforged.neoforge.event.EventHooks;
 
 public class IafDragonDestructionManager {
     public static void destroyAreaBreath(final Level level, final BlockPos center, final EntityDragonBase dragon) {
-        if (NeoForge.EVENT_BUS.post(new DragonFireDamageWorldEvent(dragon, center.getX(), center.getY(), center.getZ()))) {
+        if (NeoForge.EVENT_BUS.post(new DragonFireDamageWorldEvent(dragon, center.getX(), center.getY(), center.getZ())).isCanceled()) {
             return;
         }
 
@@ -110,7 +110,7 @@ public class IafDragonDestructionManager {
             return;
         }
 
-        if (NeoForge.EVENT_BUS.post(new DragonFireDamageWorldEvent(dragon, center.getX(), center.getY(), center.getZ()))) {
+        if (NeoForge.EVENT_BUS.post(new DragonFireDamageWorldEvent(dragon, center.getX(), center.getY(), center.getZ())).isCanceled()) {
             return;
         }
 

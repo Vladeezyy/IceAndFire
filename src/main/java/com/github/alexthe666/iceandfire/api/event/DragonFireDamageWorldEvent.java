@@ -22,8 +22,7 @@ import net.neoforged.bus.api.ICancellableEvent;
  * <br>
  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
  **/
-@Cancelable
-public class DragonFireDamageWorldEvent extends LivingEvent {
+public class DragonFireDamageWorldEvent extends LivingEvent implements ICancellableEvent {
     private EntityDragonBase dragonBase;
     private double targetX;
     private double targetY;

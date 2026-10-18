@@ -419,7 +419,7 @@ public class EntityFireDragon extends EntityDragonBase {
 
     @Override
     public void stimulateFire(double burnX, double burnY, double burnZ, int syncType) {
-        if (NeoForge.EVENT_BUS.post(new DragonFireEvent(this, burnX, burnY, burnZ))) return;
+        if (NeoForge.EVENT_BUS.post(new DragonFireEvent(this, burnX, burnY, burnZ)).isCanceled()) return;
         if (syncType == 1 && !level().isClientSide) {
             //sync with client
             IceAndFire.sendMSGToAll(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));

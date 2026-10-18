@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -20,7 +21,7 @@ import java.util.Set;
  */
 public class MessageSyncPathReached implements CustomPacketPayload {
     public static final Type<MessageSyncPathReached> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "sync_path_reached"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSyncPathReached> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageSyncPathReached::read);
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSyncPathReached> CODEC = StreamCodec.of((buf, message) -> message.write(buf), MessageSyncPathReached::read);
 
     @Override
     public Type<MessageSyncPathReached> type() {
@@ -63,7 +64,7 @@ public class MessageSyncPathReached implements CustomPacketPayload {
     public boolean handle(IPayloadContext context) {
         context.enqueueWork(() -> {
 
-            if (context.getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
+            if (context.flow() == PacketFlow.CLIENTBOUND) {
                 for (final MNode node : PathfindingDebugRenderer.lastDebugNodesPath) {
                     if (reached.contains(node.pos)) {
                         node.setReachedByWorker(true);

@@ -346,7 +346,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
                         Block block = state.getBlock();
                         if (!state.isAir() && !state.getShape(level(), pos).isEmpty() && !(block instanceof BushBlock) && block != Blocks.BEDROCK && (state.getBlock() instanceof LeavesBlock || state.is(BlockTags.LOGS))) {
                             this.getDeltaMovement().scale(0.6D);
-                            if (NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, a, b, c))) continue;
+                            if (NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, a, b, c)).isCanceled()) continue;
                             if (block != Blocks.AIR) {
                                 if (!level().isClientSide) {
                                     level().destroyBlock(pos, true);
