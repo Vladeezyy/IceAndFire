@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 
 public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLightningCharge> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/lightningdragon/charge.png");
-    public static final ResourceLocation TEXTURE_CORE = new ResourceLocation("iceandfire:textures/models/lightningdragon/charge_core.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/charge.png");
+    public static final ResourceLocation TEXTURE_CORE = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/charge_core.png");
     private static final ModelDreadLichSkull MODEL_SPIRIT = new ModelDreadLichSkull();
 
     public RenderDragonLightningCharge(EntityRendererProvider.Context context) {

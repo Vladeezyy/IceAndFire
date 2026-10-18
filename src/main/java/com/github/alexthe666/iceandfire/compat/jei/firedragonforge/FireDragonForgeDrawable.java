@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public class FireDragonForgeDrawable implements IDrawable {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/gui/dragonforge_fire.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/dragonforge_fire.png");
 
     @Override
     public int getWidth() {

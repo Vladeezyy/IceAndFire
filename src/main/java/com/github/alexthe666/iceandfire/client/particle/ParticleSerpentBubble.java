@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticleSerpentBubble extends TextureSheetParticle {
-    private static final ResourceLocation BUBBLE_TEXTURE = new ResourceLocation("iceandfire:textures/particles/sea_serpent_bubble.png");
+    private static final ResourceLocation BUBBLE_TEXTURE = ResourceLocation.parse("iceandfire:textures/particles/sea_serpent_bubble.png");
 
     public ParticleSerpentBubble(ClientLevel world, double x, double y, double z, double motX, double motY, double motZ, float size) {
         super(world, x, y, z, motX, motY, motZ);

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderStymphalianArrow extends ArrowRenderer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/misc/stymphalian_arrow.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/misc/stymphalian_arrow.png");
 
     public RenderStymphalianArrow(EntityRendererProvider.Context context) {
         super(context);

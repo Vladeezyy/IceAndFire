@@ -40,12 +40,12 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     public static final Animation ANIMATION_NIBBLE = Animation.create(10);
     public static final Animation ANIMATION_STING = Animation.create(25);
     public static final Animation ANIMATION_SLASH = Animation.create(25);
-    public static final ResourceLocation DESERT_LOOT = new ResourceLocation("iceandfire", "entities/myrmex_sentinel_desert");
-    public static final ResourceLocation JUNGLE_LOOT = new ResourceLocation("iceandfire", "entities/myrmex_sentinel_jungle");
-    private static final ResourceLocation TEXTURE_DESERT = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_desert_sentinel.png");
-    private static final ResourceLocation TEXTURE_JUNGLE = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel.png");
-    private static final ResourceLocation TEXTURE_DESERT_HIDDEN = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_desert_sentinel_hidden.png");
-    private static final ResourceLocation TEXTURE_JUNGLE_HIDDEN = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel_hidden.png");
+    public static final ResourceLocation DESERT_LOOT = ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_desert");
+    public static final ResourceLocation JUNGLE_LOOT = ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_jungle");
+    private static final ResourceLocation TEXTURE_DESERT = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel.png");
+    private static final ResourceLocation TEXTURE_JUNGLE = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel.png");
+    private static final ResourceLocation TEXTURE_DESERT_HIDDEN = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel_hidden.png");
+    private static final ResourceLocation TEXTURE_JUNGLE_HIDDEN = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel_hidden.png");
     private static final EntityDataAccessor<Boolean> HIDING = SynchedEntityData.defineId(EntityMyrmexSentinel.class, EntityDataSerializers.BOOLEAN);
     public float holdingProgress;
     public float hidingProgress;

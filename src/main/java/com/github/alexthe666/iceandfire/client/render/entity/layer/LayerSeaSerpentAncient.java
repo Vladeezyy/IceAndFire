@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class LayerSeaSerpentAncient extends RenderLayer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/seaserpent/ancient_overlay.png");
-    private static final ResourceLocation TEXTURE_BLINK = new ResourceLocation("iceandfire:textures/models/seaserpent/ancient_overlay_blink.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/seaserpent/ancient_overlay.png");
+    private static final ResourceLocation TEXTURE_BLINK = ResourceLocation.parse("iceandfire:textures/models/seaserpent/ancient_overlay_blink.png");
 
     public LayerSeaSerpentAncient(MobRenderer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> renderer) {
         super(renderer);

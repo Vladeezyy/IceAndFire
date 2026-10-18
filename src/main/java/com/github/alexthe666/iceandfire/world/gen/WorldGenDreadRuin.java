@@ -15,19 +15,19 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
-    private static final ResourceLocation STRUCTURE_0 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_0");
-    private static final ResourceLocation STRUCTURE_1 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_1");
-    private static final ResourceLocation STRUCTURE_2 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_2");
-    private static final ResourceLocation STRUCTURE_3 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_3");
-    private static final ResourceLocation STRUCTURE_4 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_4");
-    private static final ResourceLocation STRUCTURE_5 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_5");
-    private static final ResourceLocation STRUCTURE_6 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_6");
-    private static final ResourceLocation STRUCTURE_7 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_7");
-    private static final ResourceLocation STRUCTURE_8 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_8");
-    private static final ResourceLocation STRUCTURE_9 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_9");
-    private static final ResourceLocation STRUCTURE_10 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_10");
-    private static final ResourceLocation STRUCTURE_11 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_11");
-    private static final ResourceLocation STRUCTURE_12 = new ResourceLocation(IceAndFire.MODID, "dread_ruin_12");
+    private static final ResourceLocation STRUCTURE_0 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_0");
+    private static final ResourceLocation STRUCTURE_1 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_1");
+    private static final ResourceLocation STRUCTURE_2 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_2");
+    private static final ResourceLocation STRUCTURE_3 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_3");
+    private static final ResourceLocation STRUCTURE_4 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_4");
+    private static final ResourceLocation STRUCTURE_5 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_5");
+    private static final ResourceLocation STRUCTURE_6 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_6");
+    private static final ResourceLocation STRUCTURE_7 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_7");
+    private static final ResourceLocation STRUCTURE_8 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_8");
+    private static final ResourceLocation STRUCTURE_9 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_9");
+    private static final ResourceLocation STRUCTURE_10 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_10");
+    private static final ResourceLocation STRUCTURE_11 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_11");
+    private static final ResourceLocation STRUCTURE_12 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_12");
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public WorldGenDreadRuin(Codec<NoneFeatureConfiguration> configFactoryIn) {

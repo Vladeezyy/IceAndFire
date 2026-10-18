@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticleSirenMusic extends TextureSheetParticle {
-    private static final ResourceLocation SIREN_MUSIC = new ResourceLocation("iceandfire:textures/particles/siren_music.png");
+    private static final ResourceLocation SIREN_MUSIC = ResourceLocation.parse("iceandfire:textures/particles/siren_music.png");
 
     float noteParticleScale;
     float colorScale;

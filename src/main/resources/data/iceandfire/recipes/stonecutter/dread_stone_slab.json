@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "iceandfire:dread_stone_bricks"
-  },
-  "result": "iceandfire:dread_stone_slab",
-  "count": 2
-}

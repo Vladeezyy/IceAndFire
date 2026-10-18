@@ -12,10 +12,10 @@ import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 
 public class RenderFrozenState {
-    private static final ResourceLocation TEXTURE_0 = new ResourceLocation("textures/block/frosted_ice_0.png");
-    private static final ResourceLocation TEXTURE_1 = new ResourceLocation("textures/block/frosted_ice_1.png");
-    private static final ResourceLocation TEXTURE_2 = new ResourceLocation("textures/block/frosted_ice_2.png");
-    private static final ResourceLocation TEXTURE_3 = new ResourceLocation("textures/block/frosted_ice_3.png");
+    private static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("textures/block/frosted_ice_0.png");
+    private static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("textures/block/frosted_ice_1.png");
+    private static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("textures/block/frosted_ice_2.png");
+    private static final ResourceLocation TEXTURE_3 = ResourceLocation.parse("textures/block/frosted_ice_3.png");
 
     public static void render(LivingEntity entity, PoseStack matrixStack, MultiBufferSource bufferIn, int light, int frozenTicks) {
         float sideExpand = -0.125F;

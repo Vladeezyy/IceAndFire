@@ -11,8 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class WorldGenFireDragonCave extends WorldGenDragonCave {
-    public static ResourceLocation FIRE_DRAGON_CHEST = new ResourceLocation(IceAndFire.MODID, "chest/fire_dragon_female_cave");
-    public static ResourceLocation FIRE_DRAGON_CHEST_MALE = new ResourceLocation(IceAndFire.MODID, "chest/fire_dragon_male_cave");
+    public static ResourceLocation FIRE_DRAGON_CHEST = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/fire_dragon_female_cave");
+    public static ResourceLocation FIRE_DRAGON_CHEST_MALE = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/fire_dragon_male_cave");
 
     public WorldGenFireDragonCave(final Codec<NoneFeatureConfiguration> configuration) {
         super(configuration);

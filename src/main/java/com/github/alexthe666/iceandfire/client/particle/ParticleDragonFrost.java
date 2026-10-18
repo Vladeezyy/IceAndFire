@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 
 public class ParticleDragonFrost extends TextureSheetParticle {
 
-    private static final ResourceLocation SNOWFLAKE = new ResourceLocation("iceandfire:textures/particles/snowflake_0.png");
-    private static final ResourceLocation SNOWFLAKE_BIG = new ResourceLocation("iceandfire:textures/particles/snowflake_1.png");
+    private static final ResourceLocation SNOWFLAKE = ResourceLocation.parse("iceandfire:textures/particles/snowflake_0.png");
+    private static final ResourceLocation SNOWFLAKE_BIG = ResourceLocation.parse("iceandfire:textures/particles/snowflake_1.png");
     private final float dragonSize;
     private final double initialX;
     private final double initialY;

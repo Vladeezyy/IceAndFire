@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Locale;
 
@@ -28,12 +28,12 @@ public enum EnumSeaSerpent {
     public String resourceName;
     public ChatFormatting color;
     public CustomArmorMaterial armorMaterial;
-    public RegistryObject<Item> scale;
-    public RegistryObject<Item> helmet;
-    public RegistryObject<Item> chestplate;
-    public RegistryObject<Item> leggings;
-    public RegistryObject<Item> boots;
-    public RegistryObject<Block> scaleBlock;
+    public DeferredHolder<Item> scale;
+    public DeferredHolder<Item> helmet;
+    public DeferredHolder<Item> chestplate;
+    public DeferredHolder<Item> leggings;
+    public DeferredHolder<Item> boots;
+    public DeferredHolder<Block> scaleBlock;
 
     EnumSeaSerpent(ChatFormatting color) {
         this.resourceName = this.name().toLowerCase(Locale.ROOT);

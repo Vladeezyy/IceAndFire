@@ -28,8 +28,8 @@ public enum EnumHippogryphTypes {
 
     EnumHippogryphTypes(boolean developer) {
         this.developer = developer;
-        this.TEXTURE = new ResourceLocation("iceandfire:textures/models/hippogryph/" + name().toLowerCase(Locale.ROOT) + ".png");
-        this.TEXTURE_BLINK = new ResourceLocation("iceandfire:textures/models/hippogryph/" + name().toLowerCase(Locale.ROOT) + "_blink.png");
+        this.TEXTURE = ResourceLocation.parse("iceandfire:textures/models/hippogryph/" + name().toLowerCase(Locale.ROOT) + ".png");
+        this.TEXTURE_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippogryph/" + name().toLowerCase(Locale.ROOT) + "_blink.png");
 
     }
 

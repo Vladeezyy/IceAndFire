@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadScuttler extends MobRenderer<EntityDreadScuttler, ModelDreadScuttler> {
 
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_scuttler_eyes.png");
-    public static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/dread/dread_scuttler.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_scuttler_eyes.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_scuttler.png");
 
     public RenderDreadScuttler(EntityRendererProvider.Context context) {
         super(context, new ModelDreadScuttler(), 0.75F);

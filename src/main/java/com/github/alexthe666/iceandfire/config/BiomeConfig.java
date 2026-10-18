@@ -69,7 +69,7 @@ public class BiomeConfig {
                 if (obj instanceof Map.Entry<?,?> mapObj) {
                     String id = (String) mapObj.getKey();
                     SpawnBiomeData data = (SpawnBiomeData) mapObj.getValue();
-                    biomeConfigValues.put(id, SpawnBiomeConfig.create(new ResourceLocation(id), data));
+                    biomeConfigValues.put(id, SpawnBiomeConfig.create(ResourceLocation.parse(id), data));
                 }
             }
                 }catch (Exception e){
@@ -91,7 +91,7 @@ public class BiomeConfig {
                         if (obj instanceof Map.Entry entry) {
                             String id = (String) entry.getKey();
                             SpawnBiomeData data = (SpawnBiomeData) entry.getValue();
-                            entries.add(Map.entry(id, SpawnBiomeConfig.create(new ResourceLocation(id), data)));
+                            entries.add(Map.entry(id, SpawnBiomeConfig.create(ResourceLocation.parse(id), data)));
                         }
                     }
                 }catch (Exception e){

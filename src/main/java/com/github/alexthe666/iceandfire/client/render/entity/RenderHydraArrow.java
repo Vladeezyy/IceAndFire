@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderHydraArrow extends ArrowRenderer {
-    private static final ResourceLocation TEXTURES = new ResourceLocation("iceandfire:textures/models/misc/hydra_arrow.png");
+    private static final ResourceLocation TEXTURES = ResourceLocation.parse("iceandfire:textures/models/misc/hydra_arrow.png");
 
     public RenderHydraArrow(EntityRendererProvider.Context context) {
         super(context);

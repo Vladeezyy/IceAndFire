@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.PoiTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +27,7 @@ public class POITagGenerator extends PoiTypeTagsProvider {
     }
 
     private static TagKey<PoiType> create(String name) {
-        return TagKey.create(Registries.POINT_OF_INTEREST_TYPE, new ResourceLocation(IceAndFire.MODID, name));
+        return TagKey.create(Registries.POINT_OF_INTEREST_TYPE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     @Override

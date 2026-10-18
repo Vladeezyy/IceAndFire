@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.neoforged.neoforge.client.ClientHooks;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,10 +29,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class IceAndFireMainMenu extends TitleScreen {
     public static final int LAYER_COUNT = 2;
-    public static final ResourceLocation splash = new ResourceLocation(IceAndFire.MODID, "splashes.txt");
-    private static final ResourceLocation MINECRAFT_TITLE_TEXTURES = new ResourceLocation("textures/gui/title/minecraft.png");
-    private static final ResourceLocation BESTIARY_TEXTURE = new ResourceLocation("iceandfire:textures/gui/main_menu/bestiary_menu.png");
-    private static final ResourceLocation TABLE_TEXTURE = new ResourceLocation("iceandfire:textures/gui/main_menu/table.png");
+    public static final ResourceLocation splash = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "splashes.txt");
+    private static final ResourceLocation MINECRAFT_TITLE_TEXTURES = ResourceLocation.parse("textures/gui/title/minecraft.png");
+    private static final ResourceLocation BESTIARY_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/main_menu/bestiary_menu.png");
+    private static final ResourceLocation TABLE_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/main_menu/table.png");
     public static ResourceLocation[] pageFlipTextures;
     public static ResourceLocation[] drawingTextures = new ResourceLocation[22];
     private int layerTick;
@@ -44,14 +44,14 @@ public class IceAndFireMainMenu extends TitleScreen {
     private float globalAlpha = 1F;
 
     public IceAndFireMainMenu() {
-        pageFlipTextures = new ResourceLocation[]{new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/page_1.png"),
-            new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/page_2.png"),
-            new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/page_3.png"),
-            new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/page_4.png"),
-            new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/page_5.png"),
-            new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/page_6.png")};
+        pageFlipTextures = new ResourceLocation[]{ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/page_1.png"),
+            ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/page_2.png"),
+            ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/page_3.png"),
+            ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/page_4.png"),
+            ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/page_5.png"),
+            ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/page_6.png")};
         for (int i = 0; i < drawingTextures.length; i++) {
-            drawingTextures[i] = new ResourceLocation(IceAndFire.MODID, "textures/gui/main_menu/drawing_" + (i + 1) + ".png");
+            drawingTextures[i] = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "textures/gui/main_menu/drawing_" + (i + 1) + ".png");
         }
         resetDrawnImages();
         final String branch = "1.17";
@@ -192,7 +192,7 @@ public class IceAndFireMainMenu extends TitleScreen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         ms.blit(MINECRAFT_TITLE_TEXTURES, width / 2 - 256 / 2, 10, 0, 0, 256, 64, 256, 64);
 
-        ForgeHooksClient.renderMainMenu(this, ms, this.getMinecraft().font, width, height, l);
+        ClientHooks.renderMainMenu(this, ms, this.getMinecraft().font, width, height, l);
         if (this.splashText != null) {
             ms.pose().pushPose();
             ms.pose().translate((this.width / 2 + 90), 70.0D, 0.0D);

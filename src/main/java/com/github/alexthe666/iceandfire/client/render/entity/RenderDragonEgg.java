@@ -10,18 +10,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderDragonEgg extends LivingEntityRenderer<EntityDragonEgg, ModelDragonEgg<EntityDragonEgg>> {
 
-    public static final ResourceLocation EGG_RED = new ResourceLocation("iceandfire:textures/models/firedragon/egg_red.png");
-    public static final ResourceLocation EGG_GREEN = new ResourceLocation("iceandfire:textures/models/firedragon/egg_green.png");
-    public static final ResourceLocation EGG_BRONZE = new ResourceLocation("iceandfire:textures/models/firedragon/egg_bronze.png");
-    public static final ResourceLocation EGG_GREY = new ResourceLocation("iceandfire:textures/models/firedragon/egg_gray.png");
-    public static final ResourceLocation EGG_BLUE = new ResourceLocation("iceandfire:textures/models/icedragon/egg_blue.png");
-    public static final ResourceLocation EGG_WHITE = new ResourceLocation("iceandfire:textures/models/icedragon/egg_white.png");
-    public static final ResourceLocation EGG_SAPPHIRE = new ResourceLocation("iceandfire:textures/models/icedragon/egg_sapphire.png");
-    public static final ResourceLocation EGG_SILVER = new ResourceLocation("iceandfire:textures/models/icedragon/egg_silver.png");
-    public static final ResourceLocation EGG_ELECTRIC = new ResourceLocation("iceandfire:textures/models/lightningdragon/egg_electric.png");
-    public static final ResourceLocation EGG_AMYTHEST = new ResourceLocation("iceandfire:textures/models/lightningdragon/egg_amythest.png");
-    public static final ResourceLocation EGG_BLACK = new ResourceLocation("iceandfire:textures/models/lightningdragon/egg_black.png");
-    public static final ResourceLocation EGG_COPPER = new ResourceLocation("iceandfire:textures/models/lightningdragon/egg_copper.png");
+    public static final ResourceLocation EGG_RED = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_red.png");
+    public static final ResourceLocation EGG_GREEN = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_green.png");
+    public static final ResourceLocation EGG_BRONZE = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_bronze.png");
+    public static final ResourceLocation EGG_GREY = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_gray.png");
+    public static final ResourceLocation EGG_BLUE = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_blue.png");
+    public static final ResourceLocation EGG_WHITE = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_white.png");
+    public static final ResourceLocation EGG_SAPPHIRE = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_sapphire.png");
+    public static final ResourceLocation EGG_SILVER = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_silver.png");
+    public static final ResourceLocation EGG_ELECTRIC = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_electric.png");
+    public static final ResourceLocation EGG_AMYTHEST = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_amythest.png");
+    public static final ResourceLocation EGG_BLACK = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_black.png");
+    public static final ResourceLocation EGG_COPPER = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_copper.png");
 
     public RenderDragonEgg(EntityRendererProvider.Context context) {
         super(context, new ModelDragonEgg(), 0.3F);

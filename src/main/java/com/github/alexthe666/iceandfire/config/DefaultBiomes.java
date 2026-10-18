@@ -2,10 +2,10 @@ package com.github.alexthe666.iceandfire.config;
 
 import com.github.alexthe666.citadel.config.biome.BiomeEntryType;
 import com.github.alexthe666.citadel.config.biome.SpawnBiomeData;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 import static net.minecraft.tags.BiomeTags.*;
-import static net.minecraftforge.common.Tags.Biomes.*;
+import static net.neoforged.neoforge.common.Tags.Biomes.*;
 
 public class DefaultBiomes {
 

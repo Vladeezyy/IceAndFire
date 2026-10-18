@@ -27,15 +27,15 @@ import java.util.stream.Collectors;
 @JeiPlugin
 public class IceAndFireJEIPlugin implements IModPlugin {
 
-    public static final ResourceLocation MOD = new ResourceLocation("iceandfire:iceandfire");
+    public static final ResourceLocation MOD = ResourceLocation.parse("iceandfire:iceandfire");
     public static final mezz.jei.api.recipe.RecipeType<DragonForgeRecipe> FIRE_DRAGON_FORGE_RECIPE_TYPE = mezz.jei.api.recipe.RecipeType.create(ModIds.MINECRAFT_ID, "firedragonforge", DragonForgeRecipe.class);
     public static final mezz.jei.api.recipe.RecipeType<DragonForgeRecipe> ICE_DRAGON_FORGE_RECIPE_TYPE = mezz.jei.api.recipe.RecipeType.create(ModIds.MINECRAFT_ID, "icedragonforge", DragonForgeRecipe.class);
     public static final mezz.jei.api.recipe.RecipeType<DragonForgeRecipe> LIGHTNING_DRAGON_FORGE_RECIPE_TYPE = mezz.jei.api.recipe.RecipeType.create(ModIds.MINECRAFT_ID, "lightningdragonforge", DragonForgeRecipe.class);
 
 
-    public static final ResourceLocation FIRE_DRAGON_FORGE_ID = new ResourceLocation("iceandfire:fire_dragon_forge");
-    public static final ResourceLocation ICE_DRAGON_FORGE_ID = new ResourceLocation("iceandfire:ice_dragon_forge");
-    public static final ResourceLocation LIGHTNING_DRAGON_FORGE_ID = new ResourceLocation("iceandfire:lightning_dragon_forge");
+    public static final ResourceLocation FIRE_DRAGON_FORGE_ID = ResourceLocation.parse("iceandfire:fire_dragon_forge");
+    public static final ResourceLocation ICE_DRAGON_FORGE_ID = ResourceLocation.parse("iceandfire:ice_dragon_forge");
+    public static final ResourceLocation LIGHTNING_DRAGON_FORGE_ID = ResourceLocation.parse("iceandfire:lightning_dragon_forge");
 
     private void addDescription(IRecipeRegistration registry, ItemStack itemStack) {
         registry.addIngredientInfo(itemStack, VanillaTypes.ITEM_STACK, Component.translatable(itemStack.getDescriptionId() + ".jei_desc"));

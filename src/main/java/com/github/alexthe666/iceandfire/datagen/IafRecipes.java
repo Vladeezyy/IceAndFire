@@ -17,8 +17,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -746,8 +746,8 @@ public class IafRecipes extends RecipeProvider {
     }
 
     private void compact(@NotNull final Consumer<FinishedRecipe> consumer, final ItemLike unpacked, final ItemLike packed) {
-        String packedPath = ForgeRegistries.ITEMS.getKey(packed.asItem()).getPath();
-        String unpackedPath = ForgeRegistries.ITEMS.getKey(unpacked.asItem()).getPath();
+        String packedPath = BuiltInRegistries.ITEM.getKey(packed.asItem()).getPath();
+        String unpackedPath = BuiltInRegistries.ITEM.getKey(unpacked.asItem()).getPath();
 
 
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, unpacked, RecipeCategory.BUILDING_BLOCKS, packed
@@ -1019,7 +1019,7 @@ public class IafRecipes extends RecipeProvider {
     }
     
     private static ResourceLocation location(final String path) {
-        return new ResourceLocation(IceAndFire.MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, path);
     }
 
     private static String locationString(final String path) {

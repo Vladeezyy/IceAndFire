@@ -71,7 +71,7 @@ public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRend
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
             } else if (!podium.getItem(0).isEmpty()) {
-                //if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new RenderPodiumItemEvent(this, podium, f, x, y, z))) {
+                //if (net.minecraftforge.common.NeoForge.EVENT_BUS.post(new RenderPodiumItemEvent(this, podium, f, x, y, z))) {
                 matrixStackIn.pushPose();
                 float f2 = ((float) podium.prevTicksExisted + (podium.ticksExisted - podium.prevTicksExisted) * partialTicks);
                 float f3 = Mth.sin(f2 / 10.0F) * 0.1F + 0.1F;

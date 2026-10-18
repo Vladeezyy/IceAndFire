@@ -11,17 +11,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadGhoul extends MobRenderer<EntityDreadGhoul, ModelDreadGhoul> {
 
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_eyes.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_eyes.png");
 
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_closed_1.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_closed_2.png");
-    public static final ResourceLocation TEXTURE_2 = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_closed_3.png");
-    public static final ResourceLocation TEXTURE_0_MID = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_mid_1.png");
-    public static final ResourceLocation TEXTURE_1_MID = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_mid_2.png");
-    public static final ResourceLocation TEXTURE_2_MID = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_mid_3.png");
-    public static final ResourceLocation TEXTURE_0_OPEN = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_open_1.png");
-    public static final ResourceLocation TEXTURE_1_OPEN = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_open_2.png");
-    public static final ResourceLocation TEXTURE_2_OPEN = new ResourceLocation("iceandfire:textures/models/dread/dread_ghoul_open_3.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_closed_1.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_closed_2.png");
+    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_closed_3.png");
+    public static final ResourceLocation TEXTURE_0_MID = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_mid_1.png");
+    public static final ResourceLocation TEXTURE_1_MID = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_mid_2.png");
+    public static final ResourceLocation TEXTURE_2_MID = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_mid_3.png");
+    public static final ResourceLocation TEXTURE_0_OPEN = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_open_1.png");
+    public static final ResourceLocation TEXTURE_1_OPEN = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_open_2.png");
+    public static final ResourceLocation TEXTURE_2_OPEN = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_open_3.png");
 
     public RenderDreadGhoul(EntityRendererProvider.Context context) {
         super(context, new ModelDreadGhoul(0.0F), 0.5F);

@@ -29,7 +29,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class WorldGenCyclopsCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
-    public static final ResourceLocation CYCLOPS_CHEST = new ResourceLocation("iceandfire", "chest/cyclops_cave");
+    public static final ResourceLocation CYCLOPS_CHEST = ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/cyclops_cave");
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public WorldGenCyclopsCave(final Codec<NoneFeatureConfiguration> configuration) {

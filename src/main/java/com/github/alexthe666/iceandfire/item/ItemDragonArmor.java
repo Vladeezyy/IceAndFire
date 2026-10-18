@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class ItemDragonArmor extends Item {
 
     @Override
     public @NotNull String getDescriptionId() {
-        String fullName = ForgeRegistries.ITEMS.getKey(this).getPath();
+        String fullName = BuiltInRegistries.ITEM.getKey(this).getPath();
         Matcher matcher = baseName.matcher(fullName);
         name = matcher.find() ? matcher.group() : fullName;
         return "item.iceandfire." + name;

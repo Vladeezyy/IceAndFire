@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class RenderChainTie extends EntityRenderer<EntityChainTie> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/misc/chain_tie.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/misc/chain_tie.png");
     private final ModelChainTie leashKnotModel = new ModelChainTie();
 
     public RenderChainTie(EntityRendererProvider.Context context) {

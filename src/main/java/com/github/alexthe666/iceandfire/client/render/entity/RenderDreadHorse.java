@@ -10,8 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadHorse extends MobRenderer<EntityDreadHorse, HorseModel<EntityDreadHorse>> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/dread/dread_knight_horse.png");
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_knight_horse_eyes.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_horse.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_horse_eyes.png");
 
     public RenderDreadHorse(EntityRendererProvider.Context context) {
         super(context, new HorseModel<>(context.bakeLayer(ModelLayers.HORSE)), 0.75F);

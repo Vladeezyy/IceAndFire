@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderSeaSerpentArrow extends ArrowRenderer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/misc/sea_serpent_arrow.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/misc/sea_serpent_arrow.png");
 
     public RenderSeaSerpentArrow(EntityRendererProvider.Context context) {
         super(context);

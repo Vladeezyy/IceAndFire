@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderAmphithereArrow extends ArrowRenderer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/misc/amphithere_arrow.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/misc/amphithere_arrow.png");
 
 
     public RenderAmphithereArrow(EntityRendererProvider.Context context) {

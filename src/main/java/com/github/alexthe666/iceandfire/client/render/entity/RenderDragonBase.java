@@ -57,7 +57,7 @@ public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEnti
         String baseTexture = entity.getVariantName(entity.getVariant()) + entity.getDragonStage() + entity.isModelDead() + entity.isMale() + entity.isSkeletal() + entity.isSleeping() + entity.isBlinking();
         ResourceLocation resourcelocation = LAYERED_TEXTURE_CACHE.get(baseTexture);
         if (resourcelocation == null) {
-            resourcelocation = new ResourceLocation("iceandfire:" + "dragon_texture_" + baseTexture);
+            resourcelocation = ResourceLocation.parse("iceandfire:" + "dragon_texture_" + baseTexture);
             List<String> tex = new ArrayList<String>();
             tex.add(EnumDragonTextures.getTextureFromDragon(entity).toString());
             if (entity.isMale() && !entity.isSkeletal()) {

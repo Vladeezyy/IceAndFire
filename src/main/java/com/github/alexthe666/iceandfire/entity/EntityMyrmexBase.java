@@ -66,10 +66,10 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     private static final EntityDataAccessor<Byte> CLIMBING = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Integer> GROWTH_STAGE = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> VARIANT = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.BOOLEAN);
-    private static final ResourceLocation TEXTURE_DESERT_LARVA = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_desert_larva.png");
-    private static final ResourceLocation TEXTURE_DESERT_PUPA = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_desert_pupa.png");
-    private static final ResourceLocation TEXTURE_JUNGLE_LARVA = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_jungle_larva.png");
-    private static final ResourceLocation TEXTURE_JUNGLE_PUPA = new ResourceLocation("iceandfire:textures/models/myrmex/myrmex_jungle_pupa.png");
+    private static final ResourceLocation TEXTURE_DESERT_LARVA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_larva.png");
+    private static final ResourceLocation TEXTURE_DESERT_PUPA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_pupa.png");
+    private static final ResourceLocation TEXTURE_JUNGLE_LARVA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_larva.png");
+    private static final ResourceLocation TEXTURE_JUNGLE_PUPA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_pupa.png");
     private final SimpleContainer villagerInventory = new SimpleContainer(8);
     public boolean isEnteringHive = false;
     public boolean isBeingGuarded = false;

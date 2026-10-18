@@ -26,7 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,9 +36,9 @@ import java.util.*;
 public class GuiBestiary extends Screen {
     protected static final int X = 390;
     protected static final int Y = 245;
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/gui/bestiary/bestiary.png");
-    private static final ResourceLocation DRAWINGS_0 = new ResourceLocation("iceandfire:textures/gui/bestiary/drawings_0.png");
-    private static final ResourceLocation DRAWINGS_1 = new ResourceLocation("iceandfire:textures/gui/bestiary/drawings_1.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/bestiary/bestiary.png");
+    private static final ResourceLocation DRAWINGS_0 = ResourceLocation.parse("iceandfire:textures/gui/bestiary/drawings_0.png");
+    private static final ResourceLocation DRAWINGS_1 = ResourceLocation.parse("iceandfire:textures/gui/bestiary/drawings_1.png");
     private static final Map<String, ResourceLocation> PICTURE_LOCATION_CACHE = Maps.newHashMap();
     public List<EnumBestiaryPages> allPageTypes = new ArrayList<>();
     public EnumBestiaryPages pageType;
@@ -78,7 +78,7 @@ public class GuiBestiary extends Screen {
     }
 
     private static Item getItemByRegistryName(String registryName) {
-        return ForgeRegistries.ITEMS.getValue(new ResourceLocation(registryName));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(registryName));
     }
 
     @Override
@@ -786,8 +786,8 @@ public class GuiBestiary extends Screen {
     public void imageFromTxt(GuiGraphics ms) {
         String fileName = this.pageType.toString().toLowerCase(Locale.ROOT) + "_" + this.bookPages + ".txt";
         String languageName = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
-        ResourceLocation fileLoc = new ResourceLocation("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
-        ResourceLocation backupLoc = new ResourceLocation("iceandfire:lang/bestiary/en_us_0/" + fileName);
+        ResourceLocation fileLoc = ResourceLocation.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
+        ResourceLocation backupLoc = ResourceLocation.parse("iceandfire:lang/bestiary/en_us_0/" + fileName);
         Optional<Resource> resource;
 
         resource = Minecraft.getInstance().getResourceManager().getResource(fileLoc);
@@ -807,7 +807,7 @@ public class GuiBestiary extends Screen {
                             String texture = "iceandfire:textures/gui/bestiary/" + split[0];
                             ResourceLocation resourcelocation = PICTURE_LOCATION_CACHE.get(texture);
                             if (resourcelocation == null) {
-                                resourcelocation = new ResourceLocation(texture);
+                                resourcelocation = ResourceLocation.parse(texture);
                                 PICTURE_LOCATION_CACHE.put(texture, resourcelocation);
                             }
                             ms.pose().pushPose();
@@ -890,8 +890,8 @@ public class GuiBestiary extends Screen {
     public void writeFromTxt(GuiGraphics ms) {
         String fileName = this.pageType.toString().toLowerCase(Locale.ROOT) + "_" + this.bookPages + ".txt";
         String languageName = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
-        ResourceLocation fileLoc = new ResourceLocation("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
-        ResourceLocation backupLoc = new ResourceLocation("iceandfire:lang/bestiary/en_us_0/" + fileName);
+        ResourceLocation fileLoc = ResourceLocation.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
+        ResourceLocation backupLoc = ResourceLocation.parse("iceandfire:lang/bestiary/en_us_0/" + fileName);
         Optional<Resource> resource;
 
         resource = Minecraft.getInstance().getResourceManager().getResource(fileLoc);

@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.enums;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.ItemMobSkull;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Locale;
 
@@ -18,7 +18,7 @@ public enum EnumSkullType {
     HYDRA;
 
     public String itemResourceName;
-    public RegistryObject<Item> skull_item;
+    public DeferredHolder<Item> skull_item;
 
     EnumSkullType() {
         itemResourceName = this.name().toLowerCase(Locale.ROOT) + "_skull";

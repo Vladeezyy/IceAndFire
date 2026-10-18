@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderTideTrident extends EntityRenderer<EntityTideTrident> {
-    public static final ResourceLocation TRIDENT = new ResourceLocation("iceandfire:textures/models/misc/tide_trident.png");
+    public static final ResourceLocation TRIDENT = ResourceLocation.parse("iceandfire:textures/models/misc/tide_trident.png");
     private final ModelTideTrident tridentModel = new ModelTideTrident();
 
     public RenderTideTrident(EntityRendererProvider.Context context) {

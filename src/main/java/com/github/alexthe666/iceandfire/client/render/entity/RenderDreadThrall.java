@@ -17,17 +17,17 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class RenderDreadThrall extends MobRenderer<EntityDreadThrall, ModelDreadThrall> implements IHasArmorVariantResource {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/dread/dread_thrall.png");
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_thrall_eyes.png");
-    public static final ResourceLocation TEXTURE_LEG_ARMOR = new ResourceLocation("iceandfire:textures/models/dread/thrall_legs.png");
-    public static final ResourceLocation TEXTURE_ARMOR_0 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_1.png");
-    public static final ResourceLocation TEXTURE_ARMOR_1 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_2.png");
-    public static final ResourceLocation TEXTURE_ARMOR_2 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_3.png");
-    public static final ResourceLocation TEXTURE_ARMOR_3 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_4.png");
-    public static final ResourceLocation TEXTURE_ARMOR_4 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_5.png");
-    public static final ResourceLocation TEXTURE_ARMOR_5 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_6.png");
-    public static final ResourceLocation TEXTURE_ARMOR_6 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_7.png");
-    public static final ResourceLocation TEXTURE_ARMOR_7 = new ResourceLocation("iceandfire:textures/models/dread/thrall_chest_8.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_thrall.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_thrall_eyes.png");
+    public static final ResourceLocation TEXTURE_LEG_ARMOR = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_legs.png");
+    public static final ResourceLocation TEXTURE_ARMOR_0 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_1.png");
+    public static final ResourceLocation TEXTURE_ARMOR_1 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_2.png");
+    public static final ResourceLocation TEXTURE_ARMOR_2 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_3.png");
+    public static final ResourceLocation TEXTURE_ARMOR_3 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_4.png");
+    public static final ResourceLocation TEXTURE_ARMOR_4 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_5.png");
+    public static final ResourceLocation TEXTURE_ARMOR_5 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_6.png");
+    public static final ResourceLocation TEXTURE_ARMOR_6 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_7.png");
+    public static final ResourceLocation TEXTURE_ARMOR_7 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_8.png");
     public final HideableLayer<EntityDreadThrall, ModelDreadThrall, ItemInHandLayer<EntityDreadThrall, ModelDreadThrall>> itemLayer;
 
     public RenderDreadThrall(EntityRendererProvider.Context context) {

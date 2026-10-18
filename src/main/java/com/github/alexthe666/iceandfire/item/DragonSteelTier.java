@@ -8,15 +8,15 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeTier;
-import net.minecraftforge.common.TierSortingRegistry;
+import net.neoforged.neoforge.common.SimpleTier;
+import net.neoforged.neoforge.common.TierSortingRegistry;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public class DragonSteelTier {
 
-    public static final TagKey<Block> DRAGONSTEEL_TIER_TAG = BlockTags.create(new ResourceLocation("iceandfire:needs_dragonsteel"));
+    public static final TagKey<Block> DRAGONSTEEL_TIER_TAG = BlockTags.create(ResourceLocation.parse("iceandfire:needs_dragonsteel"));
     public static final Tier DRAGONSTEEL_TIER_FIRE = createTierWithRepairItem(() -> Ingredient.of(IafItemRegistry.DRAGONSTEEL_FIRE_INGOT.get()), "dragonsteel_tier_fire");
     public static final Tier DRAGONSTEEL_TIER_ICE = createTierWithRepairItem(() -> Ingredient.of(IafItemRegistry.DRAGONSTEEL_ICE_INGOT.get()), "dragonsteel_tier_ice");
     public static final Tier DRAGONSTEEL_TIER_LIGHTNING = createTierWithRepairItem(() -> Ingredient.of(IafItemRegistry.DRAGONSTEEL_LIGHTNING_INGOT.get()), "dragonsteel_tier_lightning");
@@ -25,8 +25,8 @@ public class DragonSteelTier {
 
     private static Tier createTierWithRepairItem(Supplier<Ingredient> ingredient, String name) {
         return TierSortingRegistry.registerTier(
-            new ForgeTier(4, 8000, 10, 21, 10, DRAGONSTEEL_TIER_TAG, ingredient),
-            new ResourceLocation(IceAndFire.MODID, name),
+            new SimpleTier(4, 8000, 10, 21, 10, DRAGONSTEEL_TIER_TAG, ingredient),
+            ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name),
             List.of(Tiers.NETHERITE), List.of());
     }
 

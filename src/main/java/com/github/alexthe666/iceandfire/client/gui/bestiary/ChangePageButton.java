@@ -20,7 +20,7 @@ public class ChangePageButton extends Button {
     @Override
     public void renderWidget(@NotNull GuiGraphics matrixStack, int mouseX, int mouseY, float partial) {
         if (this.active) {
-            ResourceLocation resourceLocation = new ResourceLocation("iceandfire:textures/gui/bestiary/widgets.png");
+            ResourceLocation resourceLocation = ResourceLocation.parse("iceandfire:textures/gui/bestiary/widgets.png");
             boolean flag = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
             int i = 0;
             int j = 64;

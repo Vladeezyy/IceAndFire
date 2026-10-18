@@ -9,8 +9,8 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class IafTabRegistry {
 
     public static final List<Supplier<? extends Block>> TAB_BLOCKS_LIST = new ArrayList<>();
     public static final List<Supplier<? extends Item>> TAB_ITEMS_LIST = new ArrayList<>();
-    public static final RegistryObject<CreativeModeTab> TAB_BLOCKS = TAB_REGISTER.register("blocks", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab> TAB_BLOCKS = TAB_REGISTER.register("blocks", () -> CreativeModeTab.builder()
             // Set name of tab to display
             .title(Component.translatable("itemGroup." + IceAndFire.MODID + ".blocks"))
             // Set icon of creative tab
@@ -36,7 +36,7 @@ public class IafTabRegistry {
             .build()
     );
 
-    public static final RegistryObject<CreativeModeTab> TAB_ITEMS = TAB_REGISTER.register("items", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab> TAB_ITEMS = TAB_REGISTER.register("items", () -> CreativeModeTab.builder()
             // Set name of tab to display
             .title(Component.translatable("itemGroup." + IceAndFire.MODID + ".items"))
             // Set icon of creative tab

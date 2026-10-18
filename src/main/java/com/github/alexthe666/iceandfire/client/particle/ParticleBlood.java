@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticleBlood extends TextureSheetParticle {
-    private static final ResourceLocation BLOOD = new ResourceLocation("iceandfire:textures/particles/blood.png");
+    private static final ResourceLocation BLOOD = ResourceLocation.parse("iceandfire:textures/particles/blood.png");
 
     public ParticleBlood(ClientLevel world, double x, double y, double z) {
         super(world, x, y, z, 0, Math.random() * (double) 0.2F + 0.1, 0);

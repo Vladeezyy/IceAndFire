@@ -18,7 +18,7 @@ public class IafStructurePieces {
     public static final ResourceKey<StructureTemplatePool> MAUSOLEUM_START = createKey("mausoleum/start_pool");
     public static final ResourceKey<StructureTemplatePool> GORGON_TEMPLE_START = createKey("gorgon_temple/start_pool");
     private static ResourceKey<StructureTemplatePool> createKey(String name) {
-        return ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation("iceandfire", name));
+        return ResourceKey.create(Registries.TEMPLATE_POOL, ResourceLocation.fromNamespaceAndPath("iceandfire", name));
     }
     public static void registerGraveyard(BootstapContext<StructureTemplatePool> pContext) {
         HolderGetter<StructureProcessorList> processorListHolderGetter = pContext.lookup(Registries.PROCESSOR_LIST);

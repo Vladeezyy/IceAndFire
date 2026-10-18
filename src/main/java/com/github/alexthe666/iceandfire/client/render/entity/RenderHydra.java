@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderHydra extends MobRenderer<EntityHydra, ModelHydraBody> {
 
-    public static final ResourceLocation TEXUTURE_0 = new ResourceLocation("iceandfire:textures/models/hydra/hydra_0.png");
-    public static final ResourceLocation TEXUTURE_1 = new ResourceLocation("iceandfire:textures/models/hydra/hydra_1.png");
-    public static final ResourceLocation TEXUTURE_2 = new ResourceLocation("iceandfire:textures/models/hydra/hydra_2.png");
-    public static final ResourceLocation TEXUTURE_EYES = new ResourceLocation("iceandfire:textures/models/hydra/hydra_eyes.png");
+    public static final ResourceLocation TEXUTURE_0 = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_0.png");
+    public static final ResourceLocation TEXUTURE_1 = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_1.png");
+    public static final ResourceLocation TEXUTURE_2 = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_2.png");
+    public static final ResourceLocation TEXUTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_eyes.png");
 
     public RenderHydra(EntityRendererProvider.Context context) {
         super(context, new ModelHydraBody(), 1.2F);

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class RenderDragonArrow extends ArrowRenderer<EntityDragonArrow> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/misc/dragonbone_arrow.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/misc/dragonbone_arrow.png");
 
     public RenderDragonArrow(EntityRendererProvider.Context context) {
         super(context);

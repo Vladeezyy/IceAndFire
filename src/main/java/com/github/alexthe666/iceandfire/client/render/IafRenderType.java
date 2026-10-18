@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class IafRenderType extends RenderType {
 
-    private static final ResourceLocation STONE_TEXTURE = new ResourceLocation("textures/block/stone.png");
+    private static final ResourceLocation STONE_TEXTURE = ResourceLocation.parse("textures/block/stone.png");
     protected static final RenderStateShard.ShaderStateShard RENDERTYPE_DREAD_PORTAL_SHADER = new RenderStateShard.ShaderStateShard(IafClientSetup::getRendertypeDreadPortalShader);
     private static final RenderType DREADLANDS_PORTAL = create("dreadlands_portal", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_DREAD_PORTAL_SHADER).setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(RenderDreadPortal.DREAD_PORTAL_BACKGROUND, false, false).add(RenderDreadPortal.DREAD_PORTAL, false, false).build()).createCompositeState(false));
 

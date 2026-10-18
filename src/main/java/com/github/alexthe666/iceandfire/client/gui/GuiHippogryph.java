@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 //TODO: We do the same thing here as we do for the other GUI entity screens, that's dumb
 public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/gui/hippogryph.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/hippogryph.png");
     private float mousePosx;
     private float mousePosY;
 

@@ -11,16 +11,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderAmphithere extends MobRenderer<EntityAmphithere, ModelAmphithere> {
 
-    public static final ResourceLocation TEXTURE_BLUE = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_blue.png");
-    public static final ResourceLocation TEXTURE_BLUE_BLINK = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_blue_blink.png");
-    public static final ResourceLocation TEXTURE_GREEN = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_green.png");
-    public static final ResourceLocation TEXTURE_GREEN_BLINK = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_green_blink.png");
-    public static final ResourceLocation TEXTURE_OLIVE = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_olive.png");
-    public static final ResourceLocation TEXTURE_OLIVE_BLINK = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_olive_blink.png");
-    public static final ResourceLocation TEXTURE_RED = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_red.png");
-    public static final ResourceLocation TEXTURE_RED_BLINK = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_red_blink.png");
-    public static final ResourceLocation TEXTURE_YELLOW = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_yellow.png");
-    public static final ResourceLocation TEXTURE_YELLOW_BLINK = new ResourceLocation("iceandfire:textures/models/amphithere/amphithere_yellow_blink.png");
+    public static final ResourceLocation TEXTURE_BLUE = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_blue.png");
+    public static final ResourceLocation TEXTURE_BLUE_BLINK = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_blue_blink.png");
+    public static final ResourceLocation TEXTURE_GREEN = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_green.png");
+    public static final ResourceLocation TEXTURE_GREEN_BLINK = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_green_blink.png");
+    public static final ResourceLocation TEXTURE_OLIVE = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_olive.png");
+    public static final ResourceLocation TEXTURE_OLIVE_BLINK = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_olive_blink.png");
+    public static final ResourceLocation TEXTURE_RED = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_red.png");
+    public static final ResourceLocation TEXTURE_RED_BLINK = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_red_blink.png");
+    public static final ResourceLocation TEXTURE_YELLOW = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_yellow.png");
+    public static final ResourceLocation TEXTURE_YELLOW_BLINK = ResourceLocation.parse("iceandfire:textures/models/amphithere/amphithere_yellow_blink.png");
 
     public RenderAmphithere(EntityRendererProvider.Context context) {
         super(context, new ModelAmphithere(), 1.6F);

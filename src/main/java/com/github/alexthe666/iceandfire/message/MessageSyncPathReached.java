@@ -4,9 +4,8 @@ import com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDeb
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.MNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.HashSet;
 import java.util.Set;

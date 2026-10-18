@@ -10,9 +10,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -128,12 +128,12 @@ public class IafBlockTags extends BlockTagsProvider {
                 .add(IafBlockRegistry.DEEPSLATE_SILVER_ORE.get());
 
         // These are also used / created by other mods
-        tag(TagKey.create(Registries.BLOCK, new ResourceLocation("forge", "ores/silver"))).add(IafBlockRegistry.SILVER_ORE.get());
-        tag(TagKey.create(Registries.BLOCK, new ResourceLocation("forge", "ores/silver"))).add(IafBlockRegistry.DEEPSLATE_SILVER_ORE.get());
+        tag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "ores/silver"))).add(IafBlockRegistry.SILVER_ORE.get());
+        tag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "ores/silver"))).add(IafBlockRegistry.DEEPSLATE_SILVER_ORE.get());
     }
 
     private static TagKey<Block> createKey(final String name) {
-        return TagKey.create(Registries.BLOCK, new ResourceLocation(IceAndFire.MODID, name));
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     @Override

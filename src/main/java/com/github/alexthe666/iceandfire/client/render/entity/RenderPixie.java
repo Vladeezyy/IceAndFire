@@ -12,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderPixie extends MobRenderer<EntityPixie, ModelPixie> {
 
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/pixie/pixie_0.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/pixie/pixie_1.png");
-    public static final ResourceLocation TEXTURE_2 = new ResourceLocation("iceandfire:textures/models/pixie/pixie_2.png");
-    public static final ResourceLocation TEXTURE_3 = new ResourceLocation("iceandfire:textures/models/pixie/pixie_3.png");
-    public static final ResourceLocation TEXTURE_4 = new ResourceLocation("iceandfire:textures/models/pixie/pixie_4.png");
-    public static final ResourceLocation TEXTURE_5 = new ResourceLocation("iceandfire:textures/models/pixie/pixie_5.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_0.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_1.png");
+    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_2.png");
+    public static final ResourceLocation TEXTURE_3 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_3.png");
+    public static final ResourceLocation TEXTURE_4 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_4.png");
+    public static final ResourceLocation TEXTURE_5 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_5.png");
 
     public RenderPixie(EntityRendererProvider.Context context) {
         super(context, new ModelPixie(), 0.2F);

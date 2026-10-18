@@ -19,7 +19,7 @@ public class IafStructureSets {
 
 
     private static ResourceKey<StructureSet> registerKey(String name) {
-        return ResourceKey.create(Registries.STRUCTURE_SET, new ResourceLocation(IceAndFire.MODID, name));
+        return ResourceKey.create(Registries.STRUCTURE_SET, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     public static void bootstrap(BootstapContext<StructureSet> context) {

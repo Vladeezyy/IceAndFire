@@ -37,12 +37,12 @@ public class RenderHippogryph extends MobRenderer<EntityHippogryph, ModelHippogr
 
     private class LayerHippogriffSaddle extends RenderLayer<EntityHippogryph, ModelHippogryph> {
         private final RenderHippogryph renderer;
-        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(new ResourceLocation("iceandfire:textures/models/hippogryph/saddle.png"));
-        private final RenderType BRIDLE = RenderType.entityNoOutline(new ResourceLocation("iceandfire:textures/models/hippogryph/bridle.png"));
-        private final RenderType CHEST = RenderType.entityTranslucent(new ResourceLocation("iceandfire:textures/models/hippogryph/chest.png"));
-        private final RenderType TEXTURE_DIAMOND = RenderType.entityNoOutline(new ResourceLocation("iceandfire:textures/models/hippogryph/armor_diamond.png"));
-        private final RenderType TEXTURE_GOLD = RenderType.entityNoOutline(new ResourceLocation("iceandfire:textures/models/hippogryph/armor_gold.png"));
-        private final RenderType TEXTURE_IRON = RenderType.entityNoOutline(new ResourceLocation("iceandfire:textures/models/hippogryph/armor_iron.png"));
+        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/saddle.png"));
+        private final RenderType BRIDLE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/bridle.png"));
+        private final RenderType CHEST = RenderType.entityTranslucent(ResourceLocation.parse("iceandfire:textures/models/hippogryph/chest.png"));
+        private final RenderType TEXTURE_DIAMOND = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/armor_diamond.png"));
+        private final RenderType TEXTURE_GOLD = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/armor_gold.png"));
+        private final RenderType TEXTURE_IRON = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/armor_iron.png"));
 
 
         public LayerHippogriffSaddle(RenderHippogryph renderer) {

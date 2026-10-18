@@ -13,12 +13,12 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 
 public class RenderDreadLich extends MobRenderer<EntityDreadLich, ModelDreadLich> {
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_eyes.png");
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_0.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_1.png");
-    public static final ResourceLocation TEXTURE_2 = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_2.png");
-    public static final ResourceLocation TEXTURE_3 = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_3.png");
-    public static final ResourceLocation TEXTURE_4 = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_4.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_eyes.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_0.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_1.png");
+    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_2.png");
+    public static final ResourceLocation TEXTURE_3 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_3.png");
+    public static final ResourceLocation TEXTURE_4 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_4.png");
     public final HideableLayer<EntityDreadLich, ModelDreadLich, ItemInHandLayer<EntityDreadLich, ModelDreadLich>> itemLayer;
 
     public RenderDreadLich(EntityRendererProvider.Context context) {

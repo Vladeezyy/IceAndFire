@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/dread/dread_lich_skull.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_skull.png");
     private static final ModelDreadLichSkull MODEL_SPIRIT = new ModelDreadLichSkull();
 
     public RenderDreadLichSkull(EntityRendererProvider.Context context) {

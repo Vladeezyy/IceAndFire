@@ -13,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class RenderDreadKnight extends MobRenderer<EntityDreadKnight, ModelDreadKnight> {
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_knight_eyes.png");
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/dread/dread_knight_1.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/dread/dread_knight_2.png");
-    public static final ResourceLocation TEXTURE_2 = new ResourceLocation("iceandfire:textures/models/dread/dread_knight_3.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_eyes.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_1.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_2.png");
+    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_3.png");
 
     public RenderDreadKnight(EntityRendererProvider.Context context) {
         super(context, new ModelDreadKnight(0.0F), 0.6F);

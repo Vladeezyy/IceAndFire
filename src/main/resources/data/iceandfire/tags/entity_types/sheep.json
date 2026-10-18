@@ -1,7 +1,0 @@
-{
-  "__comment": "mobs that will follow cyclops and be protected by them.",
-  "replace": false,
-  "values": [
-    "minecraft:sheep"
-  ]
-}

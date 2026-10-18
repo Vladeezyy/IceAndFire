@@ -10,8 +10,8 @@ import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.world.BiomeModifier;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class IafBiomeModifierSerializers {
     public static ResourceKey<BiomeModifier> FEATURES = createKey("iaf_features");
 
     public static ResourceKey<BiomeModifier> createKey(String name) {
-        return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(IceAndFire.MODID, name));
+        return ResourceKey.create(Registries.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     private static ListHolderSet<PlacedFeature> createHolderSet(HolderGetter<PlacedFeature> holderGetter, List<ResourceKey<PlacedFeature>> features) {

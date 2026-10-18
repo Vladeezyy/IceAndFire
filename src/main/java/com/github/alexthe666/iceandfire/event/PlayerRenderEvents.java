@@ -8,18 +8,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.UUID;
 
 public class PlayerRenderEvents {
-    public ResourceLocation redTex = new ResourceLocation("iceandfire", "textures/models/misc/cape_fire.png");
-    public ResourceLocation redElytraTex = new ResourceLocation("iceandfire", "textures/models/misc/elytra_fire.png");
-    public ResourceLocation blueTex = new ResourceLocation("iceandfire", "textures/models/misc/cape_ice.png");
-    public ResourceLocation blueElytraTex = new ResourceLocation("iceandfire", "textures/models/misc/elytra_ice.png");
-    public ResourceLocation betaTex = new ResourceLocation("iceandfire", "textures/models/misc/cape_beta.png");
-    public ResourceLocation betaElytraTex = new ResourceLocation("iceandfire", "textures/models/misc/elytra_beta.png");
+    public ResourceLocation redTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_fire.png");
+    public ResourceLocation redElytraTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_fire.png");
+    public ResourceLocation blueTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_ice.png");
+    public ResourceLocation blueElytraTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_ice.png");
+    public ResourceLocation betaTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_beta.png");
+    public ResourceLocation betaElytraTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_beta.png");
 
     public UUID[] redcapes = new UUID[]{
             /* zeklo */UUID.fromString("59efccaf-902d-45da-928a-5a549b9fd5e0"),

@@ -25,8 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.EventHooks;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -295,7 +295,7 @@ public class DragonUtils {
     }
 
     public static boolean isVillager(Entity entity) {
-        var tags =  ForgeRegistries.ENTITY_TYPES.tags();
+        var tags =  BuiltInRegistries.ENTITY_TYPE.tags();
         if (tags == null)
             return false;
         return entity.getType().is(tags.createTagKey(IafTagRegistry.VILLAGERS));
@@ -306,7 +306,7 @@ public class DragonUtils {
     }
 
     public static boolean isDragonTargetable(Entity entity, ResourceLocation tag) {
-        return entity.getType().is(ForgeRegistries.ENTITY_TYPES.tags().createTagKey(tag));
+        return entity.getType().is(BuiltInRegistries.ENTITY_TYPE.tags().createTagKey(tag));
     }
 
     public static String getDimensionName(Level world) {
@@ -318,7 +318,7 @@ public class DragonUtils {
     }
 
     public static boolean canDragonBreak(final BlockState state, final Entity entity) {
-        if (!ForgeEventFactory.getMobGriefingEvent(entity.level(), entity)) {
+        if (!EventHooks.getMobGriefingEvent(entity.level(), entity)) {
             return false;
         }
 

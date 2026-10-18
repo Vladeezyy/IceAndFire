@@ -22,7 +22,7 @@ public class IafProcessorLists {
     public static final ResourceKey<StructureProcessorList> HOUSE_PROCESSOR = createKey("village_house_processor");
 
     private static ResourceKey<StructureProcessorList> createKey(String name) {
-        return ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation(IceAndFire.MODID, name));
+        return ResourceKey.create(Registries.PROCESSOR_LIST, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     private static void register(BootstapContext<StructureProcessorList> pContext, ResourceKey<StructureProcessorList> pKey, List<StructureProcessor> pProcessors) {

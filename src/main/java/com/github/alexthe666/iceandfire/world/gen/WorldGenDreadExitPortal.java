@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import java.util.Random;
 
 public class WorldGenDreadExitPortal {
-    private static final ResourceLocation STRUCTURE = new ResourceLocation(IceAndFire.MODID, "dread_exit_portal");
+    private static final ResourceLocation STRUCTURE = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_exit_portal");
 
     public boolean generate(Level worldIn, Random rand, BlockPos position) {
         /*

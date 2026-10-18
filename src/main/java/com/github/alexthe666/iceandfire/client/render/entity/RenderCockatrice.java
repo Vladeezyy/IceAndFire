@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderCockatrice extends MobRenderer<EntityCockatrice, AdvancedEntityModel<EntityCockatrice>> {
 
-    public static final ResourceLocation TEXTURE_ROOSTER = new ResourceLocation("iceandfire:textures/models/cockatrice/cockatrice_0.png");
-    public static final ResourceLocation TEXTURE_HEN = new ResourceLocation("iceandfire:textures/models/cockatrice/cockatrice_1.png");
-    public static final ResourceLocation TEXTURE_ROOSTER_CHICK = new ResourceLocation("iceandfire:textures/models/cockatrice/cockatrice_0_chick.png");
-    public static final ResourceLocation TEXTURE_HEN_CHICK = new ResourceLocation("iceandfire:textures/models/cockatrice/cockatrice_1_chick.png");
+    public static final ResourceLocation TEXTURE_ROOSTER = ResourceLocation.parse("iceandfire:textures/models/cockatrice/cockatrice_0.png");
+    public static final ResourceLocation TEXTURE_HEN = ResourceLocation.parse("iceandfire:textures/models/cockatrice/cockatrice_1.png");
+    public static final ResourceLocation TEXTURE_ROOSTER_CHICK = ResourceLocation.parse("iceandfire:textures/models/cockatrice/cockatrice_0_chick.png");
+    public static final ResourceLocation TEXTURE_HEN_CHICK = ResourceLocation.parse("iceandfire:textures/models/cockatrice/cockatrice_1_chick.png");
     public static final ModelCockatrice ADULT_MODEL = new ModelCockatrice();
     public static final ModelCockatriceChick BABY_MODEL = new ModelCockatriceChick();
 

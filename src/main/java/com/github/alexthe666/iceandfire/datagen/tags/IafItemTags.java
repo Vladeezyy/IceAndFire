@@ -15,8 +15,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -193,16 +193,16 @@ public class IafItemTags extends ItemTagsProvider {
                 .add(Items.MUTTON, Items.COOKED_MUTTON)
                 .add(Items.PORKCHOP, Items.COOKED_PORKCHOP)
                 // Farmer's Delight
-//                .addOptionalTag(new ResourceLocation("forge", "raw_fishes"))
-                .addOptionalTag(new ResourceLocation("forge", "raw_mutton"))
-                .addOptionalTag(new ResourceLocation("forge", "raw_pork"))
-                .addOptionalTag(new ResourceLocation("forge", "raw_chicken"))
-                .addOptionalTag(new ResourceLocation("forge", "raw_beef"))
-//                .addOptionalTag(new ResourceLocation("forge", "cooked_fishes"))
-                .addOptionalTag(new ResourceLocation("forge", "cooked_mutton"))
-                .addOptionalTag(new ResourceLocation("forge", "cooked_pork"))
-                .addOptionalTag(new ResourceLocation("forge", "cooked_chicken"))
-                .addOptionalTag(new ResourceLocation("forge", "cooked_beef"));
+//                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_fishes"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_mutton"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_pork"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_chicken"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_beef"))
+//                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_fishes"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_mutton"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_pork"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_chicken"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_beef"));
 
 
         tag(BREED_AMPITHERE)
@@ -317,11 +317,11 @@ public class IafItemTags extends ItemTagsProvider {
     }
 
     private static TagKey<Item> createKey(final String name) {
-        return ItemTags.create(new ResourceLocation(IceAndFire.MODID, name));
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     private static TagKey<Item> createForgeKey(final String name) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation("forge", name));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("forge", name));
     }
 
     @Override

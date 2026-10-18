@@ -46,7 +46,7 @@ public class LayerDragonArmor extends RenderLayer<EntityDragonBase, AdvancedEnti
         if (!armorTexture.equals(dragon.dragonType.getName() + "_0_0_0_0")) {
             ResourceLocation resourcelocation = LAYERED_ARMOR_CACHE.get(armorTexture);
             if (resourcelocation == null) {
-                resourcelocation = new ResourceLocation("iceandfire" + "dragon_armor_" + armorTexture);
+                resourcelocation = ResourceLocation.parse("iceandfire" + "dragon_armor_" + armorTexture);
                 List<String> tex = new ArrayList<String>();
                 for (EquipmentSlot slot : ARMOR_SLOTS) {
                     if (dragon.dragonType == DragonType.FIRE) {

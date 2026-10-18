@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderStymphalianFeather extends ArrowRenderer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/stymphalianbird/feather.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/stymphalianbird/feather.png");
 
     public RenderStymphalianFeather(EntityRendererProvider.Context context) {
         super(context);

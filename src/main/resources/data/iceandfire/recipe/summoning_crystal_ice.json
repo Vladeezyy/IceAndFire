@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "iceandfire:ice_dragon_blood"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:gems/sapphire"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "iceandfire:summoning_crystal_ice"
+  }
+}

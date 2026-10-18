@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderGorgon extends MobRenderer<EntityGorgon, ModelGorgon> {
 
-    public static final ResourceLocation PASSIVE_TEXTURE = new ResourceLocation("iceandfire:textures/models/gorgon/gorgon_passive.png");
-    public static final ResourceLocation AGRESSIVE_TEXTURE = new ResourceLocation("iceandfire:textures/models/gorgon/gorgon_active.png");
-    public static final ResourceLocation DEAD_TEXTURE = new ResourceLocation("iceandfire:textures/models/gorgon/gorgon_decapitated.png");
+    public static final ResourceLocation PASSIVE_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_passive.png");
+    public static final ResourceLocation AGRESSIVE_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_active.png");
+    public static final ResourceLocation DEAD_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_decapitated.png");
 
     public RenderGorgon(EntityRendererProvider.Context context) {
         super(context, new ModelGorgon(), 0.4F);

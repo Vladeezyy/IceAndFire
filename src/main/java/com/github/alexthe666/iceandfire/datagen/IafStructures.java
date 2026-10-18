@@ -17,7 +17,7 @@ public class IafStructures {
     public static final ResourceKey<Structure> GORGON_TEMPLE = registerKey("gorgon_temple");
 
     public static ResourceKey<Structure> registerKey(String name) {
-        return ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(IceAndFire.MODID, name));
+        return ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     public static void bootstrap(BootstapContext<Structure> context) {

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
-    private static final ResourceLocation texture = new ResourceLocation("iceandfire:textures/gui/dragon.png");
+    private static final ResourceLocation texture = ResourceLocation.parse("iceandfire:textures/gui/dragon.png");
 
     public GuiDragon(ContainerDragon dragonInv, Inventory playerInv, Component name) {
         super(dragonInv, playerInv, name);

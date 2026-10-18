@@ -1,8 +1,0 @@
-{
-  "__comment": "villagers that will flee dragons and be targeted by them.",
-  "replace": false,
-  "values": [
-    "minecraft:villager",
-    "minecraft:wandering_trader"
-  ]
-}

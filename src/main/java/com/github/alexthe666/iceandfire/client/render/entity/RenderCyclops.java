@@ -10,18 +10,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderCyclops extends MobRenderer<EntityCyclops, ModelCyclops> {
 
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_0.png");
-    public static final ResourceLocation BLINK_0_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_0_blink.png");
-    public static final ResourceLocation BLINDED_0_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_0_injured.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_1.png");
-    public static final ResourceLocation BLINK_1_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_1_blink.png");
-    public static final ResourceLocation BLINDED_1_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_1_injured.png");
-    public static final ResourceLocation TEXTURE_2 = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_2.png");
-    public static final ResourceLocation BLINK_2_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_2_blink.png");
-    public static final ResourceLocation BLINDED_2_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_2_injured.png");
-    public static final ResourceLocation TEXTURE_3 = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_3.png");
-    public static final ResourceLocation BLINK_3_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_3_blink.png");
-    public static final ResourceLocation BLINDED_3_TEXTURE = new ResourceLocation("iceandfire:textures/models/cyclops/cyclops_3_injured.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_0.png");
+    public static final ResourceLocation BLINK_0_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_0_blink.png");
+    public static final ResourceLocation BLINDED_0_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_0_injured.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_1.png");
+    public static final ResourceLocation BLINK_1_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_1_blink.png");
+    public static final ResourceLocation BLINDED_1_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_1_injured.png");
+    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_2.png");
+    public static final ResourceLocation BLINK_2_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_2_blink.png");
+    public static final ResourceLocation BLINDED_2_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_2_injured.png");
+    public static final ResourceLocation TEXTURE_3 = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_3.png");
+    public static final ResourceLocation BLINK_3_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_3_blink.png");
+    public static final ResourceLocation BLINDED_3_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/cyclops/cyclops_3_injured.png");
 
     public RenderCyclops(EntityRendererProvider.Context context) {
         super(context, new ModelCyclops(), 1.6F);

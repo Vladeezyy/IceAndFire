@@ -147,7 +147,7 @@ public class RenderMobSkull extends EntityRenderer<EntityMobSkull> {
         String s = "iceandfire:textures/models/skulls/skull_" + skull.name().toLowerCase(Locale.ROOT) + ".png";
         ResourceLocation resourcelocation = SKULL_TEXTURE_CACHE.get(s);
         if (resourcelocation == null) {
-            resourcelocation = new ResourceLocation(s);
+            resourcelocation = ResourceLocation.parse(s);
             SKULL_TEXTURE_CACHE.put(s, resourcelocation);
         }
         return resourcelocation;

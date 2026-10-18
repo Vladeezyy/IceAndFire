@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticleHydraBreath extends TextureSheetParticle {
-    private static final ResourceLocation HYDRA_POISON = new ResourceLocation("iceandfire:textures/particles/hydra_poison.png");
+    private static final ResourceLocation HYDRA_POISON = ResourceLocation.parse("iceandfire:textures/particles/hydra_poison.png");
     float reddustParticleScale;
 
     public ParticleHydraBreath(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float p_i46349_8_, float p_i46349_9_, float p_i46349_10_) {

@@ -13,9 +13,9 @@ import javax.annotation.Nullable;
 
 
 public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm> {
-    public static final ResourceLocation TEXTURE_RED = new ResourceLocation("iceandfire:textures/models/deathworm/deathworm_red.png");
-    public static final ResourceLocation TEXTURE_WHITE = new ResourceLocation("iceandfire:textures/models/deathworm/deathworm_white.png");
-    public static final ResourceLocation TEXTURE_YELLOW = new ResourceLocation("iceandfire:textures/models/deathworm/deathworm_yellow.png");
+    public static final ResourceLocation TEXTURE_RED = ResourceLocation.parse("iceandfire:textures/models/deathworm/deathworm_red.png");
+    public static final ResourceLocation TEXTURE_WHITE = ResourceLocation.parse("iceandfire:textures/models/deathworm/deathworm_white.png");
+    public static final ResourceLocation TEXTURE_YELLOW = ResourceLocation.parse("iceandfire:textures/models/deathworm/deathworm_yellow.png");
 
     public RenderDeathWorm(EntityRendererProvider.Context context) {
         super(context, new ModelDeathWorm(), 0);

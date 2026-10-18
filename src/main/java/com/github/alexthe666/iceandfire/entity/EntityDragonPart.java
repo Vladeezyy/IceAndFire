@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.entity;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PlayMessages;
+import net.neoforged.neoforge.network.PlayMessages;
 
 public class EntityDragonPart extends EntityMutlipartPart {
     private EntityDragonBase dragon;

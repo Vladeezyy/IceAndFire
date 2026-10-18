@@ -28,14 +28,14 @@ public class ArrayLayeredTexture extends AbstractTexture {
     public void load(@NotNull ResourceManager manager) {
         Iterator<String> iterator = this.layeredTextureNames.iterator();
         String s = iterator.next();
-        Optional<Resource> iresource = manager.getResource(new ResourceLocation(s));
+        Optional<Resource> iresource = manager.getResource(ResourceLocation.parse(s));
         if (iresource.isPresent()) {
             try {
                 NativeImage nativeimage = NativeImage.read(iresource.get().open());
                 while (iterator.hasNext()) {
                     String s1 = iterator.next();
                     if (s1 != null) {
-                        Optional<Resource> iresource1 = manager.getResource(new ResourceLocation(s1));
+                        Optional<Resource> iresource1 = manager.getResource(ResourceLocation.parse(s1));
                         NativeImage nativeimage1 = NativeImage.read(iresource1.get().open());
                         for (int i = 0; i < Math.min(nativeimage1.getHeight(), nativeimage.getHeight()); i++) {
                             for (int j = 0; j < Math.min(nativeimage1.getWidth(), nativeimage.getWidth()); j++) {

@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -50,7 +50,7 @@ public class DreadRuinProcessor extends StructureProcessor {
         if (infoIn2.state().getBlock() == IafBlockRegistry.DREAD_SPAWNER.get()) {
             CompoundTag tag = new CompoundTag();
             CompoundTag spawnData = new CompoundTag();
-            ResourceLocation spawnerMobId = ForgeRegistries.ENTITY_TYPES.getKey(getRandomMobForMobSpawner(random));
+            ResourceLocation spawnerMobId = BuiltInRegistries.ENTITY_TYPE.getKey(getRandomMobForMobSpawner(random));
             if (spawnerMobId != null) {
                 CompoundTag entity = new CompoundTag();
                 entity.putString("id", spawnerMobId.toString());

@@ -1,0 +1,9 @@
+{
+  "values": [
+    "#minecraft:dirt",
+    "#c:stones",
+    "#c:cobblestones",
+    "#iceandfire:dragon_environment_blocks",
+    "minecraft:grass_block"
+  ]
+}

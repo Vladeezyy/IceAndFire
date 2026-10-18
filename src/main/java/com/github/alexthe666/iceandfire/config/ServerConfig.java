@@ -1,142 +1,142 @@
 package com.github.alexthe666.iceandfire.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
 
-    public final ForgeConfigSpec.BooleanValue generateDragonSkeletons;
-    public final ForgeConfigSpec.IntValue generateDragonSkeletonChance;
-    public final ForgeConfigSpec.IntValue generateDragonDenChance;
-    public final ForgeConfigSpec.IntValue generateDragonRoostChance;
-    public final ForgeConfigSpec.IntValue dragonDenGoldAmount;
-    public final ForgeConfigSpec.BooleanValue spawnGlaciers;
-    public final ForgeConfigSpec.IntValue glacierSpawnChance;
-    public final ForgeConfigSpec.IntValue oreToStoneRatioForDragonCaves;
-    public final ForgeConfigSpec.IntValue dragonEggTime;
-    public final ForgeConfigSpec.IntValue dragonGriefing;
-    public final ForgeConfigSpec.BooleanValue tamedDragonGriefing;
-    public final ForgeConfigSpec.IntValue dragonFlapNoiseDistance;
-    public final ForgeConfigSpec.IntValue dragonFluteDistance;
-    public final ForgeConfigSpec.DoubleValue dragonHealth;
-    public final ForgeConfigSpec.IntValue dragonAttackDamage;
-    public final ForgeConfigSpec.DoubleValue dragonAttackDamageFire;
-    public final ForgeConfigSpec.DoubleValue dragonAttackDamageIce;
-    public final ForgeConfigSpec.DoubleValue dragonAttackDamageLightning;
-    public final ForgeConfigSpec.IntValue maxDragonFlight;
-    public final ForgeConfigSpec.IntValue dragonGoldSearchLength;
-    public final ForgeConfigSpec.BooleanValue canDragonsHealFromBiting;
-    public final ForgeConfigSpec.BooleanValue canDragonsDespawn;
-    public final ForgeConfigSpec.BooleanValue doDragonsSleep;
-    public final ForgeConfigSpec.BooleanValue dragonDigWhenStuck;
-    public final ForgeConfigSpec.IntValue dragonBreakBlockCooldown;
-    public final ForgeConfigSpec.BooleanValue dragonDropSkull;
-    public final ForgeConfigSpec.BooleanValue dragonDropHeart;
-    public final ForgeConfigSpec.BooleanValue dragonDropBlood;
-    public final ForgeConfigSpec.IntValue dragonTargetSearchLength;
-    public final ForgeConfigSpec.IntValue dragonWanderFromHomeDistance;
-    public final ForgeConfigSpec.IntValue dragonHungerTickRate;
-    public final ForgeConfigSpec.BooleanValue spawnHippogryphs;
-    public final ForgeConfigSpec.IntValue hippogryphSpawnRate;
-    public final ForgeConfigSpec.BooleanValue generateGorgonTemple;
-    public final ForgeConfigSpec.DoubleValue gorgonMaxHealth;
-    public final ForgeConfigSpec.IntValue spawnPixiesChance;
-    public final ForgeConfigSpec.IntValue pixieVillageSize;
-    public final ForgeConfigSpec.BooleanValue pixiesStealItems;
-    public final ForgeConfigSpec.IntValue spawnWanderingCyclopsChance;
-    public final ForgeConfigSpec.IntValue spawnCyclopsCaveChance;
-    public final ForgeConfigSpec.IntValue cyclopesSheepSearchLength;
-    public final ForgeConfigSpec.DoubleValue cyclopsMaxHealth;
-    public final ForgeConfigSpec.DoubleValue cyclopsAttackStrength;
-    public final ForgeConfigSpec.DoubleValue cyclopsBiteStrength;
-    public final ForgeConfigSpec.BooleanValue cyclopsGriefing;
-    public final ForgeConfigSpec.DoubleValue sirenMaxHealth;
-    public final ForgeConfigSpec.BooleanValue sirenShader;
-    public final ForgeConfigSpec.IntValue sirenMaxSingTime;
-    public final ForgeConfigSpec.IntValue sirenTimeBetweenSongs;
-    public final ForgeConfigSpec.IntValue generateSirenChance;
-    public final ForgeConfigSpec.IntValue hippocampusSpawnChance;
-    public final ForgeConfigSpec.IntValue deathWormTargetSearchLength;
-    public final ForgeConfigSpec.DoubleValue deathWormMaxHealth;
-    public final ForgeConfigSpec.DoubleValue deathWormAttackStrength;
-    public final ForgeConfigSpec.BooleanValue deathWormAttackMonsters;
-    public final ForgeConfigSpec.IntValue deathWormSpawnRate;
-    public final ForgeConfigSpec.IntValue cockatriceChickenSearchLength;
-    public final ForgeConfigSpec.IntValue cockatriceEggChance;
-    public final ForgeConfigSpec.DoubleValue cockatriceMaxHealth;
-    public final ForgeConfigSpec.BooleanValue chickensLayRottenEggs;
-    public final ForgeConfigSpec.BooleanValue spawnCockatrices;
-    public final ForgeConfigSpec.IntValue cockatriceSpawnRate;
-    public final ForgeConfigSpec.IntValue stymphalianBirdTargetSearchLength;
-    public final ForgeConfigSpec.IntValue stymphalianBirdFeatherDropChance ;
-    public final ForgeConfigSpec.DoubleValue stymphalianBirdFeatherAttackStength;
-    public final ForgeConfigSpec.IntValue stymphalianBirdFlockLength;
-    public final ForgeConfigSpec.IntValue stymphalianBirdFlightHeight;
-    public final ForgeConfigSpec.BooleanValue stymphalianBirdsDataTagDrops;
-    public final ForgeConfigSpec.BooleanValue stympahlianBirdAttackAnimals;
-    public final ForgeConfigSpec.IntValue stymphalianBirdSpawnChance;
-    public final ForgeConfigSpec.BooleanValue spawnTrolls;
-    public final ForgeConfigSpec.IntValue trollSpawnRate;
-    public final ForgeConfigSpec.BooleanValue trollsDropWeapon;
-    public final ForgeConfigSpec.DoubleValue trollMaxHealth;
-    public final ForgeConfigSpec.DoubleValue trollAttackStrength;
-    public final ForgeConfigSpec.BooleanValue villagersFearDragons;
-    public final ForgeConfigSpec.BooleanValue animalsFearDragons;
-    public final ForgeConfigSpec.IntValue myrmexPregnantTicks;
-    public final ForgeConfigSpec.IntValue myrmexEggTicks;
-    public final ForgeConfigSpec.IntValue myrmexLarvaTicks;
-    public final ForgeConfigSpec.IntValue myrmexColonyGenChance ;
-    public final ForgeConfigSpec.IntValue myrmexColonySize;
-    public final ForgeConfigSpec.DoubleValue myrmexBaseAttackStrength ;
-    public final ForgeConfigSpec.IntValue myrmexMaximumWanderRadius;
-    public final ForgeConfigSpec.BooleanValue myrmexHiveIgnoreDaytime;
-    public final ForgeConfigSpec.BooleanValue spawnAmphitheres;
-    public final ForgeConfigSpec.IntValue amphithereSpawnRate;
-    public final ForgeConfigSpec.IntValue amphithereVillagerSearchLength ;
-    public final ForgeConfigSpec.IntValue amphithereTameTime;
-    public final ForgeConfigSpec.DoubleValue amphithereFlightSpeed;
-    public final ForgeConfigSpec.DoubleValue amphithereMaxHealth;
-    public final ForgeConfigSpec.DoubleValue amphithereAttackStrength;
-    public final ForgeConfigSpec.IntValue seaSerpentSpawnChance;
-    public final ForgeConfigSpec.BooleanValue seaSerpentGriefing;
-    public final ForgeConfigSpec.DoubleValue seaSerpentBaseHealth;
-    public final ForgeConfigSpec.DoubleValue seaSerpentAttackStrength;
-    public final ForgeConfigSpec.DoubleValue dragonsteelBaseDamage;
-    public final ForgeConfigSpec.IntValue dragonsteelBaseArmor;
-    public final ForgeConfigSpec.DoubleValue dragonsteelBaseArmorToughness;
-    public final ForgeConfigSpec.IntValue dragonsteelBaseDurability;
-    public final ForgeConfigSpec.IntValue dragonsteelBaseDurabilityEquipment;
-    public final ForgeConfigSpec.BooleanValue dragonMovedWronglyFix; // FIXME :: Unused
-    public final ForgeConfigSpec.BooleanValue weezerTinkers; // FIXME :: Unused
-    public final ForgeConfigSpec.DoubleValue dragonBlockBreakingDropChance;
-    public final ForgeConfigSpec.BooleanValue completeDragonPathfinding; // FIXME :: Unused
-    public final ForgeConfigSpec.BooleanValue generateMausoleums;
-    public final ForgeConfigSpec.BooleanValue spawnLiches;
-    public final ForgeConfigSpec.IntValue lichSpawnRate;
-    public final ForgeConfigSpec.IntValue lichSpawnChance;
-    public final ForgeConfigSpec.DoubleValue hydraMaxHealth;
-    public final ForgeConfigSpec.IntValue generateHydraChance;
-    public final ForgeConfigSpec.BooleanValue explosiveDragonBreath;
-    public final ForgeConfigSpec.DoubleValue weezerTinkersDisarmChance; // FIXME :: Unused
-    public final ForgeConfigSpec.BooleanValue chunkLoadSummonCrystal;
-    public ForgeConfigSpec.IntValue dangerousWorldGenDistanceLimit;
-    public ForgeConfigSpec.IntValue dangerousWorldGenSeparationLimit;
-    public final ForgeConfigSpec.DoubleValue dragonFlightSpeedMod;
-    public final ForgeConfigSpec.DoubleValue hippogryphFlightSpeedMod;
-    public final ForgeConfigSpec.DoubleValue hippocampusSwimSpeedMod;
-    public final ForgeConfigSpec.DoubleValue ghostMaxHealth;
-    public final ForgeConfigSpec.DoubleValue ghostAttackStrength;
-    public final ForgeConfigSpec.BooleanValue generateGraveyards;
-    public final ForgeConfigSpec.BooleanValue ghostSpawnFromPlayerDeaths;
-    public ForgeConfigSpec.IntValue dragonPathfindingThreads;
-    public ForgeConfigSpec.IntValue maxDragonPathingNodes;
-    public ForgeConfigSpec.BooleanValue pathfindingDebug;
-    public final ForgeConfigSpec.BooleanValue dragonWeaponFireAbility;
-    public final ForgeConfigSpec.BooleanValue dragonWeaponIceAbility;
-    public final ForgeConfigSpec.BooleanValue dragonWeaponLightningAbility;
-    public ForgeConfigSpec.IntValue villagerHouseWeight;
-    public ForgeConfigSpec.BooleanValue allowAttributeOverriding;
+    public final ModConfigSpec.BooleanValue generateDragonSkeletons;
+    public final ModConfigSpec.IntValue generateDragonSkeletonChance;
+    public final ModConfigSpec.IntValue generateDragonDenChance;
+    public final ModConfigSpec.IntValue generateDragonRoostChance;
+    public final ModConfigSpec.IntValue dragonDenGoldAmount;
+    public final ModConfigSpec.BooleanValue spawnGlaciers;
+    public final ModConfigSpec.IntValue glacierSpawnChance;
+    public final ModConfigSpec.IntValue oreToStoneRatioForDragonCaves;
+    public final ModConfigSpec.IntValue dragonEggTime;
+    public final ModConfigSpec.IntValue dragonGriefing;
+    public final ModConfigSpec.BooleanValue tamedDragonGriefing;
+    public final ModConfigSpec.IntValue dragonFlapNoiseDistance;
+    public final ModConfigSpec.IntValue dragonFluteDistance;
+    public final ModConfigSpec.DoubleValue dragonHealth;
+    public final ModConfigSpec.IntValue dragonAttackDamage;
+    public final ModConfigSpec.DoubleValue dragonAttackDamageFire;
+    public final ModConfigSpec.DoubleValue dragonAttackDamageIce;
+    public final ModConfigSpec.DoubleValue dragonAttackDamageLightning;
+    public final ModConfigSpec.IntValue maxDragonFlight;
+    public final ModConfigSpec.IntValue dragonGoldSearchLength;
+    public final ModConfigSpec.BooleanValue canDragonsHealFromBiting;
+    public final ModConfigSpec.BooleanValue canDragonsDespawn;
+    public final ModConfigSpec.BooleanValue doDragonsSleep;
+    public final ModConfigSpec.BooleanValue dragonDigWhenStuck;
+    public final ModConfigSpec.IntValue dragonBreakBlockCooldown;
+    public final ModConfigSpec.BooleanValue dragonDropSkull;
+    public final ModConfigSpec.BooleanValue dragonDropHeart;
+    public final ModConfigSpec.BooleanValue dragonDropBlood;
+    public final ModConfigSpec.IntValue dragonTargetSearchLength;
+    public final ModConfigSpec.IntValue dragonWanderFromHomeDistance;
+    public final ModConfigSpec.IntValue dragonHungerTickRate;
+    public final ModConfigSpec.BooleanValue spawnHippogryphs;
+    public final ModConfigSpec.IntValue hippogryphSpawnRate;
+    public final ModConfigSpec.BooleanValue generateGorgonTemple;
+    public final ModConfigSpec.DoubleValue gorgonMaxHealth;
+    public final ModConfigSpec.IntValue spawnPixiesChance;
+    public final ModConfigSpec.IntValue pixieVillageSize;
+    public final ModConfigSpec.BooleanValue pixiesStealItems;
+    public final ModConfigSpec.IntValue spawnWanderingCyclopsChance;
+    public final ModConfigSpec.IntValue spawnCyclopsCaveChance;
+    public final ModConfigSpec.IntValue cyclopesSheepSearchLength;
+    public final ModConfigSpec.DoubleValue cyclopsMaxHealth;
+    public final ModConfigSpec.DoubleValue cyclopsAttackStrength;
+    public final ModConfigSpec.DoubleValue cyclopsBiteStrength;
+    public final ModConfigSpec.BooleanValue cyclopsGriefing;
+    public final ModConfigSpec.DoubleValue sirenMaxHealth;
+    public final ModConfigSpec.BooleanValue sirenShader;
+    public final ModConfigSpec.IntValue sirenMaxSingTime;
+    public final ModConfigSpec.IntValue sirenTimeBetweenSongs;
+    public final ModConfigSpec.IntValue generateSirenChance;
+    public final ModConfigSpec.IntValue hippocampusSpawnChance;
+    public final ModConfigSpec.IntValue deathWormTargetSearchLength;
+    public final ModConfigSpec.DoubleValue deathWormMaxHealth;
+    public final ModConfigSpec.DoubleValue deathWormAttackStrength;
+    public final ModConfigSpec.BooleanValue deathWormAttackMonsters;
+    public final ModConfigSpec.IntValue deathWormSpawnRate;
+    public final ModConfigSpec.IntValue cockatriceChickenSearchLength;
+    public final ModConfigSpec.IntValue cockatriceEggChance;
+    public final ModConfigSpec.DoubleValue cockatriceMaxHealth;
+    public final ModConfigSpec.BooleanValue chickensLayRottenEggs;
+    public final ModConfigSpec.BooleanValue spawnCockatrices;
+    public final ModConfigSpec.IntValue cockatriceSpawnRate;
+    public final ModConfigSpec.IntValue stymphalianBirdTargetSearchLength;
+    public final ModConfigSpec.IntValue stymphalianBirdFeatherDropChance ;
+    public final ModConfigSpec.DoubleValue stymphalianBirdFeatherAttackStength;
+    public final ModConfigSpec.IntValue stymphalianBirdFlockLength;
+    public final ModConfigSpec.IntValue stymphalianBirdFlightHeight;
+    public final ModConfigSpec.BooleanValue stymphalianBirdsDataTagDrops;
+    public final ModConfigSpec.BooleanValue stympahlianBirdAttackAnimals;
+    public final ModConfigSpec.IntValue stymphalianBirdSpawnChance;
+    public final ModConfigSpec.BooleanValue spawnTrolls;
+    public final ModConfigSpec.IntValue trollSpawnRate;
+    public final ModConfigSpec.BooleanValue trollsDropWeapon;
+    public final ModConfigSpec.DoubleValue trollMaxHealth;
+    public final ModConfigSpec.DoubleValue trollAttackStrength;
+    public final ModConfigSpec.BooleanValue villagersFearDragons;
+    public final ModConfigSpec.BooleanValue animalsFearDragons;
+    public final ModConfigSpec.IntValue myrmexPregnantTicks;
+    public final ModConfigSpec.IntValue myrmexEggTicks;
+    public final ModConfigSpec.IntValue myrmexLarvaTicks;
+    public final ModConfigSpec.IntValue myrmexColonyGenChance ;
+    public final ModConfigSpec.IntValue myrmexColonySize;
+    public final ModConfigSpec.DoubleValue myrmexBaseAttackStrength ;
+    public final ModConfigSpec.IntValue myrmexMaximumWanderRadius;
+    public final ModConfigSpec.BooleanValue myrmexHiveIgnoreDaytime;
+    public final ModConfigSpec.BooleanValue spawnAmphitheres;
+    public final ModConfigSpec.IntValue amphithereSpawnRate;
+    public final ModConfigSpec.IntValue amphithereVillagerSearchLength ;
+    public final ModConfigSpec.IntValue amphithereTameTime;
+    public final ModConfigSpec.DoubleValue amphithereFlightSpeed;
+    public final ModConfigSpec.DoubleValue amphithereMaxHealth;
+    public final ModConfigSpec.DoubleValue amphithereAttackStrength;
+    public final ModConfigSpec.IntValue seaSerpentSpawnChance;
+    public final ModConfigSpec.BooleanValue seaSerpentGriefing;
+    public final ModConfigSpec.DoubleValue seaSerpentBaseHealth;
+    public final ModConfigSpec.DoubleValue seaSerpentAttackStrength;
+    public final ModConfigSpec.DoubleValue dragonsteelBaseDamage;
+    public final ModConfigSpec.IntValue dragonsteelBaseArmor;
+    public final ModConfigSpec.DoubleValue dragonsteelBaseArmorToughness;
+    public final ModConfigSpec.IntValue dragonsteelBaseDurability;
+    public final ModConfigSpec.IntValue dragonsteelBaseDurabilityEquipment;
+    public final ModConfigSpec.BooleanValue dragonMovedWronglyFix; // FIXME :: Unused
+    public final ModConfigSpec.BooleanValue weezerTinkers; // FIXME :: Unused
+    public final ModConfigSpec.DoubleValue dragonBlockBreakingDropChance;
+    public final ModConfigSpec.BooleanValue completeDragonPathfinding; // FIXME :: Unused
+    public final ModConfigSpec.BooleanValue generateMausoleums;
+    public final ModConfigSpec.BooleanValue spawnLiches;
+    public final ModConfigSpec.IntValue lichSpawnRate;
+    public final ModConfigSpec.IntValue lichSpawnChance;
+    public final ModConfigSpec.DoubleValue hydraMaxHealth;
+    public final ModConfigSpec.IntValue generateHydraChance;
+    public final ModConfigSpec.BooleanValue explosiveDragonBreath;
+    public final ModConfigSpec.DoubleValue weezerTinkersDisarmChance; // FIXME :: Unused
+    public final ModConfigSpec.BooleanValue chunkLoadSummonCrystal;
+    public ModConfigSpec.IntValue dangerousWorldGenDistanceLimit;
+    public ModConfigSpec.IntValue dangerousWorldGenSeparationLimit;
+    public final ModConfigSpec.DoubleValue dragonFlightSpeedMod;
+    public final ModConfigSpec.DoubleValue hippogryphFlightSpeedMod;
+    public final ModConfigSpec.DoubleValue hippocampusSwimSpeedMod;
+    public final ModConfigSpec.DoubleValue ghostMaxHealth;
+    public final ModConfigSpec.DoubleValue ghostAttackStrength;
+    public final ModConfigSpec.BooleanValue generateGraveyards;
+    public final ModConfigSpec.BooleanValue ghostSpawnFromPlayerDeaths;
+    public ModConfigSpec.IntValue dragonPathfindingThreads;
+    public ModConfigSpec.IntValue maxDragonPathingNodes;
+    public ModConfigSpec.BooleanValue pathfindingDebug;
+    public final ModConfigSpec.BooleanValue dragonWeaponFireAbility;
+    public final ModConfigSpec.BooleanValue dragonWeaponIceAbility;
+    public final ModConfigSpec.BooleanValue dragonWeaponLightningAbility;
+    public ModConfigSpec.IntValue villagerHouseWeight;
+    public ModConfigSpec.BooleanValue allowAttributeOverriding;
 
-    public ServerConfig(final ForgeConfigSpec.Builder builder) {
+    public ServerConfig(final ModConfigSpec.Builder builder) {
         builder.push("Generation");
         builder.push("Dragon");
         this.generateDragonSkeletons = buildBoolean(builder, "Generate Dragon Skeletons", "all", true, "Whether to generate dragon skeletons or not");
@@ -326,15 +326,15 @@ public class ServerConfig {
         this.pathfindingDebug = buildBoolean(builder, "Debug Pathfinding Mode", "all", false, "Enables the option to draw the pathfinding nodes when enabled (use a stick on an entity)");
     }
 
-    private static ForgeConfigSpec.BooleanValue buildBoolean(ForgeConfigSpec.Builder builder, String name, String catagory, boolean defaultValue, String comment){
+    private static ModConfigSpec.BooleanValue buildBoolean(ModConfigSpec.Builder builder, String name, String catagory, boolean defaultValue, String comment){
         return builder.comment(comment).translation(name).define(name, defaultValue);
     }
 
-    private static ForgeConfigSpec.IntValue buildInt(ForgeConfigSpec.Builder builder, String name, String catagory, int defaultValue, int min, int max, String comment){
+    private static ModConfigSpec.IntValue buildInt(ModConfigSpec.Builder builder, String name, String catagory, int defaultValue, int min, int max, String comment){
         return builder.comment(comment).translation(name).defineInRange(name, defaultValue, min, max);
     }
 
-    private static ForgeConfigSpec.DoubleValue buildDouble(ForgeConfigSpec.Builder builder, String name, String catagory, double defaultValue, double min, double max, String comment){
+    private static ModConfigSpec.DoubleValue buildDouble(ModConfigSpec.Builder builder, String name, String catagory, double defaultValue, double min, double max, String comment){
         return builder.comment(comment).translation(name).defineInRange(name, defaultValue, min, max);
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class LayerGorgonEyes extends RenderLayer<EntityGorgon, ModelGorgon> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/gorgon/gorgon_eyes.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_eyes.png");
     private final RenderGorgon render;
 
     public LayerGorgonEyes(RenderGorgon renderIn) {

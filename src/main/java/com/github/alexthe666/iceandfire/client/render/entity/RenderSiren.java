@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderSiren extends MobRenderer<EntitySiren, ModelSiren> {
 
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/siren/siren_0.png");
-    public static final ResourceLocation TEXTURE_0_AGGRESSIVE = new ResourceLocation("iceandfire:textures/models/siren/siren_0_aggressive.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/siren/siren_1.png");
-    public static final ResourceLocation TEXTURE_1_AGGRESSIVE = new ResourceLocation("iceandfire:textures/models/siren/siren_1_aggressive.png");
-    public static final ResourceLocation TEXTURE_2 = new ResourceLocation("iceandfire:textures/models/siren/siren_2.png");
-    public static final ResourceLocation TEXTURE_2_AGGRESSIVE = new ResourceLocation("iceandfire:textures/models/siren/siren_2_aggressive.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/siren/siren_0.png");
+    public static final ResourceLocation TEXTURE_0_AGGRESSIVE = ResourceLocation.parse("iceandfire:textures/models/siren/siren_0_aggressive.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/siren/siren_1.png");
+    public static final ResourceLocation TEXTURE_1_AGGRESSIVE = ResourceLocation.parse("iceandfire:textures/models/siren/siren_1_aggressive.png");
+    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/siren/siren_2.png");
+    public static final ResourceLocation TEXTURE_2_AGGRESSIVE = ResourceLocation.parse("iceandfire:textures/models/siren/siren_2_aggressive.png");
 
     public RenderSiren(EntityRendererProvider.Context context) {
         super(context, new ModelSiren(), 0.8F);

@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticlePixieDust extends TextureSheetParticle {
-    private static final ResourceLocation PIXIE_DUST = new ResourceLocation("iceandfire:textures/particles/pixie_dust.png");
+    private static final ResourceLocation PIXIE_DUST = ResourceLocation.parse("iceandfire:textures/particles/pixie_dust.png");
     float reddustParticleScale;
 
     public ParticlePixieDust(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float p_i46349_8_, float p_i46349_9_, float p_i46349_10_) {

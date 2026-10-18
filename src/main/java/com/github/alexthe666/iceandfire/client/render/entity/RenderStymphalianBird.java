@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderStymphalianBird extends MobRenderer<EntityStymphalianBird, ModelStymphalianBird> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation("iceandfire:textures/models/stymphalianbird/stymphalian_bird.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/stymphalianbird/stymphalian_bird.png");
 
     public RenderStymphalianBird(EntityRendererProvider.Context context) {
         super(context, new ModelStymphalianBird(), 0.6F);

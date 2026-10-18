@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.Random;
 
 public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
-    private static final ResourceLocation ENCHANTMENT_TABLE_GUI_TEXTURE = new ResourceLocation("iceandfire:textures/gui/lectern.png");
-    private static final ResourceLocation ENCHANTMENT_TABLE_BOOK_TEXTURE = new ResourceLocation("iceandfire:textures/models/lectern_book.png");
+    private static final ResourceLocation ENCHANTMENT_TABLE_GUI_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/lectern.png");
+    private static final ResourceLocation ENCHANTMENT_TABLE_BOOK_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/lectern_book.png");
     private static BookModel bookModel;
     private final Random random = new Random();
     private final Component nameable;

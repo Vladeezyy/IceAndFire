@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire;
 
+import net.minecraft.core.registries.Registries;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.client.ClientProxy;
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
@@ -19,26 +20,21 @@ import com.github.alexthe666.iceandfire.world.*;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.world.BiomeModifier;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +50,7 @@ public class IceAndFire {
     private static int packetsRegistered = 0;
 
     static {
-        NetworkRegistry.ChannelBuilder channel = NetworkRegistry.ChannelBuilder.named(new ResourceLocation("iceandfire", "main_channel"));
+        NetworkRegistry.ChannelBuilder channel = NetworkRegistry.ChannelBuilder.named(ResourceLocation.fromNamespaceAndPath("iceandfire", "main_channel"));
         String version = PROTOCOL_VERSION;
         version.getClass();
         channel = channel.clientAcceptedVersions(version::equals);
@@ -78,10 +74,10 @@ public class IceAndFire {
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigHolder.SERVER_SPEC);
         PROXY.init();
 
-        MinecraftForge.EVENT_BUS.addListener(IceAndFire::onServerStarted);
+        NeoForge.EVENT_BUS.addListener(IceAndFire::onServerStarted);
 
 
-        final DeferredRegister<Codec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, IceAndFire.MODID);
+        final DeferredRegister<Codec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(Registries.BIOME_MODIFIER_SERIALIZERS, IceAndFire.MODID);
         biomeModifiers.register(modBus);
         biomeModifiers.register("iaf_mob_spawns", IafMobSpawnBiomeModifier::makeCodec);
         biomeModifiers.register("iaf_features", IafFeatureBiomeModifier::makeCodec);
@@ -103,8 +99,8 @@ public class IceAndFire {
         IafVillagerRegistry.POI_TYPES.register(modBus);
         IafVillagerRegistry.PROFESSIONS.register(modBus);
 
-        MinecraftForge.EVENT_BUS.register(IafBlockRegistry.class);
-        MinecraftForge.EVENT_BUS.register(IafRecipeRegistry.class);
+        NeoForge.EVENT_BUS.register(IafBlockRegistry.class);
+        NeoForge.EVENT_BUS.register(IafRecipeRegistry.class);
         modBus.addListener(IceAndFire::setup);
         modBus.addListener(IceAndFire::setupComplete);
         modBus.addListener(IceAndFire::setupClient);

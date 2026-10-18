@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -185,7 +185,7 @@ public class MyrmexAIForage extends Goal {
         List<BlockPos> allBlocks = new ArrayList<>();
         BlockPos.betweenClosedStream(this.myrmex.blockPosition().offset(-RADIUS, -RADIUS / 2, -RADIUS),
             this.myrmex.blockPosition().offset(RADIUS, RADIUS / 2, RADIUS)).map(BlockPos::immutable).forEach(pos -> {
-            if (!MinecraftForge.EVENT_BUS
+            if (!NeoForge.EVENT_BUS
                 .post(new GenericGriefEvent(this.myrmex, pos.getX(), pos.getY(), pos.getZ()))) {
                 if (EntityMyrmexBase.isEdibleBlock(this.myrmex.level().getBlockState(pos))) {
                     allBlocks.add(pos);

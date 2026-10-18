@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
 
-    protected static final ResourceLocation[] DESTROY_STAGES = new ResourceLocation[]{new ResourceLocation("textures/block/destroy_stage_0.png"), new ResourceLocation("textures/block/destroy_stage_1.png"), new ResourceLocation("textures/block/destroy_stage_2.png"), new ResourceLocation("textures/block/destroy_stage_3.png"), new ResourceLocation("textures/block/destroy_stage_4.png"), new ResourceLocation("textures/block/destroy_stage_5.png"), new ResourceLocation("textures/block/destroy_stage_6.png"), new ResourceLocation("textures/block/destroy_stage_7.png"), new ResourceLocation("textures/block/destroy_stage_8.png"), new ResourceLocation("textures/block/destroy_stage_9.png")};
+    protected static final ResourceLocation[] DESTROY_STAGES = new ResourceLocation[]{ResourceLocation.parse("textures/block/destroy_stage_0.png"), ResourceLocation.parse("textures/block/destroy_stage_1.png"), ResourceLocation.parse("textures/block/destroy_stage_2.png"), ResourceLocation.parse("textures/block/destroy_stage_3.png"), ResourceLocation.parse("textures/block/destroy_stage_4.png"), ResourceLocation.parse("textures/block/destroy_stage_5.png"), ResourceLocation.parse("textures/block/destroy_stage_6.png"), ResourceLocation.parse("textures/block/destroy_stage_7.png"), ResourceLocation.parse("textures/block/destroy_stage_8.png"), ResourceLocation.parse("textures/block/destroy_stage_9.png")};
     private final Map<String, EntityModel> modelMap = new HashMap();
     private final Map<String, Entity> hollowEntityMap = new HashMap();
     private final EntityRendererProvider.Context context;

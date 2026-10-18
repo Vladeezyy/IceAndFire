@@ -13,11 +13,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldGenIceDragonRoosts extends WorldGenDragonRoosts {
-    private static final ResourceLocation DRAGON_CHEST = new ResourceLocation("iceandfire", "chest/ice_dragon_roost");
+    private static final ResourceLocation DRAGON_CHEST = ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/ice_dragon_roost");
 
     public WorldGenIceDragonRoosts(final Codec<NoneFeatureConfiguration> configuration) {
         super(configuration, IafBlockRegistry.SILVER_PILE.get());

@@ -11,7 +11,7 @@ public class IafPOITypes {
     public static final ResourceKey<PoiType> SCRIBE_POI = registerKey("scribe");
 
     public static ResourceKey<PoiType> registerKey(String name) {
-        return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, new ResourceLocation(IceAndFire.MODID, name));
+        return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
 }

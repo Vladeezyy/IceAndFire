@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge> {
-    private static final ResourceLocation TEXTURE_FIRE = new ResourceLocation("iceandfire:textures/gui/dragonforge_fire.png");
-    private static final ResourceLocation TEXTURE_ICE = new ResourceLocation("iceandfire:textures/gui/dragonforge_ice.png");
-    private static final ResourceLocation TEXTURE_LIGHTNING = new ResourceLocation("iceandfire:textures/gui/dragonforge_lightning.png");
+    private static final ResourceLocation TEXTURE_FIRE = ResourceLocation.parse("iceandfire:textures/gui/dragonforge_fire.png");
+    private static final ResourceLocation TEXTURE_ICE = ResourceLocation.parse("iceandfire:textures/gui/dragonforge_ice.png");
+    private static final ResourceLocation TEXTURE_LIGHTNING = ResourceLocation.parse("iceandfire:textures/gui/dragonforge_lightning.png");
     private final ContainerDragonForge tileFurnace;
     private final int dragonType;
 

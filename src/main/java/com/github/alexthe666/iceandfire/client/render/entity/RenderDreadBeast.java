@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadBeast extends MobRenderer<EntityDreadBeast, ModelDreadBeast> {
 
-    public static final ResourceLocation TEXTURE_EYES = new ResourceLocation("iceandfire:textures/models/dread/dread_beast_eyes.png");
-    public static final ResourceLocation TEXTURE_0 = new ResourceLocation("iceandfire:textures/models/dread/dread_beast_1.png");
-    public static final ResourceLocation TEXTURE_1 = new ResourceLocation("iceandfire:textures/models/dread/dread_beast_2.png");
+    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_beast_eyes.png");
+    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_beast_1.png");
+    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_beast_2.png");
 
     public RenderDreadBeast(EntityRendererProvider.Context context) {
         super(context, new ModelDreadBeast(), 0.5F);

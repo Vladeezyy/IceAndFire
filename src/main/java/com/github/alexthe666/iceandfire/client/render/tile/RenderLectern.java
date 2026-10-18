@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderLectern<T extends TileEntityLectern> implements BlockEntityRenderer<T> {
 
-    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderType.entityCutoutNoCull(new ResourceLocation("iceandfire:textures/models/lectern_book.png"));
+    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/lectern_book.png"));
     private final BookModel bookModel;
 
     public RenderLectern(BlockEntityRendererProvider.Context context) {
