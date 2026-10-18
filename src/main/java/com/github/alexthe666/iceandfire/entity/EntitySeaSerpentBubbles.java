@@ -20,6 +20,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjectile {
+    // The acceleration of the original: AbstractHurtingProjectile lost xPower/yPower/zPower in 1.20.5
+    protected double xPower;
+    protected double yPower;
+    protected double zPower;
+
 
     public EntitySeaSerpentBubbles(EntityType<? extends Fireball> t, Level worldIn) {
         super(t, worldIn);
@@ -27,12 +32,16 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
 
     public EntitySeaSerpentBubbles(EntityType<? extends Fireball> t, Level worldIn, double posX,
                                    double posY, double posZ, double accelX, double accelY, double accelZ) {
-        super(t, posX, posY, posZ, accelX, accelY, accelZ, worldIn);
+        super(t, posX, posY, posZ, new Vec3(accelX, accelY, accelZ), worldIn);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.initPower(accelX, accelY, accelZ);
     }
 
     public EntitySeaSerpentBubbles(EntityType<? extends Fireball> t, Level worldIn,
                                    EntitySeaSerpent shooter, double accelX, double accelY, double accelZ) {
-        super(t, shooter, accelX, accelY, accelZ, worldIn);
+        super(t, shooter, new Vec3(accelX, accelY, accelZ), worldIn);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.initPower(accelX, accelY, accelZ);
         double d0 = Math.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
         this.xPower = accelX / d0 * 0.1D;
         this.yPower = accelY / d0 * 0.1D;
@@ -157,4 +166,13 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
         }
     }
 
+
+    private void initPower(double accelX, double accelY, double accelZ) {
+        double d0 = Math.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
+        if (d0 != 0.0D) {
+            this.xPower = accelX / d0 * 0.1D;
+            this.yPower = accelY / d0 * 0.1D;
+            this.zPower = accelZ / d0 * 0.1D;
+        }
+    }
 }

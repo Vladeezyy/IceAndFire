@@ -5,7 +5,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.citadel.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
-import com.github.alexthe666.iceandfire.client.gui.IafGuiRegistry;
 import com.github.alexthe666.iceandfire.client.model.*;
 import com.github.alexthe666.iceandfire.client.model.animator.FireDragonTabulaModelAnimator;
 import com.github.alexthe666.iceandfire.client.model.animator.IceDragonTabulaModelAnimator;
@@ -140,7 +139,6 @@ public class IafClientSetup {
     @SubscribeEvent
     public static void setupClient(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            IafGuiRegistry.register();
             EnumSeaSerpentAnimations.initializeSerpentModels();
             DragonAnimationsLibrary.register(EnumDragonPoses.values(), EnumDragonModelTypes.values());
 

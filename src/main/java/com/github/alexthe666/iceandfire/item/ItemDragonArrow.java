@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.EnchantmentLevels;
 import org.jetbrains.annotations.Nullable;
 import com.github.alexthe666.iceandfire.entity.EntityDragonArrow;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
@@ -23,12 +24,12 @@ public class ItemDragonArrow extends ArrowItem {
     }
 
     @Override
-    public boolean isInfinite(@NotNull final ItemStack arrow, @NotNull final ItemStack bow, @NotNull final Player player) {
+    public boolean isInfinite(@NotNull final ItemStack arrow, @NotNull final ItemStack bow, @NotNull final LivingEntity player) {
         // Technically this would always return false - it's more a compat layer for Apotheosis' Endless Quiver enchantment
         boolean isInfinite = super.isInfinite(arrow, bow, player);
 
         if (!isInfinite) {
-            isInfinite = bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0 && getClass() == ItemDragonArrow.class;
+            isInfinite = EnchantmentLevels.has(player.level(), Enchantments.INFINITY, bow) && getClass() == ItemDragonArrow.class;
         }
 
         return isInfinite;

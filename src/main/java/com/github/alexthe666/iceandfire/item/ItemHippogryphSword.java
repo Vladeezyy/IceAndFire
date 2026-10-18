@@ -27,7 +27,7 @@ public class ItemHippogryphSword extends SwordItem {
     @Override
     public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity targetEntity, LivingEntity attacker) {
         float f = (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-        float f3 = 1.0F + EnchantmentHelper.getSweepingDamageRatio(attacker) * f;
+        float f3 = 1.0F + (float) attacker.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO) * f;
         if (attacker instanceof Player) {
             Player player = (Player) attacker;
             for (LivingEntity LivingEntity : attacker.level().getEntitiesOfClass(LivingEntity.class, targetEntity.getBoundingBox().inflate(1.0D, 0.25D, 1.0D))) {

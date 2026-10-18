@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.EnchantmentLevels;
 import net.minecraft.world.entity.LivingEntity;
 import com.github.alexthe666.iceandfire.entity.EntityPixieCharge;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
@@ -31,7 +32,7 @@ public class ItemPixieWand extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
-        boolean flag = playerIn.isCreative() || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, itemStackIn) > 0;
+        boolean flag = playerIn.isCreative() || EnchantmentLevels.has(worldIn, Enchantments.INFINITY, itemStackIn);
         ItemStack itemstack = this.findAmmo(playerIn);
         playerIn.startUsingItem(hand);
         playerIn.swing(hand);
@@ -64,7 +65,7 @@ public class ItemPixieWand extends Item {
     }
 
     public boolean isInfinite(ItemStack stack, ItemStack bow, net.minecraft.world.entity.player.Player player) {
-        int enchant = net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow);
+        int enchant = EnchantmentLevels.get(player.level(), Enchantments.INFINITY, bow);
         return enchant > 0 && stack.getItem() == IafItemRegistry.PIXIE_DUST.get();
     }
 

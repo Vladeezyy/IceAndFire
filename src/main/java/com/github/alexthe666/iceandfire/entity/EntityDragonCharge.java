@@ -22,6 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public abstract class EntityDragonCharge extends Fireball implements IDragonProjectile {
+    // The acceleration of the original: AbstractHurtingProjectile lost xPower/yPower/zPower in 1.20.5
+    protected double xPower;
+    protected double yPower;
+    protected double zPower;
+
 
 
     public EntityDragonCharge(EntityType<? extends Fireball> type, Level worldIn) {
@@ -30,7 +35,9 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
 
     public EntityDragonCharge(EntityType<? extends Fireball> type, Level worldIn, double posX,
                               double posY, double posZ, double accelX, double accelY, double accelZ) {
-        super(type, posX, posY, posZ, accelX, accelY, accelZ, worldIn);
+        super(type, posX, posY, posZ, new Vec3(accelX, accelY, accelZ), worldIn);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.initPower(accelX, accelY, accelZ);
         double d0 = Math.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
         this.xPower = accelX / d0 * 0.07D;
         this.yPower = accelY / d0 * 0.07D;
@@ -39,7 +46,9 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
 
     public EntityDragonCharge(EntityType<? extends Fireball> type, Level worldIn,
                               EntityDragonBase shooter, double accelX, double accelY, double accelZ) {
-        super(type, shooter, accelX, accelY, accelZ, worldIn);
+        super(type, shooter, new Vec3(accelX, accelY, accelZ), worldIn);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.initPower(accelX, accelY, accelZ);
         double d0 = Math.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
         this.xPower = accelX / d0 * 0.07D;
         this.yPower = accelY / d0 * 0.07D;
@@ -121,9 +130,6 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
                             ((EntityDragonBase) shootingEntity).randomizeAttacks();
                         }
                     }
-                    if (shootingEntity instanceof LivingEntity) {
-                        this.doEnchantDamageEffects((LivingEntity) shootingEntity, entity);
-                    }
                     this.remove(RemovalReason.DISCARDED);
                 }
             }
@@ -163,4 +169,13 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
         return 0F;
     }
 
+
+    private void initPower(double accelX, double accelY, double accelZ) {
+        double d0 = Math.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
+        if (d0 != 0.0D) {
+            this.xPower = accelX / d0 * 0.1D;
+            this.yPower = accelY / d0 * 0.1D;
+            this.zPower = accelZ / d0 * 0.1D;
+        }
+    }
 }

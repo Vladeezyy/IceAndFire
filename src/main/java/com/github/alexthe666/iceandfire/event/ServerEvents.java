@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.event;
 
+import com.github.alexthe666.iceandfire.util.EnchantmentLevels;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IafConfig;
@@ -382,7 +383,7 @@ public class ServerEvents {
                         event.getTarget().playSound(SoundEvents.STONE_BREAK, 2, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 0.5F);
                         event.getTarget().remove(Entity.RemovalReason.KILLED);
 
-                        if (stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) > 0) {
+                        if (EnchantmentLevels.has(event.getEntity().level(), Enchantments.SILK_TOUCH, stack)) {
                             ItemStack statuette = new ItemStack(IafItemRegistry.STONE_STATUE.get());
                             CompoundTag tag = ItemNbt.getOrEmpty(statuette);
                             tag.putBoolean("IAFStoneStatuePlayerEntity", statue.getTrappedEntityTypeString().equalsIgnoreCase("minecraft:player"));
