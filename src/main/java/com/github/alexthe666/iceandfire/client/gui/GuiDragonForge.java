@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.gui;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.DragonType;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDragonforge;
@@ -66,7 +67,7 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
         int j = 0;
 
         List<DragonForgeRecipe> recipes = this.getMinecraft().level.getRecipeManager()
-                .getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get())
+                .getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList()
                 .stream().filter(item ->
                         item.isValidInput(tileFurnace.getSlot(0).getItem()) && item.isValidBlood(tileFurnace.getSlot(1).getItem())).collect(Collectors.toList());
         int maxCookTime = recipes.isEmpty() ? 100 : recipes.get(0).getCookTime();

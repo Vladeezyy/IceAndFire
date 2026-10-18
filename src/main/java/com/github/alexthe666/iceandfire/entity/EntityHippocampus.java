@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.neoforged.neoforge.items.IItemHandler;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
@@ -54,9 +55,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -88,7 +87,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     public float sitProgress;
     private int animationTick;
     private Animation currentAnimation;
-    private LazyOptional<?> itemHandler = null;
+    private IItemHandler itemHandler = null;
 
     public EntityHippocampus(EntityType<? extends EntityHippocampus> entityType, Level worldIn) {
         super(entityType, worldIn);
@@ -433,7 +432,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
 
         this.inventory.addListener(this);
         this.updateContainerEquipment();
-        this.itemHandler = LazyOptional.of(() -> new InvWrapper(this.inventory));
+        this.itemHandler = new InvWrapper(this.inventory);
     }
 
     protected void updateContainerEquipment() {
@@ -444,21 +443,10 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
         }
     }
 
-    @Override
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (this.isAlive() && capability == Capabilities.ITEM_HANDLER && itemHandler != null)
-            return itemHandler.cast();
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        if (itemHandler != null) {
-            LazyOptional<?> oldHandler = itemHandler;
-            itemHandler = null;
-            oldHandler.invalidate();
-        }
+    /** Inventory for hoppers and other mods; registered in IafCapabilities. */
+    @Nullable
+    public IItemHandler getItemHandler() {
+        return this.isAlive() ? itemHandler : null;
     }
 
     public boolean hasInventoryChanged(Container pInventory) {

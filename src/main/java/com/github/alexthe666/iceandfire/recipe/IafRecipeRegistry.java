@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.recipe;
 
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.*;
@@ -27,7 +28,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafRecipeRegistry {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, IceAndFire.MODID);
     public static final DeferredHolder<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
@@ -35,7 +36,7 @@ public class IafRecipeRegistry {
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            DispenserBlock.registerBehavior(IafItemRegistry.STYMPHALIAN_ARROW.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.STYMPHALIAN_ARROW.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -48,7 +49,7 @@ public class IafRecipeRegistry {
                     return entityarrow;
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.AMPHITHERE_ARROW.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.AMPHITHERE_ARROW.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -60,7 +61,7 @@ public class IafRecipeRegistry {
                     return entityarrow;
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.SEA_SERPENT_ARROW.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.SEA_SERPENT_ARROW.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -72,7 +73,7 @@ public class IafRecipeRegistry {
                     return entityarrow;
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.DRAGONBONE_ARROW.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.DRAGONBONE_ARROW.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -84,7 +85,7 @@ public class IafRecipeRegistry {
                     return entityarrow;
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.HYDRA_ARROW.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.HYDRA_ARROW.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -96,7 +97,7 @@ public class IafRecipeRegistry {
                     return entityarrow;
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.HIPPOGRYPH_EGG.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.HIPPOGRYPH_EGG.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -106,7 +107,7 @@ public class IafRecipeRegistry {
                         position.y(), position.z(), stackIn);
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.ROTTEN_EGG.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.ROTTEN_EGG.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -116,7 +117,7 @@ public class IafRecipeRegistry {
                         position.z(), worldIn);
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.DEATHWORM_EGG.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.DEATHWORM_EGG.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -126,7 +127,7 @@ public class IafRecipeRegistry {
                         position.z(), worldIn, false);
                 }
             });
-            DispenserBlock.registerBehavior(IafItemRegistry.DEATHWORM_EGG_GIGANTIC.get(), new AbstractProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(IafItemRegistry.DEATHWORM_EGG_GIGANTIC.get(), new IafProjectileDispenseBehavior() {
                 /**
                  * Return the projectile entity spawned by this dispense behavior.
                  */
@@ -136,12 +137,14 @@ public class IafRecipeRegistry {
                         position.z(), worldIn, true);
                 }
             });
-
-            BrewingRecipeRegistry.addRecipe(Ingredient.of(createPotion(Potions.WATER).getItem()), Ingredient.of(IafItemRegistry.SHINY_SCALES.get()), createPotion(Potions.WATER_BREATHING));
         });
     }
 
-    public static ItemStack createPotion(Potion potion) {
-        return PotionUtils.setPotion(new ItemStack(Items.POTION), potion);
+    @EventBusSubscriber(modid = IceAndFire.MODID)
+    public static class GameEvents {
+        @SubscribeEvent
+        public static void registerBrewing(RegisterBrewingRecipesEvent event) {
+            event.getBuilder().addMix(Potions.WATER, IafItemRegistry.SHINY_SCALES.get(), Potions.WATER_BREATHING);
+        }
     }
 }

@@ -85,8 +85,6 @@ public class IceAndFire {
         IafVillagerRegistry.POI_TYPES.register(modBus);
         IafVillagerRegistry.PROFESSIONS.register(modBus);
 
-        NeoForge.EVENT_BUS.register(IafBlockRegistry.class);
-        NeoForge.EVENT_BUS.register(IafRecipeRegistry.class);
         modBus.addListener(IceAndFire::setup);
         modBus.addListener(IceAndFire::setupComplete);
         modBus.addListener(IceAndFire::setupClient);

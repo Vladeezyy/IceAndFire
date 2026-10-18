@@ -37,8 +37,6 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
     public int prevTicksExisted;
     IItemHandler handlerUp = new SidedInvWrapper(this, net.minecraft.core.Direction.UP);
     IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
-    net.minecraftforge.common.util.LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper
-        .create(this, Direction.UP, Direction.DOWN);
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
 
     public TileEntityPodium(BlockPos pos, BlockState state) {
@@ -216,17 +214,13 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
         return true;
     }
 
-    @Override
-    public <T> net.minecraftforge.common.util.@NotNull LazyOptional<T> getCapability(
-        net.minecraftforge.common.capabilities.@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null
-            && capability == Capabilities.ITEM_HANDLER) {
-            if (facing == Direction.DOWN)
-                return handlers[1].cast();
-            else
-                return handlers[0].cast();
+    /** Item handler of a side, registered in IafCapabilities. */
+    @Nullable
+    public IItemHandler getItemHandler(@Nullable Direction facing) {
+        if (this.remove || facing == null) {
+            return null;
         }
-        return super.getCapability(capability, facing);
+        return facing == Direction.DOWN ? handlerDown : handlerUp;
     }
 
     @Nullable

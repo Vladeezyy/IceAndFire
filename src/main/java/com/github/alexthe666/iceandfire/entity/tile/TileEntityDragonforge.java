@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
+import com.github.alexthe666.iceandfire.recipe.DragonForgeInput;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.BlockDragonforgeBricks;
@@ -51,8 +53,9 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     public int fireType;
     public int cookTime;
     public int lastDragonFlameTimer = 0;
-    net.minecraftforge.common.util.LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper
-        .create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+    private final IItemHandler handlerUp = new SidedInvWrapper(this, Direction.UP);
+    private final IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
+    private final IItemHandler handlerSide = new SidedInvWrapper(this, Direction.NORTH);
     private NonNullList<ItemStack> forgeItemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     private boolean prevAssembled;
     private boolean canAddFlameAgain = true;
@@ -260,11 +263,11 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     }
 
     public Optional<DragonForgeRecipe> getCurrentRecipe() {
-        return level.getRecipeManager().getRecipeFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get(), this, level);
+        return level.getRecipeManager().getRecipeFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get(), new DragonForgeInput(this.getItem(0), this.getItem(1), this.getTypeID()), level).map(RecipeHolder::value);
     }
 
     public List<DragonForgeRecipe> getRecipes() {
-        return level.getRecipeManager().getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get());
+        return level.getRecipeManager().getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList();
     }
 
     public boolean canSmelt() {
@@ -355,19 +358,17 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
         this.forgeItemStacks.clear();
     }
 
-    @Override
-    public <T> net.minecraftforge.common.util.@NotNull LazyOptional<T> getCapability(
-        net.minecraftforge.common.capabilities.@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null
-            && capability == Capabilities.ITEM_HANDLER) {
-            if (facing == Direction.UP)
-                return handlers[0].cast();
-            if (facing == Direction.DOWN)
-                return handlers[1].cast();
-            else
-                return handlers[2].cast();
+    /** Item handler of a side, registered in IafCapabilities. */
+    @Nullable
+    public IItemHandler getItemHandler(@Nullable Direction facing) {
+        if (this.remove || facing == null) {
+            return null;
         }
-        return super.getCapability(capability, facing);
+        if (facing == Direction.UP)
+            return handlerUp;
+        if (facing == Direction.DOWN)
+            return handlerDown;
+        return handlerSide;
     }
 
     @Override

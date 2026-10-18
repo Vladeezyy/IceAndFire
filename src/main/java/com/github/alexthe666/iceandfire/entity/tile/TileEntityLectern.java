@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.enums.EnumBestiaryPages;
@@ -61,8 +63,8 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
     public float pageHelp1;
     public float pageHelp2;
     public EnumBestiaryPages[] selectedPages = new EnumBestiaryPages[3];
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-        net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN);
+    private final IItemHandler handlerUp = new SidedInvWrapper(this, Direction.UP);
+    private final IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
     private final Random localRand = new Random();
     private NonNullList<ItemStack> stacks = NonNullList.withSize(3, ItemStack.EMPTY);
 
@@ -290,15 +292,13 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
         return true;
     }
 
-    @Override
-    public <T> net.minecraftforge.common.util.@NotNull LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == Capabilities.ITEM_HANDLER) {
-            if (facing == Direction.DOWN)
-                return handlers[1].cast();
-            else
-                return handlers[0].cast();
+    /** Item handler of a side, registered in IafCapabilities. */
+    @Nullable
+    public IItemHandler getItemHandler(@Nullable Direction facing) {
+        if (this.remove || facing == null) {
+            return null;
         }
-        return super.getCapability(capability, facing);
+        return facing == Direction.DOWN ? handlerDown : handlerUp;
     }
 
     @Nullable

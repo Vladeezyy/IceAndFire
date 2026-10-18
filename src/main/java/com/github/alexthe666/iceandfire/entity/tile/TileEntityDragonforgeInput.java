@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
+import net.neoforged.neoforge.items.IItemHandler;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.block.BlockDragonforgeInput;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
@@ -16,9 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -163,12 +162,9 @@ public class TileEntityDragonforgeInput extends BlockEntity {
         return null;
     }
 
-    @Override
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull final Capability<T> capability, @Nullable final Direction facing) {
-        if (core != null && capability == Capabilities.ITEM_HANDLER) {
-            return core.getCapability(capability, facing);
-        }
-
-        return super.getCapability(capability, facing);
+    /** The item handler of the forge core; registered in IafCapabilities. */
+    @Nullable
+    public IItemHandler getItemHandler(@Nullable Direction facing) {
+        return core != null ? core.getItemHandler(facing) : null;
     }
 }

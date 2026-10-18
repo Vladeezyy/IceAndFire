@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
+import net.neoforged.neoforge.items.IItemHandler;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityPixie;
@@ -43,8 +44,7 @@ public class TileEntityJar extends BlockEntity {
     public NonNullList<ItemStack> pixieItems = NonNullList.withSize(1, ItemStack.EMPTY);
     public float rotationYaw;
     public float prevRotationYaw;
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler> downHandler = PixieJarInvWrapper
-        .create(this);
+    private final IItemHandler downHandler = new PixieJarInvWrapper(this);
     private final Random rand;
 
     public TileEntityJar(BlockPos pos, BlockState state) {
@@ -148,11 +148,9 @@ public class TileEntityJar extends BlockEntity {
         }
     }
 
-    @Override
-    public <T> net.minecraftforge.common.util.@NotNull LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (facing == Direction.DOWN
-            && capability == Capabilities.ITEM_HANDLER)
-            return downHandler.cast();
-        return super.getCapability(capability, facing);
+    /** Pixie dust comes out at the bottom; registered in IafCapabilities. */
+    @Nullable
+    public IItemHandler getItemHandler(@Nullable Direction facing) {
+        return facing == Direction.DOWN ? downHandler : null;
     }
 }
