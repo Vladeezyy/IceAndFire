@@ -9,15 +9,21 @@ import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.SpawnData;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.Spawner;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class TileEntityDreadSpawner extends SpawnerBlockEntity {
-    private final BlockEntityType<?> type;
+/**
+ * SpawnerBlockEntity with the dread spawner type: in 1.21 the constructor of BlockEntity checks the block, extending
+ * SpawnerBlockEntity (type minecraft:mob_spawner) crashed the generation of the dread mausoleum.
+ */
+public class TileEntityDreadSpawner extends BlockEntity implements Spawner {
     private final DreadSpawnerBaseLogic spawner = new DreadSpawnerBaseLogic() {
         @Override
         public void broadcastEvent(Level p_155767_, @NotNull BlockPos p_155768_, int p_155769_) {
@@ -42,8 +48,7 @@ public class TileEntityDreadSpawner extends SpawnerBlockEntity {
     };
 
     public TileEntityDreadSpawner(BlockPos pos, BlockState state) {
-        super(pos, state);
-        this.type = IafTileEntityRegistry.DREAD_SPAWNER.get();
+        super(IafTileEntityRegistry.DREAD_SPAWNER.get(), pos, state);
     }
 
     @Override
@@ -74,7 +79,7 @@ public class TileEntityDreadSpawner extends SpawnerBlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-        CompoundTag compoundtag = this.saveWithoutMetadata(registries);
+        CompoundTag compoundtag = this.saveCustomOnly(registries);
         compoundtag.remove("SpawnPotentials");
         return compoundtag;
     }
@@ -90,13 +95,13 @@ public class TileEntityDreadSpawner extends SpawnerBlockEntity {
     }
 
     @Override
-    public @NotNull BaseSpawner getSpawner() {
-        return this.spawner;
+    public void setEntityId(@NotNull EntityType<?> type, @NotNull RandomSource random) {
+        this.spawner.setEntityId(type, this.level, random, this.worldPosition);
+        this.setChanged();
     }
 
-    @Override
-    public @NotNull BlockEntityType<?> getType() {
-        return this.type != null ? this.type : super.getType();
+    public @NotNull BaseSpawner getSpawner() {
+        return this.spawner;
     }
 
 }

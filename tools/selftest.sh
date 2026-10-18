@@ -6,4 +6,4 @@ timeout 1200 ./gradlew runSelftest --console=plain "$@" > build-selftest.log 2>&
 echo "exit $?"
 grep -a -E '\[selftest\] (CHECK|DONE)' build-selftest.log | sed -E 's/^.*\[selftest\] //'
 echo "--- errors"
-grep -a -E '/(ERROR|FATAL)\]|Caused by|Exception' build-selftest.log | grep -v 'NoSuchFileException: server.properties\|\[selftest\] CHECK' | sed -E 's/^\[[^]]*\] //' | cut -c1-300 | sort | uniq -c | sort -rn | head -30
+grep -a -E '/(ERROR|FATAL)\]|Caused by|Exception|UUID of added entity' build-selftest.log | grep -v 'NoSuchFileException: server.properties\|\[selftest\] CHECK' | sed -E 's/^\[[^]]*\] //' | cut -c1-300 | sort | uniq -c | sort -rn | head -30

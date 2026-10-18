@@ -260,12 +260,17 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
 
         float partY = 1.0F - this.walkAnimation.speed() * 0.5F;
 
+        boolean present = true;
         for (int i = 0; i < getHeadCount(); i++) {
             headBoxes[i].setPos(headBoxes[i].getX(), this.getY() + partY, headBoxes[i].getZ());
-            EntityUtil.updatePart(headBoxes[i], this);
+            present &= EntityUtil.updatePart(headBoxes[i], this);
 
             headBoxes[HEADS + i].setPos(headBoxes[HEADS + i].getX(), this.getY() + partY, headBoxes[HEADS + i].getZ());
-            EntityUtil.updatePart(headBoxes[HEADS + 1], this);
+            // 1.20.1 updated HEADS + 1 for every head: only one neck had a hitbox
+            present &= EntityUtil.updatePart(headBoxes[HEADS + i], this);
+        }
+        if (!present) {
+            resetParts();
         }
 
         if (getHeadCount() > 1 && !isOnFire()) {

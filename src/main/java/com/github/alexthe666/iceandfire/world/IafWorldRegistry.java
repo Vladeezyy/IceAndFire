@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.world;
 
+import net.minecraft.world.level.border.WorldBorder;
 import com.github.alexthe666.citadel.config.biome.SpawnBiomeData;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -63,7 +64,23 @@ public class IafWorldRegistry {
         return FEATURES.register(name, supplier);
     }
 
+    /** Room the biggest features (dragon caves, roosts, myrmex hives) need around their origin. */
+    private static final int FEATURE_MARGIN = 96;
+
+    /**
+     * The original generated dragon caves, nests and siren islands at the world border, where the chunks beyond do
+     * not exist: "We are asking a region for a chunk out of bound" crashed the server (issues #5335, #5592).
+     */
+    public static boolean isInsideWorldBorder(final LevelAccessor level, final BlockPos position) {
+        WorldBorder border = level.getWorldBorder();
+        return border.isWithinBounds(position.offset(-FEATURE_MARGIN, 0, -FEATURE_MARGIN))
+                && border.isWithinBounds(position.offset(FEATURE_MARGIN, 0, FEATURE_MARGIN));
+    }
+
     public static boolean isFarEnoughFromSpawn(final LevelAccessor level, final BlockPos position) {
+        if (!isInsideWorldBorder(level, position)) {
+            return false;
+        }
         // The original took the Y of the spawn point as its Z (issue #4398)
         BlockPos spawn = level.getLevelData().getSpawnPos();
         BlockPos spawnRelative = new BlockPos(spawn.getX(), position.getY(), spawn.getZ());

@@ -2,6 +2,8 @@ package com.github.alexthe666.iceandfire.selftest;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
+import com.github.alexthe666.iceandfire.entity.EntityDragonPart;
+import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.recipe.IafRecipeRegistry;
@@ -24,6 +26,8 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -33,6 +37,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Functional checks on a fresh dedicated server world (gradle runSelftest, tools/selftest.sh). Prints
@@ -82,7 +87,14 @@ public class SelfTest {
                 case 260 -> items(level);
                 case 280 -> features(server, level);
                 case 480 -> structures(server, level);
-                case 700 -> finish(server);
+                case 500 -> partsLoadChunk(level, true);
+                case 540 -> partsSpawn(level);
+                case 600 -> partsAdded(level);
+                case 605 -> partsRestored(level);
+                case 610 -> partsLoadChunk(level, false);
+                case 700 -> partsUnloaded(level);
+                case 780 -> partsReloaded(level);
+                case 800 -> finish(server);
                 default -> {
                 }
             }
@@ -237,6 +249,68 @@ public class SelfTest {
             String biome = level.getBiome(pos.atY(level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()))).unwrapKey().map(k -> k.location().toString()).orElse("?");
             check("structure " + name + " located", true, pos + " in " + biome);
         }
+    }
+
+    private static final ChunkPos PARTS_CHUNK = new ChunkPos(150, 150);
+    private static UUID partsDragon;
+    private static EntityDragonPart movedPart;
+    private static EntityDragonPart oldWorldPart;
+
+    private static void partsLoadChunk(ServerLevel level, boolean load) {
+        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, load);
+    }
+
+    private static List<EntityDragonPart> parts(ServerLevel level, Entity dragon) {
+        return level.getEntitiesOfClass(EntityDragonPart.class, dragon.getBoundingBox().inflate(48), part -> part.getParent() == dragon);
+    }
+
+    /** An adult dragon in a chunk without players, parts of #5089 / #5360. */
+    private static void partsSpawn(ServerLevel level) {
+        BlockPos pos = PARTS_CHUNK.getMiddleBlockPosition(0);
+        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) + 2;
+        EntityDragonBase dragon = IafEntityRegistry.FIRE_DRAGON.get().create(level);
+        dragon.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
+        dragon.setAgeInDays(75);
+        dragon.setNoAi(true);
+        dragon.setPersistenceRequired();
+        level.addFreshEntity(dragon);
+        partsDragon = dragon.getUUID();
+
+        // A part saved with the chunk by 1.20.1: loaded without its owner
+        oldWorldPart = IafEntityRegistry.DRAGON_MULTIPART.get().create(level);
+        oldWorldPart.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
+        level.addFreshEntity(oldWorldPart);
+    }
+
+    private static void partsAdded(ServerLevel level) {
+        Entity dragon = level.getEntity(partsDragon);
+        List<EntityDragonPart> parts = dragon == null ? List.of() : parts(level, dragon);
+        check("dragon parts added", parts.size() == 10, parts.size());
+        check("part of an old world removed", oldWorldPart.isRemoved(), oldWorldPart.getRemovalReason());
+        if (!parts.isEmpty()) {
+            // Pushed into a section without entity access: before the fix the dragon re-added it every tick
+            movedPart = parts.get(0);
+            movedPart.setPos(movedPart.getX() + 160, movedPart.getY(), movedPart.getZ());
+        }
+    }
+
+    private static void partsRestored(ServerLevel level) {
+        Entity dragon = level.getEntity(partsDragon);
+        boolean back = dragon != null && movedPart != null && level.getEntity(movedPart.getUUID()) == movedPart && movedPart.distanceTo(dragon) < 32;
+        check("part in a hidden section comes back", back, movedPart == null ? null : movedPart.position());
+    }
+
+    private static void partsUnloaded(ServerLevel level) {
+        check("dragon chunk unloaded", level.getEntity(partsDragon) == null, PARTS_CHUNK);
+        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, true);
+    }
+
+    private static void partsReloaded(ServerLevel level) {
+        Entity dragon = level.getEntity(partsDragon);
+        List<EntityDragonPart> parts = dragon == null ? List.of() : parts(level, dragon);
+        long all = dragon == null ? 0 : level.getEntitiesOfClass(EntityDragonPart.class, dragon.getBoundingBox().inflate(48)).size();
+        check("dragon parts after chunk reload", dragon != null && parts.size() == 10 && all == 10, parts.size() + " owned, " + all + " near");
+        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, false);
     }
 
     private static void finish(MinecraftServer server) {

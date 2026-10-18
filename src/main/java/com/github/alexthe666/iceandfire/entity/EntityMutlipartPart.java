@@ -38,6 +38,8 @@ public abstract class EntityMutlipartPart extends Entity {
     protected float angleYaw;
     protected float offsetY;
     protected float damageMultiplier;
+    /** Set when the parent added this part; parts are not saved (noSave), a part loaded from an old world has no owner. */
+    private boolean addedByParent;
 
     protected EntityMutlipartPart(EntityType<?> t, Level world) {
         super(t, world);
@@ -129,6 +131,11 @@ public abstract class EntityMutlipartPart extends Entity {
 
     @Override
     public void tick() {
+        if (!this.addedByParent && !this.level().isClientSide) {
+            // Saved with the chunk by 1.20.1: the parent creates its own parts, this one only doubled the hitbox
+            this.discard();
+            return;
+        }
         wasTouchingWater = false;
         if (this.tickCount > 10) {
             Entity parent = getParent();
@@ -270,7 +277,11 @@ public abstract class EntityMutlipartPart extends Entity {
         return source.is(DamageTypes.FALL) || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.FALLING_BLOCK) || source.is(DamageTypes.LAVA) || source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(source);
     }
 
-    public boolean shouldContinuePersisting() {
-        return isAddedToLevel() || this.isRemoved();
+    public boolean isAddedByParent() {
+        return this.addedByParent;
+    }
+
+    public void setAddedByParent() {
+        this.addedByParent = true;
     }
 }

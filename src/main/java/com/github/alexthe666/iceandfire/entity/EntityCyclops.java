@@ -325,7 +325,9 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
             eyeEntity.copyPosition(this);
         }
 
-        EntityUtil.updatePart(eyeEntity, this);
+        if (!EntityUtil.updatePart(eyeEntity, this)) {
+            eyeEntity = null;
+        }
 
         breakBlock();
     }

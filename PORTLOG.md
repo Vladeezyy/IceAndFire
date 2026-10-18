@@ -49,6 +49,10 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | Hydra arrows broke the chest slot instead of the shield hand | Slot of the used hand |
 | Myrmex foraging posted a grief event for every block in the search box (TPS) | Edible check first, event only for candidates |
 | Server-only `I18n` in the summoning crystal tooltip | `Component.translatable` |
+| [#5335](https://github.com/AlexModGuy/Ice_and_Fire/issues/5335), [#5592](https://github.com/AlexModGuy/Ice_and_Fire/issues/5592) features and structures at the world border | No generation within 96 blocks of the world border (`IafWorldRegistry.isInsideWorldBorder`) |
+| [#5089](https://github.com/AlexModGuy/Ice_and_Fire/issues/5089), [#5360](https://github.com/AlexModGuy/Ice_and_Fire/issues/5360) "UUID of added entity already exists" spam | A part is added to the level once (`addedByParent`); a part in a section without entity access was re-added every tick. Part types are `noSave()`, parts of 1.20.1 worlds discard themselves, parents recreate unloaded parts, a part left in a hidden section is moved back to its parent |
+| Hydra: only one neck had a hitbox | `updatePart(headBoxes[HEADS + i])` instead of `HEADS + 1` |
+| Dread spawner crashed the generation of the dread mausoleum (1.21: `BlockEntity` checks the block of its type) | `TileEntityDreadSpawner extends BlockEntity implements Spawner` with its own type |
 
 ## Port notes
 
@@ -61,6 +65,17 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - `isFood` of the animals keeps the 1.20.1 default (wheat).
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
+
+## Current state (2026-10-18, resume here)
+
+- Code above compiles. **Not yet run:** self-test with the new dragon part checks (`SelfTest` ticks 500-800: parts
+  added, old world part removed, part in a hidden section comes back, chunk unload and reload without doubled parts)
+  and the dread spawner fix. Run `tools/selftest.sh` (it now also reports "UUID of added entity" warnings), expect
+  all CHECK OK, then `tools/scenetest.sh`.
+- Previous self-test run crashed in generation on the dread spawner (fixed since, see table).
+- Next original bugs: #5192/#5208 riding lag, #5196 dragon horn on parts, #5064/#5251 hippogryph/griffin hovering,
+  #5157 amphithere sitting mount, #5197/#4297 myrmex queen, #5112/#5205 armor clipping, #5297 corpse render,
+  #5369 health above 1024, #4768 lightning dragon head twitch.
 
 ## TODO before release
 

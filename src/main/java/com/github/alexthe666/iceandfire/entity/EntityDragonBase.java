@@ -417,16 +417,20 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public void updateParts() {
-        EntityUtil.updatePart(headPart, this);
-        EntityUtil.updatePart(neckPart, this);
-        EntityUtil.updatePart(rightWingUpperPart, this);
-        EntityUtil.updatePart(rightWingLowerPart, this);
-        EntityUtil.updatePart(leftWingUpperPart, this);
-        EntityUtil.updatePart(leftWingLowerPart, this);
-        EntityUtil.updatePart(tail1Part, this);
-        EntityUtil.updatePart(tail2Part, this);
-        EntityUtil.updatePart(tail3Part, this);
-        EntityUtil.updatePart(tail4Part, this);
+        boolean present = EntityUtil.updatePart(headPart, this);
+        present &= EntityUtil.updatePart(neckPart, this);
+        present &= EntityUtil.updatePart(rightWingUpperPart, this);
+        present &= EntityUtil.updatePart(rightWingLowerPart, this);
+        present &= EntityUtil.updatePart(leftWingUpperPart, this);
+        present &= EntityUtil.updatePart(leftWingLowerPart, this);
+        present &= EntityUtil.updatePart(tail1Part, this);
+        present &= EntityUtil.updatePart(tail2Part, this);
+        present &= EntityUtil.updatePart(tail3Part, this);
+        present &= EntityUtil.updatePart(tail4Part, this);
+        if (!present) {
+            // A part was unloaded with its chunk while the dragon stayed loaded
+            resetParts(this.getRenderSize() / 3);
+        }
     }
 
     protected void updateBurnTarget() {
