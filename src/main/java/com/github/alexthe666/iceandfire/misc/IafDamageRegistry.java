@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.github.alexthe666.iceandfire.IceAndFire.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafDamageRegistry {
     public static final ResourceKey<DamageType> GORGON_DMG_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("iceandfire:gorgon"));
     public static final ResourceKey<DamageType> DRAGON_FIRE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("iceandfire:dragon_fire"));

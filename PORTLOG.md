@@ -34,3 +34,39 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | [#5297](https://github.com/AlexModGuy/Ice_and_Fire/issues/5297) | Dragon corpses shown as standing dragons on servers | Sync of the dead/model state |
 | [#5369](https://github.com/AlexModGuy/Ice_and_Fire/issues/5369) | Dragon health above 1024 from config has no effect | Attribute cap: document or raise via `max_health` range |
 | [#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768) | Lightning dragon head twitches while flying | Animation |
+
+## Fixed so far (code done, not yet tested in game)
+
+| Problem | Fix |
+|---|---|
+| [#5495](https://github.com/AlexModGuy/Ice_and_Fire/issues/5495) watchdog crash in the entity data cache | Entity data is a NeoForge attachment, the static cache maps are gone |
+| [#4398](https://github.com/AlexModGuy/Ice_and_Fire/issues/4398) "dangerous worldgen distance from spawn" did not work | The check took the Y of the spawn point as its Z |
+| [#5146](https://github.com/AlexModGuy/Ice_and_Fire/issues/5146) graveyards and mausoleums on oceans | The biome is tested at the surface of the structure start, not anywhere within `max_distance_from_center` |
+| Clients could send server-only messages (e.g. `MessageUpdatePodium`: any item on any podium) | Every message is registered for one direction; only four are bidirectional |
+| Summoning crystal kept the summon state in the item singleton: two players summoning at once broke each other | Per-summon `PendingSummon`, chunk tickets via `TicketController`, client side of single player no longer summons |
+| White and red deathworm armor were repaired with each other's chitin | Repair materials swapped back |
+| Stymphalian feathers damaged a copy of the shield, never the shield | Damage the used shield |
+| Hydra arrows broke the chest slot instead of the shield hand | Slot of the used hand |
+| Myrmex foraging posted a grief event for every block in the search box (TPS) | Edible check first, event only for candidates |
+| Server-only `I18n` in the summoning crystal tooltip | `Component.translatable` |
+
+## Port notes
+
+- Item NBT stays in `minecraft:custom_data` with the old keys (`util/ItemNbt`): items of 1.20.1 worlds are upgraded
+  into exactly that component. Dragon horns also read `minecraft:entity_data` (where the upgrade moves `EntityTag`).
+- Dragon armor modifier id `minecraft:556e1665-...` = the old UUID: dragons from 1.20.1 worlds do not get it twice.
+- Banner patterns are data (`data/iceandfire/banner_pattern`), keys in `IafBannerPatterns`.
+- Mob types are entity type tags (`undead`, `arthropod`, `aquatic`), breathing under water too
+  (`can_breathe_under_water`).
+- `isFood` of the animals keeps the 1.20.1 default (wheat).
+- Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
+  `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
+
+## TODO before release
+
+- Enchantable item tags (`minecraft:enchantable/*`, `swords`, `head_armor`...): without them the gear of Ice and
+  Fire cannot get Sharpness, Protection, Power...
+- Audit the client-to-server handlers (dragon control, hippogryph armor, multipart interact with damage from the
+  client, player hit multipart, swing arm) for range and ownership checks.
+- `sendMSGToAll` for entity updates → players tracking the entity.
+- Run the datagen once and compare with the converted data.

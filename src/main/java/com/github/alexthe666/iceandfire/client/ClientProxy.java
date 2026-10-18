@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = IceAndFire.MODID, value = Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
 
     public static Set<UUID> currentDragonRiders = new HashSet<UUID>();

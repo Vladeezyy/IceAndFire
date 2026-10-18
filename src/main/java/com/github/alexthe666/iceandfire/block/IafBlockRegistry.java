@@ -26,7 +26,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafBlockRegistry {
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(IceAndFire.MODID);

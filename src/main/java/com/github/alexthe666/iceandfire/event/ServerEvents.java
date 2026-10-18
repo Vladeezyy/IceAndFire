@@ -86,7 +86,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@EventBusSubscriber(modid = IceAndFire.MODID)
 public class ServerEvents {
 
     public static final UUID ALEX_UUID = UUID.fromString("71363abe-fd03-49c9-940d-aae8b8209b7c");

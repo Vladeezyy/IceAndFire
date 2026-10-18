@@ -32,7 +32,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafVillagerRegistry {
 
     public static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(BuiltInRegistries.POINT_OF_INTEREST_TYPE, IceAndFire.MODID);

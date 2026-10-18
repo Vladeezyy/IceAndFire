@@ -40,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(modid = IceAndFire.MODID, value = Dist.CLIENT)
 public class ClientEvents {
 
     private static final ResourceLocation SIREN_SHADER = ResourceLocation.parse("iceandfire:shaders/post/siren.json");
