@@ -26,9 +26,10 @@ public class MyrmexAIWanderHiveCenter extends Goal {
         if (!this.myrmex.canMove() || !this.myrmex.shouldEnterHive() && !this.myrmex.getNavigation().isDone() || this.myrmex.canSeeSky()) {
             return false;
         }
-        MyrmexHive village = MyrmexWorldData.get(this.myrmex.level()).getNearestHive(this.myrmex.blockPosition(), 300);
+        // Its own hive first: the nearest one could be another colony
+        MyrmexHive village = this.myrmex.getHive();
         if (village == null) {
-            village = this.myrmex.getHive();
+            village = MyrmexWorldData.get(this.myrmex.level()).getNearestHive(this.myrmex.blockPosition(), 300);
         }
         if (village == null) {
             return false;

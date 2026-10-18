@@ -374,7 +374,7 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
         this.entityData.set(SINGING, singing);
         if (!level().isClientSide) {
             this.isSinging = singing;
-            IceAndFire.sendMSGToAll(new MessageSirenSong(this.getId(), singing));
+            IceAndFire.sendMSGToTracking(this, new MessageSirenSong(this.getId(), singing));
         }
     }
 

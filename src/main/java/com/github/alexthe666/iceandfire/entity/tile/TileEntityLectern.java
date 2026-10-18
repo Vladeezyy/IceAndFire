@@ -152,7 +152,7 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
                 selectedPages[0] = null;
                 selectedPages[1] = null;
                 selectedPages[2] = null;
-                IceAndFire.sendMSGToAll(new MessageUpdateLectern(worldPosition.asLong(), -1, -1, -1, false, 0));
+                IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdateLectern(worldPosition.asLong(), -1, -1, -1, false, 0));
             } else {
                 selectedPages = randomizePages(getItem(0), getItem(1));
             }
@@ -184,7 +184,7 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
             int page1 = selectedPages[0] == null ? -1 : selectedPages[0].ordinal();
             int page2 = selectedPages[1] == null ? -1 : selectedPages[1].ordinal();
             int page3 = selectedPages[2] == null ? -1 : selectedPages[2].ordinal();
-            IceAndFire.sendMSGToAll(new MessageUpdateLectern(worldPosition.asLong(), page1, page2, page3, false, 0));
+            IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdateLectern(worldPosition.asLong(), page1, page2, page3, false, 0));
         }
         return selectedPages;
     }

@@ -398,7 +398,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         clearSegments();
         if (!this.level().isClientSide) {
             initSegments(scale * (this.getWormAge() / 5F));
-            IceAndFire.sendMSGToAll(new MessageDeathWormHitbox(this.getId(), scale * (this.getWormAge() / 5F)));
+            IceAndFire.sendMSGToTracking(this, new MessageDeathWormHitbox(this.getId(), scale * (this.getWormAge() / 5F)));
         }
     }
 

@@ -81,7 +81,7 @@ public class TileEntityJar extends BlockEntity {
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
         loadAdditional(packet.getTag(), registries);
         if (!level.isClientSide) {
-            IceAndFire.sendMSGToAll(new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getInt("PixieType")));
+            IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getInt("PixieType")));
         }
     }
 
@@ -111,12 +111,12 @@ public class TileEntityJar extends BlockEntity {
         if (entityJar.ticksExisted % 24000 == 0 && !entityJar.hasProduced && entityJar.hasPixie) {
             entityJar.hasProduced = true;
             if (!level.isClientSide) {
-                IceAndFire.sendMSGToAll(new MessageUpdatePixieJar(pos.asLong(), entityJar.hasProduced));
+                IceAndFire.sendMSGToTracking(level, pos, new MessageUpdatePixieJar(pos.asLong(), entityJar.hasProduced));
             }
         }
         if (entityJar.hasPixie && entityJar.hasProduced != entityJar.prevHasProduced && entityJar.ticksExisted > 5) {
             if (!level.isClientSide) {
-                IceAndFire.sendMSGToAll(new MessageUpdatePixieJar(pos.asLong(), entityJar.hasProduced));
+                IceAndFire.sendMSGToTracking(level, pos, new MessageUpdatePixieJar(pos.asLong(), entityJar.hasProduced));
             } else {
                 level.playLocalSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5, IafSoundRegistry.PIXIE_HURT, SoundSource.BLOCKS, 1, 1, false);
             }
@@ -144,7 +144,7 @@ public class TileEntityJar extends BlockEntity {
         pixie.setOwnerUUID(this.pixieOwnerUUID);
 
         if (!level.isClientSide) {
-            IceAndFire.sendMSGToAll(new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));
+            IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));
         }
     }
 

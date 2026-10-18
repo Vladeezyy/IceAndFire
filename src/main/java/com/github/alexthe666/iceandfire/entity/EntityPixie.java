@@ -352,7 +352,7 @@ public class EntityPixie extends TamableAnimal {
                     house.pixieItems.set(0, this.getItemInHand(InteractionHand.MAIN_HAND));
                     house.tamedPixie = this.isTame();
                     house.pixieOwnerUUID = this.getOwnerUUID();
-                    IceAndFire.sendMSGToAll(new MessageUpdatePixieHouse(housePos.asLong(), true, this.getColor()));
+                    IceAndFire.sendMSGToTracking(this.level(), housePos, new MessageUpdatePixieHouse(housePos.asLong(), true, this.getColor()));
                     this.remove(RemovalReason.DISCARDED);
                 }
             }

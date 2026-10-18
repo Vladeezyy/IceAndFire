@@ -21,6 +21,10 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -112,7 +116,19 @@ public class IceAndFire {
 
     /** Sends the message to the players that see the entity; most entity updates do not need to go further. */
     public static void sendMSGToTracking(Entity entity, CustomPacketPayload message) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, message);
+        if (!entity.level().isClientSide) {
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, message);
+        }
+    }
+
+    /**
+     * Sends the message to the players that have the chunk of the block, in its level. sendMSGToAll sent block updates
+     * to every player of every dimension: a player in the Nether got the podium of the same position in the Overworld.
+     */
+    public static void sendMSGToTracking(Level level, BlockPos pos, CustomPacketPayload message) {
+        if (level instanceof ServerLevel serverLevel) {
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos), message);
+        }
     }
 
     public static void sendMSGToPlayer(CustomPacketPayload message, ServerPlayer player) {

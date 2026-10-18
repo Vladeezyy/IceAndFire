@@ -391,7 +391,7 @@ public class EntityLightningDragon extends EntityDragonBase {
         if (NeoForge.EVENT_BUS.post(new DragonFireEvent(this, burnX, burnY, burnZ)).isCanceled()) return;
         if (syncType == 1 && !level().isClientSide) {
             //sync with client
-            IceAndFire.sendMSGToAll(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
+            IceAndFire.sendMSGToTracking(this, new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
         }
         if (syncType == 2 && level().isClientSide) {
             //sync with server
@@ -399,7 +399,7 @@ public class EntityLightningDragon extends EntityDragonBase {
         }
         if (syncType == 3 && !level().isClientSide) {
             //sync with client, fire bomb
-            IceAndFire.sendMSGToAll(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 5));
+            IceAndFire.sendMSGToTracking(this, new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 5));
         }
         if (syncType == 4 && level().isClientSide) {
             //sync with server, fire bomb

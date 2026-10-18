@@ -111,7 +111,7 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
         }
         this.setChanged();
         if (!level.isClientSide) {
-            IceAndFire.sendMSGToAll(new MessageUpdatePodium(this.getBlockPos().asLong(), stacks.get(0)));
+            IceAndFire.sendMSGToTracking(level, this.getBlockPos(), new MessageUpdatePodium(this.getBlockPos().asLong(), stacks.get(0)));
         }
     }
 

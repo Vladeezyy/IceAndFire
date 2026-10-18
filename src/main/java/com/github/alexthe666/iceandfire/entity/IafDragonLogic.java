@@ -498,11 +498,11 @@ public class IafDragonLogic {
             try {
                 for (int i = 0; i < currentPath.getNodeCount(); i++) {
                     final Node point = currentPath.getNode(i);
-                    IceAndFire.sendMSGToAll(new MessageSpawnParticleAt(point.x, point.y, point.z, 2));
+                    IceAndFire.sendMSGToTracking(dragon, new MessageSpawnParticleAt(point.x, point.y, point.z, 2));
                 }
                 if (currentPath.getNextNodePos() != null) {
                     final Vec3 point = Vec3.atCenterOf(currentPath.getNextNodePos());
-                    IceAndFire.sendMSGToAll(new MessageSpawnParticleAt(point.x, point.y, point.z, 1));
+                    IceAndFire.sendMSGToTracking(dragon, new MessageSpawnParticleAt(point.x, point.y, point.z, 1));
 
                 }
             } catch (Exception e) {

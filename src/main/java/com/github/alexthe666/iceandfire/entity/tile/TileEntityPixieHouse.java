@@ -91,7 +91,7 @@ public class TileEntityPixieHouse extends BlockEntity {
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
         loadAdditional(packet.getTag(), registries);
         if (!level.isClientSide) {
-            IceAndFire.sendMSGToAll(
+            IceAndFire.sendMSGToTracking(level, worldPosition,
                 new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getInt("HouseType")));
         }
     }
@@ -130,7 +130,7 @@ public class TileEntityPixieHouse extends BlockEntity {
         pixie.setTame(this.tamedPixie, true);
         pixie.setOwnerUUID(this.pixieOwnerUUID);
         if (!level.isClientSide) {
-            IceAndFire.sendMSGToAll(new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));
+            IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));
         }
     }
 }

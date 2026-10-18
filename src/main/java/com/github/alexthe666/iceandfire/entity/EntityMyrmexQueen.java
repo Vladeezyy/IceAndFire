@@ -139,7 +139,9 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
 
         if (hasMadeHome() && this.getGrowthStage() >= 2 && !this.canSeeSky()) {
             eggTicks++;
-        } else if (this.canSeeSky()) {
+        } else if (this.canSeeSky() && (!this.hasMadeHome() || this.getHive() == null)) {
+            // Only a queen without a hive digs a nest: a queen of a hive that saw the sky (a broken ceiling, a water
+            // entrance above her) dug a new nest, moved into it and left her hive (#5197, #4297)
             this.setAnimation(ANIMATION_DIGNEST);
             if (this.getAnimationTick() == 42) {
                 int down = Math.max(15, this.blockPosition().getY() - 20 + this.getRandom().nextInt(10));

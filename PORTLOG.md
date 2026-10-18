@@ -58,6 +58,8 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | [#5157](https://github.com/AlexModGuy/Ice_and_Fire/issues/5157) amphithere sits in the air after the rider gets off | "Stay" applies again only on the ground |
 | [#5192](https://github.com/AlexModGuy/Ice_and_Fire/issues/5192), [#5208](https://github.com/AlexModGuy/Ice_and_Fire/issues/5208) riding lag on servers (not reproduced: net test with an adult dragon keeps 20 game ticks per second on the client) | Every dragon part called `markHurt()` every tick: a motion packet per part per tick to every player tracking it, ~200 packets/s per dragon (measured with `tools/nettest.sh`). Removed |
 | Server crash when a death worm of an unknown variant, a myrmex swarmer or a troll of an unknown type died (null loot table; found by the stress test: a dragon burning myrmexes) | `BuiltInLootTables.EMPTY`; the self-test kills every creature once |
+| [#5197](https://github.com/AlexModGuy/Ice_and_Fire/issues/5197), [#4297](https://github.com/AlexModGuy/Ice_and_Fire/issues/4297) myrmex queen leaves or vanishes from her hive | A queen that "saw the sky" (`canSeeSkyFromBelowWater`: also under water, e.g. a water entrance above her, or a broken ceiling) dug a new nest, teleported into it and left her hive. Only a queen without a hive digs now; the queen wanders only without a hive; myrmexes wander to their own hive first. Self-test reproduces it (water shaft above the queen) |
+| Block updates (podium, lectern, dragonforge, jar, pixie house) went to every player of every dimension (a player in the Nether got the podium of the same position in the Overworld); dragon forge sent its cook time every tick to everybody while a dragon breathed on it | All 25 `sendMSGToAll` → players tracking the entity or the chunk of the block, in its level (`IceAndFire.sendMSGToTracking`) |
 | Light gray banner patterns showed their raw key in every language (`.silver` instead of `light_gray`) | Keys renamed in the 15 languages |
 | Dragon corpses in caves below y 0 floated (sink check at y > -1) | World floor |
 | [#5369](https://github.com/AlexModGuy/Ice_and_Fire/issues/5369) health above 1024 from the config silently capped | Config comments name the Minecraft limit, a warning in the log when a value is above it |
@@ -78,14 +80,17 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
-## Current state (2026-10-18)
+## Current state (2026-10-18 evening, resume here)
 
-- 2.1.13-beta.1: self-test 27/27, client scene 28/28 (also with Sodium, Iris, Lithium, FerriteCore, ModernFix, Jade,
-  EntityCulling, AttributeFix: `tools/scenetest.sh -Pwith_compat`), net test (`tools/nettest.sh`), stress test 10/10
-  (`tools/stresstest.sh`, `SEED=` repeats a world), production server with the built jar.
-- Not done: #5197 myrmex queen (needs a long hive simulation), #4768 lightning dragon head twitch.
+- After 2.1.13-beta.1: queen fix (#5197) tested by the self-test (29/29, check "myrmex queen stays in her hive under a
+  water entrance"). `sendMSGToAll` → tracking players: **compiles, not yet run** (run selftest, nettest, scene).
+- Started: long hive simulation in the stress test. `src/selftest/.../TestHive.java` builds a hive with its queen
+  (SelfTest has its own copy of that code, switch it to TestHive). To do in `StressTest`: after the reload cycles
+  place a `TestHive` near the arena (other chunk, `forceArea`), after 100 ticks check `queenAtHome`, run
+  `tick sprint 6000` (`server.getCommands().performPrefixedCommand(...)`), log `state()` every 1000 ticks, check
+  `queenAtHome` at the end, then DONE.
+- Then: README "Fixed bugs" (#5197, block updates per dimension), release 2.1.13-beta.2, KB note.
 
 ## TODO
 
-- `sendMSGToAll` for entity updates → players tracking the entity (less traffic on big servers).
-- #5197 myrmex queen: a hive simulation of an hour in the stress test.
+- Long hive simulation in the stress test (see Current state).

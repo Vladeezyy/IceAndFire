@@ -10,6 +10,7 @@ public class MyrmexQueenAIWander extends MyrmexAIWander {
 
     @Override
     public boolean canUse() {
-        return (myrmex.canSeeSky() || myrmex.getHive() == null) && super.canUse();
+        // A queen of a hive stays home (MyrmexAIWanderHiveCenter, MyrmexAIReEnterHive), even under an open sky
+        return myrmex.getHive() == null && super.canUse();
     }
 }

@@ -442,7 +442,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                 this.setBreathingFire(true);
             } else {
                 if (!level().isClientSide) {
-                    IceAndFire.sendMSGToAll(new MessageDragonSetBurnBlock(this.getId(), true, burningTarget));
+                    IceAndFire.sendMSGToTracking(this, new MessageDragonSetBurnBlock(this.getId(), true, burningTarget));
                 }
                 burningTarget = null;
             }
@@ -1205,11 +1205,11 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                             if (player.getPassengers().size() >= 3)
                                 return InteractionResult.FAIL;
                             this.startRiding(player, true);
-                            IceAndFire.sendMSGToAll(new MessageStartRidingMob(this.getId(), true, true));
+                            IceAndFire.sendMSGToTracking(this, new MessageStartRidingMob(this.getId(), true, true));
                         } else if (dragonStage > 2 && !player.isPassenger()) {
                             player.setShiftKeyDown(false);
                             player.startRiding(this, true);
-                            IceAndFire.sendMSGToAll(new MessageStartRidingMob(this.getId(), true, false));
+                            IceAndFire.sendMSGToTracking(this, new MessageStartRidingMob(this.getId(), true, false));
                             this.setInSittingPose(false);
                         }
                         this.getNavigation().stop();

@@ -112,7 +112,7 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
                     }
                 } else {
                     if (entityDragonforge.cookTime > 0) {
-                        IceAndFire.sendMSGToAll(new MessageUpdateDragonforge(pos.asLong(), entityDragonforge.cookTime));
+                        IceAndFire.sendMSGToTracking(level, pos, new MessageUpdateDragonforge(pos.asLong(), entityDragonforge.cookTime));
                         entityDragonforge.cookTime = 0;
                     }
                 }
@@ -397,7 +397,7 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
             } else {
                 cookTime = 0;
             }
-            IceAndFire.sendMSGToAll(new MessageUpdateDragonforge(worldPosition.asLong(), cookTime));
+            IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdateDragonforge(worldPosition.asLong(), cookTime));
         }
         lastDragonFlameTimer = 40;
     }

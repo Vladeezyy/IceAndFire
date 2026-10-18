@@ -94,7 +94,11 @@ public class SelfTest {
                 case 610 -> partsLoadChunk(level, false);
                 case 700 -> partsUnloaded(level);
                 case 780 -> partsReloaded(level);
-                case 800 -> finish(server);
+                case 790 -> hivePlace(level);
+                case 900 -> hiveSettled(level);
+                case 905 -> hiveFlood(level);
+                case 1205 -> hiveAfterFlood(level);
+                case 1220 -> finish(server);
                 default -> {
                 }
             }
@@ -346,6 +350,83 @@ public class SelfTest {
         long all = dragon == null ? 0 : level.getEntitiesOfClass(EntityDragonPart.class, dragon.getBoundingBox().inflate(48)).size();
         check("dragon parts after chunk reload", dragon != null && parts.size() == 10 && all == 10, parts.size() + " owned, " + all + " near");
         level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, false);
+    }
+
+    /** Hive of #5197: the queen dug a new nest and left her hive whenever she "saw the sky", also through water. */
+    private static final ChunkPos HIVE_CHUNK = new ChunkPos(490, 490);
+    private static com.github.alexthe666.iceandfire.entity.util.MyrmexHive hive;
+    private static com.github.alexthe666.iceandfire.entity.EntityMyrmexQueen queen;
+    private static int hivesBefore;
+
+    private static void hiveArea(ServerLevel level, boolean load) {
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
+                level.setChunkForced(HIVE_CHUNK.x + x, HIVE_CHUNK.z + z, load);
+            }
+        }
+    }
+
+    private static void hivePlace(ServerLevel level) {
+        hiveArea(level, true);
+        BlockPos top = HIVE_CHUNK.getMiddleBlockPosition(0);
+        int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE, top.getX(), top.getZ());
+        BlockPos center = new BlockPos(top.getX(), Math.min(surface, level.getSeaLevel()) - 25, top.getZ());
+        // Built in a finished world as a queen digs it (small: the surface heightmaps of the world, not of worldgen),
+        // the queen placed as the worldgen does
+        var gen = new com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive(true, false, net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC);
+        gen.placeSmallGen(level, level.random, center);
+        hive = gen.hive;
+        var newQueen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level);
+        BlockPos ground = com.github.alexthe666.iceandfire.entity.util.MyrmexHive.getGroundedPos(level, center);
+        newQueen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+        newQueen.setHive(hive);
+        newQueen.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+        level.addFreshEntity(newQueen);
+        hivesBefore = com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level).getHivelist().size();
+        IceAndFire.LOGGER.info("[selftest] hive at {} (surface {})", center, surface);
+    }
+
+    private static com.github.alexthe666.iceandfire.entity.EntityMyrmexQueen findQueen(ServerLevel level) {
+        return level.getEntitiesOfClass(com.github.alexthe666.iceandfire.entity.EntityMyrmexQueen.class, new net.minecraft.world.phys.AABB(hive.getCenter()).inflate(64))
+            .stream().filter(q -> q.getHive() == hive).findFirst().orElse(null);
+    }
+
+    private static String queenState(ServerLevel level) {
+        if (queen == null) {
+            return "no queen";
+        }
+        var data = com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level);
+        return "alive " + queen.isAlive() + ", own hive " + (queen.getHive() == hive) + ", " + String.format("%.1f", Math.sqrt(queen.distanceToSqr(hive.getCenter().getCenter())))
+            + " blocks from the center, hives " + hivesBefore + " -> " + data.getHivelist().size() + ", sees the sky " + queen.canSeeSky();
+    }
+
+    private static void hiveSettled(ServerLevel level) {
+        queen = findQueen(level);
+        check("myrmex queen in her hive", queen != null && queen.getHive() == hive && queen.distanceToSqr(hive.getCenter().getCenter()) < 20 * 20, queenState(level));
+    }
+
+    /** A water entrance: a shaft from the queen up, water to the sea level, open sky above. */
+    private static void hiveFlood(ServerLevel level) {
+        if (queen == null) {
+            return;
+        }
+        BlockPos base = queen.blockPosition();
+        for (int y = base.getY() + 1; y < level.getMaxBuildHeight(); y++) {
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    BlockPos pos = new BlockPos(base.getX() + x, y, base.getZ() + z);
+                    boolean water = y >= base.getY() + 5 && y < level.getSeaLevel();
+                    level.setBlock(pos, water ? net.minecraft.world.level.block.Blocks.WATER.defaultBlockState() : net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+        }
+        IceAndFire.LOGGER.info("[selftest] water shaft above the queen: {}", queenState(level));
+    }
+
+    private static void hiveAfterFlood(ServerLevel level) {
+        check("myrmex queen stays in her hive under a water entrance (#5197)", queen != null && queen.isAlive() && queen.getHive() == hive
+            && queen.distanceToSqr(hive.getCenter().getCenter()) < 20 * 20 && com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level).getHivelist().size() == hivesBefore, queenState(level));
+        hiveArea(level, false);
     }
 
     private static void finish(MinecraftServer server) {
