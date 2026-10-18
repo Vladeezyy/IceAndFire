@@ -1,0 +1,39 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="${mod_license}"
+issueTrackerURL="https://github.com/Vladeezyy/IceAndFire/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/ice-and-fire-dragons"
+authors="${mod_authors}"
+credits="Port to NeoForge ${minecraft_version}: Vladeezyy"
+description='''
+Dragons and other mythological creatures in Minecraft.
+'''
+
+[[mixins]]
+config="iceandfire.mixins.json"
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="citadel"
+    type="required"
+    versionRange="${citadel_version_range}"
+    ordering="AFTER"
+    side="BOTH"
