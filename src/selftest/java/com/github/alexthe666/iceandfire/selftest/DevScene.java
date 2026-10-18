@@ -61,6 +61,14 @@ public final class DevScene {
     private static int failures;
     private static BlockPos stage;
 
+    private static final List<java.util.function.Supplier<ItemStack>> HELMETS = List.of(
+        () -> ItemStack.EMPTY,
+        () -> new ItemStack(IafItemRegistry.DRAGONSTEEL_FIRE_HELMET.get()),
+        () -> new ItemStack(com.github.alexthe666.iceandfire.enums.EnumDragonArmor.values()[0].helmet.get()),
+        () -> new ItemStack(IafItemRegistry.SILVER_HELMET.get()),
+        () -> new ItemStack(IafItemRegistry.COPPER_HELMET.get()),
+        () -> new ItemStack(IafItemRegistry.DEATHWORM_YELLOW_HELMET.get()));
+
     static {
         at(40, mc -> server(mc, DevScene::setup));
         at(45, mc -> mc.options.hideGui = true);
@@ -69,6 +77,23 @@ public final class DevScene {
         at(130, mc -> server(mc, p -> look(p, stage.offset(0, 8, 38), stage.offset(0, 3, 20))));
         at(220, mc -> shot(mc, "dragons"));
         at(230, mc -> server(mc, p -> level(p).getEntitiesOfClass(EntityDragonBase.class, p.getBoundingBox().inflate(80)).forEach(Entity::discard)));
+        // Helmets close up, front (#5112: the hat layer of the skin through the helmet); first without a helmet
+        at(236, mc -> {
+            mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            mc.options.fov().set(30);
+        });
+        for (int k = 0; k < HELMETS.size(); k++) {
+            final int n = k;
+            at(240 + k * 40, mc -> server(mc, p -> {
+                p.setItemSlot(EquipmentSlot.HEAD, HELMETS.get(n).get());
+                look(p, stage.offset(0, 2, 40), stage.offset(0, 2, 30));
+            }));
+            at(270 + k * 40, mc -> shot(mc, "helmet_" + n));
+        }
+        at(240 + HELMETS.size() * 40, mc -> {
+            mc.options.fov().set(70);
+            mc.options.setCameraType(CameraType.FIRST_PERSON);
+        });
         // Armor in third person (issues #5112, #5205: armor models and textures)
         at(480, mc -> server(mc, DevScene::armor));
         at(485, mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
@@ -158,6 +183,8 @@ public final class DevScene {
             others.add(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()) + "@" + e.blockPosition().subtract(stage).toShortString());
         }
         IceAndFire.LOGGER.info("[scene] around the stage before {}: {}", BuiltInRegistries.ENTITY_TYPE.getKey(type), others);
+        // Night for the troll (stone in daylight), day for the rest
+        level.setDayTime(BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath().equals("troll") ? 18000 : 6000);
         Entity entity = place(level, type, stage.offset(0, 0, 0), 200);
         lastCloseUp = entity;
         float size = Math.max(entity.getBbWidth(), entity.getBbHeight());

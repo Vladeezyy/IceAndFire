@@ -956,6 +956,20 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         return isModelDead;
     }
 
+    @Override
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        // First data of a dragon the client has not ticked yet: a corpse or a sleeping dragon coming into view starts
+        // in its pose instead of getting up from standing
+        if (this.level().isClientSide && this.tickCount == 0 && this.prevAnimationProgresses != null) {
+            if (key == MODEL_DEAD && this.entityData.get(MODEL_DEAD)) {
+                this.modelDeadProgress = this.prevModelDeadProgress = 20.0F;
+            } else if (key == SLEEPING && this.entityData.get(SLEEPING)) {
+                this.sleepProgress = this.prevAnimationProgresses[1] = 20.0F;
+            }
+        }
+    }
+
     public void setModelDead(boolean modeldead) {
         this.entityData.set(MODEL_DEAD, modeldead);
         if (!level().isClientSide) {
@@ -1722,7 +1736,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         isOverAir = isOverAirLogic();
         logic.updateDragonCommon();
         if (this.isModelDead()) {
-            if (!level().isClientSide && level().isEmptyBlock(BlockPos.containing(this.getBlockX(), this.getBoundingBox().minY, this.getBlockZ())) && this.getY() > -1) {
+            if (!level().isClientSide && level().isEmptyBlock(BlockPos.containing(this.getBlockX(), this.getBoundingBox().minY, this.getBlockZ())) && this.getY() > this.level().getMinBuildHeight()) {
                 this.move(MoverType.SELF, new Vec3(0, -0.2F, 0));
             }
             this.setBreathingFire(false);

@@ -60,7 +60,7 @@ public class WorldGenSirenIsland extends Feature<NoneFeatureConfiguration> imple
             for (float j = 0; j < 2 * Math.PI * i + context.random().nextInt(2); j += 0.5f) {
                 BlockPos stonePos = BlockPos.containing(Math.floor(center.getX() + Mth.sin(j) * i + context.random().nextInt(2)), center.getY(), Math.floor(center.getZ() + Mth.cos(j) * i + context.random().nextInt(2)));
 
-                while (!context.level().getBlockState(stonePos).canOcclude() && stonePos.getY() >= 0) {
+                while (!context.level().getBlockState(stonePos).canOcclude() && stonePos.getY() >= context.level().getMinBuildHeight()) {
                     context.level().setBlock(stonePos, getStone(context.random()), Block.UPDATE_ALL);
                     stonePos = stonePos.below();
                 }

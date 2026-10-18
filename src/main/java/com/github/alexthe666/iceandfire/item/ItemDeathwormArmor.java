@@ -27,7 +27,7 @@ public class ItemDeathwormArmor extends ArmorItem implements IafClientItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                return new ModelDeathWormArmor(ModelDeathWormArmor.getBakedModel(armorSlot == EquipmentSlot.LEGS || armorSlot == EquipmentSlot.HEAD));
+                return new ModelDeathWormArmor(ModelDeathWormArmor.getBakedModel(armorSlot));
             }
         });
     }

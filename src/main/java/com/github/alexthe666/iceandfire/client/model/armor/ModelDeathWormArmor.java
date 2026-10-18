@@ -2,6 +2,7 @@ package com.github.alexthe666.iceandfire.client.model.armor;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -11,6 +12,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 public class ModelDeathWormArmor extends ArmorModelBase {
     private static final ModelPart INNER_MODEL = createMesh(CubeDeformation.NONE.extend(INNER_MODEL_OFFSET), 0.0F).getRoot().bake(64, 64);
     private static final ModelPart OUTER_MODEL = createMesh(CubeDeformation.NONE.extend(OUTER_MODEL_OFFSET), 0.0F).getRoot().bake(64, 64);
+    private static final ModelPart HEAD_MODEL = createMesh(CubeDeformation.NONE.extend(HEAD_MODEL_OFFSET), 0.0F).getRoot().bake(64, 64);
 
     public ModelDeathWormArmor(ModelPart modelPart) {
         super(modelPart);
@@ -39,6 +41,10 @@ public class ModelDeathWormArmor extends ArmorModelBase {
 
     public static ModelPart getBakedModel(boolean inner) {
         return inner ? INNER_MODEL : OUTER_MODEL;
+    }
+
+    public static ModelPart getBakedModel(EquipmentSlot slot) {
+        return slot == EquipmentSlot.HEAD ? HEAD_MODEL : getBakedModel(slot == EquipmentSlot.LEGS);
     }
 
 }

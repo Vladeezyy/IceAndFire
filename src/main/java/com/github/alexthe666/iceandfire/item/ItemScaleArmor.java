@@ -57,16 +57,15 @@ public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonIt
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                boolean inner = armorSlot == EquipmentSlot.LEGS || armorSlot == EquipmentSlot.HEAD;
                 if (itemStack.getItem() instanceof ItemScaleArmor) {
                     DragonType dragonType = ((ItemScaleArmor) itemStack.getItem()).armor_type.eggType.dragonType;
 
                     if (DragonType.FIRE == dragonType)
-                        return new ModelFireDragonScaleArmor(inner);
+                        return new ModelFireDragonScaleArmor(armorSlot);
                     if (DragonType.ICE == dragonType)
-                        return new ModelIceDragonScaleArmor(inner);
+                        return new ModelIceDragonScaleArmor(armorSlot);
                     if (DragonType.LIGHTNING == dragonType)
-                        return new ModelLightningDragonScaleArmor(inner);
+                        return new ModelLightningDragonScaleArmor(armorSlot);
                 }
                 return _default;
 

@@ -1,6 +1,8 @@
 package com.github.alexthe666.iceandfire;
 
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.fml.config.ModConfig;
 
 public class IafConfig {
@@ -153,6 +155,15 @@ public class IafConfig {
         }
     }
 
+    /** #5369: a dragon health of 5000 in the config gave dragons 1024, the limit of the attribute, without a word. */
+    private static void warnAboveHealthLimit() {
+        double limit = Attributes.MAX_HEALTH.value() instanceof RangedAttribute ranged ? ranged.getMaxValue() : Double.MAX_VALUE;
+        double highest = Math.max(dragonHealth, Math.max(dreadQueenMaxHealth, Math.max(hydraMaxHealth, cyclopsMaxHealth)));
+        if (highest > limit) {
+            IceAndFire.LOGGER.warn("A health value of the Ice and Fire config ({}) is above the max health limit of Minecraft ({}): creatures get {}. A mod that raises the limit (e.g. AttributeFix) is needed.", highest, limit, limit);
+        }
+    }
+
     public static void bakeServer(final ModConfig config) {
         try {
             generateDragonSkeletons = ConfigHolder.SERVER.generateDragonSkeletons.get();
@@ -285,6 +296,7 @@ public class IafConfig {
             villagerHouseWeight = ConfigHolder.SERVER.villagerHouseWeight.get();
             allowAttributeOverriding = ConfigHolder.SERVER.allowAttributeOverriding.get();
             pathfindingDebug = ConfigHolder.SERVER.pathfindingDebug.get();
+            warnAboveHealthLimit();
         } catch (Exception e) {
             IceAndFire.LOGGER.warn("An exception was caused trying to load the common config for Ice and Fire.");
             e.printStackTrace();

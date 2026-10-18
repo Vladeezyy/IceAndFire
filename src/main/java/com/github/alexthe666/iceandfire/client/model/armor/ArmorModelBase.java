@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public class ArmorModelBase extends HumanoidModel<LivingEntity> {
     protected static float INNER_MODEL_OFFSET = 0.38F;
     protected static float OUTER_MODEL_OFFSET = 0.45F;
+    /** Above the hat layer of the player model (0.5): the inner offset of 1.20.1 let the skin through helmets (#5112). */
+    protected static float HEAD_MODEL_OFFSET = 0.55F;
     public ArmorModelBase(ModelPart p_170677_) {
         super(p_170677_);
     }

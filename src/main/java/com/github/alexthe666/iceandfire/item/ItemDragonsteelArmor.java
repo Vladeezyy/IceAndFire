@@ -38,14 +38,13 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                boolean inner = armorSlot == EquipmentSlot.LEGS || armorSlot == EquipmentSlot.HEAD;
                 if (itemStack.getItem() instanceof ArmorItem) {
                     if (material == DRAGONSTEEL_FIRE_ARMOR_MATERIAL)
-                        return new ModelDragonsteelFireArmor(inner);
+                        return new ModelDragonsteelFireArmor(armorSlot);
                     if (material == DRAGONSTEEL_ICE_ARMOR_MATERIAL)
-                        return new ModelDragonsteelIceArmor(inner);
+                        return new ModelDragonsteelIceArmor(armorSlot);
                     if (material == DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL)
-                        return new ModelDragonsteelLightningArmor(inner);
+                        return new ModelDragonsteelLightningArmor(armorSlot);
                 }
                 return _default;
 

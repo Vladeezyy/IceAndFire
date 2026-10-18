@@ -60,6 +60,18 @@ neoForge {
             client()
             systemProperty 'iceandfire.scene', 'true'
         }
+        // tools/nettest.sh: a dedicated server in run-netserver and a client that joins it and rides a dragon
+        netserver {
+            server()
+            gameDirectory = project.file('run-netserver')
+            programArgument '--nogui'
+            systemProperty 'iceandfire.nettest', 'server'
+        }
+        netclient {
+            client()
+            systemProperty 'iceandfire.nettest', 'client'
+            programArguments.addAll '--quickPlayMultiplayer', 'localhost:25570', '--username', 'NetTester'
+        }
         data {
             data()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()

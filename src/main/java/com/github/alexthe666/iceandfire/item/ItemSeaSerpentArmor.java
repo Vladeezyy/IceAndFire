@@ -54,7 +54,7 @@ public class ItemSeaSerpentArmor extends ArmorItem implements IafClientItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                return new ModelSeaSerpentArmor(armorSlot == EquipmentSlot.LEGS || armorSlot == EquipmentSlot.HEAD);
+                return new ModelSeaSerpentArmor(armorSlot);
             }
         });
     }
