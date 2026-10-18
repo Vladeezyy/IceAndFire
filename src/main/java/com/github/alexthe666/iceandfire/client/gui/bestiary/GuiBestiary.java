@@ -37,6 +37,10 @@ import java.util.*;
 public class GuiBestiary extends Screen {
     protected static final int X = 390;
     protected static final int Y = 245;
+    /** Text width in font pixels that fits a page: bestiary.png is drawn 390 wide, the left parchment ends at 192.7. */
+    private static final int LEFT_PAGE_TEXT_WIDTH = 189;
+    /** The right parchment ends at 385.4, its text starts at 220 * 0.945. */
+    private static final int RIGHT_PAGE_TEXT_WIDTH = 187;
     private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/bestiary/bestiary.png");
     private static final ResourceLocation DRAWINGS_0 = ResourceLocation.parse("iceandfire:textures/gui/bestiary/drawings_0.png");
     private static final ResourceLocation DRAWINGS_1 = ResourceLocation.parse("iceandfire:textures/gui/bestiary/drawings_1.png");
@@ -915,10 +919,21 @@ public class GuiBestiary extends Screen {
                     ms.pose().scale(0.945F, 0.945F, 0.945F);
                     ms.pose().translate(0, 5.5F, 0);
                 }
-                if (linenumber <= 19) {
-                    font.drawInBatch(line, 15, 20 + linenumber * 10, 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                // A line wider than the page (translations, tools/bestiary_width.py) is squeezed to fit instead of running
+                // over the binding or the edge of the book
+                boolean leftPage = linenumber <= 19;
+                float x = leftPage ? 15 : 220;
+                int lineWidth = font.width(line);
+                int pageWidth = leftPage ? LEFT_PAGE_TEXT_WIDTH : RIGHT_PAGE_TEXT_WIDTH;
+                if (lineWidth > pageWidth) {
+                    ms.pose().translate(x, 0, 0);
+                    ms.pose().scale((float) pageWidth / lineWidth, 1F, 1F);
+                    x = 0;
+                }
+                if (leftPage) {
+                    font.drawInBatch(line, x, 20 + linenumber * 10, 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
                 } else {
-                    font.drawInBatch(line, 220, (linenumber - 19) * 10, 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                    font.drawInBatch(line, x, (linenumber - 19) * 10, 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
                 }
                 linenumber++;
                 ms.pose().popPose();

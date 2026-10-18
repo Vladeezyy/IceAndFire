@@ -21,9 +21,9 @@ hielo o fuego también se puede
 hacer con los eléctricos, tal como:
 armaduras de escamas de dragón,
 
-frascos de sangre, acero dracónico,
-bloques de escamas y más.
-
+frascos de sangre, acero
+dracónico, bloques de escamas y
+más.
 <item><iceandfire:dragonscale_amythest 100 120 40 1>
 <item><iceandfire:armor_amythest_helmet 100 140 30 1>
 <item><iceandfire:dragonsteel_lightning_ingot 100 160 40 1>

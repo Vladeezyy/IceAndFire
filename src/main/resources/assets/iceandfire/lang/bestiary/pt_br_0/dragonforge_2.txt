@@ -22,11 +22,11 @@ precisará de muros de ossos de dragão.
 
 Para energizar adequadamente sua
 forja coloque o dragão domesticado
-ou acorrentado em frente à abertura.
-Fazendo isso o dragão comecará a 
-expelir chamas ou gelo dentro da forja
-enquanto houver itens válidos dentro dela.
-
+ou acorrentado em frente à
+abertura. Fazendo isso o dragão
+comecará a expelir chamas ou gelo
+dentro da forja enquanto houver
+itens válidos dentro dela.
 
 A maioria dos itens colocados na forja,
 se tornarão cinzas ou gelo de dragão,

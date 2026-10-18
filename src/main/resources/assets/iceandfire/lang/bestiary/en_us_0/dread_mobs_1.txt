@@ -13,11 +13,11 @@ and tear through their prey.
 
 
 
-Dread Beasts are the mangled remains
-of animals converted by the dread
-lich. They move quickly and bite any
-living thing they can get their
-teeth on.
+Dread Beasts are the mangled
+remains of animals converted by the
+dread lich. They move quickly and
+bite any living thing they can get
+their teeth on.
 
 <image><drawings_2.png 275 5 70 111 37 50 1>
 

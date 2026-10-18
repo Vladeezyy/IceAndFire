@@ -28,11 +28,11 @@ dano.
 A explosão de gelo não é o único
 ataque elemental. O dragão também
 pode criar um jato que congela
-completamente o terreno. Este cubo 
-de gelo explosivo é jogado na 
-direção da presa do dragão. Somente 
-dragões experientes são capazes de 
-fazer este ataque.
+completamente o terreno. Este cubo
+de gelo explosivo é jogado na
+direção da presa do dragão.
+Somente dragões experientes são
+capazes de fazer este ataque.
 
 
 

@@ -21,10 +21,10 @@ gelo, também podem ser feitos
 utilizando os itens do dragão 
 elétrico.
 
-Tais como: Armadura de escamas de 
-dragão elétrico, garrafas de sangue, 
-aço dracônico, blocos escamosos e 
-mais.
+Tais como: Armadura de escamas de
+dragão elétrico, garrafas de
+sangue, aço dracônico, blocos
+escamosos e mais.
 
 <item><iceandfire:dragonscale_amythest 100 120 40 1>
 <item><iceandfire:armor_amythest_helmet 100 140 30 1>

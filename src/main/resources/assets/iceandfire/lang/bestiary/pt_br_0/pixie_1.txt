@@ -1,6 +1,6 @@
 Simplesmente interaja com uma fada
-segurando uma jarra para capturá-la.
-
+segurando uma jarra para
+capturá-la.
 Consumir o pó de fada causará 
 levitação e um pouco de brilho,
 no entanto esse pó pode ser usado
@@ -12,10 +12,10 @@ ambrósia.
 
 
 
-Quando a ambrósia é consumida, ela 
-irá restaurar uma grande quantidade
-de vida juntamente com efeitos de 
-poções muito potentes.
+Quando a ambrósia é consumida, ela
+irá restaurar uma grande
+quantidade de vida juntamente com
+efeitos de poções muito potentes.
 
 
 

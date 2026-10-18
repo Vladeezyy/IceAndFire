@@ -1,37 +1,37 @@
-Trocar com um myrmex È um negÛcio
-lucrativo. Oper·rias geralmente 
-trocam itens de baixa qualidade, mas 
-est„o dispostas a trocar alguma resina
-por sendimentos e ocasionalmente 
-gemas. Soldados ir„o trocar por 
-itens de mobs comuns, as Sentinelas 
-por itens mais raros ou venenosos. 
-Monarcas ir„o trocar por artefatos e 
-ingredientes alquÌmicos. Rainhas
-exclusivamente oferecem ovos pelas 
-trocas.
+Trocar com um myrmex √© um neg√≥cio
+lucrativo. Oper√°rias geralmente
+trocam itens de baixa qualidade, mas
+est√£o dispostas a trocar alguma
+resina por sendimentos e
+ocasionalmente gemas. Soldados ir√£o
+trocar por itens de mobs comuns, as
+Sentinelas por itens mais raros ou
+venenosos. Monarcas ir√£o trocar
+por artefatos e ingredientes
+alqu√≠micos. Rainhas exclusivamente
+oferecem ovos pelas trocas.
 
 
 
 
-B·culos Myrmex podem ser usados
+B√°culos Myrmex podem ser usados
 para modificar a estrutura das
-colÙnias. Ao interagir com um
+col√¥nias. Ao interagir com um
 
-myrmex enquanto segura um b·culo
-ir· vincul·-lo ‡ sua colÙnia.  
-Enquanto usa-lo, vocÍ poder· 
-deletar certas salas da colÙnia e
-interromper a reproduÁ„o da rainha. 
-Usando o b·culo enquanto se esgueira, 
-vocÍ poder· adicionar novas salas na
-sua posiÁ„o. SÛ È possÌvel utilizar
-esse b·culo se sua reputaÁ„o for
-igual ou maior que 75.
+myrmex enquanto segura um b√°culo
+ir√° vincul√°-lo √† sua col√¥nia.
+Enquanto usa-lo, voc√™ poder√°
+deletar certas salas da col√¥nia e
+interromper a reprodu√ß√£o da
+rainha. Usando o b√°culo enquanto se
+esgueira, voc√™ poder√° adicionar
+novas salas na sua posi√ß√£o. S√≥ √©
+poss√≠vel utilizar esse b√°culo se sua
+reputa√ß√£o for igual ou maior que 75.
 
-Ovos de myrmex sÛ podem eclodir no
-subterr‚neo. Um ovo de rainha, quando
-chocado no subsolo prÛximo do jogador,
-se unir· ‡ ele, e a colÙnia que se
-formar· a seguir ter· um opini„o 
+Ovos de myrmex s√≥ podem eclodir no
+subterr√¢neo. Um ovo de rainha, quando
+chocado no subsolo pr√≥ximo do jogador,
+se unir√° √† ele, e a col√¥nia que se
+formar√° a seguir ter√° um opini√£o 
 permanente de valor 100.

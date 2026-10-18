@@ -60,13 +60,13 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
             font.drawInBatch(s3, k + this.imageWidth / 2 - font.width(s3) / 2, l + 75, 0XFFFFFF, false, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
             String s2 = StatCollector.translateToLocal("dragon.health") + " " + Math.floor(Math.min(dragon.getHealth(), dragon.getMaxHealth())) + " / " + dragon.getMaxHealth();
             font.drawInBatch(s2, k + this.imageWidth / 2 - font.width(s2) / 2, l + 84, 0XFFFFFF, false, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-            String s5 = StatCollector.translateToLocal("dragon.gender") + StatCollector.translateToLocal((dragon.isMale() ? "dragon.gender.male" : "dragon.gender.female"));
+            String s5 = StatCollector.translateToLocal("dragon.gender") + " " + StatCollector.translateToLocal((dragon.isMale() ? "dragon.gender.male" : "dragon.gender.female"));
             font.drawInBatch(s5, k + this.imageWidth / 2 - font.width(s5) / 2, l + 93, 0XFFFFFF, false, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-            String s6 = StatCollector.translateToLocal("dragon.hunger") + dragon.getHunger() + "/100";
+            String s6 = StatCollector.translateToLocal("dragon.hunger") + " " + dragon.getHunger() + "/100";
             font.drawInBatch(s6, k + this.imageWidth / 2 - font.width(s6) / 2, l + 102, 0XFFFFFF, false, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
             String s4 = StatCollector.translateToLocal("dragon.stage") + " " + dragon.getDragonStage() + " " + StatCollector.translateToLocal("dragon.days.front") + dragon.getAgeInDays() + " " + StatCollector.translateToLocal("dragon.days.back");
             font.drawInBatch(s4, k + this.imageWidth / 2 - font.width(s4) / 2, l + 111, 0XFFFFFF, false, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-            String s7 = dragon.getOwner() != null ? StatCollector.translateToLocal("dragon.owner") + dragon.getOwner().getName().getString() : StatCollector.translateToLocal("dragon.untamed");
+            String s7 = dragon.getOwner() != null ? StatCollector.translateToLocal("dragon.owner") + " " + dragon.getOwner().getName().getString() : StatCollector.translateToLocal("dragon.untamed");
             font.drawInBatch(s7, k + this.imageWidth / 2 - font.width(s7) / 2, l + 120, 0XFFFFFF, false, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
         }
     }

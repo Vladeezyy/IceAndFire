@@ -19,13 +19,13 @@ queira transformar em pedra.
 
 
 
-Qualquer criatura petrificada ao ser
-destruída com uma picareta virará
-pedregulho, a menos é claro que você 
-use uma picareta com Toque Suave, 
-que ao destruir a criatura 
-petrificada irá gerar uma estátua 
-dela.
+Qualquer criatura petrificada ao
+ser destruída com uma picareta
+virará pedregulho, a menos é claro
+que você use uma picareta com
+Toque Suave, que ao destruir a
+criatura petrificada irá gerar uma
+estátua dela.
 
 Tenha cuidado, a cabeça da górgona
 só pode ser usada uma vez!
