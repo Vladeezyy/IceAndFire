@@ -93,7 +93,7 @@ public class SeaSerpentAIMeleeJump  extends JumpGoal {
             this.dolphin.setXRot(Mth.rotLerp(this.dolphin.getXRot(), 0.0F, 0.2F));
         } else {
             final double d0 = vector3d.horizontalDistance();
-            final double d1 = Math.signum(-vector3d.y) * Math.acos(d0 / vector3d.length()) * (180F / (float) Math.PI);
+            final double d1 = vector3d.length() < 1.0E-6 ? 0.0D : Math.signum(-vector3d.y) * Math.acos(Mth.clamp(d0 / vector3d.length(), -1.0D, 1.0D)) * (180F / (float) Math.PI);
             this.dolphin.setXRot((float) d1);
         }
 

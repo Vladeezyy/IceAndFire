@@ -207,13 +207,25 @@ public class StressTest {
         return new AABB(center).inflate(160, 400, 160);
     }
 
-    /** Every dragon has its 10 parts, no part without a dragon. */
+    private static int dragonsBefore = -1;
+
+    /**
+     * Every ticking dragon has its 10 parts, no dragon more than 10, no part without a dragon, no dragon lost. Dragons
+     * that flew out of the forced chunks do not tick after a reload and have no parts yet.
+     */
     private static void parts(ServerLevel level, String when) {
         List<EntityDragonBase> dragons = dragons(level);
         List<EntityDragonPart> parts = level.getEntitiesOfClass(EntityDragonPart.class, area().inflate(64));
         long orphans = parts.stream().filter(part -> !(part.getParent() instanceof EntityDragonBase)).count();
-        check("dragon parts " + when, parts.size() - orphans == dragons.size() * 10L && orphans == 0,
-            dragons.size() + " dragons, " + parts.size() + " parts, " + orphans + " without a dragon");
+        long ticking = dragons.stream().filter(dragon -> level.isPositionEntityTicking(dragon.blockPosition())).count();
+        long withAllParts = dragons.stream().filter(dragon -> parts.stream().filter(part -> part.getParent() == dragon).count() == 10).count();
+        long tooMany = dragons.stream().filter(dragon -> parts.stream().filter(part -> part.getParent() == dragon).count() > 10).count();
+        if (dragonsBefore < 0) {
+            dragonsBefore = dragons.size();
+        }
+        check("dragon parts " + when, orphans == 0 && tooMany == 0 && withAllParts >= ticking && dragons.size() == dragonsBefore,
+            dragons.size() + " dragons (" + ticking + " ticking, " + withAllParts + " with 10 parts, " + tooMany + " with more), "
+                + parts.size() + " parts, " + orphans + " without a dragon");
     }
 
     private static void report(MinecraftServer server, ServerLevel level, String phase) {

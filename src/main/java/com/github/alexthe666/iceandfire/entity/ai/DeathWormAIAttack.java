@@ -115,7 +115,7 @@ public class DeathWormAIAttack extends Goal {
             this.worm.setXRot(Mth.rotLerp(this.worm.getXRot(), 0.0F, 0.2F));
         } else {
             final double d0 = vector3d.horizontalDistance();
-            final double d1 = Math.signum(-vector3d.y) * Math.acos(d0 / vector3d.length()) * (180F / (float) Math.PI);
+            final double d1 = vector3d.length() < 1.0E-6 ? 0.0D : Math.signum(-vector3d.y) * Math.acos(Mth.clamp(d0 / vector3d.length(), -1.0D, 1.0D)) * (180F / (float) Math.PI);
             this.worm.setXRot((float) d1);
         }
         if (shouldJump())

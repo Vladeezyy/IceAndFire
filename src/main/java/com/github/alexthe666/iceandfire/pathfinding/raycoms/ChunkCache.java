@@ -159,7 +159,8 @@ public class ChunkCache implements LevelReader {
 
     @Override
     public Holder<Biome> getUncachedNoiseBiome(final int x, final int y, final int z) {
-        return null;
+        // From the biome source (no chunk access); null was a crash for any biome lookup during pathfinding
+        return this.world.getUncachedNoiseBiome(x, y, z);
     }
 
     /**
