@@ -94,6 +94,37 @@ public class NetTest {
     private static boolean dismounted;
     private static int fails;
 
+    private static final java.util.Map<String, Integer> PACKETS = new java.util.concurrent.ConcurrentHashMap<>();
+    private static boolean counterInstalled;
+
+    /** Counts the packets by type before the vanilla handler (bundles are counted by their content). */
+    private static void installCounter(Minecraft mc) {
+        if (counterInstalled) {
+            return;
+        }
+        counterInstalled = true;
+        mc.getConnection().getConnection().channel().pipeline().addBefore("packet_handler", "nettest_counter", new io.netty.channel.ChannelInboundHandlerAdapter() {
+            @Override
+            public void channelRead(io.netty.channel.ChannelHandlerContext ctx, Object msg) throws Exception {
+                if (msg instanceof net.minecraft.network.protocol.BundlePacket<?> bundle) {
+                    for (Object packet : bundle.subPackets()) {
+                        PACKETS.merge(name(packet), 1, Integer::sum);
+                    }
+                } else {
+                    PACKETS.merge(name(msg), 1, Integer::sum);
+                }
+                super.channelRead(ctx, msg);
+            }
+        });
+    }
+
+    private static String name(Object packet) {
+        if (packet instanceof net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket custom) {
+            return custom.payload().type().id().getPath();
+        }
+        return packet.getClass().getSimpleName().replace("Clientbound", "").replace("Packet", "");
+    }
+
     @SubscribeEvent
     public static void onClientTickPre(ClientTickEvent.Pre event) {
         if (MODE.equals("client")) {
@@ -115,6 +146,7 @@ public class NetTest {
             return;
         }
         mc.options.pauseOnLostFocus = false;
+        installCounter(mc);
         long now = System.currentTimeMillis();
         if (now - lastSecond >= 1000) {
             long gameTime = mc.level.getGameTime();
@@ -123,6 +155,12 @@ public class NetTest {
                 String.format("%.1f", tickMsMax), String.format("%.0f", mc.getConnection().getConnection().getAverageReceivedPackets()),
                 String.format("%.0f", mc.getConnection().getConnection().getAverageSentPackets()),
                 lastGameTime < 0 ? 0 : gameTime - lastGameTime, mc.player.blockPosition().toShortString());
+            // The packet types the client received in this second, most first
+            StringBuilder top = new StringBuilder();
+            PACKETS.entrySet().stream().sorted((a, b) -> b.getValue() - a.getValue()).limit(6)
+                .forEach(e -> top.append(e.getKey()).append('=').append(e.getValue()).append(' '));
+            IceAndFire.LOGGER.info("[nettest] client packets {}", top);
+            PACKETS.clear();
             lastGameTime = gameTime;
             lastSecond = now;
             tickMsSum = 0;
