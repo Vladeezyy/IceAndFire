@@ -5,9 +5,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import java.util.function.Consumer;
 
 /**
- * Items with client extensions (armor models, custom renderers). NeoForge 1.21 removed Item#initializeClient, the
- * extensions are collected in {@code RegisterClientExtensionsEvent}.
+ * Items with client extensions (armor models, custom renderers), collected in {@code RegisterClientExtensionsEvent}.
+ * Not named initializeClient: NeoForge 21.1 still calls the deprecated Item#initializeClient, which would register
+ * every extension twice and crash.
  */
 public interface IafClientItem {
-    void initializeClient(Consumer<IClientItemExtensions> consumer);
+    void registerClientExtensions(Consumer<IClientItemExtensions> consumer);
 }

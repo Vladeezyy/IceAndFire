@@ -32,7 +32,7 @@ public class ItemTrollWeapon extends SwordItem implements IafClientItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
 
         consumer.accept(new IClientItemExtensions() {
             static final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> new RenderTrollWeapon(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));

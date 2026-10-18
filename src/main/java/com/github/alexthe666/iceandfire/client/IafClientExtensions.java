@@ -18,7 +18,7 @@ public class IafClientExtensions {
         for (DeferredHolder<Item, ? extends Item> holder : IafItemRegistry.ITEMS.getEntries()) {
             Item item = holder.get();
             if (item instanceof IafClientItem clientItem) {
-                clientItem.initializeClient(extensions -> event.registerItem(extensions, item));
+                clientItem.registerClientExtensions(extensions -> event.registerItem(extensions, item));
             }
         }
     }

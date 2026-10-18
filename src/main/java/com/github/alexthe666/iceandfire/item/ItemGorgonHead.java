@@ -44,7 +44,7 @@ public class ItemGorgonHead extends Item implements IafClientItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
 
         consumer.accept(new IClientItemExtensions() {
             static final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> new RenderGorgonHead(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));

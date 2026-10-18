@@ -21,6 +21,18 @@ repositories {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+// Functional self-test and client scene (src/selftest): loaded in dev runs only, never part of the jar
+sourceSets {
+    selftest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    selftestImplementation.extendsFrom implementation
+    selftestCompileOnly.extendsFrom compileOnly
+}
+
 neoForge {
     version = project.neo_version
 
@@ -37,6 +49,17 @@ neoForge {
             server()
             programArgument '--nogui'
         }
+        // tools/selftest.sh: functional checks on a fresh world, then the server stops
+        selftest {
+            server()
+            programArgument '--nogui'
+            systemProperty 'iceandfire.selftest', 'true'
+        }
+        // tools/scenetest.sh: client scene with checks and screenshots in run/screenshots
+        scene {
+            client()
+            systemProperty 'iceandfire.scene', 'true'
+        }
         data {
             data()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
@@ -50,6 +73,7 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.selftest)
         }
     }
 }
@@ -85,6 +109,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 }
 sourceSets.main.resources.srcDir generateModMetadata
 neoForge.ideSyncTask generateModMetadata
+neoForge.addModdingDependenciesTo(sourceSets.selftest)
 
 tasks.named('jar', Jar).configure {
     from('LICENSE') { rename { 'LICENSE_iceandfire' } }

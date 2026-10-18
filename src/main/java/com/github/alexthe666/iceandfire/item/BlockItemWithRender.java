@@ -17,7 +17,7 @@ public class BlockItemWithRender extends BlockItem implements IafClientItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new CitadelItemRenderProperties() {
             static final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> new IceAndFireTEISR(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
 
