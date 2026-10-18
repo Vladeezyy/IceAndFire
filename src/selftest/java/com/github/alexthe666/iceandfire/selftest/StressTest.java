@@ -127,10 +127,10 @@ public class StressTest {
         }
     }
 
-    /** 64 x 64 chunks around the arena, 64 per tick (a player flying fast loads a few per tick). */
+    /** 64 x 64 chunks around the arena, 16 per tick (64 per tick kept one tick busy for more than the 60 s of the watchdog). */
     private static void generate(ServerLevel level, long now) {
         int total = GEN_SIDE * GEN_SIDE;
-        for (int n = 0; n < 64 && genIndex < total; n++, genIndex++) {
+        for (int n = 0; n < 16 && genIndex < total; n++, genIndex++) {
             level.getChunk(ARENA.x - GEN_SIDE / 2 + genIndex % GEN_SIDE, ARENA.z - GEN_SIDE / 2 + genIndex / GEN_SIDE);
         }
         if (genIndex >= total) {

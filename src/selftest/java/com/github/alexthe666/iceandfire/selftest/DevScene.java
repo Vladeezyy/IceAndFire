@@ -298,6 +298,14 @@ public final class DevScene {
         server.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, server);
         player.serverLevel().setDayTime(6000);
         player.serverLevel().setWeatherParameters(6000, 0, false, false);
+        // The other mods of the run (tools/scenetest.sh -Pwith_compat)
+        List<String> mods = new ArrayList<>();
+        net.neoforged.fml.ModList.get().forEachModContainer((id, container) -> {
+            if (!List.of("minecraft", "neoforge", IceAndFire.MODID, "citadel").contains(id)) {
+                mods.add(id + " " + container.getModInfo().getVersion());
+            }
+        });
+        IceAndFire.LOGGER.info("[scene] other mods: {}", mods);
     }
 
     /** Flat grass stage 90 x 90 at the spawn. */
