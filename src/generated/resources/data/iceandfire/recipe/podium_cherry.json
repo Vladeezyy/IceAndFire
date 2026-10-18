@@ -1,19 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "item": "minecraft:cherry_planks"
+    },
+    "S": {
+      "item": "minecraft:cherry_slab"
+    }
+  },
   "pattern": [
     "SPS",
     " P ",
     "SPS"
   ],
-  "key": {
-    "S": {
-      "item": "minecraft:cherry_slab"
-    },
-    "P": {
-      "item": "minecraft:cherry_planks"
-    }
-  },
   "result": {
+    "count": 1,
     "id": "iceandfire:podium_cherry"
   }
 }

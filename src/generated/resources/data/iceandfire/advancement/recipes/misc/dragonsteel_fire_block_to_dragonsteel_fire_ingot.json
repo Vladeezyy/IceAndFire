@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonsteel_fire_block",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonsteel_fire_block"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonsteel_fire_block_to_dragonsteel_fire_ingot"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

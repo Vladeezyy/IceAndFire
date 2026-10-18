@@ -1,19 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "item": "minecraft:acacia_planks"
+    },
+    "S": {
+      "item": "minecraft:acacia_slab"
+    }
+  },
   "pattern": [
     "SPS",
     " P ",
     "SPS"
   ],
-  "key": {
-    "S": {
-      "item": "minecraft:acacia_slab"
-    },
-    "P": {
-      "item": "minecraft:acacia_planks"
-    }
-  },
   "result": {
+    "count": 1,
     "id": "iceandfire:podium_acacia"
   }
 }

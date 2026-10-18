@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_sea_serpent_scale_block_teal",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_sea_serpent_scale_block_teal"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:sea_serpent_scale_block_teal_to_sea_serpent_scales_teal"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

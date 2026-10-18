@@ -192,17 +192,9 @@ public class IafItemTags extends ItemTagsProvider {
                 .add(Items.CHICKEN, Items.COOKED_CHICKEN)
                 .add(Items.MUTTON, Items.COOKED_MUTTON)
                 .add(Items.PORKCHOP, Items.COOKED_PORKCHOP)
-                // Farmer's Delight
-//                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_fishes"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_mutton"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_pork"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_chicken"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "raw_beef"))
-//                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_fishes"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_mutton"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_pork"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_chicken"))
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "cooked_beef"));
+                // Meat of other mods (Farmer's Delight...): the common tags of 1.21
+                .addOptionalTag(Tags.Items.FOODS_RAW_MEAT)
+                .addOptionalTag(Tags.Items.FOODS_COOKED_MEAT);
 
 
         tag(BREED_AMPITHERE)
@@ -320,8 +312,9 @@ public class IafItemTags extends ItemTagsProvider {
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
+    /** Common tags: forge:ingots/silver of 1.20.1 is c:ingots/silver in 1.21 (the repair of silver gear read it). */
     private static TagKey<Item> createForgeKey(final String name) {
-        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("forge", name));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
     @Override

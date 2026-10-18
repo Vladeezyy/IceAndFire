@@ -8,3 +8,4 @@ out/
 logs/
 build-*.log
 run-netserver/
+src/generated/resources/.cache/

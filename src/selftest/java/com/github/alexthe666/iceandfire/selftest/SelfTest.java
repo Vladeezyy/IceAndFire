@@ -207,6 +207,25 @@ public class SelfTest {
 
         ItemStack copy = ItemStack.parseOptional(level.registryAccess(), (CompoundTag) statue.save(level.registryAccess()));
         check("item data saved", ItemStack.isSameItemSameComponents(copy, statue), copy);
+
+        // Every tool and armor can be repaired: a repair ingredient made of a tag nobody fills (forge:ingots/silver of
+        // 1.20.1) matches nothing
+        List<String> noRepair = new ArrayList<>();
+        for (net.minecraft.world.item.Item item : BuiltInRegistries.ITEM) {
+            if (!BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(IceAndFire.MODID)) {
+                continue;
+            }
+            net.minecraft.world.item.crafting.Ingredient repair = null;
+            if (item instanceof net.minecraft.world.item.TieredItem tiered) {
+                repair = tiered.getTier().getRepairIngredient();
+            } else if (item instanceof net.minecraft.world.item.ArmorItem armor) {
+                repair = armor.getMaterial().value().repairIngredient().get();
+            }
+            if (repair != null && repair != net.minecraft.world.item.crafting.Ingredient.EMPTY && repair.hasNoItems()) {
+                noRepair.add(BuiltInRegistries.ITEM.getKey(item).getPath());
+            }
+        }
+        check("repair ingredients not empty", noRepair.isEmpty(), noRepair);
     }
 
     private static final int GEN_RADIUS = 20;

@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonscale_sapphire",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonscale_sapphire"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonscale_sapphire_to_dragonscales_sapphire"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

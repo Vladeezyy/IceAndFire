@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_item",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_item"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:tide_bronze_boots"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

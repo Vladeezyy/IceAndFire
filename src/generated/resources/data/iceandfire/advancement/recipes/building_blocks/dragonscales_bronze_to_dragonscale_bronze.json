@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonscales_bronze",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonscales_bronze"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonscales_bronze_to_dragonscale_bronze"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

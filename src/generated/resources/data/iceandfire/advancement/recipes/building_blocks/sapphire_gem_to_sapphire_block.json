@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_sapphire_gem",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_sapphire_gem"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:sapphire_gem_to_sapphire_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

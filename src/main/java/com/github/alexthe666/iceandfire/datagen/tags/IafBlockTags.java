@@ -128,8 +128,8 @@ public class IafBlockTags extends BlockTagsProvider {
                 .add(IafBlockRegistry.DEEPSLATE_SILVER_ORE.get());
 
         // These are also used / created by other mods
-        tag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "ores/silver"))).add(IafBlockRegistry.SILVER_ORE.get());
-        tag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "ores/silver"))).add(IafBlockRegistry.DEEPSLATE_SILVER_ORE.get());
+        tag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "ores/silver"))).add(IafBlockRegistry.SILVER_ORE.get());
+        tag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "ores/silver"))).add(IafBlockRegistry.DEEPSLATE_SILVER_ORE.get());
     }
 
     private static TagKey<Block> createKey(final String name) {

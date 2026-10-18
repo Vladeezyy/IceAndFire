@@ -1,19 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "item": "minecraft:crimson_planks"
+    },
+    "S": {
+      "item": "minecraft:crimson_slab"
+    }
+  },
   "pattern": [
     "SPS",
     " P ",
     "SPS"
   ],
-  "key": {
-    "S": {
-      "item": "minecraft:crimson_slab"
-    },
-    "P": {
-      "item": "minecraft:crimson_planks"
-    }
-  },
   "result": {
+    "count": 1,
     "id": "iceandfire:podium_crimson"
   }
 }

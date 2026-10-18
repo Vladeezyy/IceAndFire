@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonscales_copper",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonscales_copper"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonscales_copper_to_dragonscale_copper"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

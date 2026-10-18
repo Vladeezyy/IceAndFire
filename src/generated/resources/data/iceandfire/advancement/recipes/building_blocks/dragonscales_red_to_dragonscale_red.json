@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonscales_red",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonscales_red"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonscales_red_to_dragonscale_red"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

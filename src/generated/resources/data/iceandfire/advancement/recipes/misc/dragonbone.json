@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragon_bone_block",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragon_bone_block"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonbone"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

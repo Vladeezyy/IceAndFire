@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonscale_amythest",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonscale_amythest"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonscale_amythest_to_dragonscales_amythest"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

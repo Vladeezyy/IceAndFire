@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_dragonscale_electric",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_dragonscale_electric"
     ]
   ],
   "rewards": {
     "recipes": [
       "iceandfire:dragonscale_electric_to_dragonscales_electric"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }
