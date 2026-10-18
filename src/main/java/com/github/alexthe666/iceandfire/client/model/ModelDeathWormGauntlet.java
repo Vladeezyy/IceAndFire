@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
 import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
@@ -108,7 +109,7 @@ public class ModelDeathWormGauntlet extends ModelDragonBase {
 
     public void animate(ItemStack stack, float partialTick) {
         this.resetToDefaultPose();
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.view(stack);
         Entity holder = Minecraft.getInstance().level.getEntity(tag.getInt("HolderID"));
 
         if (!(holder instanceof LivingEntity)) {

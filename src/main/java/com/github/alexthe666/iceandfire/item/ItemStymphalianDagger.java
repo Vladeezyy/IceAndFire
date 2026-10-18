@@ -16,7 +16,7 @@ import java.util.List;
 public class ItemStymphalianDagger extends SwordItem {
 
     public ItemStymphalianDagger() {
-        super(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, 3, -1.0F, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, 3, -1.0F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
 

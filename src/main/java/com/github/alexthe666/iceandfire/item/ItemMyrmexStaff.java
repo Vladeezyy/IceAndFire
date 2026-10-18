@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
 import com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive;
@@ -27,14 +28,14 @@ public class ItemMyrmexStaff extends Item {
 
     @Override
     public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
-        itemStack.setTag(new CompoundTag());
+        ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
     @Override
     public void inventoryTick(ItemStack stack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (stack.getTag() == null) {
-            stack.setTag(new CompoundTag());
-            stack.getTag().putUUID("HiveUUID", new UUID(0, 0));
+        if (!ItemNbt.hasTag(stack)) {
+            ItemNbt.setTag(stack, new CompoundTag());
+            ItemNbt.update(stack, tag -> tag.putUUID("HiveUUID", new UUID(0, 0)));
         }
     }
 
@@ -44,8 +45,8 @@ public class ItemMyrmexStaff extends Item {
         if (playerIn.isShiftKeyDown()) {
             return super.use(worldIn, playerIn, hand);
         }
-        if (itemStackIn.getTag() != null && itemStackIn.getTag().hasUUID("HiveUUID")) {
-            UUID id = itemStackIn.getTag().getUUID("HiveUUID");
+        if (ItemNbt.hasTag(itemStackIn) && ItemNbt.view(itemStackIn).hasUUID("HiveUUID")) {
+            UUID id = ItemNbt.view(itemStackIn).getUUID("HiveUUID");
             if (!worldIn.isClientSide) {
                 MyrmexHive hive = MyrmexWorldData.get(worldIn).getHiveFromUUID(id);
                 MyrmexWorldData.addHive(worldIn, new MyrmexHive());
@@ -67,7 +68,7 @@ public class ItemMyrmexStaff extends Item {
         if (!context.getPlayer().isShiftKeyDown()) {
             return super.useOn(context);
         } else {
-            CompoundTag tag = context.getPlayer().getItemInHand(context.getHand()).getTag();
+            CompoundTag tag = ItemNbt.getTag(context.getPlayer().getItemInHand(context.getHand()));
             if (tag != null && tag.hasUUID("HiveUUID")) {
                 UUID id = tag.getUUID("HiveUUID");
                 if (!context.getLevel().isClientSide) {

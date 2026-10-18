@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.github.alexthe666.citadel.animation.IAnimatedEntity;
@@ -1100,10 +1101,10 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             } else if (!level().isClientSide && stack.isEmpty() && IafConfig.dragonDropSkull) {
                 if (this.getDeathStage() >= lastDeathStage - 1) {
                     ItemStack skull = getSkull().copy();
-                    skull.setTag(new CompoundTag());
-                    skull.getTag().putInt("Stage", this.getDragonStage());
-                    skull.getTag().putInt("DragonType", 0);
-                    skull.getTag().putInt("DragonAge", this.getAgeInDays());
+                    ItemNbt.setTag(skull, new CompoundTag());
+                    ItemNbt.update(skull, tag -> tag.putInt("Stage", this.getDragonStage()));
+                    ItemNbt.update(skull, tag -> tag.putInt("DragonType", 0));
+                    ItemNbt.update(skull, tag -> tag.putInt("DragonAge", this.getAgeInDays()));
                     this.setDeathStage(this.getDeathStage() + 1);
                     if (!level().isClientSide) {
                         this.spawnAtLocation(skull, 1);
@@ -1170,13 +1171,14 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             if (this.isOwnedBy(player)) {
                 if (stack.getItem() == getSummoningCrystal() && !ItemSummoningCrystal.hasDragon(stack)) {
                     this.setCrystalBound(true);
-                    CompoundTag compound = stack.getOrCreateTag();
+                    CompoundTag compound = ItemNbt.getOrEmpty(stack);
                     CompoundTag dragonTag = new CompoundTag();
                     dragonTag.putUUID("DragonUUID", this.getUUID());
                     if (this.getCustomName() != null) {
                         dragonTag.putString("CustomName", this.getCustomName().getString());
                     }
                     compound.put("Dragon", dragonTag);
+                    ItemNbt.setTag(stack, compound);
                     this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 1, 1);
                     player.swing(hand);
                     return InteractionResult.SUCCESS;

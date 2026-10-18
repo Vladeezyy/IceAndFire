@@ -21,7 +21,7 @@ import java.util.Random;
 public class ItemAmphithereMacuahuitl extends SwordItem {
 
     public ItemAmphithereMacuahuitl() {
-        super(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, 3, -2.4F, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override

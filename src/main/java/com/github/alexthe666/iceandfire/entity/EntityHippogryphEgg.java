@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -64,7 +65,7 @@ public class EntityHippogryphEgg extends ThrownEgg {
             hippogryph.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
             if (itemstack != null) {
                 int variant = 0;
-                CompoundTag tag = itemstack.getTag();
+                CompoundTag tag = ItemNbt.getTag(itemstack);
                 if (tag != null) {
                     variant = tag.getInt("EggOrdinal");
                 }

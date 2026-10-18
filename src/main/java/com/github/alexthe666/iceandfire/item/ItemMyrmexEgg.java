@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexEgg;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import net.minecraft.ChatFormatting;
@@ -33,7 +34,7 @@ public class ItemMyrmexEgg extends Item {
                 ItemStack stack = new ItemStack(this);
                 CompoundTag tag = new CompoundTag();
                 tag.putInt("EggOrdinal", i);
-                stack.setTag(tag);
+                ItemNbt.setTag(stack, tag);
                 items.add(stack);
             }
         }
@@ -43,7 +44,7 @@ public class ItemMyrmexEgg extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         String caste;
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         int eggOrdinal = 0;
         if (tag != null) {
             eggOrdinal = tag.getInt("EggOrdinal");
@@ -76,7 +77,7 @@ public class ItemMyrmexEgg extends Item {
         ItemStack itemstack = context.getPlayer().getItemInHand(context.getHand());
         BlockPos offset = context.getClickedPos().relative(context.getClickedFace());
         EntityMyrmexEgg egg = new EntityMyrmexEgg(IafEntityRegistry.MYRMEX_EGG.get(), context.getLevel());
-        CompoundTag tag = itemstack.getTag();
+        CompoundTag tag = ItemNbt.getTag(itemstack);
         int eggOrdinal = 0;
         if (tag != null) {
             eggOrdinal = tag.getInt("EggOrdinal");
@@ -97,7 +98,7 @@ public class ItemMyrmexEgg extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         int eggOrdinal = 0;
         if (tag != null) {
             eggOrdinal = tag.getInt("EggOrdinal");

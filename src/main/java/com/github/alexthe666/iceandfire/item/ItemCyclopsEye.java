@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -32,8 +33,8 @@ public class ItemCyclopsEye extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (stack.getTag() == null) {
-            stack.setTag(new CompoundTag());
+        if (!ItemNbt.hasTag(stack)) {
+            ItemNbt.setTag(stack, new CompoundTag());
         } else {
             if (entity instanceof LivingEntity) {
                 LivingEntity living = (LivingEntity) entity;
@@ -47,13 +48,13 @@ public class ItemCyclopsEye extends Item {
                         }
                     }
                     if (inflictedDamage) {
-                        stack.getTag().putInt("HurtingTicks", stack.getTag().getInt("HurtingTicks") + 1);
+                        ItemNbt.update(stack, tag -> tag.putInt("HurtingTicks", ItemNbt.view(stack).getInt("HurtingTicks") + 1));
                     }
                 }
-                if (stack.getTag().getInt("HurtingTicks") > 120) {
+                if (ItemNbt.view(stack).getInt("HurtingTicks") > 120) {
                     stack.hurtAndBreak(1, (LivingEntity) entity, (p_220017_1_) -> {
                     });
-                    stack.getTag().putInt("HurtingTicks", 0);
+                    ItemNbt.update(stack, tag -> tag.putInt("HurtingTicks", 0));
                 }
             }
 

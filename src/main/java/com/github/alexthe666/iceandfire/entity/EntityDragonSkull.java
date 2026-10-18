@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.entity.util.IBlacklistedFromStatues;
 import com.github.alexthe666.iceandfire.entity.util.IDeadMob;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
@@ -139,9 +140,9 @@ public class EntityDragonSkull extends Animal implements IBlacklistedFromStatues
             return;
         this.remove(RemovalReason.DISCARDED);
         ItemStack stack = new ItemStack(getDragonSkullItem());
-        stack.setTag(new CompoundTag());
-        stack.getTag().putInt("Stage", this.getStage());
-        stack.getTag().putInt("DragonAge", this.getDragonAge());
+        ItemNbt.setTag(stack, new CompoundTag());
+        ItemNbt.update(stack, tag -> tag.putInt("Stage", this.getStage()));
+        ItemNbt.update(stack, tag -> tag.putInt("DragonAge", this.getDragonAge()));
         if (!this.level().isClientSide)
             this.spawnAtLocation(stack, 0.0F);
 

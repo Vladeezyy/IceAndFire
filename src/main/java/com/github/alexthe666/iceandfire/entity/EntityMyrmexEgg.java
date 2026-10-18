@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.util.IBlacklistedFromStatues;
 import com.github.alexthe666.iceandfire.entity.util.IDeadMob;
@@ -202,7 +203,7 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
         ItemStack egg = new ItemStack(this.isJungle() ? IafItemRegistry.MYRMEX_JUNGLE_EGG.get() : IafItemRegistry.MYRMEX_DESERT_EGG.get(), 1);
         CompoundTag newTag = new CompoundTag();
         newTag.putInt("EggOrdinal", this.getMyrmexCaste());
-        egg.setTag(newTag);
+        ItemNbt.setTag(egg, newTag);
         return egg;
     }
 

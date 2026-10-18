@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.pathfinding.raycoms;
 
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -106,8 +107,8 @@ public class WorldRenderMacros extends UiRenderMacros
         if (bufferSource == null)
         {
             bufferSource = MultiBufferSource.immediateWithBuffers(Util.make(new Object2ObjectLinkedOpenHashMap<>(), map -> {
-                buffers.forEach(type -> map.put(type, new BufferBuilder(type.bufferSize())));
-            }), Tesselator.getInstance().getBuilder());
+                buffers.forEach(type -> map.put(type, new ByteBufferBuilder(type.bufferSize())));
+            }), new ByteBufferBuilder(1536));
         }
         return bufferSource;
     }
@@ -350,411 +351,411 @@ public class WorldRenderMacros extends UiRenderMacros
     {
         // z plane
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ);
+        buf.addVertex(m, maxX, minY, minZ);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX2, minY2, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX2, minY2, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
-        buf.vertex(m, minX2, minY2, minZ).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX2, maxY2, minZ);
+        buf.addVertex(m, minX2, minY2, minZ);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, minX2, maxY2, minZ);
 
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, minX2, maxY2, minZ);
+        buf.addVertex(m, minX, maxY, minZ);
 
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX2, maxY2, minZ).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX2, maxY2, minZ);
+        buf.addVertex(m, minX2, maxY2, minZ);
 
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
-        buf.vertex(m, maxX2, maxY2, minZ).endVertex();
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ);
+        buf.addVertex(m, maxX2, maxY2, minZ);
 
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
-
-        //
-
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX, minY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
-
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX, minY2, minZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY, minZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ);
 
         //
 
-        buf.vertex(m, minX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
+        buf.addVertex(m, minX, maxY2, minZ2);
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX2, maxY2, minZ2);
 
-        buf.vertex(m, minX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
+        buf.addVertex(m, minX, maxY2, minZ2);
+        buf.addVertex(m, minX, minY2, minZ2);
+        buf.addVertex(m, minX2, minY2, minZ2);
 
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX2, minY, minZ2);
+        buf.addVertex(m, maxX2, minY, minZ2);
 
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY, maxZ2).endVertex();
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, maxX2, minY, minZ2);
+        buf.addVertex(m, maxX2, minY2, minZ2);
 
-        buf.vertex(m, maxX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX, maxY2, minZ2);
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, maxX2, minY2, minZ2);
 
-        buf.vertex(m, maxX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX, maxY2, minZ2);
+        buf.addVertex(m, maxX2, minY2, minZ2);
+        buf.addVertex(m, maxX, minY2, minZ2);
 
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, maxZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, maxX2, maxY, minZ2);
+        buf.addVertex(m, minX2, maxY, minZ2);
 
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, maxX2, maxY, minZ2);
 
         //
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
+        buf.addVertex(m, minX, maxY2, maxZ2);
+        buf.addVertex(m, minX2, maxY2, maxZ2);
+        buf.addVertex(m, minX2, minY2, maxZ2);
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ).endVertex();
+        buf.addVertex(m, minX, maxY2, maxZ2);
+        buf.addVertex(m, minX2, minY2, maxZ2);
+        buf.addVertex(m, minX, minY2, maxZ2);
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
+        buf.addVertex(m, minX2, minY2, maxZ2);
+        buf.addVertex(m, maxX2, minY, maxZ2);
+        buf.addVertex(m, minX2, minY, maxZ2);
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
+        buf.addVertex(m, minX2, minY2, maxZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
+        buf.addVertex(m, maxX2, minY, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
+        buf.addVertex(m, maxX, maxY2, maxZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
+        buf.addVertex(m, maxX2, maxY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ).endVertex();
+        buf.addVertex(m, maxX, maxY2, maxZ2);
+        buf.addVertex(m, maxX, minY2, maxZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
+        buf.addVertex(m, minX2, maxY2, maxZ2);
+        buf.addVertex(m, minX2, maxY, maxZ2);
+        buf.addVertex(m, maxX2, maxY, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
+        buf.addVertex(m, minX2, maxY2, maxZ2);
+        buf.addVertex(m, maxX2, maxY, maxZ2);
+        buf.addVertex(m, maxX2, maxY2, maxZ2);
+
+        //
+
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX2, minY2, maxZ);
+
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, maxX2, minY2, maxZ);
+        buf.addVertex(m, minX2, minY2, maxZ);
+
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX2, minY2, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ);
+
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ);
+        buf.addVertex(m, minX, maxY, maxZ);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ);
+        buf.addVertex(m, maxX2, maxY2, maxZ);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX2, maxY2, maxZ);
+        buf.addVertex(m, maxX2, minY2, maxZ);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX2, minY2, maxZ);
+        buf.addVertex(m, maxX, minY, maxZ);
 
         // x plane
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX, minY2, maxZ2);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX, minY2, minZ2).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX, minY2, maxZ2);
+        buf.addVertex(m, minX, minY2, minZ2);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX, minY2, minZ2).endVertex();
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX, minY2, minZ2);
+        buf.addVertex(m, minX, maxY2, minZ2);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX, maxY2, minZ2);
+        buf.addVertex(m, minX, maxY, minZ);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, minX, maxY2, minZ2);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX, maxY2, minZ2);
+        buf.addVertex(m, minX, maxY2, maxZ2);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX, maxY2, maxZ2);
+        buf.addVertex(m, minX, minY2, maxZ2);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-
-        //
-
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY2, minZ).endVertex();
-
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY, minZ2).endVertex();
-
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
-
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX, minY2, maxZ2);
+        buf.addVertex(m, minX, minY, maxZ);
 
         //
 
-        buf.vertex(m, maxX2, maxY2, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ);
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, minX2, minY2, minZ2);
 
-        buf.vertex(m, maxX2, maxY2, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ);
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX2, minY2, minZ);
 
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY, maxZ2).endVertex();
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX2, minY, maxZ2);
+        buf.addVertex(m, minX2, minY, minZ2);
 
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX2, minY2, maxZ2);
+        buf.addVertex(m, minX2, minY, maxZ2);
 
-        buf.vertex(m, maxX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, maxZ);
+        buf.addVertex(m, minX2, minY2, maxZ2);
+        buf.addVertex(m, minX2, maxY2, maxZ2);
 
-        buf.vertex(m, maxX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
+        buf.addVertex(m, minX2, maxY2, maxZ);
+        buf.addVertex(m, minX2, minY2, maxZ);
+        buf.addVertex(m, minX2, minY2, maxZ2);
 
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, minX2, maxY, minZ2);
+        buf.addVertex(m, minX2, maxY, maxZ2);
 
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, maxZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, minX2, maxY, maxZ2);
+        buf.addVertex(m, minX2, maxY2, maxZ2);
 
         //
 
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ2);
+        buf.addVertex(m, maxX2, maxY2, minZ2);
 
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ);
+        buf.addVertex(m, maxX2, minY2, minZ2);
 
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX, minY2, minZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, minZ2);
+        buf.addVertex(m, maxX2, minY, minZ2);
+        buf.addVertex(m, maxX2, minY, maxZ2);
 
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, minZ2);
+        buf.addVertex(m, maxX2, minY, maxZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
+        buf.addVertex(m, maxX2, maxY2, maxZ);
+        buf.addVertex(m, maxX2, maxY2, maxZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, maxZ);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, maxX2, maxY, maxZ2);
+        buf.addVertex(m, maxX2, maxY, minZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, maxX2, maxY2, maxZ2);
+        buf.addVertex(m, maxX2, maxY, maxZ2);
+
+        //
+
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX, minY2, maxZ2);
+        buf.addVertex(m, maxX, minY, maxZ);
+
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX, minY2, minZ2);
+        buf.addVertex(m, maxX, minY2, maxZ2);
+
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX, maxY2, minZ2);
+        buf.addVertex(m, maxX, minY2, minZ2);
+
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX, maxY2, minZ2);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX, maxY2, minZ2);
+        buf.addVertex(m, maxX, maxY, minZ);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX, maxY2, maxZ2);
+        buf.addVertex(m, maxX, maxY2, minZ2);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX, minY2, maxZ2);
+        buf.addVertex(m, maxX, maxY2, maxZ2);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX, minY2, maxZ2);
 
         // y plane
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
-        buf.vertex(m, minX, minY, maxZ).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX2, minY, maxZ2);
+        buf.addVertex(m, minX, minY, maxZ);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, minX2, minY, minZ2).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, minX2, minY, minZ2);
+        buf.addVertex(m, minX2, minY, maxZ2);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
-        buf.vertex(m, minX2, minY, minZ2).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, maxX2, minY, minZ2);
+        buf.addVertex(m, minX2, minY, minZ2);
 
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX2, minY, minZ2);
 
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX2, minY, minZ2);
+        buf.addVertex(m, maxX, minY, minZ);
 
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY, minZ2).endVertex();
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX2, minY, maxZ2);
+        buf.addVertex(m, maxX2, minY, minZ2);
 
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
-        buf.vertex(m, maxX2, minY, maxZ2).endVertex();
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, minX2, minY, maxZ2);
+        buf.addVertex(m, maxX2, minY, maxZ2);
 
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX2, minY, maxZ2).endVertex();
-
-        //
-
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-
-        buf.vertex(m, maxX2, minY2, minZ).endVertex();
-        buf.vertex(m, minX2, minY2, minZ).endVertex();
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX, minY2, minZ2).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
-
-        buf.vertex(m, minX2, minY2, minZ2).endVertex();
-        buf.vertex(m, minX, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-
-        buf.vertex(m, maxX2, minY2, maxZ).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, minX2, minY2, maxZ).endVertex();
-
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX, minY2, minZ2).endVertex();
-
-        buf.vertex(m, maxX2, minY2, minZ2).endVertex();
-        buf.vertex(m, maxX2, minY2, maxZ2).endVertex();
-        buf.vertex(m, maxX, minY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX2, minY, maxZ2);
 
         //
 
-        buf.vertex(m, maxX2, maxY2, minZ).endVertex();
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, minZ);
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, maxX2, minY2, minZ2);
 
-        buf.vertex(m, maxX2, maxY2, minZ).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, minZ).endVertex();
+        buf.addVertex(m, maxX2, minY2, minZ);
+        buf.addVertex(m, minX2, minY2, minZ);
+        buf.addVertex(m, minX2, minY2, minZ2);
 
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX, maxY2, minZ2).endVertex();
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX, minY2, minZ2);
+        buf.addVertex(m, minX, minY2, maxZ2);
 
-        buf.vertex(m, minX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, minX, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, minX2, minY2, minZ2);
+        buf.addVertex(m, minX, minY2, maxZ2);
+        buf.addVertex(m, minX2, minY2, maxZ2);
 
-        buf.vertex(m, maxX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, maxZ);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
+        buf.addVertex(m, minX2, minY2, maxZ2);
 
-        buf.vertex(m, maxX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, maxZ);
+        buf.addVertex(m, minX2, minY2, maxZ2);
+        buf.addVertex(m, minX2, minY2, maxZ);
 
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, minZ2);
+        buf.addVertex(m, maxX, minY2, maxZ2);
+        buf.addVertex(m, maxX, minY2, minZ2);
 
-        buf.vertex(m, maxX2, maxY2, minZ2).endVertex();
-        buf.vertex(m, maxX, maxY2, maxZ2).endVertex();
-        buf.vertex(m, maxX2, maxY2, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, minY2, minZ2);
+        buf.addVertex(m, maxX2, minY2, maxZ2);
+        buf.addVertex(m, maxX, minY2, maxZ2);
 
         //
 
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ);
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, minX2, maxY2, minZ2);
 
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, minX2, maxY, minZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ);
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, minX2, maxY2, minZ);
 
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, minX2, maxY, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, minX, maxY2, maxZ2);
+        buf.addVertex(m, minX, maxY2, minZ2);
 
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
+        buf.addVertex(m, minX2, maxY2, minZ2);
+        buf.addVertex(m, minX2, maxY2, maxZ2);
+        buf.addVertex(m, minX, maxY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ2);
+        buf.addVertex(m, maxX2, maxY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX2, maxY, minZ2).endVertex();
-        buf.vertex(m, maxX2, maxY, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ);
+        buf.addVertex(m, minX2, maxY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, maxX, maxY2, minZ2);
+        buf.addVertex(m, maxX, maxY2, maxZ2);
 
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX2, maxY, maxZ2).endVertex();
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
+        buf.addVertex(m, maxX2, maxY2, minZ2);
+        buf.addVertex(m, maxX, maxY2, maxZ2);
+        buf.addVertex(m, maxX2, maxY2, maxZ2);
+
+        //
+
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX2, maxY, maxZ2);
+
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, minX2, maxY, maxZ2);
+        buf.addVertex(m, minX2, maxY, minZ2);
+
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, minX2, maxY, minZ2);
+        buf.addVertex(m, maxX2, maxY, minZ2);
+
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, maxX2, maxY, minZ2);
+        buf.addVertex(m, maxX, maxY, minZ);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX2, maxY, minZ2);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX2, maxY, minZ2);
+        buf.addVertex(m, maxX2, maxY, maxZ2);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX2, maxY, maxZ2);
+        buf.addVertex(m, minX2, maxY, maxZ2);
+
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, minX2, maxY, maxZ2);
+        buf.addVertex(m, minX, maxY, maxZ);
     }
 
     public static void renderBox(final BufferSource buffer,
@@ -814,57 +815,57 @@ public class WorldRenderMacros extends UiRenderMacros
     {
         // z plane
 
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, minX, minY, minZ).endVertex();
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, minX, minY, minZ);
 
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX, minY, minZ);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, maxX, minY, maxZ);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX, maxY, maxZ);
 
         // y plane
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX, minY, minZ);
+        buf.addVertex(m, maxX, minY, minZ);
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX, minY, maxZ);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, minX, maxY, minZ);
 
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, maxX, maxY, maxZ);
+        buf.addVertex(m, maxX, maxY, minZ);
 
         // x plane
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
-        buf.vertex(m, minX, minY, minZ).endVertex();
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX, maxY, minZ);
+        buf.addVertex(m, minX, minY, minZ);
 
-        buf.vertex(m, minX, minY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY, maxZ).endVertex();
-        buf.vertex(m, minX, maxY, minZ).endVertex();
+        buf.addVertex(m, minX, minY, maxZ);
+        buf.addVertex(m, minX, maxY, maxZ);
+        buf.addVertex(m, minX, maxY, minZ);
 
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, minY, minZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX, minY, minZ);
+        buf.addVertex(m, maxX, maxY, minZ);
 
-        buf.vertex(m, maxX, minY, maxZ).endVertex();
-        buf.vertex(m, maxX, maxY, minZ).endVertex();
-        buf.vertex(m, maxX, maxY, maxZ).endVertex();
+        buf.addVertex(m, maxX, minY, maxZ);
+        buf.addVertex(m, maxX, maxY, minZ);
+        buf.addVertex(m, maxX, maxY, maxZ);
     }
 
     public static void renderFillRectangle(final BufferSource buffer,
@@ -906,13 +907,13 @@ public class WorldRenderMacros extends UiRenderMacros
             return;
         }
 
-        buffer.vertex(m, x, y, z).color(red, green, blue, alpha).endVertex();
-        buffer.vertex(m, x, y + h, z).color(red, green, blue, alpha).endVertex();
-        buffer.vertex(m, x + w, y + h, z).color(red, green, blue, alpha).endVertex();
+        buffer.addVertex(m, x, y, z).setColor(red, green, blue, alpha);
+        buffer.addVertex(m, x, y + h, z).setColor(red, green, blue, alpha);
+        buffer.addVertex(m, x + w, y + h, z).setColor(red, green, blue, alpha);
 
-        buffer.vertex(m, x, y, z).color(red, green, blue, alpha).endVertex();
-        buffer.vertex(m, x + w, y + h, z).color(red, green, blue, alpha).endVertex();
-        buffer.vertex(m, x + w, y, z).color(red, green, blue, alpha).endVertex();
+        buffer.addVertex(m, x, y, z).setColor(red, green, blue, alpha);
+        buffer.addVertex(m, x + w, y + h, z).setColor(red, green, blue, alpha);
+        buffer.addVertex(m, x + w, y, z).setColor(red, green, blue, alpha);
     }
 
     /**

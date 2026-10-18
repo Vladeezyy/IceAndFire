@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.github.alexthe666.citadel.animation.IAnimatedEntity;
@@ -17,7 +18,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -49,7 +53,6 @@ import javax.annotation.Nullable;
 
 public class EntityDreadKnight extends EntityDreadMob implements IAnimatedEntity, IVillagerFear, IAnimalFear {
 
-    public static final ItemStack SHIELD = generateShield();
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(EntityDreadKnight.class, EntityDataSerializers.INT);
     public static Animation ANIMATION_SPAWN = Animation.create(40);
     private int animationTick;
@@ -59,14 +62,12 @@ public class EntityDreadKnight extends EntityDreadMob implements IAnimatedEntity
         super(type, worldIn);
     }
 
-    private static ItemStack generateShield() {
-        ItemStack itemstack = new ItemStack(Items.CYAN_BANNER);
-        CompoundTag compoundnbt = itemstack.getOrCreateTagElement("BlockEntityTag");
-
-        ListTag listnbt = new BannerPattern.Builder().addPattern(BannerPatterns.BASE, DyeColor.CYAN).addPattern(Holder.direct(IafBannerPatterns.PATTERN_DREAD.get()), DyeColor.WHITE).toListTag();
-        compoundnbt.put("Patterns", listnbt);
+    private static ItemStack generateShield(Level level) {
         ItemStack shield = new ItemStack(Items.SHIELD, 1);
-        shield.setTag(itemstack.getTag());
+        Registry<BannerPattern> patterns = level.registryAccess().registryOrThrow(Registries.BANNER_PATTERN);
+        shield.set(DataComponents.BASE_COLOR, DyeColor.CYAN);
+        patterns.getHolder(IafBannerPatterns.PATTERN_DREAD).ifPresent(dread ->
+                shield.set(DataComponents.BANNER_PATTERNS, new BannerPatternLayers.Builder().add(dread, DyeColor.WHITE).build()));
         return shield;
     }
 
@@ -134,7 +135,7 @@ public class EntityDreadKnight extends EntityDreadMob implements IAnimatedEntity
         super.populateDefaultEquipmentSlots(pRandom, pDifficulty);
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(IafItemRegistry.DREAD_KNIGHT_SWORD.get()));
         if (random.nextBoolean()) {
-            this.setItemSlot(EquipmentSlot.OFFHAND, SHIELD.copy());
+            this.setItemSlot(EquipmentSlot.OFFHAND, generateShield(this.level()));
         }
         setArmorVariant(random.nextInt(3));
     }

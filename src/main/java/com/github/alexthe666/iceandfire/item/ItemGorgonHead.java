@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.client.render.tile.RenderGorgonHead;
 import com.github.alexthe666.iceandfire.datagen.tags.IafEntityTags;
 import com.github.alexthe666.iceandfire.entity.EntityStoneStatue;
@@ -57,7 +58,7 @@ public class ItemGorgonHead extends Item implements IafClientItem {
 
     @Override
     public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
-        itemStack.setTag(new CompoundTag());
+        ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
     @Override
@@ -140,14 +141,14 @@ public class ItemGorgonHead extends Item implements IafClientItem {
                 }
             }
         }
-        stack.getTag().putBoolean("Active", false);
+        ItemNbt.update(stack, tag -> tag.putBoolean("Active", false));
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         playerIn.startUsingItem(hand);
-        itemStackIn.getTag().putBoolean("Active", true);
+        ItemNbt.update(itemStackIn, tag -> tag.putBoolean("Active", true));
         return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, itemStackIn);
     }
 

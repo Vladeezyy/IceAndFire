@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.enums;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.item.ItemBestiary;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
@@ -57,7 +58,7 @@ public enum EnumBestiaryPages {
     }
 
     public static boolean hasAllPages(ItemStack book) {
-        return Ints.asList(book.getTag().getIntArray("Pages")).containsAll(ALL_INDEXES);
+        return Ints.asList(ItemNbt.view(book).getIntArray("Pages")).containsAll(ALL_INDEXES);
     }
 
     public static List<Integer> enumToInt(List<EnumBestiaryPages> pages) {
@@ -80,7 +81,7 @@ public enum EnumBestiaryPages {
 
     public static List<EnumBestiaryPages> possiblePages(ItemStack book) {
         if (book.getItem() instanceof ItemBestiary) {
-            CompoundTag tag = book.getTag();
+            CompoundTag tag = ItemNbt.getOrEmpty(book);
             Collection<EnumBestiaryPages> containedPages = containedPages(Ints.asList(tag.getIntArray("Pages")));
             List<EnumBestiaryPages> possiblePages = new ArrayList<>(ALL_PAGES);
             possiblePages.removeAll(containedPages);
@@ -93,13 +94,14 @@ public enum EnumBestiaryPages {
     public static boolean addPage(EnumBestiaryPages page, ItemStack book) {
         boolean flag = false;
         if (book.getItem() instanceof ItemBestiary) {
-            CompoundTag tag = book.getTag();
+            CompoundTag tag = ItemNbt.getOrEmpty(book);
             final List<Integer> already = new ArrayList<>(Ints.asList(tag.getIntArray("Pages")));
             if (!already.contains(page.ordinal())) {
                 already.add(page.ordinal());
                 flag = true;
             }
             tag.putIntArray("Pages", Ints.toArray(already));
+            ItemNbt.setTag(book, tag);
         }
         return flag;
     }

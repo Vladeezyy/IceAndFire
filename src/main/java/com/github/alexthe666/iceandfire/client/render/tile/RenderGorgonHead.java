@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.model.ModelGorgonHead;
 import com.github.alexthe666.iceandfire.client.model.ModelGorgonHeadActive;
@@ -31,8 +32,8 @@ public class RenderGorgonHead extends BlockEntityWithoutLevelRenderer {
     public void renderByItem(ItemStack stack, @NotNull ItemDisplayContext type, @NotNull PoseStack stackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         boolean active = false;
         if (stack.getItem() == IafItemRegistry.GORGON_HEAD.get()) {
-            if (stack.getTag() != null) {
-                if (stack.getTag().getBoolean("Active"))
+            if (ItemNbt.hasTag(stack)) {
+                if (ItemNbt.view(stack).getBoolean("Active"))
                     active = true;
             }
         }

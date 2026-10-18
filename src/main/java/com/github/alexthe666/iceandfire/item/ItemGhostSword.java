@@ -9,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +25,7 @@ import java.util.List;
 public class ItemGhostSword extends SwordItem {
 
     public ItemGhostSword() {
-        super(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL, 5, -1.0F, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL, 5, -1.0F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     public static void spawnGhostSwordEntity(ItemStack stack, Player playerEntity) {

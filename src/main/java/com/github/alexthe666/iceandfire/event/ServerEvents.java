@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.event;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -383,11 +384,12 @@ public class ServerEvents {
 
                         if (stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) > 0) {
                             ItemStack statuette = new ItemStack(IafItemRegistry.STONE_STATUE.get());
-                            CompoundTag tag = statuette.getOrCreateTag();
+                            CompoundTag tag = ItemNbt.getOrEmpty(statuette);
                             tag.putBoolean("IAFStoneStatuePlayerEntity", statue.getTrappedEntityTypeString().equalsIgnoreCase("minecraft:player"));
                             tag.putString("IAFStoneStatueEntityID", statue.getTrappedEntityTypeString());
                             tag.put("IAFStoneStatueNBT", writtenTag);
                             statue.addAdditionalSaveData(tag);
+                            ItemNbt.setTag(statuette, tag);
 
                             if (!statue.level().isClientSide()) {
                                 statue.spawnAtLocation(statuette, 1);

@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityDeathWorm;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
@@ -12,8 +14,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -31,21 +33,20 @@ public interface DragonSteelOverrides<T extends TieredItem> {
      * @deprecated use data pack overrides instead
      */
     @Deprecated
-    Multimap<Attribute, AttributeModifier> bakeDragonsteel();
+    ItemAttributeModifiers bakeDragonsteel();
 
     default float getAttackDamage(T item) {
-        if (item instanceof SwordItem) {
-            return ((SwordItem) item).getDamage();
+        double damage = 0;
+        for (ItemAttributeModifiers.Entry entry : item.components().getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY).modifiers()) {
+            if (entry.attribute().is(Attributes.ATTACK_DAMAGE)) {
+                damage += entry.modifier().amount();
+            }
         }
-        if (item instanceof DiggerItem) {
-            return ((DiggerItem) item).getAttackDamage();
-        }
-        return item.getTier().getAttackDamageBonus();
-        //return item.getDamage(item.asItem().getDefaultInstance())
+        return (float) damage;
     }
 
     default boolean isDragonsteel(Tier tier) {
-        return tier.getTag() == DragonSteelTier.DRAGONSTEEL_TIER_TAG;
+        return DragonSteelTier.isDragonsteel(tier);
     }
 
     default boolean isDragonsteelFire(Tier tier) {
@@ -62,13 +63,13 @@ public interface DragonSteelOverrides<T extends TieredItem> {
 
     default void hurtEnemy(T item, ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (item.getTier() == IafItemRegistry.SILVER_TOOL_MATERIAL) {
-            if (target.getMobType() == MobType.UNDEAD) {
+            if (target.getType().is(EntityTypeTags.UNDEAD)) {
                 target.hurt(attacker.level().damageSources().magic(), getAttackDamage(item) + 3.0F);
             }
         }
 
         if (item.getTier() == IafItemRegistry.MYRMEX_CHITIN_TOOL_MATERIAL) {
-            if (target.getMobType() != MobType.ARTHROPOD) {
+            if (!target.getType().is(EntityTypeTags.ARTHROPOD)) {
                 target.hurt(attacker.level().damageSources().generic(), getAttackDamage(item) + 5.0F);
             }
             if (target instanceof EntityDeathWorm) {
@@ -105,7 +106,7 @@ public interface DragonSteelOverrides<T extends TieredItem> {
 
     }
 
-    default void appendHoverText(Tier tier, ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    default void appendHoverText(Tier tier, ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (tier == IafItemRegistry.SILVER_TOOL_MATERIAL) {
             tooltip.add(Component.translatable("silvertools.hurt").withStyle(ChatFormatting.GREEN));
         }

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -115,7 +116,7 @@ public class EntityMyrmexWorker extends EntityMyrmexBase {
         if (!this.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
             if (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ItemMyrmexEgg) {
                 boolean isJungle = this.getItemInHand(InteractionHand.MAIN_HAND).getItem() == IafItemRegistry.MYRMEX_JUNGLE_EGG.get();
-                CompoundTag tag = this.getItemInHand(InteractionHand.MAIN_HAND).getTag();
+                CompoundTag tag = ItemNbt.getTag(this.getItemInHand(InteractionHand.MAIN_HAND));
                 int metadata = 0;
                 if (tag != null) {
                     metadata = tag.getInt("EggOrdinal");

@@ -27,7 +27,7 @@ public class ItemTrollWeapon extends SwordItem implements IafClientItem {
     public EnumTroll.Weapon weapon = EnumTroll.Weapon.AXE;
 
     public ItemTrollWeapon(EnumTroll.Weapon weapon) {
-        super(IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL, 15, -3.5F, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL, 15, -3.5F))/*.tab(IceAndFire.TAB_ITEMS)*/);
         this.weapon = weapon;
     }
 

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.util;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -197,7 +198,7 @@ public class MyrmexTrades {
         ItemStack egg = new ItemStack(jungle ? IafItemRegistry.MYRMEX_JUNGLE_EGG.get() : IafItemRegistry.MYRMEX_DESERT_EGG.get());
         CompoundTag tag = new CompoundTag();
         tag.putInt("EggOrdinal", caste);
-        egg.setTag(tag);
+        ItemNbt.setTag(egg, tag);
         return egg;
     }
 
@@ -358,7 +359,7 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource rand) {
             ItemStack cloneStack = new ItemStack(this.stack.getItem(), this.itemCount);
-            cloneStack.setTag(this.stack.getTag());
+            ItemNbt.setTag(cloneStack, ItemNbt.getTag(this.stack));
             return new MerchantOffer(new ItemStack(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), this.emeraldCount), cloneStack, this.maxUses, this.exp, this.multiplier);
         }
     }
@@ -516,7 +517,7 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource rand) {
             ItemStack cloneStack = new ItemStack(this.stack.getItem(), this.itemCount);
-            cloneStack.setTag(this.stack.getTag());
+            ItemNbt.setTag(cloneStack, ItemNbt.getTag(this.stack));
             return new MerchantOffer(new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get(), this.emeraldCount), cloneStack, this.maxUses, this.exp, this.multiplier);
         }
     }

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
@@ -49,10 +50,10 @@ public class ItemSummoningCrystal extends Item {
     }
 
     private static CompoundTag getDragonTag(ItemStack stack) {
-        if (stack.getItem() instanceof ItemSummoningCrystal && stack.getTag() != null) {
-            for (String tagInfo : stack.getTag().getAllKeys()) {
+        if (stack.getItem() instanceof ItemSummoningCrystal && ItemNbt.hasTag(stack)) {
+            for (String tagInfo : ItemNbt.view(stack).getAllKeys()) {
                 if (tagInfo.contains("Dragon")) {
-                    return stack.getTag().getCompound(tagInfo);
+                    return ItemNbt.view(stack).getCompound(tagInfo);
                 }
             }
         }
@@ -65,7 +66,7 @@ public class ItemSummoningCrystal extends Item {
 
     @Override
     public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
-        itemStack.setTag(new CompoundTag());
+        ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
     public ItemStack onItemUseFinish(Level worldIn, LivingEntity LivingEntity) {
@@ -83,10 +84,10 @@ public class ItemSummoningCrystal extends Item {
         if (stack.getItem() == IafItemRegistry.SUMMONING_CRYSTAL_LIGHTNING.get()) {
             desc = "entity.iceandfire.lightning_dragon";
         }
-        if (stack.getTag() != null) {
-            for (String tagInfo : stack.getTag().getAllKeys()) {
+        if (ItemNbt.hasTag(stack)) {
+            for (String tagInfo : ItemNbt.view(stack).getAllKeys()) {
                 if (tagInfo.contains("Dragon")) {
-                    CompoundTag dragonTag = stack.getTag().getCompound(tagInfo);
+                    CompoundTag dragonTag = ItemNbt.view(stack).getCompound(tagInfo);
                     String dragonName = I18n.get(desc);
                     if (!dragonTag.getString("CustomName").isEmpty()) {
                         dragonName = dragonTag.getString("CustomName");
@@ -190,7 +191,7 @@ public class ItemSummoningCrystal extends Item {
         this.summoningPlayer.playSound(SoundEvents.GLASS_BREAK, 1, 1);
         this.summoningPlayer.swing(this.summoningHand);
         this.summoningPlayer.displayClientMessage(Component.translatable("message.iceandfire.dragonTeleport"), true);
-        stack.setTag(new CompoundTag());
+        ItemNbt.setTag(stack, new CompoundTag());
     }
 
     public void delayedSummon() {

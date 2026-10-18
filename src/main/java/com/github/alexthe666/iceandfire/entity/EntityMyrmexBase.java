@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.github.alexthe666.citadel.animation.IAnimatedEntity;
@@ -484,10 +485,10 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     public void onStaffInteract(Player player, ItemStack itemstack) {
-        if (itemstack.getTag() == null) {
+        if (!ItemNbt.hasTag(itemstack)) {
             return;
         }
-        UUID staffUUID = itemstack.getTag().hasUUID("HiveUUID") ? itemstack.getTag().getUUID("HiveUUID") : null;
+        UUID staffUUID = ItemNbt.view(itemstack).hasUUID("HiveUUID") ? ItemNbt.view(itemstack).getUUID("HiveUUID") : null;
         if (level().isClientSide) {
             return;
         }
@@ -511,7 +512,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
                 } else {
                     player.displayClientMessage(Component.translatable("myrmex.message.staff_set_unnamed", center.getX(), center.getY(), center.getZ()), true);
                 }
-                itemstack.getTag().putUUID("HiveUUID", this.getHive().hiveUUID);
+                ItemNbt.update(itemstack, tag -> tag.putUUID("HiveUUID", this.getHive().hiveUUID));
             }
 
         }

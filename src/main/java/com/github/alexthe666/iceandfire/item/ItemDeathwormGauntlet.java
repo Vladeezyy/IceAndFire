@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.client.render.tile.RenderDeathWormGauntlet;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
 import com.github.alexthe666.iceandfire.misc.IafSoundRegistry;
@@ -73,10 +74,11 @@ public class ItemDeathwormGauntlet extends Item implements IafClientItem {
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack, int count) {
         if (!deathwormReceded && !deathwormLaunched) {
             if (entity instanceof Player player) {
-                CompoundTag tag = stack.getOrCreateTag();
+                CompoundTag tag = ItemNbt.getOrEmpty(stack);
 
                 if (tag.getInt("HolderID") != player.getId()) {
                     tag.putInt("HolderID", player.getId());
+                    ItemNbt.setTag(stack, tag);
                 }
 
                 if (player.getCooldowns().getCooldownPercent(this, 0.0F) == 0) {
@@ -96,10 +98,11 @@ public class ItemDeathwormGauntlet extends Item implements IafClientItem {
             specialDamage = 0;
         }
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrEmpty(stack);
 
         if (tag.getInt("HolderID") != -1) {
             tag.putInt("HolderID", -1);
+            ItemNbt.setTag(stack, tag);
         }
     }
 

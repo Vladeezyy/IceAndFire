@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.compat.jei.icedragonforge;
 
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -38,11 +39,11 @@ public class IceDragonForgeDrawable implements IDrawable {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
         Matrix4f matrix4f = ms.pose().last().pose();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.addVertex(matrix4f, x, y + height, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
         bufferbuilder.addVertex(matrix4f, x + width, y + height, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
         bufferbuilder.addVertex(matrix4f, x + width, y, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY) * 0.00390625F);
         bufferbuilder.addVertex(matrix4f, x, y, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY) * 0.00390625F);
-        tessellator.end();
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
     }
 }

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.entity.EntityHippogryphEgg;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.enums.EnumHippogryphTypes;
@@ -34,7 +35,7 @@ public class ItemHippogryphEgg extends Item {
         ItemStack stack = new ItemStack(IafItemRegistry.HIPPOGRYPH_EGG.get());
         CompoundTag tag = new CompoundTag();
         tag.putInt("EggOrdinal", eggType.ordinal());
-        stack.setTag(tag);
+        ItemNbt.setTag(stack, tag);
         return stack;
     }
 
@@ -46,7 +47,7 @@ public class ItemHippogryphEgg extends Item {
                 ItemStack stack = new ItemStack(this);
                 CompoundTag tag = new CompoundTag();
                 tag.putInt("EggOrdinal", type.ordinal());
-                stack.setTag(tag);
+                ItemNbt.setTag(stack, tag);
                 items.add(stack);
 
             }
@@ -76,7 +77,7 @@ public class ItemHippogryphEgg extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         int eggOrdinal = 0;
         if (tag != null) {
             eggOrdinal = tag.getInt("EggOrdinal");

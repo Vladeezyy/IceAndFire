@@ -1,13 +1,12 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.Item;
 import com.github.alexthe666.iceandfire.IafConfig;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
@@ -20,31 +19,31 @@ import java.util.List;
 public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModAxe> {
 
     private final Tier tier;
-    private Multimap<Attribute, AttributeModifier> dragonsteelModifiers;
+    private ItemAttributeModifiers dragonsteelModifiers;
+    private double dragonsteelDamage;
 
     public ItemModAxe(Tier toolmaterial) {
-        super(toolmaterial, 5.0F, -3.0F, (new Item.Properties()));
+        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 5.0F, -3.0F)));
         this.tier = toolmaterial;
     }
 
     @Override
     @Deprecated
-    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot equipmentSlot) {
-        return equipmentSlot == EquipmentSlot.MAINHAND && isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers(equipmentSlot);
+    public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
+        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers(stack);
     }
 
     @Override
     @Deprecated
-    public Multimap<Attribute, AttributeModifier> bakeDragonsteel() {
-        if (tier.getAttackDamageBonus() != IafConfig.dragonsteelBaseDamage || dragonsteelModifiers == null) {
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> lvt_5_1_ = ImmutableMultimap.builder();
-            lvt_5_1_.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", IafConfig.dragonsteelBaseDamage - 1F + 5F, AttributeModifier.Operation.ADD_VALUE));
-            lvt_5_1_.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.0F, AttributeModifier.Operation.ADD_VALUE));
-            this.dragonsteelModifiers = lvt_5_1_.build();
-            return this.dragonsteelModifiers;
-        } else {
-            return dragonsteelModifiers;
+    public ItemAttributeModifiers bakeDragonsteel() {
+        if (dragonsteelModifiers == null || dragonsteelDamage != IafConfig.dragonsteelBaseDamage) {
+            dragonsteelDamage = IafConfig.dragonsteelBaseDamage;
+            dragonsteelModifiers = ItemAttributeModifiers.builder()
+                    .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, IafConfig.dragonsteelBaseDamage - 1F + 5F, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                    .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -3.0F, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                    .build();
         }
+        return dragonsteelModifiers;
     }
 
     @Override
