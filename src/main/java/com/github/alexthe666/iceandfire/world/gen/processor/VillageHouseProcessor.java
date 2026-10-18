@@ -34,7 +34,7 @@ public class VillageHouseProcessor extends StructureProcessor {
         RandomSource random = settings.getRandom(infoIn2.pos());
         if (infoIn2.state().getBlock() == Blocks.CHEST) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("LootTable", LOOT.toString());
+            tag.putString("LootTable", LOOT.location().toString());
             tag.putLong("LootTableSeed", random.nextLong());
             return new StructureTemplate.StructureBlockInfo(infoIn2.pos(), infoIn2.state(), tag);
         }

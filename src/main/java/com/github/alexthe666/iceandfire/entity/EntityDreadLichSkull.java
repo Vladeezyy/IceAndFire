@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.item.Items;
 import net.minecraft.network.syncher.SynchedEntityData;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.enums.EnumParticles;
@@ -28,6 +29,7 @@ public class EntityDreadLichSkull extends AbstractArrow {
 
     public EntityDreadLichSkull(EntityType<? extends AbstractArrow> type, Level worldIn) {
         super(type, worldIn);
+        this.pickup = Pickup.DISALLOWED;
         this.setBaseDamage(6F);
     }
 
@@ -40,13 +42,15 @@ public class EntityDreadLichSkull extends AbstractArrow {
 
     public EntityDreadLichSkull(EntityType<? extends AbstractArrow> type, Level worldIn, LivingEntity shooter,
                                 double x, double y, double z) {
-        super(type, shooter, worldIn, ItemStack.EMPTY, null);
+        super(type, shooter, worldIn, new ItemStack(Items.ARROW), null);
+        this.pickup = Pickup.DISALLOWED;
         this.setBaseDamage(6);
     }
 
     public EntityDreadLichSkull(EntityType<? extends AbstractArrow> type, Level worldIn, LivingEntity shooter,
                                 double dmg) {
-        super(type, shooter, worldIn, ItemStack.EMPTY, null);
+        super(type, shooter, worldIn, new ItemStack(Items.ARROW), null);
+        this.pickup = Pickup.DISALLOWED;
         this.setBaseDamage(dmg);
     }
 
@@ -193,7 +197,8 @@ public class EntityDreadLichSkull extends AbstractArrow {
 
     @Override
     protected @NotNull ItemStack getDefaultPickupItem() {
-        return ItemStack.EMPTY;
+        // Never picked up (Pickup.DISALLOWED), but 1.21 saves the pickup item and cannot encode an empty stack
+        return new ItemStack(Items.ARROW);
     }
 
 

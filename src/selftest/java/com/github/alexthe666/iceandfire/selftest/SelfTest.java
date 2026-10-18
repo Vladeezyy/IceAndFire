@@ -131,7 +131,8 @@ public class SelfTest {
                 continue;
             }
             BlockPos pos = new BlockPos(x, 0, 64);
-            level.getChunk(pos);
+            // No player on the server: keep the chunks (and the entities in them) loaded
+            level.setChunkForced(pos.getX() >> 4, pos.getZ() >> 4, true);
             int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) + 1;
             Entity entity = type.create(level);
             if (entity == null) {
@@ -172,6 +173,7 @@ public class SelfTest {
         int frozen = EntityDataProvider.getCapability(loaded).map(data -> data.frozenData.frozenTicks).orElse(-1);
         check("entity data saved", frozen == 120, frozen);
 
+        SPAWNED.forEach(e -> level.setChunkForced(e.chunkPosition().x, e.chunkPosition().z, false));
         SPAWNED.forEach(Entity::discard);
         SPAWNED.clear();
     }

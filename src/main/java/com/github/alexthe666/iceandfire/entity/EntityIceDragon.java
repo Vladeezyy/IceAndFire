@@ -74,12 +74,6 @@ public class EntityIceDragon extends EntityDragonBase {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(SWIMMING, Boolean.FALSE);
-    }
-
-    @Override
     public String getVariantName(int variant) {
         switch (variant) {
             default:

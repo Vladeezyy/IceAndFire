@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.item.Items;
 import net.minecraft.network.syncher.SynchedEntityData;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -31,6 +32,7 @@ public class EntityGhostSword extends AbstractArrow {
 
     public EntityGhostSword(EntityType<? extends AbstractArrow> type, Level worldIn) {
         super(type, worldIn);
+        this.pickup = Pickup.DISALLOWED;
         this.setBaseDamage(9F);
     }
 
@@ -43,7 +45,8 @@ public class EntityGhostSword extends AbstractArrow {
 
     public EntityGhostSword(EntityType<? extends AbstractArrow> type, Level worldIn, LivingEntity shooter,
                             double dmg) {
-        super(type, shooter, worldIn, ItemStack.EMPTY, null);
+        super(type, shooter, worldIn, new ItemStack(Items.ARROW), null);
+        this.pickup = Pickup.DISALLOWED;
         this.setBaseDamage(dmg);
     }
 
@@ -140,7 +143,8 @@ public class EntityGhostSword extends AbstractArrow {
 
     @Override
     protected @NotNull ItemStack getDefaultPickupItem() {
-        return ItemStack.EMPTY;
+        // Never picked up (Pickup.DISALLOWED), but 1.21 saves the pickup item and cannot encode an empty stack
+        return new ItemStack(Items.ARROW);
     }
 
 

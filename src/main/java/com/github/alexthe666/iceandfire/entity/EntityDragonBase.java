@@ -100,7 +100,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class EntityDragonBase extends TamableAnimal implements IPassabilityNavigator, ISyncMount, IFlyingMount, IMultipartEntity, IAnimatedEntity, IDragonFlute, IDeadMob, IVillagerFear, IAnimalFear, IDropArmor, IHasCustomizableAttributes, ICustomSizeNavigator, ICustomMoveController, ContainerListener {
 
     public static final int FLIGHT_CHANCE_PER_TICK = 1500;
-    // SWIMMING was declared but never defined: 1.21 refuses entities with undefined data ids
+    // Used by the ice dragon only, but every dragon must define it: 1.21 refuses entities with undefined data ids
+    protected static final EntityDataAccessor<Boolean> SWIMMING = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.BOOLEAN);
     // The UUID of the original as id: dragons of 1.20 worlds have the modifier as minecraft:<uuid> after the upgrade
     private static final ResourceLocation ARMOR_MODIFIER_ID = ResourceLocation.withDefaultNamespace("556e1665-8b10-40c8-8f9d-cf9b1667f295");
     private static final EntityDataAccessor<Integer> HUNGER = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.INT);
@@ -599,6 +600,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HUNGER, 0);
+        builder.define(SWIMMING, Boolean.FALSE);
         builder.define(AGE_TICKS, 0);
         builder.define(GENDER, false);
         builder.define(VARIANT, 0);
