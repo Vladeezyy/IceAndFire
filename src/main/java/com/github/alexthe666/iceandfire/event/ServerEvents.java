@@ -201,7 +201,7 @@ public class ServerEvents {
     private static final String[] VILLAGE_TYPES = new String[]{"plains", "desert", "snowy", "savanna", "taiga"};
 
     @SubscribeEvent
-    public static void addNewVillageBuilding(final ServerAboutToStartEvent event) {
+    public void addNewVillageBuilding(final ServerAboutToStartEvent event) {
         if (IafConfig.villagerHouseWeight > 0) {
             Registry<StructureTemplatePool> templatePoolRegistry = event.getServer().registryAccess().registry(Registries.TEMPLATE_POOL).orElseThrow();
             Registry<StructureProcessorList> processorListRegistry = event.getServer().registryAccess().registry(Registries.PROCESSOR_LIST).orElseThrow();
@@ -521,7 +521,7 @@ public class ServerEvents {
     }
 
     @SubscribeEvent // TODO :: Can this be moved into the item itself?
-    public static void onPlayerLeftClick(PlayerInteractEvent.LeftClickEmpty event) {
+    public void onPlayerLeftClick(PlayerInteractEvent.LeftClickEmpty event) {
         onLeftClick(event.getEntity(), event.getItemStack());
         if (event.getLevel().isClientSide) {
             IceAndFire.sendMSGToServer(new MessageSwingArm());
@@ -576,7 +576,7 @@ public class ServerEvents {
     }
 
     //@SubscribeEvent // FIXME :: Unused
-    public static void onChestGenerated(LootTableLoadEvent event) {
+    public void onChestGenerated(LootTableLoadEvent event) {
         final ResourceLocation eventName = event.getName();
         final boolean condition1 = eventName.equals(BuiltInLootTables.SIMPLE_DUNGEON)
                 || eventName.equals(BuiltInLootTables.ABANDONED_MINESHAFT)

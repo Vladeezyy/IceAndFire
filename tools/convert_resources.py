@@ -40,6 +40,10 @@ def c_tag(name):
     return prefix + 'c:' + C_RENAMES.get(path, path)
 
 
+# ids renamed by vanilla since 1.20.1
+RENAMED_IDS = {'minecraft:grass': 'minecraft:short_grass', 'minecraft:scute': 'minecraft:turtle_scute'}
+
+
 def fix_strings(node):
     if isinstance(node, dict):
         return {k: fix_strings(v) for k, v in node.items()}
@@ -48,6 +52,8 @@ def fix_strings(node):
     if isinstance(node, str):
         if node in FORGE_TYPES:
             return FORGE_TYPES[node]
+        if node in RENAMED_IDS:
+            return RENAMED_IDS[node]
         if node.startswith('forge:') or node.startswith('#forge:'):
             return c_tag(node)
     return node

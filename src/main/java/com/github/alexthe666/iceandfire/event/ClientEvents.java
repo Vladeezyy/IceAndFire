@@ -54,7 +54,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void renderWorldLastEvent(@NotNull final RenderLevelStageEvent event)
+    public void renderWorldLastEvent(@NotNull final RenderLevelStageEvent event)
     {
         WorldEventContext.INSTANCE.renderWorldLastEvent(event);
     }
