@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.pathfinding;
 
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -23,17 +24,18 @@ public class NodeProcessorDeathWorm extends NodeEvaluator {
     }
 
     @Override
-    public @NotNull Target getGoal(double x, double y, double z) {
+    public @NotNull Target getTarget(double x, double y, double z) {
         return new Target(this.getNode(Mth.floor(x - 0.4), Mth.floor(y + 0.5D), Mth.floor(z - 0.4)));
     }
 
     @Override
-    public @NotNull PathType getBlockPathType(@NotNull BlockGetter blockaccessIn, int x, int y, int z, @NotNull Mob entitylivingIn) {
-        return this.getBlockPathType(blockaccessIn, x, y, z);
+    public @NotNull PathType getPathTypeOfMob(@NotNull PathfindingContext context, int x, int y, int z, @NotNull Mob entitylivingIn) {
+        return this.getPathType(context, x, y, z);
     }
 
     @Override
-    public @NotNull PathType getBlockPathType(BlockGetter worldIn, int x, int y, int z) {
+    public @NotNull PathType getPathType(@NotNull PathfindingContext context, int x, int y, int z) {
+        BlockGetter worldIn = context.level();
         BlockPos blockpos = new BlockPos(x, y, z);
         BlockState blockstate = worldIn.getBlockState(blockpos);
         if (!isPassable(worldIn, blockpos.below()) && (blockstate.isAir() || isPassable(worldIn, blockpos))) {
@@ -68,8 +70,8 @@ public class NodeProcessorDeathWorm extends NodeEvaluator {
         for (int i = p_186327_1_; i < p_186327_1_ + this.entityWidth; ++i) {
             for (int j = p_186327_2_; j < p_186327_2_ + this.entityHeight; ++j) {
                 for (int k = p_186327_3_; k < p_186327_3_ + this.entityDepth; ++k) {
-                    BlockState blockstate = this.level.getBlockState(blockpos$mutable.set(i, j, k));
-                    if (!isPassable(this.level, blockpos$mutable.below()) && (blockstate.isAir() || isPassable(this.level, blockpos$mutable))) {
+                    BlockState blockstate = this.currentContext.level().getBlockState(blockpos$mutable.set(i, j, k));
+                    if (!isPassable(this.currentContext.level(), blockpos$mutable.below()) && (blockstate.isAir() || isPassable(this.currentContext.level(), blockpos$mutable))) {
                         return PathType.BREACH;
                     }
 
@@ -77,7 +79,7 @@ public class NodeProcessorDeathWorm extends NodeEvaluator {
             }
         }
 
-        BlockState blockstate1 = this.level.getBlockState(blockpos$mutable);
+        BlockState blockstate1 = this.currentContext.level().getBlockState(blockpos$mutable);
         return isPassable(blockstate1) ? PathType.WATER : PathType.BLOCKED;
     }
 

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -398,6 +399,11 @@ public class IafItemRegistry {
         registerItem("spawn_egg_dread_horse", () -> new DeferredSpawnEggItem(IafEntityRegistry.DREAD_HORSE, 0XE0E6E6, 0XACACAC, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
         registerItem("spawn_egg_hydra", () -> new DeferredSpawnEggItem(IafEntityRegistry.HYDRA, 0X8B8B78, 0X2E372B, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
         registerItem("spawn_egg_ghost", () -> new DeferredSpawnEggItem(IafEntityRegistry.GHOST, 0XB9EDB8, 0X73B276, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
+    }
+
+    @SubscribeEvent
+    public static void registerTicketControllers(RegisterTicketControllersEvent event) {
+        event.register(ItemSummoningCrystal.CHUNK_TICKETS);
     }
 
     public static <I extends Item> DeferredItem<I> registerItem(String name, Supplier<I> item) {

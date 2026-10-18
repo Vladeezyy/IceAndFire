@@ -40,7 +40,7 @@ public class HideableModelRenderer extends AdvancedModelBox {
         this.rotationPointZ = currentModel.rotationPointZ;
     }
 
-    public void invisibleRender(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void invisibleRender(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
         if (this.showModel && (!this.cubeList.isEmpty() || !this.childModels.isEmpty())) {
             matrixStackIn.pushPose();
             this.translateAndRotate(matrixStackIn);
@@ -48,7 +48,7 @@ public class HideableModelRenderer extends AdvancedModelBox {
                 matrixStackIn.scale(1.0F / Math.max(this.scaleX, 1.0E-4F), 1.0F / Math.max(this.scaleY, 1.0E-4F), 1.0F / Math.max(this.scaleZ, 1.0E-4F));
             }
             for (BasicModelPart renderer : this.childModels) {
-                renderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, FastColor.ARGB32.colorFromFloat(alpha, red, green, blue));
+                renderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
             }
 
             matrixStackIn.popPose();

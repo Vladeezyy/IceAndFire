@@ -2890,9 +2890,12 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     public void onAddedToLevel() {
         super.onAddedToLevel();
 
-        ItemSummoningCrystal itemSummoningCrystal = ItemSummoningCrystal.DELAYED_SUMMONS.get(this.getUUID());
-        if (itemSummoningCrystal != null) {
-            itemSummoningCrystal.delayedSummon();
+        // Client and integrated server share the map in single player: only the server summons
+        if (!this.level().isClientSide) {
+            ItemSummoningCrystal.PendingSummon summon = ItemSummoningCrystal.DELAYED_SUMMONS.get(this.getUUID());
+            if (summon != null) {
+                ItemSummoningCrystal.delayedSummon(summon);
+            }
         }
     }
 

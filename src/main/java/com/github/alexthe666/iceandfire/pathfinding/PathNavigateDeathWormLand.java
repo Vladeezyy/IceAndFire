@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.pathfinding;
 
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 import com.github.alexthe666.iceandfire.entity.EntityDeathWorm;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -218,12 +219,12 @@ public class PathNavigateDeathWormLand extends PathNavigation {
                     double d1 = (double) l + 0.5D - vec31.z;
 
                     if (d0 * p_179683_8_ + d1 * p_179683_10_ >= 0.0D) {
-                        PathType pathnodetype = this.nodeEvaluator.getBlockPathType(this.level, k, y - 1, l, this.mob);
+                        PathType pathnodetype = this.nodeEvaluator.getPathTypeOfMob(new PathfindingContext(this.level, this.mob), k, y - 1, l, this.mob);
                         if (pathnodetype == PathType.LAVA) {
                             return false;
                         }
 
-                        pathnodetype = this.nodeEvaluator.getBlockPathType(this.level, k, y, l, this.mob);
+                        pathnodetype = this.nodeEvaluator.getPathTypeOfMob(new PathfindingContext(this.level, this.mob), k, y, l, this.mob);
                         float f = this.mob.getPathfindingMalus(pathnodetype);
 
                         if (f < 0.0F || f >= 8.0F) {
