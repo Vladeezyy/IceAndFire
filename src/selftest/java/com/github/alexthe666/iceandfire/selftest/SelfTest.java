@@ -72,14 +72,17 @@ public class SelfTest {
         MinecraftServer server = event.getServer();
         ServerLevel level = server.overworld();
         try {
+            if (genIndex >= 0) {
+                generateStep(level);
+            }
             switch (tick) {
                 case 20 -> registries(server);
                 case 40 -> spawnAll(level);
                 case 240 -> checkSpawned(level);
                 case 260 -> items(level);
                 case 280 -> features(server, level);
-                case 400 -> structures(server, level);
-                case 600 -> finish(server);
+                case 480 -> structures(server, level);
+                case 700 -> finish(server);
                 default -> {
                 }
             }
@@ -194,50 +197,46 @@ public class SelfTest {
         check("item data saved", ItemStack.isSameItemSameComponents(copy, statue), copy);
     }
 
+    private static final int GEN_RADIUS = 20;
+    private static int genIndex = -1;
+
+    /**
+     * Real world generation of 40 x 40 chunks far from spawn, 16 chunks per tick: the features of the mod are placed by
+     * the biome modifier as in a normal world (placing them in a finished world logs "Unprimed heightmap").
+     */
     private static void features(MinecraftServer server, ServerLevel level) {
-        var registry = level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE);
-        int x = 4000;
-        List<String> failed = new ArrayList<>();
-        int placed = 0;
-        for (ResourceLocation id : registry.keySet()) {
-            if (!id.getNamespace().equals(IceAndFire.MODID)) {
-                continue;
-            }
-            Holder<ConfiguredFeature<?, ?>> holder = registry.getHolderOrThrow(ResourceKey.create(Registries.CONFIGURED_FEATURE, id));
-            BlockPos pos = new BlockPos(x, 0, 4000);
-            for (int dx = -2; dx <= 2; dx++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    level.getChunk((pos.getX() >> 4) + dx, (pos.getZ() >> 4) + dz);
-                }
-            }
-            int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ());
-            try {
-                // Many features refuse to place in a wrong biome or near spawn: this checks that they do not crash
-                holder.value().place(level, level.getChunkSource().getGenerator(), level.getRandom(), pos.atY(y));
-                placed++;
-            } catch (Throwable t) {
-                failed.add(id + ": " + t);
-                IceAndFire.LOGGER.error("[selftest] feature {}", id, t);
-            }
-            x += 200;
-        }
-        check("features place without errors", failed.isEmpty(), placed + " placed, failed " + failed);
+        genIndex = 0;
     }
 
-    private static void structures(MinecraftServer server, ServerLevel level) {
-        CommandSourceStack source = server.createCommandSourceStack().withSuppressedOutput().withPermission(4);
-        int x = -4000;
-        List<String> failed = new ArrayList<>();
-        for (String structure : List.of("gorgon_temple", "graveyard", "mausoleum")) {
-            int before = fail;
-            try {
-                server.getCommands().getDispatcher().execute("place structure iceandfire:" + structure + " " + x + " 70 -4000", source);
-            } catch (Exception e) {
-                failed.add(structure + ": " + e.getMessage());
-            }
-            x -= 300;
+    private static void generateStep(ServerLevel level) {
+        int side = GEN_RADIUS * 2;
+        int total = side * side;
+        for (int n = 0; n < 16 && genIndex < total; n++, genIndex++) {
+            int cx = 500 + genIndex % side - GEN_RADIUS;
+            int cz = 500 + genIndex / side - GEN_RADIUS;
+            level.getChunk(cx, cz);
         }
-        check("structures place", failed.isEmpty(), failed);
+        if (genIndex >= total) {
+            genIndex = -1;
+            check("world generation " + total + " chunks", true, "no crash");
+        }
+    }
+
+    /** Locates every structure of the mod (this runs their biome checks) and places it there. */
+    private static void structures(MinecraftServer server, ServerLevel level) {
+        var registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        CommandSourceStack source = server.createCommandSourceStack().withSuppressedOutput().withPermission(4);
+        for (String name : List.of("gorgon_temple", "graveyard", "mausoleum")) {
+            var holder = registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name)));
+            var found = level.getChunkSource().getGenerator().findNearestMapStructure(level, net.minecraft.core.HolderSet.direct(holder), new BlockPos(0, 64, 0), 150, false);
+            if (found == null) {
+                check("structure " + name + " located", false, "none within 150 chunks");
+                continue;
+            }
+            BlockPos pos = found.getFirst();
+            String biome = level.getBiome(pos.atY(level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()))).unwrapKey().map(k -> k.location().toString()).orElse("?");
+            check("structure " + name + " located", true, pos + " in " + biome);
+        }
     }
 
     private static void finish(MinecraftServer server) {
