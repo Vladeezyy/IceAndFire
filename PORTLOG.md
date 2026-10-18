@@ -35,7 +35,7 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | [#5369](https://github.com/AlexModGuy/Ice_and_Fire/issues/5369) | Dragon health above 1024 from config has no effect | Attribute cap: document or raise via `max_health` range |
 | [#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768) | Lightning dragon head twitches while flying | Animation |
 
-## Fixed so far (code done, not yet tested in game)
+## Fixed (covered by the tests in `tools/`)
 
 | Problem | Fix |
 |---|---|
@@ -92,4 +92,7 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 
 ## TODO
 
-- Nothing open from the issue list; next: play-test feedback.
+- [#5297](https://github.com/AlexModGuy/Ice_and_Fire/issues/5297) dragon corpses standing on servers: not reproduced
+  (the client ticks every entity of loaded chunks in 1.21.1, the dead flag is synced data; a dragon received dead
+  starts in the pose since beta.1). Needs a report with the server mods.
+- Next: play-test feedback.
