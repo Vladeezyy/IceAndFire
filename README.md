@@ -1,9 +1,11 @@
 # Ice and Fire for NeoForge 1.21.1
 
 Port of [Ice and Fire](https://www.curseforge.com/minecraft/mc-mods/ice-and-fire-dragons) by Alexthe666 and TheBv
-(version 2.1.13, Forge 1.20.1) to NeoForge 1.21.1. Work in progress.
+(version 2.1.13, Forge 1.20.1) to NeoForge 1.21.1. Beta.
 
-Requires [Citadel](https://modrinth.com/mod/citadel) 2.7.1+ for 1.21.1.
+- Minecraft 1.21.1, NeoForge 21.1.197 or newer (tested with 21.1.262).
+- Requires [Citadel](https://modrinth.com/mod/citadel) 2.7.1+ for NeoForge 1.21.1.
+- Worlds and items of the 1.20.1 version are upgraded (item data keeps its keys in `minecraft:custom_data`).
 
 Please report bugs of this port here, not to the original author.
 
@@ -32,6 +34,17 @@ Please report bugs of this port here, not to the original author.
 - Hippogryphs and amphitheres taking off in caves below y 0, dragon corpses floating there.
 - Only one hydra neck had a hitbox; deathworm armor repaired with the wrong chitin; Stymphalian feathers and hydra
   arrows damaged the wrong item.
+
+## Tested with
+
+Sodium 0.6.13, Iris 1.8.12, Lithium 0.15.4, FerriteCore 7.0.3, ModernFix 5.27.26, Jade 15.10.6, JEI 19.64,
+EntityCulling 1.11.2, AttributeFix 21.1.3 (client scene, all creatures rendered). Dedicated server: a client riding an
+adult dragon; load test with 30 adult dragons and 100 creatures, 4096 generated chunks, chunk reload cycles.
+
+## Known issues
+
+- The myrmex queen can still leave her hive ([#5197](https://github.com/AlexModGuy/Ice_and_Fire/issues/5197), not reproduced).
+- Lightning dragon head twitch while flying ([#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768)) not looked at.
 
 ## License
 

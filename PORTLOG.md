@@ -78,22 +78,14 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
-## Current state (2026-10-18, resume here)
+## Current state (2026-10-18)
 
-- Code above compiles. **Not yet run:** self-test with the new dragon part checks (`SelfTest` ticks 500-800: parts
-  added, old world part removed, part in a hidden section comes back, chunk unload and reload without doubled parts)
-  and the dread spawner fix. Run `tools/selftest.sh` (it now also reports "UUID of added entity" warnings), expect
-  all CHECK OK, then `tools/scenetest.sh`.
-- Previous self-test run crashed in generation on the dread spawner (fixed since, see table).
-- Next original bugs: #5192/#5208 riding lag, #5196 dragon horn on parts, #5064/#5251 hippogryph/griffin hovering,
-  #5157 amphithere sitting mount, #5197/#4297 myrmex queen, #5112/#5205 armor clipping, #5297 corpse render,
-  #5369 health above 1024, #4768 lightning dragon head twitch.
+- 2.1.13-beta.1: self-test 27/27, client scene 28/28 (also with Sodium, Iris, Lithium, FerriteCore, ModernFix, Jade,
+  EntityCulling, AttributeFix: `tools/scenetest.sh -Pwith_compat`), net test (`tools/nettest.sh`), stress test 10/10
+  (`tools/stresstest.sh`, `SEED=` repeats a world), production server with the built jar.
+- Not done: #5197 myrmex queen (needs a long hive simulation), #4768 lightning dragon head twitch.
 
-## TODO before release
+## TODO
 
-- Enchantable item tags (`minecraft:enchantable/*`, `swords`, `head_armor`...): without them the gear of Ice and
-  Fire cannot get Sharpness, Protection, Power...
-- Audit the client-to-server handlers (dragon control, hippogryph armor, multipart interact with damage from the
-  client, player hit multipart, swing arm) for range and ownership checks.
-- `sendMSGToAll` for entity updates → players tracking the entity.
-- Run the datagen once and compare with the converted data.
+- `sendMSGToAll` for entity updates → players tracking the entity (less traffic on big servers).
+- #5197 myrmex queen: a hive simulation of an hour in the stress test.
