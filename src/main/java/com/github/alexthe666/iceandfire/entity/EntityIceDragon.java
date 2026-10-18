@@ -94,11 +94,6 @@ public class EntityIceDragon extends EntityDragonBase {
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public Item getVariantScale(int variant) {
         switch (variant) {
             default:

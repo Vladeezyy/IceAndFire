@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -250,7 +251,7 @@ public class EntityFireDragon extends EntityDragonBase {
     @Override
     protected float getBlockSpeedFactor() {
         // Disable soul sand slow down
-        if (this.onSoulSpeedBlock()) {
+        if (this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(BlockTags.SOUL_SPEED_BLOCKS)) {
             return this.getDragonStage() >= 2 ? 1.0f : 0.8f;
         }
         return super.getBlockSpeedFactor();

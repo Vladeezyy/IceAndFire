@@ -181,11 +181,6 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public void aiStep() {
         super.aiStep();
         yBodyRot = getYRot();

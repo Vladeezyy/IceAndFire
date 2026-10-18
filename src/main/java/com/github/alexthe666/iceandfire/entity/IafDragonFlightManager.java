@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.util.DragonUtils;
 import com.github.alexthe666.iceandfire.entity.util.IFlyingMount;
@@ -188,7 +189,7 @@ public class IafDragonFlightManager {
                 PathNavigation pathnavigate = this.mob.getNavigation();
                 if (pathnavigate != null) {
                     NodeEvaluator nodeprocessor = pathnavigate.getNodeEvaluator();
-                    if (nodeprocessor != null && nodeprocessor.getBlockPathType(this.mob.level(), Mth.floor(this.mob.getX() + (double) f7), Mth.floor(this.mob.getY()), Mth.floor(this.mob.getZ() + (double) f8)) != PathType.WALKABLE) {
+                    if (nodeprocessor != null && nodeprocessor.getPathType(new PathfindingContext(this.mob.level(), this.mob), Mth.floor(this.mob.getX() + (double) f7), Mth.floor(this.mob.getY()), Mth.floor(this.mob.getZ() + (double) f8)) != PathType.WALKABLE) {
                         this.strafeForwards = 1.0F;
                         this.strafeRight = 0.0F;
                         f1 = f;

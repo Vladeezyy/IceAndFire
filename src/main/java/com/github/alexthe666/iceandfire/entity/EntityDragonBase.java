@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.items.IItemHandler;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
@@ -100,7 +101,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
 
     public static final int FLIGHT_CHANCE_PER_TICK = 1500;
     protected static final EntityDataAccessor<Boolean> SWIMMING = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.BOOLEAN);
-    private static final UUID ARMOR_MODIFIER_UUID = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
+    // The UUID of the original as id: dragons of 1.20 worlds have the modifier as minecraft:<uuid> after the upgrade
+    private static final ResourceLocation ARMOR_MODIFIER_ID = ResourceLocation.withDefaultNamespace("556e1665-8b10-40c8-8f9d-cf9b1667f295");
     private static final EntityDataAccessor<Integer> HUNGER = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> AGE_TICKS = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> GENDER = SynchedEntityData.defineId(EntityDragonBase.class, EntityDataSerializers.BOOLEAN);
@@ -737,7 +739,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                 if (!itemstack.isEmpty()) {
                     CompoundTag CompoundNBT = new CompoundTag();
                     CompoundNBT.putByte("Slot", (byte) i);
-                    itemstack.save(CompoundNBT);
+                    CompoundNBT = (CompoundTag) itemstack.save(this.registryAccess(), CompoundNBT);
                     nbttaglist.add(CompoundNBT);
                 }
             }
@@ -745,7 +747,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         }
         compound.putBoolean("CrystalBound", this.isBoundToCrystal());
         if (this.hasCustomName()) {
-            compound.putString("CustomName", Component.Serializer.toJson(this.getCustomName()));
+            compound.putString("CustomName", Component.Serializer.toJson(this.getCustomName(), this.registryAccess()));
         }
     }
 
@@ -780,7 +782,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                 CompoundTag CompoundNBT = (net.minecraft.nbt.CompoundTag) inbt;
                 int j = CompoundNBT.getByte("Slot") & 255;
                 if (j <= 4) {
-                    dragonInventory.setItem(j, ItemStack.of(CompoundNBT));
+                    dragonInventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
                 }
             }
         } else {
@@ -789,12 +791,12 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             for (Tag inbt : nbttaglist) {
                 CompoundTag CompoundNBT = (net.minecraft.nbt.CompoundTag) inbt;
                 int j = CompoundNBT.getByte("Slot") & 255;
-                dragonInventory.setItem(j, ItemStack.of(CompoundNBT));
+                dragonInventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
             }
         }
         this.setCrystalBound(compound.getBoolean("CrystalBound"));
         if (compound.contains("CustomName", 8) && !compound.getString("CustomName").startsWith("TextComponent")) {
-            this.setCustomName(Component.Serializer.fromJson(compound.getString("CustomName")));
+            this.setCustomName(Component.Serializer.fromJson(compound.getString("CustomName"), this.registryAccess()));
         }
 
         this.setConfigurableAttributes();
@@ -891,8 +893,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         final double baseValue = minimumArmor + (armorStep * this.getAgeInDays());
         this.getAttribute(Attributes.ARMOR).setBaseValue(baseValue);
         if (!this.level().isClientSide) {
-            this.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_UUID);
-            this.getAttribute(Attributes.ARMOR).addPermanentModifier(new AttributeModifier(ARMOR_MODIFIER_UUID, "Dragon armor bonus", calculateArmorModifier(), AttributeModifier.Operation.ADD_VALUE));
+            this.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_ID);
+            this.getAttribute(Attributes.ARMOR).addPermanentModifier(new AttributeModifier(ARMOR_MODIFIER_ID, calculateArmorModifier(), AttributeModifier.Operation.ADD_VALUE));
         }
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(Math.min(2048, IafConfig.dragonTargetSearchLength));
     }
@@ -1291,7 +1293,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         if (stack.getItem() == IafItemRegistry.DRAGON_BONE.get()) {
             this.playSound(SoundEvents.SKELETON_AMBIENT, 1, 1);
         } else {
-            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 1, 1);
+            this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1, 1);
         }
         return stack;
     }
@@ -1450,7 +1452,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         }
 
         if (doBreak) {
-            if (EventHooks.getMobGriefingEvent(this.level(), this)) {
+            if (EventHooks.canEntityGrief(this.level(), this)) {
                 if (DragonUtils.canGrief(this)) {
                     // TODO :: make `force` ignore the dragon stage?
                     if (!isModelDead() && this.getDragonStage() >= 3 && (this.canMove() || this.getControllingPassenger() != null)) {
@@ -1699,7 +1701,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     @Override
-    public float getStepHeight() {
+    public float maxUpStep() {
         return Math.max(1.2F, 1.2F + (Math.min(this.getAgeInDays(), 125) - 25) * 1.8F / 100F);
     }
 
@@ -1783,7 +1785,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose poseIn) {
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose poseIn) {
         return this.getType().getDimensions().scale(this.getScale());
     }
 
@@ -1816,10 +1818,11 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             return false;
         }
 
-        final boolean flag = entityIn.hurt(this.level().damageSources().mobAttack(this), ((int) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue()));
+        DamageSource source = this.level().damageSources().mobAttack(this);
+        final boolean flag = entityIn.hurt(source, ((int) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue()));
 
-        if (flag) {
-            this.doEnchantDamageEffects(this, entityIn);
+        if (flag && this.level() instanceof ServerLevel serverLevel) {
+            EnchantmentHelper.doPostAttackEffects(serverLevel, entityIn, source);
         }
 
         return flag;
@@ -2332,7 +2335,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                 this.setTarget(null);
             }
             // Stop flying when hit the water, but waterfalls do not block flying
-            if (this.getFeetBlockState().getFluidState().isSource() && this.isInWater() && !this.isGoingUp()) {
+            if (this.getInBlockState().getFluidState().isSource() && this.isInWater() && !this.isGoingUp()) {
                 this.setFlying(false);
                 this.setHovering(false);
             }
@@ -2871,7 +2874,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     @Override
-    public void onRemovedFromWorld() {
+    public void onRemovedFromLevel() {
         if (IafConfig.chunkLoadSummonCrystal) {
             if (this.isBoundToCrystal()) {
                 DragonPosWorldData data = DragonPosWorldData.get(level());
@@ -2880,12 +2883,12 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                 }
             }
         }
-        super.onRemovedFromWorld();
+        super.onRemovedFromLevel();
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
 
         ItemSummoningCrystal itemSummoningCrystal = ItemSummoningCrystal.DELAYED_SUMMONS.get(this.getUUID());
         if (itemSummoningCrystal != null) {

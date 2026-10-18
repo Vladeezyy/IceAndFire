@@ -37,6 +37,16 @@ import java.util.List;
 import java.util.Random;
 
 public class TileEntityLectern extends BaseContainerBlockEntity implements WorldlyContainer {
+    @Override
+    protected @NotNull NonNullList<ItemStack> getItems() {
+        return this.stacks;
+    }
+
+    @Override
+    protected void setItems(@NotNull NonNullList<ItemStack> items) {
+        this.stacks = items;
+    }
+
     private static final int[] slotsTop = new int[]{0};
     private static final int[] slotsSides = new int[]{1};
     private static final int[] slotsBottom = new int[]{0};

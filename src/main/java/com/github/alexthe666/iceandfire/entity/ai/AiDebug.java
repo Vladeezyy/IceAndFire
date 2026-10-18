@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.ai;
 
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.world.entity.Mob;
 import org.apache.logging.log4j.LogManager;
@@ -33,12 +34,12 @@ public class AiDebug {
                 continue;
             }
             if (entity.goalSelector != null) {
-                List<String> goals = entity.goalSelector.getRunningGoals().map(goal -> goal.getGoal().toString()).collect(Collectors.toList());
+                List<String> goals = entity.goalSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).map(goal -> goal.getGoal().toString()).collect(Collectors.toList());
                 if (!goals.isEmpty())
                     LOGGER.debug("{} - GOALS: {}", entity, goals);
             }
             if (entity.targetSelector != null) {
-                List<String> targets = entity.targetSelector.getRunningGoals().map(goal -> goal.getGoal().toString()).collect(Collectors.toList());
+                List<String> targets = entity.targetSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).map(goal -> goal.getGoal().toString()).collect(Collectors.toList());
                 if (!targets.isEmpty())
                     LOGGER.debug("{} - TARGET: {}", entity, targets);
             }

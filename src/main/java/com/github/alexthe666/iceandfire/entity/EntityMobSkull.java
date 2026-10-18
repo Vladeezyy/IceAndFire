@@ -45,11 +45,6 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public boolean isInvulnerableTo(DamageSource i) {
         return i.getEntity() != null;
     }

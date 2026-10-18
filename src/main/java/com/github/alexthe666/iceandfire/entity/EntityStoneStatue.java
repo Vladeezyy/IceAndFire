@@ -160,7 +160,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose poseIn) {
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose poseIn) {
         return stoneStatueSize;
     }
 
@@ -211,11 +211,6 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
         this.entityData.set(CRACK_AMOUNT, crackAmount);
     }
 
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
 
     @Override
     public boolean canBeTurnedToStone() {

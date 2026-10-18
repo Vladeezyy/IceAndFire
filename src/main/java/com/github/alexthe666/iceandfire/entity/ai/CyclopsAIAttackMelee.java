@@ -13,13 +13,13 @@ public class CyclopsAIAttackMelee extends MeleeAttackGoal {
     }
 
     @Override
-    protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
-        final double d0 = this.getAttackReachSqr(entity);
+    protected void checkAndPerformAttack(@NotNull LivingEntity entity) {
+        final double distance = this.mob.distanceToSqr(entity);
         if (isCyclopsBlinded() && distance >= 36D) {
             this.stop();
             return;
         }
-        if (distance <= d0) {
+        if (this.mob.isWithinMeleeAttackRange(entity)) {
             this.mob.swing(InteractionHand.MAIN_HAND);
             this.mob.doHurtTarget(entity);
         }

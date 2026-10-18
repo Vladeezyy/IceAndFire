@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -248,7 +249,10 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
             if (IafConfig.trollsDropWeapon) {
                 if (this.getRandom().nextInt(3) == 0) {
                     ItemStack weaponStack = new ItemStack(this.getWeaponType().item.get(), 1);
-                    weaponStack.hurt(this.getRandom().nextInt(250), this.getRandom(), null);
+                    if (this.level() instanceof ServerLevel serverLevel) {
+                weaponStack.hurtAndBreak(this.getRandom().nextInt(250), serverLevel, null, item -> {
+                });
+            }
                     dropItemAt(weaponStack, this.getX(), this.getY(), this.getZ());
                 } else {
                     ItemStack brokenDrop = new ItemStack(Blocks.STONE_BRICKS, this.getRandom().nextInt(2) + 1);
@@ -392,13 +396,13 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
                 float weaponX = (float) (getX() + 1.9F * Mth.cos((float) ((yBodyRot + 90) * Math.PI / 180)));
                 float weaponZ = (float) (getZ() + 1.9F * Mth.sin((float) ((yBodyRot + 90) * Math.PI / 180)));
                 float weaponY = (float) (getY() + (this.getEyeHeight() / 2));
-                Explosion explosion = new Explosion(level(), this, weaponX, weaponY, weaponZ, 1F + this.getRandom().nextFloat(), new ArrayList<>());
+                Explosion explosion = new Explosion(level(), this, weaponX, weaponY, weaponZ, 1F + this.getRandom().nextFloat(), false, Explosion.BlockInteraction.DESTROY_WITH_DECAY, new ArrayList<>());
                 if (!NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, weaponX, weaponY, weaponZ)).isCanceled()) {
                     explosion.explode();
                     explosion.finalizeExplosion(true);
                 }
 
-                this.playSound(SoundEvents.GENERIC_EXPLODE, 1, 1);
+                this.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1, 1);
 
             }
         }

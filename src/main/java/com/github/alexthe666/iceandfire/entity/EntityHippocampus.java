@@ -325,7 +325,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             if (this.isGoingUp()) {
                 if (!this.isInWater() && this.onGround()) {
                     this.jumpFromGround();
-                    net.minecraftforge.common.CommonHooks.onLivingJump(this);
+                    net.neoforged.neoforge.common.CommonHooks.onLivingJump(this);
                 } else if (this.isInWater()) {
                     this.setDeltaMovement(vec3.add(0, 0.04F, 0));
                 }
@@ -386,7 +386,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             if (!itemstack.isEmpty()) {
                 CompoundTag CompoundNBT = new CompoundTag();
                 CompoundNBT.putByte("Slot", (byte) i);
-                itemstack.save(CompoundNBT);
+                CompoundNBT = (CompoundTag) itemstack.save(this.registryAccess(), CompoundNBT);
                 nbttaglist.add(CompoundNBT);
             }
         }
@@ -406,7 +406,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompound(i);
                 int j = CompoundNBT.getByte("Slot") & 255;
-                this.inventory.setItem(j, ItemStack.of(CompoundNBT));
+                this.inventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
             }
         }
     }
@@ -459,7 +459,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     }
 
     @Override
-    public void equipSaddle(@Nullable SoundSource pSource) {
+    public void equipSaddle(@NotNull ItemStack stack, @Nullable SoundSource pSource) {
         this.inventory.setItem(0, new ItemStack(Items.SADDLE));
     }
 

@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.tags.ItemTags;
+import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.github.alexthe666.citadel.animation.IAnimatedEntity;
@@ -65,6 +67,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnimatedEntity, IDragonFlute, IVillagerFear, IAnimalFear, IDropArmor, IFlyingMount, ICustomMoveController, IHasCustomizableAttributes {
+
+    @Override
+    public boolean isFood(@NotNull ItemStack stack) {
+        // The default of Animal in 1.20.1
+        return stack.is(Items.WHEAT);
+    }
+
 
     private static final int FLIGHT_CHANCE_PER_TICK = 1200;
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(EntityHippogryph.class, EntityDataSerializers.INT);
@@ -324,7 +333,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                 }
                 return InteractionResult.SUCCESS;
             }
-            if (itemstack.getItem().isEdible() && itemstack.getItem().getFoodProperties() != null && itemstack.getItem().getFoodProperties().isMeat() && this.getHealth() < this.getMaxHealth()) {
+            if (itemstack.has(DataComponents.FOOD) && itemstack.is(ItemTags.MEAT) && this.getHealth() < this.getMaxHealth()) {
                 this.heal(5);
                 this.playSound(SoundEvents.GENERIC_EAT, 1, 1);
                 for (int i = 0; i < 3; i++) {
@@ -453,7 +462,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                 if (!itemstack.isEmpty()) {
                     CompoundTag CompoundNBT = new CompoundTag();
                     CompoundNBT.putByte("Slot", (byte) i);
-                    itemstack.save(CompoundNBT);
+                    CompoundNBT = (CompoundTag) itemstack.save(this.registryAccess(), CompoundNBT);
                     nbttaglist.add(CompoundNBT);
                 }
             }
@@ -484,7 +493,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompound(i);
                 int j = CompoundNBT.getByte("Slot") & 255;
-                this.hippogryphInventory.setItem(j, ItemStack.of(CompoundNBT));
+                this.hippogryphInventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
             }
         } else {
             ListTag nbttaglist = compound.getList("Items", 10);
@@ -493,7 +502,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                 CompoundTag CompoundNBT = nbttaglist.getCompound(i);
                 int j = CompoundNBT.getByte("Slot") & 255;
                 this.initHippogryphInv();
-                this.hippogryphInventory.setItem(j, ItemStack.of(CompoundNBT));
+                this.hippogryphInventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
                 //this.setArmorInSlot(j, this.getIntFromArmor(ItemStack.loadItemStackFromNBT(CompoundNBT)));
                 ItemStack saddle = hippogryphInventory.getItem(0);
                 ItemStack chest = hippogryphInventory.getItem(1);

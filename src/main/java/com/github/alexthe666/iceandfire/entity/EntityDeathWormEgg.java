@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -40,12 +41,12 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile implements IEnti
 
 
     @Override
-    public void writeSpawnData(FriendlyByteBuf buffer) {
+    public void writeSpawnData(@NotNull RegistryFriendlyByteBuf buffer) {
         buffer.writeBoolean(this.giant);
     }
 
     @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
+    public void readSpawnData(@NotNull RegistryFriendlyByteBuf additionalData) {
         this.giant = additionalData.readBoolean();
     }
 

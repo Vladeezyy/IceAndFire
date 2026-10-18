@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.item.Items;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.datagen.tags.IafItemTags;
@@ -46,14 +48,23 @@ import javax.annotation.Nullable;
 
 public class EntityPixie extends TamableAnimal {
 
+    @Override
+    public boolean isFood(@NotNull ItemStack stack) {
+        // The default of Animal in 1.20.1
+        return stack.is(Items.WHEAT);
+    }
+
+
     public static final float[][] PARTICLE_RGB = new float[][]{new float[]{1F, 0.752F, 0.792F}, new float[]{0.831F, 0.662F, 1F}, new float[]{0.513F, 0.843F, 1F}, new float[]{0.654F, 0.909F, 0.615F}, new float[]{0.996F, 0.788F, 0.407F}};
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EntityPixie.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(EntityPixie.class, EntityDataSerializers.INT);
 
     public static final int STEAL_COOLDOWN = 3000;
 
-    public MobEffect[] positivePotions = new MobEffect[]{MobEffects.DAMAGE_BOOST, MobEffects.JUMP, MobEffects.MOVEMENT_SPEED, MobEffects.LUCK, MobEffects.DIG_SPEED};
-    public MobEffect[] negativePotions = new MobEffect[]{MobEffects.WEAKNESS, MobEffects.CONFUSION, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.UNLUCK, MobEffects.DIG_SLOWDOWN};
+    @SuppressWarnings("unchecked")
+    public Holder<MobEffect>[] positivePotions = new Holder[]{MobEffects.DAMAGE_BOOST, MobEffects.JUMP, MobEffects.MOVEMENT_SPEED, MobEffects.LUCK, MobEffects.DIG_SPEED};
+    @SuppressWarnings("unchecked")
+    public Holder<MobEffect>[] negativePotions = new Holder[]{MobEffects.WEAKNESS, MobEffects.CONFUSION, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.UNLUCK, MobEffects.DIG_SLOWDOWN};
     public boolean slowSpeed = false;
     public int ticksUntilHouseAI;
     public int ticksHeldItemFor;
@@ -271,10 +282,6 @@ public class EntityPixie extends TamableAnimal {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setColor(this.random.nextInt(5));
         this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-
-        if (dataTag != null) {
-            System.out.println("EntityPixie spawned with dataTag: " + dataTag);
-        }
 
         return spawnDataIn;
     }

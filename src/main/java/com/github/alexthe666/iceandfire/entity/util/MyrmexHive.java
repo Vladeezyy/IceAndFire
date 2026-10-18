@@ -231,7 +231,7 @@ public class MyrmexHive {
         if (this.world == null || this.world.getServer() == null)
             return UUIDUtil.createOfflinePlayerUUID(name);
         Optional<GameProfile> profile = this.world.getServer().getProfileCache().get(name);
-        return profile.isPresent() ? UUIDUtil.getOrCreatePlayerUUID(profile.get()) : UUIDUtil.createOfflinePlayerUUID(name);
+        return profile.isPresent() ? profile.get().getId() : UUIDUtil.createOfflinePlayerUUID(name);
     }
 
     public int modifyPlayerReputation(UUID playerName, int reputation) {

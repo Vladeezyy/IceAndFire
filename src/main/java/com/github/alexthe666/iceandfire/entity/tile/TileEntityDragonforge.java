@@ -43,6 +43,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class TileEntityDragonforge extends BaseContainerBlockEntity implements WorldlyContainer {
+    @Override
+    protected @NotNull NonNullList<ItemStack> getItems() {
+        return this.forgeItemStacks;
+    }
+
+    @Override
+    protected void setItems(@NotNull NonNullList<ItemStack> items) {
+        this.forgeItemStacks = items;
+    }
+
 
     private static final int[] SLOTS_TOP = new int[]{0, 1};
     private static final int[] SLOTS_BOTTOM = new int[]{2};

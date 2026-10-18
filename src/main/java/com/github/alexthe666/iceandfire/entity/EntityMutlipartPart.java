@@ -83,7 +83,7 @@ public abstract class EntityMutlipartPart extends Entity {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose poseIn) {
-        return new EntityDimensions(getScaleX(), getScaleY(), false);
+        return EntityDimensions.scalable(getScaleX(), getScaleY());
     }
 
     @Override
@@ -271,6 +271,6 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
     public boolean shouldContinuePersisting() {
-        return isAddedToWorld() || this.isRemoved();
+        return isAddedToLevel() || this.isRemoved();
     }
 }

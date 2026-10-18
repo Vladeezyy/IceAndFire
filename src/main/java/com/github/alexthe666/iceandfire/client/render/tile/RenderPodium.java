@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
+import net.minecraft.world.phys.AABB;
 import com.github.alexthe666.iceandfire.client.model.ModelDragonEgg;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderDragonEgg;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderMyrmexEgg;
@@ -20,6 +21,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRenderer<T> {
+
+    // The item floats above the podium; formerly BlockEntity#getRenderBoundingBox
+    @Override
+    public @NotNull AABB getRenderBoundingBox(@NotNull T podium) {
+        return new AABB(podium.getBlockPos().getX(), podium.getBlockPos().getY(), podium.getBlockPos().getZ(), podium.getBlockPos().getX() + 1, podium.getBlockPos().getY() + 3, podium.getBlockPos().getZ() + 1);
+    }
 
     public RenderPodium(BlockEntityRendererProvider.Context context) {
 

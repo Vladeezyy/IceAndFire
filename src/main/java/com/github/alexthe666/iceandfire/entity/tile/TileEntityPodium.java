@@ -31,6 +31,16 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class TileEntityPodium extends BaseContainerBlockEntity implements WorldlyContainer {
+    @Override
+    protected @NotNull NonNullList<ItemStack> getItems() {
+        return this.stacks;
+    }
+
+    @Override
+    protected void setItems(@NotNull NonNullList<ItemStack> items) {
+        this.stacks = items;
+    }
+
 
     private static final int[] slotsTop = new int[]{0};
     public int ticksExisted;
@@ -47,11 +57,6 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
     public static void tick(Level level, BlockPos pos, BlockState state, TileEntityPodium entityPodium) {
         entityPodium.prevTicksExisted = entityPodium.ticksExisted;
         entityPodium.ticksExisted++;
-    }
-
-    @Override
-    public net.minecraft.world.phys.AABB getRenderBoundingBox() {
-        return new net.minecraft.world.phys.AABB(worldPosition, worldPosition.offset(1, 3, 1));
     }
 
     @Override
@@ -104,7 +109,7 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
         if (!stack.isEmpty() && stack.getCount() > this.getMaxStackSize()) {
             stack.setCount(this.getMaxStackSize());
         }
-        this.saveAdditional(this.getUpdateTag());
+        this.setChanged();
         if (!level.isClientSide) {
             IceAndFire.sendMSGToAll(new MessageUpdatePodium(this.getBlockPos().asLong(), stacks.get(0)));
         }

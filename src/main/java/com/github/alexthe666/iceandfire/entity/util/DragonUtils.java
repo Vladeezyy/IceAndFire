@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity.util;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.datagen.tags.IafBlockTags;
@@ -295,10 +297,7 @@ public class DragonUtils {
     }
 
     public static boolean isVillager(Entity entity) {
-        var tags =  BuiltInRegistries.ENTITY_TYPE.tags();
-        if (tags == null)
-            return false;
-        return entity.getType().is(tags.createTagKey(IafTagRegistry.VILLAGERS));
+        return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.VILLAGERS));
     }
 
     public static boolean isAnimaniaMob(Entity entity) {
@@ -306,7 +305,7 @@ public class DragonUtils {
     }
 
     public static boolean isDragonTargetable(Entity entity, ResourceLocation tag) {
-        return entity.getType().is(BuiltInRegistries.ENTITY_TYPE.tags().createTagKey(tag));
+        return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, tag));
     }
 
     public static String getDimensionName(Level world) {
@@ -318,7 +317,7 @@ public class DragonUtils {
     }
 
     public static boolean canDragonBreak(final BlockState state, final Entity entity) {
-        if (!EventHooks.getMobGriefingEvent(entity.level(), entity)) {
+        if (!EventHooks.canEntityGrief(entity.level(), entity)) {
             return false;
         }
 

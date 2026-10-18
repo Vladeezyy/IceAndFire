@@ -19,7 +19,6 @@ import com.github.alexthe666.iceandfire.pathfinding.PathNavigateDeathWormSand;
 import com.google.common.base.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.PositionImpl;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -68,6 +67,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICustomCollisions, IBlacklistedFromStatues, IAnimatedEntity, IVillagerFear, IAnimalFear, IGroundMount, IHasCustomizableAttributes, ICustomMoveController {
+
+    @Override
+    public boolean isFood(@NotNull ItemStack stack) {
+        // The default of Animal in 1.20.1
+        return stack.is(Items.WHEAT);
+    }
+
 
     public static final ResourceKey<LootTable> TAN_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/deathworm_tan"));
     public static final ResourceKey<LootTable> WHITE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/deathworm_white"));
@@ -481,7 +487,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
 
     @Override
     protected void moveTowardsClosestSpace(double x, double y, double z) {
-        PositionImpl blockpos = new PositionImpl(x, y, z);
+        Vec3 blockpos = new Vec3(x, y, z);
         Vec3i vec3i = new Vec3i((int) Math.round(blockpos.x()), (int) Math.round(blockpos.y()), (int) Math.round(blockpos.z()));
         Vec3 vector3d = new Vec3(x - blockpos.x(), y - blockpos.y(), z - blockpos.z());
         BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();

@@ -47,7 +47,7 @@ public class IafDragonDestructionManager {
         }
 
         double damageRadius = 3.5;
-        boolean canBreakBlocks = EventHooks.getMobGriefingEvent(level, dragon);
+        boolean canBreakBlocks = EventHooks.canEntityGrief(level, dragon);
 
         if (dragon.getDragonStage() <= 3) {
             BlockPos.betweenClosedStream(center.offset(-1, -1, -1), center.offset(1, 1, 1)).forEach(position -> {
@@ -118,7 +118,7 @@ public class IafDragonDestructionManager {
         int y = 2;
         int z = 2;
 
-        boolean canBreakBlocks = DragonUtils.canGrief(dragon) && EventHooks.getMobGriefingEvent(level, dragon);
+        boolean canBreakBlocks = DragonUtils.canGrief(dragon) && EventHooks.canEntityGrief(level, dragon);
 
         if (canBreakBlocks) {
             if (dragon.getDragonStage() <= 3) {
@@ -268,7 +268,7 @@ public class IafDragonDestructionManager {
     }
 
     private static void causeExplosion(Level world, BlockPos center, EntityDragonBase destroyer, DamageSource source, int stage) {
-        Explosion.BlockInteraction mode = EventHooks.getMobGriefingEvent(world, destroyer) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP;
+        Explosion.BlockInteraction mode = EventHooks.canEntityGrief(world, destroyer) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP;
         BlockLaunchExplosion explosion = new BlockLaunchExplosion(world, destroyer, source, center.getX(), center.getY(), center.getZ(), Math.min(2, stage - 2), mode);
         explosion.explode();
         explosion.finalizeExplosion(true);

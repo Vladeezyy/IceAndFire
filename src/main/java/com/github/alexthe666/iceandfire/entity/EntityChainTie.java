@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.network.syncher.SynchedEntityData;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.core.BlockPos;
@@ -12,7 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.decoration.BlockAttachedEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,13 +26,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class EntityChainTie extends HangingEntity {
+public class EntityChainTie extends BlockAttachedEntity {
 
-    public EntityChainTie(EntityType<? extends HangingEntity> type, Level worldIn) {
+    public EntityChainTie(EntityType<? extends BlockAttachedEntity> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public EntityChainTie(EntityType<? extends HangingEntity> type, Level worldIn, BlockPos hangingPositionIn) {
+    public EntityChainTie(EntityType<? extends BlockAttachedEntity> type, Level worldIn, BlockPos hangingPositionIn) {
         super(type, worldIn, hangingPositionIn);
         this.setPos(hangingPositionIn.getX() + 0.5D, hangingPositionIn.getY(), hangingPositionIn.getZ() + 0.5D);
     }
@@ -59,6 +60,10 @@ public class EntityChainTie extends HangingEntity {
     }
 
     @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    }
+
+    @Override
     public void setPos(double x, double y, double z) {
         super.setPos(Mth.floor(x) + 0.5D, Mth.floor(y) + 0.5D, Mth.floor(z) + 0.5D);
     }
@@ -83,16 +88,6 @@ public class EntityChainTie extends HangingEntity {
     }
 
     @Override
-    public int getWidth() {
-        return 9;
-    }
-
-    @Override
-    public int getHeight() {
-        return 9;
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         BlockPos blockpos = this.getPos();
         compound.putInt("TileX", blockpos.getX());
@@ -106,18 +101,13 @@ public class EntityChainTie extends HangingEntity {
     }
 
     @Override
-    protected float getEyeHeight(@NotNull Pose poseIn, @NotNull EntityDimensions sizeIn) {
-        return -0.0625F;
-    }
-
-    @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
         return distance < 1024.0D;
     }
 
     @Override
     public void dropItem(@Nullable Entity brokenEntity) {
-        this.playSound(SoundEvents.ARMOR_EQUIP_CHAIN, 1.0F, 1.0F);
+        this.playSound(SoundEvents.ARMOR_EQUIP_CHAIN.value(), 1.0F, 1.0F);
     }
 
     @Override
@@ -174,8 +164,8 @@ public class EntityChainTie extends HangingEntity {
         return this.level().getBlockState(this.pos).getBlock() instanceof WallBlock;
     }
 
-    @Override
+    
     public void playPlacementSound() {
-        this.playSound(SoundEvents.ARMOR_EQUIP_CHAIN, 1.0F, 1.0F);
+        this.playSound(SoundEvents.ARMOR_EQUIP_CHAIN.value(), 1.0F, 1.0F);
     }
 }

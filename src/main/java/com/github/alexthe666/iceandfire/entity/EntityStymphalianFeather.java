@@ -80,9 +80,9 @@ public class EntityStymphalianFeather extends AbstractArrow {
                 }
 
                 if (Hand == net.minecraft.world.InteractionHand.MAIN_HAND) {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                    entity.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
                 } else {
-                    this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                    entity.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
                 }
                 this.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
             }

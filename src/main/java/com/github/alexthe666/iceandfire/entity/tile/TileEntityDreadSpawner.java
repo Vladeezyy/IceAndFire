@@ -52,10 +52,10 @@ public class TileEntityDreadSpawner extends SpawnerBlockEntity {
         this.spawner.load(this.level, this.worldPosition, p_155760_);
     }
 
-    public CompoundTag save(CompoundTag p_59795_) {
+    @Override
+    protected void saveAdditional(@NotNull CompoundTag p_59795_, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(p_59795_, registries);
         this.spawner.save(p_59795_);
-        return p_59795_;
     }
 
     public static void clientTick(Level p_155755_, BlockPos p_155756_, BlockState p_155757_, TileEntityDreadSpawner p_155758_) {

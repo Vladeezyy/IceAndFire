@@ -1,5 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import com.github.alexthe666.iceandfire.IceAndFire;
+import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
@@ -63,6 +66,13 @@ import java.util.Set;
 import java.util.UUID;
 
 public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity, Merchant, ICustomSizeNavigator, IPassabilityNavigator, IHasCustomizableAttributes {
+
+    @Override
+    public boolean isFood(@NotNull ItemStack stack) {
+        // The default of Animal in 1.20.1
+        return stack.is(Items.WHEAT);
+    }
+
 
     public static final Animation ANIMATION_PUPA_WIGGLE = Animation.create(20);
     private static final EntityDataAccessor<Byte> CLIMBING = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.BYTE);
@@ -280,7 +290,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         }
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
-            tag.put("Offers", merchantoffers.createTag());
+            tag.put("Offers", MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), merchantoffers).getOrThrow());
         }
 
         ListTag listnbt = new ListTag();
@@ -288,7 +298,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         for (int i = 0; i < this.villagerInventory.getContainerSize(); ++i) {
             ItemStack itemstack = this.villagerInventory.getItem(i);
             if (!itemstack.isEmpty()) {
-                listnbt.add(itemstack.save(new CompoundTag()));
+                listnbt.add(itemstack.save(this.registryAccess()));
             }
         }
         tag.put("Inventory", listnbt);
@@ -304,13 +314,13 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             this.setHive(MyrmexWorldData.get(level()).getHiveFromUUID(tag.getUUID("HiveUUID")));
         }
         if (tag.contains("Offers", 10)) {
-            this.offers = new MerchantOffers(tag.getCompound("Offers"));
+            this.offers = MerchantOffers.CODEC.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), tag.get("Offers")).resultOrPartial(IceAndFire.LOGGER::warn).orElse(null);
         }
 
         ListTag listnbt = tag.getList("Inventory", 10);
 
         for (int i = 0; i < listnbt.size(); ++i) {
-            ItemStack itemstack = ItemStack.of(listnbt.getCompound(i));
+            ItemStack itemstack = ItemStack.parseOptional(this.registryAccess(), listnbt.getCompound(i));
             if (!itemstack.isEmpty()) {
                 this.villagerInventory.addItem(itemstack);
             }
@@ -780,12 +790,11 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     protected void resetCustomer() {
         this.setTradingPlayer(null);
     }
-
     @Override
     @Nullable
-    public Entity changeDimension(@NotNull ServerLevel server, net.minecraftforge.common.util.@NotNull ITeleporter teleporter) {
+    public Entity changeDimension(@NotNull DimensionTransition transition) {
         this.resetCustomer();
-        return super.changeDimension(server, teleporter);
+        return super.changeDimension(transition);
     }
 
     public SimpleContainer getVillagerInventory() {

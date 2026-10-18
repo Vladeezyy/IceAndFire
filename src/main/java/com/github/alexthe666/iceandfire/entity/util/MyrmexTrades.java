@@ -1,5 +1,9 @@
 package com.github.alexthe666.iceandfire.entity.util;
 
+import net.minecraft.world.item.component.SuspiciousStewEffects;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.core.Holder;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.core.registries.Registries;
 import java.util.Optional;
@@ -21,7 +25,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
@@ -267,11 +270,13 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), this.emeraldCount);
-            List<Potion> lvt_4_1_ = BuiltInRegistries.POTION.stream().filter((potion) -> {
-                return !potion.getEffects().isEmpty() && PotionBrewing.isBrewablePotion(potion);
+            PotionBrewing brewing = trader.level().potionBrewing();
+            List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.holders().filter((potion) -> {
+                return !potion.value().getEffects().isEmpty() && brewing.isBrewablePotion(potion);
             }).collect(Collectors.toList());
-            Potion lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
-            ItemStack lvt_6_1_ = PotionUtils.setPotion(new ItemStack(this.potionStack.getItem(), this.potionCount), lvt_5_1_);
+            Holder<Potion> lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
+            ItemStack lvt_6_1_ = PotionContents.createItemStack(this.potionStack.getItem(), lvt_5_1_);
+            lvt_6_1_.setCount(this.potionCount);
             return new MerchantOffer(new ItemCost(lvt_3_1_.getItem(), lvt_3_1_.getCount()), Optional.of(new ItemCost(this.buyingItem, this.buyingItemCount)), lvt_6_1_, this.maxUses, this.xpValue, this.priceMultiplier);
         }
     }
@@ -306,12 +311,12 @@ public class MyrmexTrades {
     }
 
     static class SuspiciousStewForEmeraldTrade implements VillagerTrades.ItemListing {
-        final MobEffect effect;
+        final Holder<MobEffect> effect;
         final int duration;
         final int xpValue;
         private final float priceMultiplier;
 
-        public SuspiciousStewForEmeraldTrade(MobEffect effectIn, int durationIn, int xpValue) {
+        public SuspiciousStewForEmeraldTrade(Holder<MobEffect> effectIn, int durationIn, int xpValue) {
             this.effect = effectIn;
             this.duration = durationIn;
             this.xpValue = xpValue;
@@ -322,7 +327,7 @@ public class MyrmexTrades {
         @Nullable
         public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(Items.SUSPICIOUS_STEW, 1);
-            SuspiciousStewItem.saveMobEffect(lvt_3_1_, this.effect, this.duration);
+            lvt_3_1_.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, new SuspiciousStewEffects(List.of(new SuspiciousStewEffects.Entry(this.effect, this.duration))));
             return new MerchantOffer(new ItemCost(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), 1), lvt_3_1_, 12, this.xpValue, this.priceMultiplier);
         }
     }
@@ -447,11 +452,13 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get(), this.emeraldCount);
-            List<Potion> lvt_4_1_ = BuiltInRegistries.POTION.stream().filter((potion) -> {
-                return !potion.getEffects().isEmpty() && PotionBrewing.isBrewablePotion(potion);
+            PotionBrewing brewing = trader.level().potionBrewing();
+            List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.holders().filter((potion) -> {
+                return !potion.value().getEffects().isEmpty() && brewing.isBrewablePotion(potion);
             }).collect(Collectors.toList());
-            Potion lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
-            ItemStack lvt_6_1_ = PotionUtils.setPotion(new ItemStack(this.potionStack.getItem(), this.potionCount), lvt_5_1_);
+            Holder<Potion> lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
+            ItemStack lvt_6_1_ = PotionContents.createItemStack(this.potionStack.getItem(), lvt_5_1_);
+            lvt_6_1_.setCount(this.potionCount);
             return new MerchantOffer(new ItemCost(lvt_3_1_.getItem(), lvt_3_1_.getCount()), Optional.of(new ItemCost(this.buyingItem, this.buyingItemCount)), lvt_6_1_, this.maxUses, this.xpValue, this.priceMultiplier);
         }
     }

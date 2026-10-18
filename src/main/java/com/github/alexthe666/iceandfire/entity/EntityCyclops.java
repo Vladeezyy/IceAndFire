@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.github.alexthe666.citadel.animation.IAnimatedEntity;
@@ -168,7 +170,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
             if (!entityIn.hasPassenger(this)
                 && entityIn.getBbWidth() < 1.95F
                 && !(entityIn instanceof EntityDragonBase)
-                && !entityIn.getType().is((BuiltInRegistries.ENTITY_TYPE.tags().createTagKey(IafTagRegistry.CYCLOPS_UNLIFTABLES)))) {
+                && !entityIn.getType().is((TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.CYCLOPS_UNLIFTABLES)))) {
                 this.setAnimation(ANIMATION_EATPLAYER);
                 entityIn.stopRiding();
                 entityIn.startRiding(this, true);

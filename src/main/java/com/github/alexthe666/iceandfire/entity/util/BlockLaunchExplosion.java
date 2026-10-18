@@ -38,7 +38,7 @@ public class BlockLaunchExplosion extends Explosion {
     }
 
     public BlockLaunchExplosion(Level world, Mob entity, DamageSource source, double x, double y, double z, float size, BlockInteraction mode) {
-        super(world, entity, source, null, x, y, z, size, false, mode);
+        super(world, entity, source, null, x, y, z, size, false, mode, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE);
         this.world = world;
         this.size = size;
         this.x = x;
@@ -71,7 +71,7 @@ public class BlockLaunchExplosion extends Explosion {
     @Override
     public void finalizeExplosion(boolean spawnParticles) {
         if (world.isClientSide) {
-            this.world.playLocalSound(this.x, this.y, this.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+            this.world.playLocalSound(this.x, this.y, this.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
         }
 
         boolean flag = this.mode != BlockInteraction.KEEP;
