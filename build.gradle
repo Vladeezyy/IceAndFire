@@ -55,6 +55,12 @@ neoForge {
             programArgument '--nogui'
             systemProperty 'iceandfire.selftest', 'true'
         }
+        // tools/stresstest.sh: generation, 30 dragons and 100 creatures, chunk reload cycles
+        stress {
+            server()
+            programArgument '--nogui'
+            systemProperty 'iceandfire.stress', 'true'
+        }
         // tools/scenetest.sh: client scene with checks and screenshots in run/screenshots
         scene {
             client()
@@ -100,6 +106,20 @@ dependencies {
     implementation "maven.modrinth:citadel:${citadel_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
+    // tools/scenetest.sh -Pwith_compat: the client mods this one is played with (dev only, not in the jar)
+    if (project.hasProperty('with_compat')) {
+        localRuntime "maven.modrinth:sodium:mc1.21.1-0.6.13-neoforge"
+        localRuntime "maven.modrinth:iris:1.8.12+1.21.1-neoforge"
+        localRuntime "maven.modrinth:lithium:mc1.21.1-0.15.4-neoforge"
+        localRuntime "maven.modrinth:ferrite-core:7.0.3-neoforge"
+        localRuntime "maven.modrinth:modernfix:5.27.26+mc1.21.1"
+        localRuntime "maven.modrinth:jade:15.10.6+neoforge"
+        localRuntime "maven.modrinth:entityculling:8w8FfUPs"
+        localRuntime "maven.modrinth:attributefix:TyNITLDY"
+        localRuntime "maven.modrinth:bookshelf-lib:1sdJl7J1"
+        localRuntime "maven.modrinth:prickle:EE1FHDyD"
+    }
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

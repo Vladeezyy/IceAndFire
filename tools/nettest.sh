@@ -10,7 +10,12 @@ printf 'eula=true\n' > run-netserver/eula.txt
 printf 'online-mode=false\nserver-port=25570\nsimulation-distance=6\nview-distance=10\nlevel-seed=1234\nspawn-protection=0\nmax-tick-time=-1\n' > run-netserver/server.properties
 timeout 900 ./gradlew runNetserver --console=plain > build-netserver.log 2>&1 < /dev/null &
 i=0
-until grep -q 'Done (' build-netserver.log 2>/dev/null || [ $i -gt 300 ]; do sleep 2; i=$((i+1)); done
+until grep -q -E 'Done \(|Failed to start|BUILD FAILED' build-netserver.log 2>/dev/null || [ $i -gt 300 ]; do sleep 2; i=$((i+1)); done
+if ! grep -q 'Done (' build-netserver.log; then
+  echo "server did not start"
+  grep -a -E '/(ERROR|FATAL)\]|Caused by' build-netserver.log | head -10
+  exit 1
+fi
 timeout 600 ./gradlew runNetclient --console=plain > build-netclient.log 2>&1 < /dev/null
 echo "client exit $?"
 wait

@@ -154,16 +154,13 @@ public abstract class EntityMutlipartPart extends Entity {
                     double d2 = parent.getZ() - this.getZ();
                     float f2 = -((float) (Mth.atan2(d1, Mth.sqrt((float) (d0 * d0 + d2 * d2))) * (180F / (float) Math.PI)));
                     this.setXRot(this.limitAngle(this.getXRot(), f2, 5.0F));
-                    this.markHurt();
                     this.setYRot(renderYawOffset);
                     this.setPartYaw(getYRot());
-                    if (!this.level().isClientSide) {
-                        this.collideWithNearbyEntities();
-                    }
                 } else {
                     this.setPos(parent.getX() + this.radius * Mth.cos((float) (renderYawOffset * (Math.PI / 180.0F) + this.angleYaw)), parent.getY() + this.offsetY, parent.getZ() + this.radius * Mth.sin((float) (renderYawOffset * (Math.PI / 180.0F) + this.angleYaw)));
-                    this.markHurt();
                 }
+                // No markHurt() here: it sent a motion packet for every part every tick to every player tracking it
+                // (200 packets per second per dragon); the position goes with the usual position updates
                 if (!this.level().isClientSide) {
                     this.collideWithNearbyEntities();
                 }
