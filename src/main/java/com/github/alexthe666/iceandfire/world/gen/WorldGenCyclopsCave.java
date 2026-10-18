@@ -1,5 +1,8 @@
 package com.github.alexthe666.iceandfire.world.gen;
 
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.block.BlockGoldPile;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
@@ -29,7 +32,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class WorldGenCyclopsCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
-    public static final ResourceLocation CYCLOPS_CHEST = ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/cyclops_cave");
+    public static final ResourceKey<LootTable> CYCLOPS_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/cyclops_cave"));
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public WorldGenCyclopsCave(final Codec<NoneFeatureConfiguration> configuration) {

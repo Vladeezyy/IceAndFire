@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.items.IItemHandler;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.citadel.animation.Animation;
@@ -1301,10 +1302,10 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         return dist <= 1.0D || result.getType() == HitResult.Type.MISS;
     }
 
-    public abstract ResourceLocation getDeadLootTable();
+    public abstract ResourceKey<LootTable> getDeadLootTable();
 
     public ItemStack getItemFromLootTable() {
-        LootTable loottable = this.level().getServer().getServerResources().managers().getLootData().getLootTable(getDeadLootTable());
+        LootTable loottable = this.level().getServer().reloadableRegistries().getLootTable(getDeadLootTable());
         LootParams.Builder lootparams$builder = (new LootParams.Builder((ServerLevel) this.level())).withParameter(LootContextParams.THIS_ENTITY, this).withParameter(LootContextParams.ORIGIN, this.position()).withParameter(LootContextParams.DAMAGE_SOURCE, this.level().damageSources().generic());
         for (ItemStack itemstack : loottable.getRandomItems(lootparams$builder.create(LootContextParamSets.ENTITY))) {
             return itemstack;

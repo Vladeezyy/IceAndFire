@@ -1,5 +1,8 @@
 package com.github.alexthe666.iceandfire.world.gen;
 
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
@@ -17,7 +20,7 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldGenFireDragonRoosts extends WorldGenDragonRoosts {
-    private static final ResourceLocation DRAGON_CHEST = ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/fire_dragon_roost");
+    private static final ResourceKey<LootTable> DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/fire_dragon_roost"));
 
     public WorldGenFireDragonRoosts(final Codec<NoneFeatureConfiguration> configuration) {
         super(configuration, IafBlockRegistry.GOLD_PILE.get());
@@ -29,7 +32,7 @@ public class WorldGenFireDragonRoosts extends WorldGenDragonRoosts {
     }
 
     @Override
-    protected ResourceLocation getRoostLootTable() {
+    protected ResourceKey<LootTable> getRoostLootTable() {
         return DRAGON_CHEST;
     }
 
@@ -51,7 +54,7 @@ public class WorldGenFireDragonRoosts extends WorldGenDragonRoosts {
             block = IafBlockRegistry.CHARRED_COBBLESTONE.get();
         } else if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS)) {
             block = IafBlockRegistry.ASH.get();
-        } else if (state.is(Blocks.GRASS) || state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.CROPS)) {
+        } else if (state.is(Blocks.SHORT_GRASS) || state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.CROPS)) {
             block = Blocks.AIR;
         }
 

@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.world;
 
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.world.gen.TypedFeature;
@@ -43,7 +45,7 @@ public class IafWorldData extends SavedData {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
             DimensionDataStorage storage = overworld.getDataStorage();
-            IafWorldData data = storage.computeIfAbsent(IafWorldData::new, IafWorldData::new, IDENTIFIER);
+            IafWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(IafWorldData::new, (tag, registries) -> new IafWorldData(tag)), IDENTIFIER);
             data.setDirty();
 
             return data;
@@ -95,7 +97,7 @@ public class IafWorldData extends SavedData {
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag entry = list.getCompound(i);
                 String id = entry.getString("id");
-                BlockPos position = NbtUtils.readBlockPos(entry.getCompound("position"));
+                BlockPos position = readPosition(entry);
                 LAST_GENERATED.get(type).add(Map.entry(id, position));
             }
         }
@@ -104,7 +106,7 @@ public class IafWorldData extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(@NotNull final CompoundTag tag) {
+    public @NotNull CompoundTag save(@NotNull final CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         for (var e : LAST_GENERATED.entrySet()) {
             ListTag listTag = new ListTag();
 
@@ -120,5 +122,14 @@ public class IafWorldData extends SavedData {
         }
 
         return tag;
+    }
+
+    /** 1.21 writes positions as int arrays, worlds of 1.20 have compounds with X, Y and Z. */
+    private static BlockPos readPosition(CompoundTag entry) {
+        if (entry.contains("position", Tag.TAG_COMPOUND)) {
+            CompoundTag old = entry.getCompound("position");
+            return new BlockPos(old.getInt("X"), old.getInt("Y"), old.getInt("Z"));
+        }
+        return NbtUtils.readBlockPos(entry, "position").orElse(BlockPos.ZERO);
     }
 }

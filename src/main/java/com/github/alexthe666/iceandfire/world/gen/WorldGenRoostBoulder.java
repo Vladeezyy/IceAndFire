@@ -31,7 +31,7 @@ public class WorldGenRoostBoulder {
 
                     Block block = worldIn.getBlockState(position.below()).getBlock();
 
-                    if (block != Blocks.GRASS && block != Blocks.DIRT && block != Blocks.STONE) {
+                    if (block != Blocks.SHORT_GRASS && block != Blocks.DIRT && block != Blocks.STONE) {
                         break label50;
                     }
                 }

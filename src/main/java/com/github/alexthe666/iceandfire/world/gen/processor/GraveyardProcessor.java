@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.world.gen.processor;
 
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.world.IafProcessors;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ public class GraveyardProcessor extends StructureProcessor {
 
     private final float integrity = 1.0F;
     public static final GraveyardProcessor INSTANCE = new GraveyardProcessor();
-    public static final Codec<GraveyardProcessor> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<GraveyardProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     public GraveyardProcessor() {
     }

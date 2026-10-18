@@ -4,6 +4,7 @@ import com.github.alexthe666.citadel.config.biome.SpawnBiomeData;
 import com.github.alexthe666.iceandfire.config.BiomeConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.QuartPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -43,19 +44,17 @@ public class IafStructure extends Structure {
     }
 
     protected boolean isBiomeValid(GenerationContext pContext, Pair<String, SpawnBiomeData> validBiomes, BlockPos blockPos) {
-        return isBiomeValid(pContext, validBiomes, blockPos);
+        return isBiomeValid(pContext, (Map.Entry<String, SpawnBiomeData>) validBiomes, blockPos);
     }
 
+    /**
+     * Tests the biome at the surface where the structure starts. The original accepted the structure when any biome in
+     * {@link #maxDistanceFromCenter} blocks matched, which put graveyards and mausoleums on oceans (issue #5146).
+     */
     protected boolean isBiomeValid(GenerationContext pContext, Map.Entry<String, SpawnBiomeData> validBiomes, BlockPos blockPos) {
-        boolean validBiome = false;
-        Set<Holder<Biome>> biomes = pContext.chunkGenerator().getBiomeSource().getBiomesWithin(blockPos.getX(), blockPos.getY(), blockPos.getZ(), this.maxDistanceFromCenter, pContext.randomState().sampler());
-        for (Holder<Biome> biome : biomes) {
-            if (BiomeConfig.test(validBiomes, biome)) {
-                validBiome = true;
-                break;
-            }
-        }
-        return validBiome;
+        int y = pContext.chunkGenerator().getFirstOccupiedHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, pContext.heightAccessor(), pContext.randomState());
+        Holder<Biome> biome = pContext.chunkGenerator().getBiomeSource().getNoiseBiome(QuartPos.fromBlock(blockPos.getX()), QuartPos.fromBlock(y), QuartPos.fromBlock(blockPos.getZ()), pContext.randomState().sampler());
+        return BiomeConfig.test(validBiomes, biome);
     }
 
     @Override

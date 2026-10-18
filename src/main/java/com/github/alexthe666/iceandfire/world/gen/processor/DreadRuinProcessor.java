@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.world.gen.processor;
 
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.world.IafProcessors;
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
 public class DreadRuinProcessor extends StructureProcessor {
 
     public static final DreadRuinProcessor INSTANCE = new DreadRuinProcessor();
-    public static final Codec<DreadRuinProcessor> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<DreadRuinProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     public DreadRuinProcessor() {
     }

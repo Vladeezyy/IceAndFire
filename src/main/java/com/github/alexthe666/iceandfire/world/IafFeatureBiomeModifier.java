@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.world;
 
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.mojang.serialization.Codec;
@@ -17,7 +19,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import java.util.HashMap;
 
 public class IafFeatureBiomeModifier implements BiomeModifier {
-    private static final DeferredHolder<Codec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features"), Registries.BIOME_MODIFIER_SERIALIZERS, IceAndFire.MODID);
+    private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features"));
     private final HolderSet<PlacedFeature> features;
     public final HashMap<String, Holder<PlacedFeature>> featureMap = new HashMap<>();
     public IafFeatureBiomeModifier(HolderSet<PlacedFeature> features) {
@@ -32,11 +34,12 @@ public class IafFeatureBiomeModifier implements BiomeModifier {
         }
     }
 
-    public Codec<? extends BiomeModifier> codec() {
+    @Override
+    public MapCodec<? extends BiomeModifier> codec() {
         return SERIALIZER.get();
     }
 
-    public static Codec<IafFeatureBiomeModifier> makeCodec() {
-        return RecordCodecBuilder.create(config -> config.group(PlacedFeature.LIST_CODEC.fieldOf("features").forGetter((otherConfig) -> otherConfig.features)).apply(config, IafFeatureBiomeModifier::new));
+    public static MapCodec<IafFeatureBiomeModifier> makeCodec() {
+        return RecordCodecBuilder.mapCodec(config -> config.group(PlacedFeature.LIST_CODEC.fieldOf("features").forGetter((otherConfig) -> otherConfig.features)).apply(config, IafFeatureBiomeModifier::new));
     }
 }

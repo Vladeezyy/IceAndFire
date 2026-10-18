@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.world.gen;
 
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.block.BlockGoldPile;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
@@ -188,7 +190,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
 
             if (position.distSqr(context.origin()) <= circularArea && heightDifference < 2 + context.random().nextInt(height) && !context.level().isEmptyBlock(position.below())) {
                 if (context.level().isEmptyBlock(position.above())) {
-                    context.level().setBlock(position, transform(Blocks.GRASS), Block.UPDATE_CLIENTS);
+                    context.level().setBlock(position, transform(Blocks.SHORT_GRASS), Block.UPDATE_CLIENTS);
                 } else {
                     // TODO :: Usually not much / anything of this survives the next generation steps
                     context.level().setBlock(position, transform(Blocks.DIRT), Block.UPDATE_CLIENTS);
@@ -245,7 +247,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
 
     protected abstract EntityType<? extends EntityDragonBase> getDragonType();
 
-    protected abstract ResourceLocation getRoostLootTable();
+    protected abstract ResourceKey<LootTable> getRoostLootTable();
 
     protected abstract BlockState transform(final BlockState block);
 

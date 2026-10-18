@@ -1,5 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
 
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.ai.*;
@@ -40,8 +43,8 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     public static final Animation ANIMATION_NIBBLE = Animation.create(10);
     public static final Animation ANIMATION_STING = Animation.create(25);
     public static final Animation ANIMATION_SLASH = Animation.create(25);
-    public static final ResourceLocation DESERT_LOOT = ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_desert");
-    public static final ResourceLocation JUNGLE_LOOT = ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_jungle");
+    public static final ResourceKey<LootTable> DESERT_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_desert"));
+    public static final ResourceKey<LootTable> JUNGLE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_jungle"));
     private static final ResourceLocation TEXTURE_DESERT = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel.png");
     private static final ResourceLocation TEXTURE_JUNGLE = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel.png");
     private static final ResourceLocation TEXTURE_DESERT_HIDDEN = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel_hidden.png");
@@ -68,7 +71,7 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
 
     @Override
     @Nullable
-    protected ResourceLocation getDefaultLootTable() {
+    protected ResourceKey<LootTable> getDefaultLootTable() {
         return isJungle() ? JUNGLE_LOOT : DESERT_LOOT;
     }
 

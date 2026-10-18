@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.world;
 
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
@@ -13,7 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class IafMobSpawnBiomeModifier implements BiomeModifier {
-    private static final DeferredHolder<Codec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"), Registries.BIOME_MODIFIER_SERIALIZERS, IceAndFire.MODID);
+    private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
 
     public IafMobSpawnBiomeModifier() {
     }
@@ -26,11 +28,12 @@ public class IafMobSpawnBiomeModifier implements BiomeModifier {
     }
 
 
-    public Codec<? extends BiomeModifier> codec() {
+    @Override
+    public MapCodec<? extends BiomeModifier> codec() {
         return SERIALIZER.get();
     }
 
-    public static Codec<IafMobSpawnBiomeModifier> makeCodec() {
-        return Codec.unit(IafMobSpawnBiomeModifier::new);
+    public static MapCodec<IafMobSpawnBiomeModifier> makeCodec() {
+        return MapCodec.unit(IafMobSpawnBiomeModifier::new);
     }
 }

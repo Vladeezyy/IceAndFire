@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.world;
 
+import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
 import com.google.common.collect.Lists;
@@ -41,7 +42,7 @@ public class MyrmexWorldData extends SavedData {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
             DimensionDataStorage storage = overworld.getDataStorage();
-            MyrmexWorldData data = storage.computeIfAbsent(MyrmexWorldData::new, MyrmexWorldData::new, IDENTIFIER);
+            MyrmexWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag)), IDENTIFIER);
             if (data != null) {
                 data.world = world;
                 data.setDirty();
@@ -138,7 +139,7 @@ public class MyrmexWorldData extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(CompoundTag compound) {
+    public @NotNull CompoundTag save(CompoundTag compound, @NotNull HolderLookup.Provider registries) {
         compound.putInt("Tick", this.tickCounter);
         ListTag nbttaglist = new ListTag();
 

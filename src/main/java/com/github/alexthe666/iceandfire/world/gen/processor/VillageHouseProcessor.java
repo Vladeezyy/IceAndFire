@@ -1,5 +1,9 @@
 package com.github.alexthe666.iceandfire.world.gen.processor;
 
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.world.IafProcessors;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -18,9 +22,9 @@ import javax.annotation.Nullable;
 
 public class VillageHouseProcessor extends StructureProcessor {
 
-    public static final ResourceLocation LOOT = ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/village_scribe");
+    public static final ResourceKey<LootTable> LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/village_scribe"));
     public static final VillageHouseProcessor INSTANCE = new VillageHouseProcessor();
-    public static final Codec<VillageHouseProcessor> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<VillageHouseProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     public VillageHouseProcessor() {
     }

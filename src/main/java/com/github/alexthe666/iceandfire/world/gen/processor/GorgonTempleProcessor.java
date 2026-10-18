@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.world.gen.processor;
 
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.world.IafProcessors;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ import javax.annotation.Nullable;
 public class GorgonTempleProcessor extends StructureProcessor {
 
     public static final GorgonTempleProcessor INSTANCE = new GorgonTempleProcessor();
-    public static final Codec<GorgonTempleProcessor> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<GorgonTempleProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     public GorgonTempleProcessor() {
     }

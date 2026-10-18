@@ -1,5 +1,9 @@
 package com.github.alexthe666.iceandfire.world.gen;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.block.BlockGoldPile;
 import com.github.alexthe666.iceandfire.datagen.tags.IafBlockTags;
@@ -39,8 +43,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
-    public ResourceLocation DRAGON_CHEST;
-    public ResourceLocation DRAGON_MALE_CHEST;
+    public ResourceKey<LootTable> DRAGON_CHEST;
+    public ResourceKey<LootTable> DRAGON_MALE_CHEST;
     public WorldGenCaveStalactites CEILING_DECO;
     public BlockState PALETTE_BLOCK1;
     public BlockState PALETTE_BLOCK2;
@@ -120,7 +124,7 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
     }
 
     public void createShell(LevelAccessor worldIn, RandomSource rand, Set<BlockPos> positions) {
-        ITagManager<Block> tagManager = BuiltInRegistries.BLOCK.tags();
+        Registry<Block> tagManager = BuiltInRegistries.BLOCK;
 
         List<Block> rareOres = getBlockList(tagManager, IafBlockTags.DRAGON_CAVE_RARE_ORES);
         List<Block> uncommonOres = getBlockList(tagManager, IafBlockTags.DRAGON_CAVE_UNCOMMON_ORES);
@@ -160,12 +164,12 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
         });
     }
 
-    private List<Block> getBlockList(final ITagManager<Block> tagManager, final TagKey<Block> tagKey) {
+    private List<Block> getBlockList(final Registry<Block> tagManager, final TagKey<Block> tagKey) {
         if (tagManager == null) {
             return List.of();
         }
 
-        return tagManager.getTag(tagKey).stream().toList();
+        return tagManager.getTag(tagKey).map(set -> set.stream().map(Holder::value).toList()).orElse(List.of());
     }
 
     public void hollowOut(LevelAccessor worldIn, Set<BlockPos> positions) {

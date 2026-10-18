@@ -1,5 +1,8 @@
 package com.github.alexthe666.iceandfire.world.gen;
 
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.datagen.tags.IafBlockTags;
@@ -11,8 +14,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class WorldGenFireDragonCave extends WorldGenDragonCave {
-    public static ResourceLocation FIRE_DRAGON_CHEST = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/fire_dragon_female_cave");
-    public static ResourceLocation FIRE_DRAGON_CHEST_MALE = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/fire_dragon_male_cave");
+    public static ResourceKey<LootTable> FIRE_DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/fire_dragon_female_cave"));
+    public static ResourceKey<LootTable> FIRE_DRAGON_CHEST_MALE = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/fire_dragon_male_cave"));
 
     public WorldGenFireDragonCave(final Codec<NoneFeatureConfiguration> configuration) {
         super(configuration);
