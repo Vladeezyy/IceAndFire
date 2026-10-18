@@ -57,22 +57,15 @@ public class MessageHippogryphArmor implements CustomPacketPayload {
                 if (player != null) {
                     Entity entity = player.level().getEntity(message.dragonId);
 
+                    // The values of the client are not trusted (any client could saddle and armor any hippogryph
+                    // without the items): the server reads its own inventory of the creature
+                    if (entity == null || player.distanceToSqr(entity) > 64 * 64) {
+                        return;
+                    }
                     if (entity instanceof EntityHippogryph hippogryph) {
-                        if (message.slot_index == 0) {
-                            hippogryph.setSaddled(message.armor_type == 1);
-                        } else if (message.slot_index == 1) {
-                            hippogryph.setChested(message.armor_type == 1);
-                        } else if (message.slot_index == 2) {
-                            hippogryph.setArmor(message.armor_type);
-                        }
+                        hippogryph.refreshInventory();
                     } else if (entity instanceof EntityHippocampus hippo) {
-                        if (message.slot_index == 0) {
-                            hippo.setSaddled(message.armor_type == 1);
-                        } else if (message.slot_index == 1) {
-                            hippo.setChested(message.armor_type == 1);
-                        } else if (message.slot_index == 2) {
-                            hippo.setArmor(message.armor_type);
-                        }
+                        hippo.updateContainerEquipment();
                     }
                 }
             });

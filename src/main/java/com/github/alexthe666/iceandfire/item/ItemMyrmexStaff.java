@@ -7,6 +7,7 @@ import com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive;
 import com.github.alexthe666.iceandfire.message.MessageSetMyrmexHiveNull;
 import com.github.alexthe666.iceandfire.world.MyrmexWorldData;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -49,11 +50,10 @@ public class ItemMyrmexStaff extends Item {
             UUID id = ItemNbt.view(itemStackIn).getUUID("HiveUUID");
             if (!worldIn.isClientSide) {
                 MyrmexHive hive = MyrmexWorldData.get(worldIn).getHiveFromUUID(id);
-                MyrmexWorldData.addHive(worldIn, new MyrmexHive());
                 if (hive != null) {
-                    IceAndFire.sendMSGToAll(new MessageGetMyrmexHive(hive.toNBT()));
+                    IceAndFire.sendMSGToPlayer(new MessageGetMyrmexHive(hive.toNBT()), (ServerPlayer) playerIn);
                 } else {
-                    IceAndFire.sendMSGToAll(new MessageSetMyrmexHiveNull());
+                    IceAndFire.sendMSGToPlayer(new MessageSetMyrmexHiveNull(), (ServerPlayer) playerIn);
                 }
             } else if (id != null && !id.equals(new UUID(0, 0))) {
                 IceAndFire.PROXY.openMyrmexStaffGui(itemStackIn);
@@ -74,9 +74,9 @@ public class ItemMyrmexStaff extends Item {
                 if (!context.getLevel().isClientSide) {
                     MyrmexHive hive = MyrmexWorldData.get(context.getLevel()).getHiveFromUUID(id);
                     if (hive != null) {
-                        IceAndFire.sendMSGToAll(new MessageGetMyrmexHive(hive.toNBT()));
+                        IceAndFire.sendMSGToPlayer(new MessageGetMyrmexHive(hive.toNBT()), (ServerPlayer) context.getPlayer());
                     } else {
-                        IceAndFire.sendMSGToAll(new MessageSetMyrmexHiveNull());
+                        IceAndFire.sendMSGToPlayer(new MessageSetMyrmexHiveNull(), (ServerPlayer) context.getPlayer());
                     }
                 } else if (id != null && !id.equals(new UUID(0, 0))) {
                     IceAndFire.PROXY.openMyrmexAddRoomGui(context.getPlayer().getItemInHand(context.getHand()), context.getClickedPos(), context.getPlayer().getDirection());

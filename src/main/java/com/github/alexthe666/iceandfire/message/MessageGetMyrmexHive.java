@@ -7,6 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
+import com.github.alexthe666.iceandfire.item.ItemMyrmexStaff;
+import com.github.alexthe666.iceandfire.util.ItemNbt;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import java.util.UUID;
 import com.github.alexthe666.iceandfire.world.MyrmexWorldData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -47,24 +52,36 @@ public class MessageGetMyrmexHive implements CustomPacketPayload {
         public static void handle(final MessageGetMyrmexHive message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.player();
-
+                MyrmexHive receivedHive = MyrmexHive.fromNBT(message.hive);
                 if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
-                    player = IceAndFire.PROXY.getClientSidePlayer();
+                    CompoundTag tag = new CompoundTag();
+                    receivedHive.writeVillageDataToNBT(tag);
+                    receivedHive.readVillageDataFromNBT(tag);
+                    IceAndFire.PROXY.setReferencedHive(receivedHive);
+                    return;
                 }
 
-                MyrmexHive serverHive = MyrmexHive.fromNBT(message.hive);
-                CompoundTag tag = new CompoundTag();
-                serverHive.writeVillageDataToNBT(tag);
-                serverHive.readVillageDataFromNBT(tag);
-                IceAndFire.PROXY.setReferencedHive(serverHive);
-
-                if (player != null) {
-                    MyrmexHive realHive = MyrmexWorldData.get(player.level()).getHiveFromUUID(serverHive.hiveUUID);
-                    realHive.readVillageDataFromNBT(serverHive.toNBT());
+                // Edits of the staff screens: only from a player who holds the staff of this hive and may command it
+                Player player = context.player();
+                MyrmexHive realHive = receivedHive.hiveUUID == null ? null : MyrmexWorldData.get(player.level()).getHiveFromUUID(receivedHive.hiveUUID);
+                if (realHive == null || !holdsStaffOf(player, realHive.hiveUUID)) {
+                    return;
+                }
+                if (player.isCreative() || realHive.canPlayerCommandHive(player.getUUID())) {
+                    realHive.applyStaffEdits(receivedHive, player);
                 }
             });
 
         }
+    }
+
+    private static boolean holdsStaffOf(Player player, UUID hive) {
+        for (InteractionHand hand : InteractionHand.values()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.getItem() instanceof ItemMyrmexStaff && ItemNbt.view(stack).hasUUID("HiveUUID") && hive.equals(ItemNbt.view(stack).getUUID("HiveUUID"))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

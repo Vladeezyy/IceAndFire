@@ -135,13 +135,11 @@ public class IceAndFire {
         registrar.playToClient(MessageUpdatePodium.TYPE, MessageUpdatePodium.CODEC, MessageUpdatePodium.Handler::handle);
         registrar.playToServer(MessageDragonControl.TYPE, MessageDragonControl.CODEC, MessageDragonControl.Handler::handle);
         registrar.playToServer(MessageHippogryphArmor.TYPE, MessageHippogryphArmor.CODEC, MessageHippogryphArmor.Handler::handle);
-        registrar.playToServer(MessageMultipartInteract.TYPE, MessageMultipartInteract.CODEC, MessageMultipartInteract.Handler::handle);
-        registrar.playToServer(MessagePlayerHitMultipart.TYPE, MessagePlayerHitMultipart.CODEC, MessagePlayerHitMultipart.Handler::handle);
         registrar.playToServer(MessageSwingArm.TYPE, MessageSwingArm.CODEC, MessageSwingArm.Handler::handle);
-        registrar.playBidirectional(MessageDragonSyncFire.TYPE, MessageDragonSyncFire.CODEC, MessageDragonSyncFire.Handler::handle);
+        registrar.playToClient(MessageDragonSyncFire.TYPE, MessageDragonSyncFire.CODEC, MessageDragonSyncFire.Handler::handle);
         registrar.playBidirectional(MessageGetMyrmexHive.TYPE, MessageGetMyrmexHive.CODEC, MessageGetMyrmexHive.Handler::handle);
         registrar.playBidirectional(MessageStartRidingMob.TYPE, MessageStartRidingMob.CODEC, MessageStartRidingMob.Handler::handle);
-        registrar.playBidirectional(MessageUpdateLectern.TYPE, MessageUpdateLectern.CODEC, MessageUpdateLectern.Handler::handle);
+        registrar.playToClient(MessageUpdateLectern.TYPE, MessageUpdateLectern.CODEC, MessageUpdateLectern.Handler::handle);
         registrar.playToClient(MessageSyncPath.TYPE, MessageSyncPath.CODEC, MessageSyncPath::handle);
         registrar.playToClient(MessageSyncPathReached.TYPE, MessageSyncPathReached.CODEC, MessageSyncPathReached::handle);
         registrar.playToClient(SyncEntityData.TYPE, SyncEntityData.CODEC, SyncEntityData::handle);

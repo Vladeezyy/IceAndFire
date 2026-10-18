@@ -21,7 +21,6 @@ import com.github.alexthe666.iceandfire.entity.util.DragonUtils;
 import com.github.alexthe666.iceandfire.entity.util.IAnimalFear;
 import com.github.alexthe666.iceandfire.entity.util.IVillagerFear;
 import com.github.alexthe666.iceandfire.item.*;
-import com.github.alexthe666.iceandfire.message.MessagePlayerHitMultipart;
 import com.github.alexthe666.iceandfire.message.MessageSwingArm;
 import com.github.alexthe666.iceandfire.message.MessageSyncPath;
 import com.github.alexthe666.iceandfire.misc.IafDamageRegistry;
@@ -228,9 +227,6 @@ public class ServerEvents {
             if (event.getTarget() instanceof EntityHydraHead && parent instanceof EntityHydra) {
                 extraData = ((EntityHydraHead) event.getTarget()).headIndex;
                 ((EntityHydra) parent).triggerHeadFlags(extraData);
-            }
-            if (event.getTarget().level().isClientSide && parent != null) {
-                IceAndFire.sendMSGToServer(new MessagePlayerHitMultipart(parent.getId(), extraData));
             }
         }
     }

@@ -65,6 +65,11 @@ public class MessageDragonControl implements CustomPacketPayload {
         return posZ;
     }
 
+    /** Position of the client within 10 blocks of the server (vanilla "moved too quickly" for vehicles): no teleports. */
+    public boolean isNear(Entity entity) {
+        return entity.distanceToSqr(this.getPosX(), this.getPosY(), this.getPosZ()) < 100;
+    }
+
     public static class Handler {
         public Handler() {
         }
@@ -99,17 +104,25 @@ public class MessageDragonControl implements CustomPacketPayload {
                                 hippo.setControlState(message.controlState);
                             }
 
-                            hippo.setPos(message.getPosX(), message.getPosY(), message.getPosZ());
+                            if (message.isNear(hippo)) {
+
+                                hippo.setPos(message.getPosX(), message.getPosY(), message.getPosZ());
+
+                            }
                         } else if (entity instanceof EntityDeathWorm deathWorm) {
                             deathWorm.setControlState(message.controlState);
-                            deathWorm.setPos(message.getPosX(), message.getPosY(), message.getPosZ());
+                            if (message.isNear(deathWorm)) {
+                                deathWorm.setPos(message.getPosX(), message.getPosY(), message.getPosZ());
+                            }
                         } else if (entity instanceof EntityAmphithere amphithere) {
                             if (amphithere.isOwnedBy(player)) {
                                 amphithere.setControlState(message.controlState);
                             }
 
                             // TODO :: Is this handled by Entity#move due to recent changes?
-                            amphithere.setPos(message.getPosX(), message.getPosY(), message.getPosZ());
+                            if (message.isNear(amphithere)) {
+                                amphithere.setPos(message.getPosX(), message.getPosY(), message.getPosZ());
+                            }
                         }
                     }
                 }

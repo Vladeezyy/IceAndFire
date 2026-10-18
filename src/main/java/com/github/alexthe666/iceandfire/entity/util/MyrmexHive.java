@@ -609,6 +609,42 @@ public class MyrmexHive {
         }
     }
 
+    /**
+     * Changes made in the staff screens, sent back by the client (MessageGetMyrmexHive): breeding, rooms and entrances.
+     * 1.20.1 replaced the whole hive with the data of the client (reputation, members, owner...).
+     */
+    public void applyStaffEdits(MyrmexHive edited, Player player) {
+        this.reproduces = edited.reproduces;
+        mergeRooms(this.foodRooms, edited.foodRooms, player);
+        mergeRooms(this.babyRooms, edited.babyRooms, player);
+        mergeRooms(this.miscRooms, edited.miscRooms, player);
+        mergeEntrances(this.entrances, edited.entrances, player);
+        mergeEntrances(this.entranceBottoms, edited.entranceBottoms, player);
+    }
+
+    /** A room is added on the block the player clicked. */
+    private static boolean canAddRoom(BlockPos pos, Player player) {
+        return pos.closerToCenterThan(player.position(), 16);
+    }
+
+    private static void mergeRooms(List<BlockPos> rooms, List<BlockPos> edited, Player player) {
+        rooms.removeIf(pos -> !edited.contains(pos));
+        for (BlockPos pos : edited) {
+            if (!rooms.contains(pos) && canAddRoom(pos, player)) {
+                rooms.add(pos);
+            }
+        }
+    }
+
+    private static void mergeEntrances(Map<BlockPos, Direction> entrances, Map<BlockPos, Direction> edited, Player player) {
+        entrances.keySet().removeIf(pos -> !edited.containsKey(pos));
+        edited.forEach((pos, facing) -> {
+            if (!entrances.containsKey(pos) && canAddRoom(pos, player)) {
+                entrances.put(pos, facing);
+            }
+        });
+    }
+
     public void removeRoom(BlockPos pos) {
         this.foodRooms.remove(pos);
         this.miscRooms.remove(pos);

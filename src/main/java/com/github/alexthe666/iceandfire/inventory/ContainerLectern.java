@@ -5,7 +5,6 @@ import com.github.alexthe666.iceandfire.entity.tile.TileEntityLectern;
 import com.github.alexthe666.iceandfire.enums.EnumBestiaryPages;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.ItemBestiary;
-import com.github.alexthe666.iceandfire.message.MessageUpdateLectern;
 import com.github.alexthe666.iceandfire.misc.IafSoundRegistry;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -54,7 +53,11 @@ public class ContainerLectern extends AbstractContainerMenu {
         }
     }
 
-    private static int getPageField(int i) {
+    private int getPageField(int i) {
+        // Server: the lectern of this menu (the proxy holds one lectern for every player of a server)
+        if (this.tileFurnace instanceof TileEntityLectern lectern) {
+            return lectern.selectedPages[i] == null ? -1 : lectern.selectedPages[i].ordinal();
+        }
         if (IceAndFire.PROXY.getRefrencedTE() instanceof TileEntityLectern) {
             TileEntityLectern lectern = (TileEntityLectern) IceAndFire.PROXY.getRefrencedTE();
             return lectern.selectedPages[i] == null ? -1 : lectern.selectedPages[i].ordinal();
@@ -124,75 +127,60 @@ public class ContainerLectern extends AbstractContainerMenu {
             if (possiblePagesInt[0] < 0) {
                 pages[0] = null;
             } else {
-                pages[0] = EnumBestiaryPages.values()[Math.min(EnumBestiaryPages.values().length, possiblePagesInt[0])];
+                pages[0] = EnumBestiaryPages.values()[Math.min(EnumBestiaryPages.values().length - 1, possiblePagesInt[0])];
             }
             if (possiblePagesInt[1] < 0) {
                 pages[1] = null;
             } else {
-                pages[1] = EnumBestiaryPages.values()[Math.min(EnumBestiaryPages.values().length, possiblePagesInt[1])];
+                pages[1] = EnumBestiaryPages.values()[Math.min(EnumBestiaryPages.values().length - 1, possiblePagesInt[1])];
             }
             if (possiblePagesInt[2] < 0) {
                 pages[2] = null;
             } else {
-                pages[2] = EnumBestiaryPages.values()[Math.min(EnumBestiaryPages.values().length, possiblePagesInt[2])];
+                pages[2] = EnumBestiaryPages.values()[Math.min(EnumBestiaryPages.values().length - 1, possiblePagesInt[2])];
             }
         }
         return pages;
     }
 
     @Override
-    public boolean clickMenuButton(Player playerIn, int id) {
-        possiblePagesInt[0] = getPageField(0);
-        possiblePagesInt[1] = getPageField(1);
-        possiblePagesInt[2] = getPageField(2);
+    public boolean clickMenuButton(@NotNull Player playerIn, int id) {
+        // The server decides: in 1.20.1 it only took the manuscripts and added the page the client named in
+        // MessageUpdateLectern (any page, on any lectern)
+        if (id < 0 || id > 2) {
+            return false;
+        }
+        onUpdate();
         ItemStack bookStack = this.tileFurnace.getItem(0);
         ItemStack manuscriptStack = this.tileFurnace.getItem(1);
-        int i = 3;
-
-        if (!playerIn.level().isClientSide && !playerIn.isCreative()) {
-            manuscriptStack.shrink(i);
-            if (manuscriptStack.isEmpty()) {
-                this.tileFurnace.setItem(1, ItemStack.EMPTY);
-            }
+        int cost = 3;
+        if (!playerIn.isCreative() && (manuscriptStack.getItem() != IafItemRegistry.MANUSCRIPT.get() || manuscriptStack.getCount() < cost)) {
             return false;
         }
-
-        if ((manuscriptStack.isEmpty() ||
-            manuscriptStack.getCount() < i ||
-            manuscriptStack.getItem() != IafItemRegistry.MANUSCRIPT.get())
-            && !playerIn.isCreative()) {
+        if (this.possiblePagesInt[id] <= 0 || bookStack.getItem() != IafItemRegistry.BESTIARY.get()) {
             return false;
-        } else if (this.possiblePagesInt[id] > 0 && !bookStack.isEmpty()) {
-            EnumBestiaryPages page = getPossiblePages()[Mth.clamp(id, 0, 2)];
-            if (page != null) {
-                if (bookStack.getItem() == IafItemRegistry.BESTIARY.get()) {
-                    this.tileFurnace.setItem(0, bookStack);
-                    if (IceAndFire.PROXY.getRefrencedTE() instanceof TileEntityLectern) {
-                        if (!playerIn.level().isClientSide) {
-
-                            if (bookStack.getItem() == IafItemRegistry.BESTIARY.get()) {
-                                EnumBestiaryPages.addPage(EnumBestiaryPages.fromInt(page.ordinal()), bookStack);
-                            }
-                            if (this.tileFurnace instanceof TileEntityLectern entityLectern) {
-                                entityLectern.randomizePages(bookStack, manuscriptStack);
-                            }
-
-                        }
-                        else {
-                            IceAndFire.sendMSGToServer(new MessageUpdateLectern(IceAndFire.PROXY.getRefrencedTE().getBlockPos().asLong(), 0, 0, 0, true, page.ordinal()));
-                        }
-
-                    }
+        }
+        EnumBestiaryPages page = getPossiblePages()[id];
+        if (page == null) {
+            return false;
+        }
+        if (!playerIn.level().isClientSide) {
+            if (!playerIn.isCreative()) {
+                manuscriptStack.shrink(cost);
+                if (manuscriptStack.isEmpty()) {
+                    this.tileFurnace.setItem(1, ItemStack.EMPTY);
                 }
-
-                this.tileFurnace.setChanged();
-                this.slotsChanged(this.tileFurnace);
-                playerIn.level().playSound(null, playerIn.blockPosition(), IafSoundRegistry.BESTIARY_PAGE, SoundSource.BLOCKS, 1.0F, playerIn.level().random.nextFloat() * 0.1F + 0.9F);
             }
-            onUpdate();
-            return true;
-        } else {
-            return false;
+            EnumBestiaryPages.addPage(page, bookStack);
+            this.tileFurnace.setItem(0, bookStack);
+            if (this.tileFurnace instanceof TileEntityLectern lectern) {
+                lectern.randomizePages(bookStack, this.tileFurnace.getItem(1));
+            }
+            this.tileFurnace.setChanged();
+            this.slotsChanged(this.tileFurnace);
+            playerIn.level().playSound(null, playerIn.blockPosition(), IafSoundRegistry.BESTIARY_PAGE, SoundSource.BLOCKS, 1.0F, playerIn.level().random.nextFloat() * 0.1F + 0.9F);
         }
+        onUpdate();
+        return true;
     }
 }

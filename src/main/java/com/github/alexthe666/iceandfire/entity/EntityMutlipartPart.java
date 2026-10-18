@@ -1,7 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import com.github.alexthe666.iceandfire.message.MessageMultipartInteract;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -19,6 +18,9 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.event.EventHooks;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -256,19 +258,37 @@ public abstract class EntityMutlipartPart extends Entity {
 
     @Override
     public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
+        // Server only: the client has no parent (the interact packet of the vanilla client reaches this on the server)
         Entity parent = getParent();
-        if (level().isClientSide && parent != null) {
-            IceAndFire.sendMSGToServer(new MessageMultipartInteract(parent.getId(), 0));
+        if (parent == null) {
+            return InteractionResult.PASS;
         }
-        return parent != null ? parent.interact(player, hand) : InteractionResult.PASS;
+        InteractionResult result = parent.interact(player, hand);
+        // Player.interactOn offers the held item (dragon horn, lead...) only to living entities and a part is not one:
+        // a click on a part never picked the dragon up with the horn (#5196)
+        if (!result.consumesAction() && parent instanceof LivingEntity living) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.isEmpty()) {
+                ItemStack copy = stack.copy();
+                if (player.getAbilities().instabuild) {
+                    stack = copy;
+                }
+                result = stack.interactLivingEntity(player, living, hand);
+                if (result.consumesAction()) {
+                    this.level().gameEvent(GameEvent.ENTITY_INTERACT, living.position(), GameEvent.Context.of(player));
+                    if (stack.isEmpty() && !player.getAbilities().instabuild) {
+                        EventHooks.onPlayerDestroyItem(player, copy, hand);
+                        player.setItemInHand(hand, ItemStack.EMPTY);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float damage) {
         Entity parent = getParent();
-        if (level().isClientSide && source.getEntity() instanceof Player && parent != null) {
-            IceAndFire.sendMSGToServer(new MessageMultipartInteract(parent.getId(), damage * damageMultiplier));
-        }
         return parent != null && parent.hurt(source, damage * this.damageMultiplier);
     }
 

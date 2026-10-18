@@ -435,7 +435,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
         this.itemHandler = new InvWrapper(this.inventory);
     }
 
-    protected void updateContainerEquipment() {
+    public void updateContainerEquipment() {
         if (!this.level().isClientSide) {
             this.setSaddled(!this.inventory.getItem(INV_SLOT_SADDLE).isEmpty());
             this.setChested(!this.inventory.getItem(INV_SLOT_CHEST).isEmpty());
