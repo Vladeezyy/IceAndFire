@@ -235,7 +235,12 @@ public abstract class DragonTabulaModelAnimator<T extends EntityDragonBase> exte
             float x = currPositionCube.rotateAngleX;
             float y = currPositionCube.rotateAngleY;
             float z = currPositionCube.rotateAngleZ;
-            if (x != flightPart.rotateAngleX || y != flightPart.rotateAngleY || z != flightPart.rotateAngleZ) {
+            // Skip only the parts the flight cycle does not move (both key frames are the flying pose). The original
+            // skipped a segment whenever its END frame was the flying pose: the lightning dragon's head (flight2 =
+            // flying pose, 28.7°) jumped to the still pose once per wing beat (#4768)
+            boolean prevIsPose = prevX == flightPart.rotateAngleX && prevY == flightPart.rotateAngleY && prevZ == flightPart.rotateAngleZ;
+            boolean currIsPose = x == flightPart.rotateAngleX && y == flightPart.rotateAngleY && z == flightPart.rotateAngleZ;
+            if (!prevIsPose || !currIsPose) {
                 this.setRotateAngle(cube, 1F, prevX + deltaTicks * distance(prevX, x), prevY + deltaTicks * distance(prevY, y), prevZ + deltaTicks * distance(prevZ, z));
             }
         }

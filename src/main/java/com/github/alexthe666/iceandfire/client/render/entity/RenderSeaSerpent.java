@@ -34,8 +34,9 @@ public class RenderSeaSerpent extends MobRenderer<EntitySeaSerpent, AdvancedEnti
 
     @Override
     protected void scale(EntitySeaSerpent entity, PoseStack matrixStackIn, float partialTickTime) {
-        this.shadowRadius = entity.getSeaSerpentScale();
-        matrixStackIn.scale(shadowRadius, shadowRadius, shadowRadius);
+        float s = entity.getSeaSerpentScale() * VanillaScale.undo(entity);
+        this.shadowRadius = s;
+        matrixStackIn.scale(s, s, s);
     }
 
     @Override

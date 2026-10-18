@@ -27,6 +27,11 @@ Please report bugs of this port here, not to the original author.
   player nearby; a likely cause of the riding lag on servers ([#5192](https://github.com/AlexModGuy/Ice_and_Fire/issues/5192),
   [#5208](https://github.com/AlexModGuy/Ice_and_Fire/issues/5208)), which could not be reproduced directly.
 - Light gray banner patterns showed their raw translation key.
+- Adult dragons (and big death worms, sea serpents, dread creatures, young myrmexes) were drawn several times too big
+  and had a huge hitbox (an adult dragon 23 blocks high instead of 5): Minecraft 1.21 scales models and hitboxes by
+  `getScale()` itself, and the mod scaled them again. The rider sat under the dragon's body; now on its back.
+- Lightning dragon head twitched once per wing beat while flying ([#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768)):
+  a segment of the flight cycle was skipped whenever its end frame equalled the still flying pose.
 - The bestiary's contents could not be read: white entry names on the light parchment buttons; now dark ink like the
   pages.
 - Server crash when a myrmex swarmer (or a death worm / troll of an unknown kind) died.
@@ -49,7 +54,6 @@ adult dragon; load test with 30 adult dragons and 100 creatures, 4096 generated 
 
 ## Known issues
 
-- Lightning dragon head twitch while flying ([#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768)) not looked at.
 
 ## License
 

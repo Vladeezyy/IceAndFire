@@ -53,6 +53,25 @@ public class TestHive {
         return new TestHive(gen.hive, queen, MyrmexWorldData.get(level).getHivelist().size());
     }
 
+    /** Workers, soldiers and a sentinel of the hive, as the world generation of a big hive adds them. */
+    public int populate(ServerLevel level) {
+        BlockPos ground = MyrmexHive.getGroundedPos(level, hive.getCenter());
+        int added = 0;
+        for (int i = 0; i < 9; i++) {
+            var type = i < 5 ? IafEntityRegistry.MYRMEX_WORKER.get() : i < 8 ? IafEntityRegistry.MYRMEX_SOLDIER.get() : IafEntityRegistry.MYRMEX_SENTINEL.get();
+            com.github.alexthe666.iceandfire.entity.EntityMyrmexBase myrmex = type.create(level);
+            myrmex.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+            myrmex.setHive(hive);
+            myrmex.setJungleVariant(queen.isJungle());
+            myrmex.setPersistenceRequired();
+            myrmex.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+            if (level.addFreshEntity(myrmex)) {
+                added++;
+            }
+        }
+        return added;
+    }
+
     public double distance() {
         return Math.sqrt(queen.distanceToSqr(hive.getCenter().getCenter()));
     }

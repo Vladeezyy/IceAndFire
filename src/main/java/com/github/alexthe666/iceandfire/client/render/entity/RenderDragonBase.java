@@ -46,10 +46,13 @@ public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEnti
 
     @Override
     protected void scale(EntityDragonBase entity, PoseStack matrixStackIn, float partialTickTime) {
-        this.shadowRadius = entity.getRenderSize() / 3;
+        float size = entity.getRenderSize() / 3;
+        // vanilla already scaled the model (and the shadow) by getScale(): only the dragon's own size on top
+        this.shadowRadius = size * VanillaScale.undo(entity);
         float f7 = entity.prevDragonPitch + (entity.getDragonPitch() - entity.prevDragonPitch) * partialTickTime;
         matrixStackIn.mulPose(Axis.XP.rotationDegrees(f7));
-        matrixStackIn.scale(shadowRadius, shadowRadius, shadowRadius);
+        float s = size * VanillaScale.undo(entity);
+        matrixStackIn.scale(s, s, s);
     }
 
     @Override

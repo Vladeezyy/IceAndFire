@@ -21,7 +21,8 @@ public class RenderDreadScuttler extends MobRenderer<EntityDreadScuttler, ModelD
 
     @Override
     public void scale(EntityDreadScuttler LivingEntityIn, PoseStack stack, float partialTickTime) {
-        stack.scale(LivingEntityIn.getSize(), LivingEntityIn.getSize(), LivingEntityIn.getSize());
+        float s = LivingEntityIn.getSize() * VanillaScale.undo(LivingEntityIn);
+        stack.scale(s, s, s);
     }
 
     @Override

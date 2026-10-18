@@ -168,6 +168,7 @@ public class StressTest {
             TestHive.forceArea(level, HIVE, true);
         } else if (t == 40) {
             testHive = TestHive.place(level, HIVE);
+            check("myrmexes added to the test hive", testHive.populate(level) == 9, "9 workers, soldiers and a sentinel");
         } else if (t == 140) {
             check("myrmex queen in her hive", testHive.queenAtHome(level), testHive.state(level));
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput().withPermission(4), "tick sprint " + HIVE_TICKS);

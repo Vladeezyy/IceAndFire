@@ -80,18 +80,16 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
-## Current state (2026-10-18 night, resume here)
+## Current state (2026-10-19, resume here)
 
-- 2.1.13-beta.2: myrmex queen (#5197) and block updates per dimension; tested on macOS: self-test 29/29, stress test
-  12/12 with the long hive simulation (a hive with its queen, `tick sprint 6000`: the queen stays at home; note: the
-  test hive has no workers, so it checks the queen, not a busy hive), net test (riding an adult dragon on a dedicated
-  server, 0 failed checks), client scene (every creature, 0 failed checks).
-- Test scripts run on Windows (Git Bash) and macOS: `tools/common.sh` (process cleanup, time limit, server.properties,
-  own port 25581, narrator onboarding off on a fresh `run/`).
-- The self-test schedule waits for the world generation and for the dragon chunk to be entity ticking (failed on a
-  slower machine).
+- 2.1.13-beta.3: double scaling of 1.21 (`LivingEntityRenderer` and `LivingEntity.getDimensions` apply
+  `getScale()` since 1.20.5; dragons and sea serpents also scaled their dimensions, six renderers scaled their models
+  by the same factor) — `client/render/entity/VanillaScale.undo`, dimensions scaled once. Adult dragon hitbox 23 → 5.25
+  blocks, rider on the back (net test logs the rider position and takes a third-person shot). #4768: flight cycle
+  segment skipped when only its END frame equalled the flying pose (`DragonTabulaModelAnimator`), now only when both do.
+- Tests on macOS: self-test 29/29, stress 13/13 (12.5 ms average tick with 30 dragons; the test hive has its queen,
+  5 workers, 3 soldiers and a sentinel, 6000 ticks of /tick sprint, the queen stays), net test, scene.
 
 ## TODO
 
-- A busy test hive (workers, soldiers) for the long simulation.
-- Lightning dragon head twitch (#4768).
+- Nothing open from the issue list; next: play-test feedback.

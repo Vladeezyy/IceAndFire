@@ -22,7 +22,8 @@ public class RenderDreadBeast extends MobRenderer<EntityDreadBeast, ModelDreadBe
 
     @Override
     protected void scale(EntityDreadBeast entity, PoseStack matrixStackIn, float partialTickTime) {
-        matrixStackIn.scale(entity.getSize(), entity.getSize(), entity.getSize());
+        float s = entity.getSize() * VanillaScale.undo(entity);
+        matrixStackIn.scale(s, s, s);
     }
 
     @Override

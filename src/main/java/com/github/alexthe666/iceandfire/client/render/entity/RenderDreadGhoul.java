@@ -31,7 +31,7 @@ public class RenderDreadGhoul extends MobRenderer<EntityDreadGhoul, ModelDreadGh
 
     @Override
     protected void scale(EntityDreadGhoul entity, PoseStack matrixStackIn, float partialTickTime) {
-        float scale = entity.getSize() < 0.01F ? 1F : entity.getSize();
+        float scale = (entity.getSize() < 0.01F ? 1F : entity.getSize()) * VanillaScale.undo(entity);
         matrixStackIn.scale(scale, scale, scale);
     }
 

@@ -1806,7 +1806,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
 
     @Override
     protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose poseIn) {
-        return this.getType().getDimensions().scale(this.getScale());
+        // LivingEntity.getDimensions scales these by getScale() since 1.20.5 (1.20.1 did it here): once only
+        return this.getType().getDimensions();
     }
 
     @Override

@@ -194,6 +194,22 @@ public class NetTest {
             if (riddenTicks == 450) {
                 Screenshot.grab(new File("."), "nettest_flying.png", mc.getMainRenderTarget(), c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
             }
+            // Where the rider is: feet and eyes against the dragon and its saddle point, and how it looks from behind
+            if (riddenTicks % 100 == 50 && mc.player.getVehicle() instanceof EntityDragonBase dragon) {
+                IceAndFire.LOGGER.info("[nettest] rider feet {} eyes {} above the dragon, saddle point {}, dragon height {}, render size {}, pitch {}",
+                    String.format("%.2f", mc.player.getY() - dragon.getY()), String.format("%.2f", mc.player.getEyeY() - dragon.getY()),
+                    String.format("%.2f", dragon.getRiderPosition().y - dragon.getY()), String.format("%.2f", dragon.getBbHeight()),
+                    String.format("%.1f", dragon.getRenderSize()), String.format("%.1f", dragon.getDragonPitch()));
+            }
+            if (riddenTicks == 470) {
+                mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
+            }
+            if (riddenTicks == 490) {
+                Screenshot.grab(new File("."), "nettest_flying_third.png", mc.getMainRenderTarget(), c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
+            }
+            if (riddenTicks == 500) {
+                mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            }
             // Get off: shift as a player presses it
             mc.options.keyShift.setDown(riddenTicks >= 700 && riddenTicks < 720);
             if (riddenTicks == 760) {

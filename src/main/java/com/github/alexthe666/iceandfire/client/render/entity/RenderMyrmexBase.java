@@ -48,6 +48,7 @@ public class RenderMyrmexBase extends MobRenderer<EntityMyrmexBase, AdvancedEnti
         if (myrmex.getGrowthStage() == 1) {
             scale /= 1.5F;
         }
+        scale *= VanillaScale.undo(myrmex);
         matrixStackIn.scale(scale, scale, scale);
         if (myrmex.isPassenger() && myrmex.getGrowthStage() < 2) {
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
