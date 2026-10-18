@@ -1,5 +1,10 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.citadel.server.message.PacketBufferUtils;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityPodium;
@@ -8,11 +13,16 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageUpdatePodium {
+public class MessageUpdatePodium implements CustomPacketPayload {
+    public static final Type<MessageUpdatePodium> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "update_podium"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageUpdatePodium> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageUpdatePodium::read);
+
+    @Override
+    public Type<MessageUpdatePodium> type() {
+        return TYPE;
+    }
 
     public long blockPos;
     public ItemStack heldStack;
@@ -39,13 +49,12 @@ public class MessageUpdatePodium {
         public Handler() {
         }
 
-        public static void handle(final MessageUpdatePodium message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageUpdatePodium message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
-                if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 
@@ -58,7 +67,6 @@ public class MessageUpdatePodium {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 }

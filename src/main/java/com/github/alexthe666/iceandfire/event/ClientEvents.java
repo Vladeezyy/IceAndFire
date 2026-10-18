@@ -91,7 +91,7 @@ public class ClientEvents {
                 moveController.dismount(mc.options.keyShift.isDown());
                 byte controlState = moveController.getControlState();
                 if (controlState != previousState) {
-                    IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageDragonControl(entity.getId(), controlState, entity.getX(), entity.getY(), entity.getZ()));
+                    IceAndFire.sendMSGToServer(new MessageDragonControl(entity.getId(), controlState, entity.getX(), entity.getY(), entity.getZ()));
                 }
             }
         }
@@ -109,7 +109,7 @@ public class ClientEvents {
                     moveController.strike(IafKeybindRegistry.dragon_fireAttack.isDown());
                     byte controlState = moveController.getControlState();
                     if (controlState != previousState) {
-                        IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageDragonControl(entity.getId(), controlState, entity.getX(), entity.getY(), entity.getZ()));
+                        IceAndFire.sendMSGToServer(new MessageDragonControl(entity.getId(), controlState, entity.getX(), entity.getY(), entity.getZ()));
                     }
                 }
             }

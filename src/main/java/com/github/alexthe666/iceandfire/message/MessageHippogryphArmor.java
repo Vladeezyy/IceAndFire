@@ -1,15 +1,26 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
 import com.github.alexthe666.iceandfire.entity.EntityHippogryph;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageHippogryphArmor {
+public class MessageHippogryphArmor implements CustomPacketPayload {
+    public static final Type<MessageHippogryphArmor> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "hippogryph_armor"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageHippogryphArmor> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageHippogryphArmor::read);
+
+    @Override
+    public Type<MessageHippogryphArmor> type() {
+        return TYPE;
+    }
 
     public int dragonId;
     public int slot_index;
@@ -38,11 +49,10 @@ public class MessageHippogryphArmor {
         public Handler() {
         }
 
-        public static void handle(final MessageHippogryphArmor message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageHippogryphArmor message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
                 if (player != null) {
                     Entity entity = player.level().getEntity(message.dragonId);
@@ -67,7 +77,6 @@ public class MessageHippogryphArmor {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 }

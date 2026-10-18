@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
 
-import com.github.alexthe666.citadel.server.item.CustomArmorMaterial;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.resources.ResourceLocation;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelFireDragonScaleArmor;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelIceDragonScaleArmor;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelLightningDragonScaleArmor;
@@ -25,13 +26,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonItem {
+public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonItem, IafClientItem{
 
     public EnumDragonArmor armor_type;
     public EnumDragonEgg eggType;
 
-    public ItemScaleArmor(EnumDragonEgg eggType, EnumDragonArmor armorType, CustomArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemScaleArmor(EnumDragonEgg eggType, EnumDragonArmor armorType, IafArmorMaterial material, ArmorItem.Type slot) {
+        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
         this.armor_type = armorType;
         this.eggType = eggType;
     }
@@ -74,8 +75,8 @@ public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonIt
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "iceandfire:textures/models/armor/" + armor_type.name() + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png");
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return ResourceLocation.parse("iceandfire:textures/models/armor/" + armor_type.name() + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }
 
 

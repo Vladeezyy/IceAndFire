@@ -1,16 +1,26 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntitySiren;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageSirenSong {
+public class MessageSirenSong implements CustomPacketPayload {
+    public static final Type<MessageSirenSong> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "siren_song"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSirenSong> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageSirenSong::read);
+
+    @Override
+    public Type<MessageSirenSong> type() {
+        return TYPE;
+    }
 
     public int sirenId;
     public boolean isSinging;
@@ -37,13 +47,12 @@ public class MessageSirenSong {
         public Handler() {
         }
 
-        public static void handle(final MessageSirenSong message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageSirenSong message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
-                if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 
@@ -56,7 +65,6 @@ public class MessageSirenSong {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 

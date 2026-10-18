@@ -1,5 +1,10 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexBase;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
@@ -8,11 +13,16 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageMyrmexSettings {
+public class MessageMyrmexSettings implements CustomPacketPayload {
+    public static final Type<MessageMyrmexSettings> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "myrmex_settings"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageMyrmexSettings> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageMyrmexSettings::read);
+
+    @Override
+    public Type<MessageMyrmexSettings> type() {
+        return TYPE;
+    }
 
     public int queenID;
     public boolean reproduces;
@@ -42,13 +52,12 @@ public class MessageMyrmexSettings {
         public Handler() {
         }
 
-        public static void handle(final MessageMyrmexSettings message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageMyrmexSettings message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
-                if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 
@@ -69,7 +78,6 @@ public class MessageMyrmexSettings {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 }

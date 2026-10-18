@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +25,7 @@ public class ItemBlindfold extends ArmorItem {
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "iceandfire:textures/models/armor/blindfold_layer_1.png";
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return ResourceLocation.parse("iceandfire:textures/models/armor/blindfold_layer_1.png");
     }
 }

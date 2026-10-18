@@ -256,7 +256,7 @@ public abstract class EntityMutlipartPart extends Entity {
     public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
         Entity parent = getParent();
         if (level().isClientSide && parent != null) {
-            IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageMultipartInteract(parent.getId(), 0));
+            IceAndFire.sendMSGToServer(new MessageMultipartInteract(parent.getId(), 0));
         }
         return parent != null ? parent.interact(player, hand) : InteractionResult.PASS;
     }
@@ -265,7 +265,7 @@ public abstract class EntityMutlipartPart extends Entity {
     public boolean hurt(@NotNull DamageSource source, float damage) {
         Entity parent = getParent();
         if (level().isClientSide && source.getEntity() instanceof Player && parent != null) {
-            IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageMultipartInteract(parent.getId(), damage * damageMultiplier));
+            IceAndFire.sendMSGToServer(new MessageMultipartInteract(parent.getId(), damage * damageMultiplier));
         }
         return parent != null && parent.hurt(source, damage * this.damageMultiplier);
     }

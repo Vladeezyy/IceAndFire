@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemTrollWeapon extends SwordItem {
+public class ItemTrollWeapon extends SwordItem implements IafClientItem {
 
     public EnumTroll.Weapon weapon = EnumTroll.Weapon.AXE;
 

@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -15,8 +17,8 @@ import java.util.List;
 
 public class ItemModArmor extends ArmorItem {
 
-    public ItemModArmor(ArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemModArmor(IafArmorMaterial material, ArmorItem.Type slot) {
+        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override
@@ -33,18 +35,18 @@ public class ItemModArmor extends ArmorItem {
 
     @Override
     @Nullable
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        if (this.material == IafItemRegistry.MYRMEX_DESERT_ARMOR_MATERIAL) {
-            return "iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "myrmex_desert_layer_2" : "myrmex_desert_layer_1") + ".png";
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        if (this.material == IafItemRegistry.MYRMEX_DESERT_ARMOR_MATERIAL.holder()) {
+            return ResourceLocation.parse("iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "myrmex_desert_layer_2" : "myrmex_desert_layer_1") + ".png");
         }
-        if (this.material == IafItemRegistry.MYRMEX_JUNGLE_ARMOR_MATERIAL) {
-            return "iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "myrmex_jungle_layer_2" : "myrmex_jungle_layer_1") + ".png";
+        if (this.material == IafItemRegistry.MYRMEX_JUNGLE_ARMOR_MATERIAL.holder()) {
+            return ResourceLocation.parse("iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "myrmex_jungle_layer_2" : "myrmex_jungle_layer_1") + ".png");
         }
-        if (this.material == IafItemRegistry.SHEEP_ARMOR_MATERIAL) {
-            return "iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "sheep_disguise_layer_2" : "sheep_disguise_layer_1") + ".png";
+        if (this.material == IafItemRegistry.SHEEP_ARMOR_MATERIAL.holder()) {
+            return ResourceLocation.parse("iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "sheep_disguise_layer_2" : "sheep_disguise_layer_1") + ".png");
         }
-        if (this.material == IafItemRegistry.EARPLUGS_ARMOR_MATERIAL) {
-            return "iceandfire:textures/models/armor/earplugs_layer_1.png";
+        if (this.material == IafItemRegistry.EARPLUGS_ARMOR_MATERIAL.holder()) {
+            return ResourceLocation.parse("iceandfire:textures/models/armor/earplugs_layer_1.png");
         }
         return null;
     }

@@ -80,11 +80,6 @@ public class BlockPixieHouse extends BaseEntityBlock {
     }
 
     @Override
-    public void initializeClient(@NotNull Consumer<IClientBlockExtensions> consumer) {
-        super.initializeClient(consumer);
-    }
-
-    @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }

@@ -6,8 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.lang.reflect.Field;
 
@@ -275,20 +275,22 @@ public final class IafSoundRegistry {
     }
 
     @SubscribeEvent
-    public static void registerSoundEvents(final NewRegistryEvent event) {
+    public static void registerSoundEvents(final RegisterEvent event) {
+        event.register(Registries.SOUND_EVENT, helper -> {
         try {
             for (Field f : IafSoundRegistry.class.getFields()) {
                 Object obj = f.get(null);
                 if (obj instanceof SoundEvent) {
-                    BuiltInRegistries.SOUND_EVENT.register(((SoundEvent) obj).getLocation(), (SoundEvent) obj);
+                    helper.register(((SoundEvent) obj).getLocation(), (SoundEvent) obj);
                 } else if (obj instanceof SoundEvent[]) {
                     for (SoundEvent soundEvent : (SoundEvent[]) obj) {
-                        BuiltInRegistries.SOUND_EVENT.register(soundEvent.getLocation(), soundEvent);
+                        helper.register(soundEvent.getLocation(), soundEvent);
                     }
                 }
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+        });
     }
 }

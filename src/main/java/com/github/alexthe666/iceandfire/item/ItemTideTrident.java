@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemTideTrident extends TridentItem {
+public class ItemTideTrident extends TridentItem implements IafClientItem {
 
     public ItemTideTrident() {
         super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(400));

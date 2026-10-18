@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemDeathwormGauntlet extends Item {
+public class ItemDeathwormGauntlet extends Item implements IafClientItem {
 
     private boolean deathwormReceded = true;
     private boolean deathwormLaunched = false;

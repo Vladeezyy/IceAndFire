@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ItemGorgonHead extends Item {
+public class ItemGorgonHead extends Item implements IafClientItem {
 
     public ItemGorgonHead() {
         super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(1));

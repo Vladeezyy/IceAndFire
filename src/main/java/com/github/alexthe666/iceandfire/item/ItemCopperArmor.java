@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.resources.ResourceLocation;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelCopperArmor;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
@@ -15,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class ItemCopperArmor extends ArmorItem {
+public class ItemCopperArmor extends ArmorItem implements IafClientItem {
 
-    public ItemCopperArmor(ArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemCopperArmor(IafArmorMaterial material, ArmorItem.Type slot) {
+        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override
@@ -33,8 +34,8 @@ public class ItemCopperArmor extends ArmorItem {
 
     @Override
     @Nullable
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "armor_copper_metal_layer_2" : "armor_copper_metal_layer_1") + ".png";
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return ResourceLocation.parse("iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "armor_copper_metal_layer_2" : "armor_copper_metal_layer_1") + ".png");
     }
 
 

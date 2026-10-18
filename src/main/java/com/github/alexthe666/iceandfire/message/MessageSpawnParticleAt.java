@@ -1,5 +1,10 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -7,11 +12,16 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageSpawnParticleAt {
+public class MessageSpawnParticleAt implements CustomPacketPayload {
+    public static final Type<MessageSpawnParticleAt> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "spawn_particle_at"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSpawnParticleAt> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageSpawnParticleAt::read);
+
+    @Override
+    public Type<MessageSpawnParticleAt> type() {
+        return TYPE;
+    }
     private double x;
     private double y;
     private double z;
@@ -42,13 +52,12 @@ public class MessageSpawnParticleAt {
         public Handler() {
         }
 
-        public static void handle(final MessageSpawnParticleAt message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageSpawnParticleAt message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
-                if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 
@@ -61,7 +70,6 @@ public class MessageSpawnParticleAt {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 }

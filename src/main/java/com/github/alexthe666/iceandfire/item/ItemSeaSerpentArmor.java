@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
 
-import com.github.alexthe666.citadel.server.item.CustomArmorMaterial;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.resources.ResourceLocation;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelSeaSerpentArmor;
 import com.github.alexthe666.iceandfire.enums.EnumSeaSerpent;
 import net.minecraft.ChatFormatting;
@@ -24,12 +25,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemSeaSerpentArmor extends ArmorItem {
+public class ItemSeaSerpentArmor extends ArmorItem implements IafClientItem {
 
     public EnumSeaSerpent armor_type;
 
-    public ItemSeaSerpentArmor(EnumSeaSerpent armorType, CustomArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemSeaSerpentArmor(EnumSeaSerpent armorType, IafArmorMaterial material, ArmorItem.Type slot) {
+        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
         this.armor_type = armorType;
     }
 
@@ -59,8 +60,8 @@ public class ItemSeaSerpentArmor extends ArmorItem {
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "iceandfire:textures/models/armor/armor_tide_" + armor_type.resourceName + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png");
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return ResourceLocation.parse("iceandfire:textures/models/armor/armor_tide_" + armor_type.resourceName + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }
 
     @Override

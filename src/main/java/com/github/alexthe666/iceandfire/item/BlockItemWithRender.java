@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.util.Lazy;
 
 import java.util.function.Consumer;
 
-public class BlockItemWithRender extends BlockItem {
+public class BlockItemWithRender extends BlockItem implements IafClientItem {
     public BlockItemWithRender(Block p_40565_, Properties p_40566_) {
         super(p_40565_, p_40566_);
     }

@@ -1,13 +1,12 @@
 package com.github.alexthe666.iceandfire.enums;
 
-import com.github.alexthe666.citadel.server.item.CustomArmorMaterial;
+import net.neoforged.neoforge.registries.DeferredItem;
 import com.github.alexthe666.iceandfire.item.IafArmorMaterial;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.ItemScaleArmor;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 public enum EnumDragonArmor {
 
@@ -24,14 +23,14 @@ public enum EnumDragonArmor {
     armor_copper(14, EnumDragonEgg.COPPER),
     armor_black(15, EnumDragonEgg.BLACK);
 
-    public CustomArmorMaterial material;
+    public IafArmorMaterial material;
     public int armorId;
     public EnumDragonEgg eggType;
-    public DeferredHolder<Item> helmet;
-    public DeferredHolder<Item> chestplate;
-    public DeferredHolder<Item> leggings;
-    public DeferredHolder<Item> boots;
-    public CustomArmorMaterial armorMaterial;
+    public DeferredItem<Item> helmet;
+    public DeferredItem<Item> chestplate;
+    public DeferredItem<Item> leggings;
+    public DeferredItem<Item> boots;
+    public IafArmorMaterial armorMaterial;
 
     EnumDragonArmor(int armorId, EnumDragonEgg eggType) {
         this.armorId = armorId;

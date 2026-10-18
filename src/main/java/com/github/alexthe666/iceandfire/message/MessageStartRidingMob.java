@@ -1,5 +1,10 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.ISyncMount;
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,11 +12,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageStartRidingMob {
+public class MessageStartRidingMob implements CustomPacketPayload {
+    public static final Type<MessageStartRidingMob> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "start_riding_mob"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageStartRidingMob> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageStartRidingMob::read);
+
+    @Override
+    public Type<MessageStartRidingMob> type() {
+        return TYPE;
+    }
 
     public int dragonId;
     public boolean ride;
@@ -40,13 +50,12 @@ public class MessageStartRidingMob {
         public Handler() {
         }
 
-        public static void handle(final MessageStartRidingMob message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageStartRidingMob message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
-                if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 
@@ -73,7 +82,6 @@ public class MessageStartRidingMob {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 }

@@ -176,7 +176,7 @@ public class GuiMyrmexStaff extends Screen {
     @Override
     public void removed() {
         if (ClientProxy.getReferedClientHive() != null) {
-            IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageGetMyrmexHive(ClientProxy.getReferedClientHive().toNBT()));
+            IceAndFire.sendMSGToServer(new MessageGetMyrmexHive(ClientProxy.getReferedClientHive().toNBT()));
         }
     }
 

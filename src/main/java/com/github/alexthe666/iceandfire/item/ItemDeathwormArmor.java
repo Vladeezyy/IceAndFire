@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
+import net.minecraft.resources.ResourceLocation;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelDeathWormArmor;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
@@ -14,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class ItemDeathwormArmor extends ArmorItem {
+public class ItemDeathwormArmor extends ArmorItem implements IafClientItem {
 
-    public ItemDeathwormArmor(ArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemDeathwormArmor(IafArmorMaterial material, ArmorItem.Type slot) {
+        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
 
@@ -33,13 +34,13 @@ public class ItemDeathwormArmor extends ArmorItem {
 
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        if (this.getMaterial() == IafItemRegistry.DEATHWORM_2_ARMOR_MATERIAL) {
-            return "iceandfire:textures/models/armor/armor_deathworm_red" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png");
-        } else if (this.getMaterial() == IafItemRegistry.DEATHWORM_1_ARMOR_MATERIAL) {
-            return "iceandfire:textures/models/armor/armor_deathworm_white" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png");
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        if (this.getMaterial() == IafItemRegistry.DEATHWORM_2_ARMOR_MATERIAL.holder()) {
+            return ResourceLocation.parse("iceandfire:textures/models/armor/armor_deathworm_red" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
+        } else if (this.getMaterial() == IafItemRegistry.DEATHWORM_1_ARMOR_MATERIAL.holder()) {
+            return ResourceLocation.parse("iceandfire:textures/models/armor/armor_deathworm_white" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
         } else {
-            return "iceandfire:textures/models/armor/armor_deathworm_yellow" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png");
+            return ResourceLocation.parse("iceandfire:textures/models/armor/armor_deathworm_yellow" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
         }
     }
 }

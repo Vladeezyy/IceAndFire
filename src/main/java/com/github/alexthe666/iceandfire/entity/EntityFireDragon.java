@@ -423,7 +423,7 @@ public class EntityFireDragon extends EntityDragonBase {
         }
         if (syncType == 2 && level().isClientSide) {
             //sync with server
-            IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
+            IceAndFire.sendMSGToServer(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
         }
         if (syncType == 3 && !level().isClientSide) {
             //sync with client, fire bomb
@@ -431,7 +431,7 @@ public class EntityFireDragon extends EntityDragonBase {
         }
         if (syncType == 4 && level().isClientSide) {
             //sync with server, fire bomb
-            IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 5));
+            IceAndFire.sendMSGToServer(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 5));
         }
         if (syncType > 2 && syncType < 6) {
             if (this.getAnimation() != ANIMATION_FIRECHARGE) {

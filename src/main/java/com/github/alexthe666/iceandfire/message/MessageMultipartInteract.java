@@ -1,5 +1,10 @@
 package com.github.alexthe666.iceandfire.message;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
@@ -7,11 +12,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
 
-public class MessageMultipartInteract {
+public class MessageMultipartInteract implements CustomPacketPayload {
+    public static final Type<MessageMultipartInteract> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "multipart_interact"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageMultipartInteract> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageMultipartInteract::read);
+
+    @Override
+    public Type<MessageMultipartInteract> type() {
+        return TYPE;
+    }
 
     public int creatureID;
     public float dmg;
@@ -37,13 +47,12 @@ public class MessageMultipartInteract {
         public Handler() {
         }
 
-        public static void handle(final MessageMultipartInteract message, final Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        public static void handle(final MessageMultipartInteract message, final IPayloadContext context) {
 
             context.enqueueWork(() -> {
-                Player player = context.getSender();
+                Player player = context.player();
 
-                if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 
@@ -64,7 +73,6 @@ public class MessageMultipartInteract {
                 }
             });
 
-            context.setPacketHandled(true);
         }
     }
 }

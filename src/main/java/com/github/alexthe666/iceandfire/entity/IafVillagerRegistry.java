@@ -34,9 +34,9 @@ import java.util.List;
 public class IafVillagerRegistry {
 
     public static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(BuiltInRegistries.POINT_OF_INTEREST_TYPE, IceAndFire.MODID);
-    public static final DeferredHolder<PoiType> SCRIBE_POI = POI_TYPES.register("scribe", () -> new PoiType(ImmutableSet.copyOf(IafBlockRegistry.LECTERN.get().getStateDefinition().getPossibleStates()), 1, 1));
+    public static final DeferredHolder<PoiType, PoiType> SCRIBE_POI = POI_TYPES.register("scribe", () -> new PoiType(ImmutableSet.copyOf(IafBlockRegistry.LECTERN.get().getStateDefinition().getPossibleStates()), 1, 1));
     public static final DeferredRegister<VillagerProfession> PROFESSIONS = DeferredRegister.create(BuiltInRegistries.VILLAGER_PROFESSION, IceAndFire.MODID);
-    public static final DeferredHolder<VillagerProfession> SCRIBE = PROFESSIONS.register("scribe", ()-> new VillagerProfession("scribe", (entry) -> entry.value().equals(SCRIBE_POI.get()), (entry) -> entry.value().equals(SCRIBE_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_LIBRARIAN));
+    public static final DeferredHolder<VillagerProfession, VillagerProfession> SCRIBE = PROFESSIONS.register("scribe", ()-> new VillagerProfession("scribe", (entry) -> entry.value().equals(SCRIBE_POI.get()), (entry) -> entry.value().equals(SCRIBE_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_LIBRARIAN));
 
     public static void addScribeTrades(Int2ObjectMap<List<VillagerTrades.ItemListing>> trades) {
 

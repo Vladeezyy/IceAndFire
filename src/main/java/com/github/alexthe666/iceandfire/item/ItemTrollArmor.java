@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
 
-import com.github.alexthe666.citadel.server.item.CustomArmorMaterial;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.resources.ResourceLocation;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelTrollArmor;
 import com.github.alexthe666.iceandfire.enums.EnumTroll;
 import net.minecraft.ChatFormatting;
@@ -19,22 +20,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class ItemTrollArmor extends ArmorItem{
+public class ItemTrollArmor extends ArmorItem implements IafClientItem {
 
     public EnumTroll troll;
 
-    public ItemTrollArmor(EnumTroll troll, CustomArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemTrollArmor(EnumTroll troll, IafArmorMaterial material, ArmorItem.Type slot) {
+        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
         this.troll = troll;
     }
 
     public static String getName(EnumTroll troll, EquipmentSlot slot) {
         return "%s_troll_leather_%s".formatted(troll.name().toLowerCase(Locale.ROOT), getArmorPart(slot));
-    }
-
-    @Override
-    public @NotNull ArmorMaterial getMaterial() {
-        return troll.material;
     }
 
 
@@ -59,8 +55,8 @@ public class ItemTrollArmor extends ArmorItem{
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "iceandfire:textures/models/armor/armor_troll_" + troll.name().toLowerCase(Locale.ROOT) + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png");
+    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return ResourceLocation.parse("iceandfire:textures/models/armor/armor_troll_" + troll.name().toLowerCase(Locale.ROOT) + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }
 
     @Override

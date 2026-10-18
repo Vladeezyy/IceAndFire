@@ -36,7 +36,7 @@ public class GuiMyrmexAddRoom extends Screen {
     }
 
     public static void onGuiClosed() {
-        IceAndFire.NETWORK_WRAPPER.sendToServer(new MessageGetMyrmexHive(ClientProxy.getReferedClientHive().toNBT()));
+        IceAndFire.sendMSGToServer(new MessageGetMyrmexHive(ClientProxy.getReferedClientHive().toNBT()));
     }
 
     @Override

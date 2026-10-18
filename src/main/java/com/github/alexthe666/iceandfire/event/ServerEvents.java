@@ -224,7 +224,7 @@ public class ServerEvents {
                 ((EntityHydra) parent).triggerHeadFlags(extraData);
             }
             if (event.getTarget().level().isClientSide && parent != null) {
-                IceAndFire.NETWORK_WRAPPER.sendToServer(new MessagePlayerHitMultipart(parent.getId(), extraData));
+                IceAndFire.sendMSGToServer(new MessagePlayerHitMultipart(parent.getId(), extraData));
             }
         }
     }
