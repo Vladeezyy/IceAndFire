@@ -54,6 +54,8 @@ public final class DevScene {
     private static final boolean ENABLED = Boolean.getBoolean("iceandfire.scene");
     private static final String WORLD = "iaf_scene";
     private static final List<Pair<Integer, Consumer<Minecraft>>> STEPS = new ArrayList<>();
+    /** The close-ups start at tick 700, one creature every 30 ticks; END leaves room for 40 of them. */
+    private static final int END = 700 + 40 * 30;
     private static boolean opened;
     private static int tick;
     private static int failures;
@@ -64,15 +66,9 @@ public final class DevScene {
         at(45, mc -> mc.options.hideGui = true);
         at(60, mc -> server(mc, DevScene::buildStage));
         at(120, mc -> server(mc, DevScene::dragons));
+        at(130, mc -> server(mc, p -> look(p, stage.offset(0, 8, 38), stage.offset(0, 3, 20))));
         at(220, mc -> shot(mc, "dragons"));
-        at(225, mc -> server(mc, p -> look(p, stage.offset(0, 2, 30), stage.offset(0, 0, 8))));
-        at(260, mc -> shot(mc, "dragons_close"));
-        at(270, mc -> server(mc, DevScene::creatures));
-        at(370, mc -> shot(mc, "creatures"));
-        at(375, mc -> server(mc, p -> look(p, stage.offset(-20, 5, -10), stage.offset(-20, 0, -30))));
-        at(420, mc -> shot(mc, "creatures_left"));
-        at(425, mc -> server(mc, p -> look(p, stage.offset(20, 5, -10), stage.offset(20, 0, -30))));
-        at(470, mc -> shot(mc, "creatures_right"));
+        at(230, mc -> server(mc, p -> level(p).getEntitiesOfClass(EntityDragonBase.class, p.getBoundingBox().inflate(80)).forEach(Entity::discard)));
         // Armor in third person (issues #5112, #5205: armor models and textures)
         at(480, mc -> server(mc, DevScene::armor));
         at(485, mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
@@ -99,11 +95,72 @@ public final class DevScene {
         });
         at(640, mc -> shot(mc, "bestiary"));
         at(650, mc -> mc.setScreen(null));
-        at(660, DevScene::checkRendered);
-        at(680, mc -> {
+        at(END + 20, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
         });
+    }
+
+    /** The living creatures of the mod except dragons (by registry order). */
+    private static final List<EntityType<?>> CREATURES = new ArrayList<>();
+    private static final List<String> MOBS = List.of("hippogryph", "gorgon", "pixie", "cyclops", "siren", "hippocampus", "deathworm", "cockatrice",
+            "stymphalian_bird", "troll", "myrmex_worker", "myrmex_soldier", "myrmex_sentinel", "myrmex_royal", "myrmex_queen", "amphithere", "sea_serpent",
+            "myrmex_swarmer", "dread_thrall", "dread_ghoul", "dread_beast", "dread_scuttler", "dread_lich", "dread_knight", "dread_horse", "hydra", "ghost");
+    private static Entity lastCloseUp;
+
+    static {
+    }
+
+    private static void addCloseUps() {
+        int t0 = 700;
+        for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+            if (id.getNamespace().equals(IceAndFire.MODID) && MOBS.contains(id.getPath())) {
+                CREATURES.add(type);
+            }
+        }
+        for (int i = 0; i < CREATURES.size(); i++) {
+            final int n = i;
+            at(t0 + i * 30, mc -> server(mc, p -> closeUp(p, CREATURES.get(n))));
+            at(t0 + i * 30 + 25, mc -> {
+                EntityType<?> type = CREATURES.get(n);
+                boolean present = false;
+                for (Entity e : mc.level.entitiesForRendering()) {
+                    present |= e.getType() == type;
+                }
+                String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath();
+                List<String> near = new ArrayList<>();
+                for (Entity e : mc.level.entitiesForRendering()) {
+                    if (e.distanceTo(mc.player) < 30 && !(e instanceof net.minecraft.world.entity.item.ItemEntity)) {
+                        near.add(e.getClass().getSimpleName() + "@" + e.blockPosition().subtract(stage).toShortString() + (e == mc.getCameraEntity() ? "(camera)" : ""));
+                    }
+                }
+                IceAndFire.LOGGER.info("[scene] client entities near {}: {} player at {}", name, near, mc.player.blockPosition().subtract(stage).toShortString());
+                check("client has " + name, present, "");
+                shot(mc, "mob_" + name);
+            });
+        }
+    }
+
+    private static ServerLevel level(ServerPlayer player) {
+        return player.serverLevel();
+    }
+
+    private static void closeUp(ServerPlayer player, EntityType<?> type) {
+        ServerLevel level = player.serverLevel();
+        if (lastCloseUp != null) {
+            lastCloseUp.discard();
+        }
+        List<String> others = new ArrayList<>();
+        for (Entity e : level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(64), e -> !(e instanceof ServerPlayer))) {
+            others.add(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()) + "@" + e.blockPosition().subtract(stage).toShortString());
+        }
+        IceAndFire.LOGGER.info("[scene] around the stage before {}: {}", BuiltInRegistries.ENTITY_TYPE.getKey(type), others);
+        Entity entity = place(level, type, stage.offset(0, 0, 0), 200);
+        lastCloseUp = entity;
+        float size = Math.max(entity.getBbWidth(), entity.getBbHeight());
+        int distance = Math.max(4, (int) Math.ceil(size * 2.2F));
+        look(player, stage.offset(distance / 3, Math.max(2, (int) (entity.getBbHeight() * 0.8F) + 1), distance), stage.offset(0, (int) (entity.getBbHeight() / 2), 0));
     }
 
     private static void at(int t, Consumer<Minecraft> action) {
@@ -127,7 +184,7 @@ public final class DevScene {
             if (mc.getLevelSource().levelExists(WORLD)) {
                 mc.createWorldOpenFlows().openWorld(WORLD, () -> mc.setScreen(new TitleScreen()));
             } else {
-                LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, false, Difficulty.PEACEFUL, true, new GameRules(), WorldDataConfiguration.DEFAULT);
+                LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, false, Difficulty.NORMAL, true, new GameRules(), WorldDataConfiguration.DEFAULT);
                 mc.createWorldOpenFlows().createFreshLevel(WORLD, settings, new WorldOptions(1234L, false, false), WorldPresets::createNormalWorldDimensions, new TitleScreen());
             }
             return;
@@ -142,7 +199,10 @@ public final class DevScene {
             mc.setScreen(null);
         }
         tick++;
-        for (Pair<Integer, Consumer<Minecraft>> step : STEPS) {
+        if (tick == 1) {
+            addCloseUps();
+        }
+        for (Pair<Integer, Consumer<Minecraft>> step : new ArrayList<>(STEPS)) {
             if (step.getFirst() == tick) {
                 IceAndFire.LOGGER.info("[scene] tick {}", tick);
                 try {
@@ -248,9 +308,9 @@ public final class DevScene {
         int i = -1;
         int count = 0;
         for (EntityType<?> type : List.of(IafEntityRegistry.FIRE_DRAGON.get(), IafEntityRegistry.ICE_DRAGON.get(), IafEntityRegistry.LIGHTNING_DRAGON.get())) {
-            Entity entity = place(level, type, stage.offset(i * 16, 0, 0), 180);
+            Entity entity = place(level, type, stage.offset(i * 12, 0, 20), 180);
             if (entity instanceof EntityDragonBase dragon) {
-                dragon.setAgeInDays(100);
+                dragon.setAgeInDays(40);
                 count++;
             }
             i++;
@@ -261,8 +321,8 @@ public final class DevScene {
     /** Every other living creature of the mod in rows behind the dragons. */
     private static void creatures(ServerPlayer player) {
         ServerLevel level = player.serverLevel();
-        int x = -40;
-        int z = -16;
+        int x = -36;
+        int z = -6;
         int count = 0;
         List<String> skipped = new ArrayList<>();
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
@@ -277,10 +337,10 @@ public final class DevScene {
             }
             place(level, type, stage.offset(x, 0, z), 180);
             count++;
-            x += 8;
-            if (x > 40) {
-                x = -40;
-                z -= 12;
+            x += 7;
+            if (x > 36) {
+                x = -36;
+                z -= 8;
             }
         }
         check("creatures placed", count > 25, count + ", not mobs: " + skipped);
