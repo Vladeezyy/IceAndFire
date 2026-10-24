@@ -47,7 +47,8 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile {
     }
 
     private boolean isGiant() {
-        return this.entityData.get(GIANT);
+        // getDefaultItem runs while the entity data is built (false then, as the field of the original)
+        return this.entityData != null && this.entityData.get(GIANT);
     }
 
     @Override

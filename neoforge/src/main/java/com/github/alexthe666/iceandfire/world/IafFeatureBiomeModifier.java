@@ -19,7 +19,7 @@ import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 import java.util.HashMap;
 
 public class IafFeatureBiomeModifier implements BiomeModifier {
-    private static final RegistryEntry<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = RegistryEntry.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features"));
+    private static final net.neoforged.neoforge.registries.DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = net.neoforged.neoforge.registries.DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features"));
     private final HolderSet<PlacedFeature> features;
     public final HashMap<String, Holder<PlacedFeature>> featureMap = new HashMap<>();
     public IafFeatureBiomeModifier(HolderSet<PlacedFeature> features) {
@@ -30,7 +30,7 @@ public class IafFeatureBiomeModifier implements BiomeModifier {
     @Override
     public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == Phase.ADD) {
-            IafWorldRegistry.addFeatures(biome, featureMap, builder);
+            IafWorldRegistry.addFeatures(biome, featureMap, (step, feature) -> builder.getGenerationSettings().getFeatures(step).add(feature));
         }
     }
 

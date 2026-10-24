@@ -1,28 +1,25 @@
 package dev.vladeezyy.iceandfire.neoforge;
 
-import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
-import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
-import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
+import com.github.alexthe666.iceandfire.entity.tile.*;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-/**
- * Item handlers of the block entities (hoppers and pipes), formerly getCapability overrides.
- */
-@EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
-public class IafCapabilities {
+/** Item handlers of the block entities and mounts (hoppers and pipes), formerly getCapability overrides */
+final class IafCapabilities {
+    private IafCapabilities() {
+    }
 
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.DRAGONFORGE_CORE.get(), TileEntityDragonforge::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.DRAGONFORGE_BRICK.get(), TileEntityDragonforgeBrick::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.DRAGONFORGE_INPUT.get(), TileEntityDragonforgeInput::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.PODIUM.get(), TileEntityPodium::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.IAF_LECTERN.get(), TileEntityLectern::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.PIXIE_JAR.get(), TileEntityJar::getItemHandler);
-        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.FIRE_DRAGON.get(), (dragon, context) -> dragon.getItemHandler());
-        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.ICE_DRAGON.get(), (dragon, context) -> dragon.getItemHandler());
-        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.LIGHTNING_DRAGON.get(), (dragon, context) -> dragon.getItemHandler());
-        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.HIPPOCAMPUS.get(), (hippocampus, context) -> hippocampus.getItemHandler());
+    static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.DRAGONFORGE_CORE.get(), (be, side) -> NeoForgeTransfer.toNeo(be.getItemHandler(side)));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.DRAGONFORGE_BRICK.get(), (be, side) -> NeoForgeTransfer.toNeo(be.getItemHandler(side)));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.DRAGONFORGE_INPUT.get(), (be, side) -> NeoForgeTransfer.toNeo(be.getItemHandler(side)));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.PODIUM.get(), (be, side) -> NeoForgeTransfer.toNeo(be.getItemHandler(side)));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.IAF_LECTERN.get(), (be, side) -> NeoForgeTransfer.toNeo(be.getItemHandler(side)));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IafTileEntityRegistry.PIXIE_JAR.get(), (be, side) -> NeoForgeTransfer.toNeo(be.getItemHandler(side)));
+        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.FIRE_DRAGON.get(), (dragon, context) -> NeoForgeTransfer.toNeo(dragon.getItemHandler()));
+        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.ICE_DRAGON.get(), (dragon, context) -> NeoForgeTransfer.toNeo(dragon.getItemHandler()));
+        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.LIGHTNING_DRAGON.get(), (dragon, context) -> NeoForgeTransfer.toNeo(dragon.getItemHandler()));
+        event.registerEntity(Capabilities.ItemHandler.ENTITY, IafEntityRegistry.HIPPOCAMPUS.get(), (hippocampus, context) -> NeoForgeTransfer.toNeo(hippocampus.getItemHandler()));
     }
 }

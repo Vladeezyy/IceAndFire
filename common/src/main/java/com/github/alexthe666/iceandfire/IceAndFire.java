@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire;
 
+import com.github.alexthe666.iceandfire.misc.IafSoundRegistry;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.client.ClientProxy;
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
@@ -46,9 +47,10 @@ public class IceAndFire {
         PROXY.init();
         // the registry classes queue their entries (Registrar) when loaded, in the original's order
         IafArmorMaterials.MATERIALS.getRegistryKey();
-        
         IafItemRegistry.ITEMS.getRegistryKey();
         IafBlockRegistry.BLOCKS.getRegistryKey();
+        IafItemRegistry.registerSpawnEggs();
+        IafSoundRegistry.registerSoundEvents();
         IafTabRegistry.TAB_REGISTER.getRegistryKey();
         IafEntityRegistry.ENTITIES.getRegistryKey();
         IafTileEntityRegistry.TYPES.getRegistryKey();

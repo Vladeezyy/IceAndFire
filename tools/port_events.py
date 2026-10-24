@@ -16,8 +16,8 @@ BUS = JAVA / "dev/vladeezyy/iceandfire/bus"
 PKG = "dev.vladeezyy.iceandfire.bus"
 BUS_TYPES = {p.stem for p in BUS.glob("*.java")} - {"package-info", "IafBus", "EventIndex", "ClientEventIndex"}
 API = {"SubscribeEvent", "EventPriority", "Event", "ICancellableEvent", "EventBusSubscriber", "Dist", "OnlyIn"}
-SUB = re.compile(r"@SubscribeEvent(?:\(priority\s*=\s*EventPriority\.(\w+)\))?\s*\n(?:\s*@\w+(?:\([^)]*\))?\s*\n)*"
-                 r"\s*public (static )?void (\w+)\(\s*(?:final )?([\w.]+)(?:<[^>]*>)? \w+\)")
+SUB = re.compile(r"^\s*@SubscribeEvent(?:\(\s*priority\s*=\s*EventPriority\.(\w+)\))?[ \t]*(?://[^\n]*)?\n(?:\s*@\w+(?:\([^)]*\))?\s*\n)*"
+                 r"\s*public (static )?void (\w+)\(\s*(?:@\w+ )?(?:final )?(?:@\w+ )?([\w.]+)(?:<[^>]*>)? \w+\)", re.M)
 
 
 def rewrite_imports(src):

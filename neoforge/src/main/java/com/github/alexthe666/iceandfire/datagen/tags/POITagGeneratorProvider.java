@@ -1,6 +1,5 @@
 package com.github.alexthe666.iceandfire.datagen.tags;
 
-import static com.github.alexthe666.iceandfire.datagen.tags.POITagGenerator.*;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.datagen.IafPOITypes;

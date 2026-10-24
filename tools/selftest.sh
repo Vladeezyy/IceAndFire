@@ -4,10 +4,10 @@ cd "$(dirname "$0")/.."
 # A crashed run can leave its server (and port 25565) behind: stop the test servers of this project
 . tools/common.sh
 kill_runs 'selftest'
-rm -rf run/world build-selftest.log
+rm -rf $RUN/world build-selftest.log
 # The watchdog stays on here (tools/stresstest.sh turns it off)
 set_prop max-tick-time 60000
-timed 1200 ./gradlew runSelftest --console=plain "$@" > build-selftest.log 2>&1 < /dev/null
+timed 1200 ./gradlew :$LOADER:runSelftest --console=plain "$@" > build-selftest.log 2>&1 < /dev/null
 echo "exit $?"
 grep -a -E '\[selftest\] (CHECK|DONE)' build-selftest.log | sed -E 's/^.*\[selftest\] //'
 echo "--- errors"

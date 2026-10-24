@@ -15,7 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 
 public class IafMobSpawnBiomeModifier implements BiomeModifier {
-    private static final RegistryEntry<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = RegistryEntry.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
+    private static final net.neoforged.neoforge.registries.DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = net.neoforged.neoforge.registries.DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
 
     public IafMobSpawnBiomeModifier() {
     }
@@ -23,7 +23,7 @@ public class IafMobSpawnBiomeModifier implements BiomeModifier {
     @Override
     public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == Phase.ADD) {
-            IafEntityRegistry.addSpawners(biome, builder);
+            IafEntityRegistry.addSpawners(biome, (category, spawner) -> builder.getMobSpawnSettings().getSpawner(category).add(spawner));
         }
     }
 

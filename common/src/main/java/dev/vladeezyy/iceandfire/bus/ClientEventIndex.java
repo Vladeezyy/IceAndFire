@@ -11,6 +11,7 @@ public final class ClientEventIndex {
         IafBus.add(EntityMountEvent.class, EventPriority.NORMAL, clientEvents::onEntityMount);
         IafBus.add(EntityTickEvent.Pre.class, EventPriority.NORMAL, clientEvents::onLivingUpdate);
         IafBus.add(FMLClientSetupEvent.class, EventPriority.NORMAL, com.github.alexthe666.iceandfire.client.IafClientSetup::setupClient);
+        IafBus.add(RenderLevelStageEvent.class, EventPriority.LOWEST, clientEvents::renderWorldLastEvent);
         IafBus.add(RenderLivingEvent.Post.class, EventPriority.NORMAL, clientEvents::onPostRenderLiving);
         IafBus.add(RenderLivingEvent.Pre.class, EventPriority.NORMAL, clientEvents::onPreRenderLiving);
         IafBus.add(RenderPlayerEvent.Pre.class, EventPriority.NORMAL, playerRenderEvents::playerRender);

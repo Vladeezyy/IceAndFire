@@ -27,6 +27,7 @@ public final class EventIndex {
         IafBus.add(PlayerEvent.PlayerLoggedOutEvent.class, EventPriority.NORMAL, serverEvents::onPlayerLeaveEvent);
         IafBus.add(PlayerEvent.StartTracking.class, EventPriority.NORMAL, com.github.alexthe666.iceandfire.entity.props.CapabilityHandler::onPlayerStartTracking);
         IafBus.add(PlayerInteractEvent.EntityInteract.class, EventPriority.NORMAL, serverEvents::onEntityInteract);
+        IafBus.add(PlayerInteractEvent.LeftClickEmpty.class, EventPriority.NORMAL, serverEvents::onPlayerLeftClick);
         IafBus.add(PlayerInteractEvent.RightClickBlock.class, EventPriority.NORMAL, serverEvents::onPlayerRightClick);
         IafBus.add(PlayerInteractEvent.RightClickItem.class, EventPriority.NORMAL, serverEvents::onEntityUseItem);
         IafBus.add(ProjectileImpactEvent.class, EventPriority.NORMAL, serverEvents::onArrowCollide);

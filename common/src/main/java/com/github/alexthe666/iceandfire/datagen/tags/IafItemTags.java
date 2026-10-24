@@ -20,11 +20,12 @@ public final class IafItemTags {
     }
 
     // the c: tag folders (NeoForge's ItemTagsProvider constants before the split)
-    private static final String STORAGE_BLOCK_PATH = "storage_blocks";
-    private static final String GEMS = "gems";
-    private static final String INGOTS_PATH = "ingots";
-    private static final String NUGGETS_PATH = "nuggets";
-    private static final String BONES_PATH = "bones";
+    public static final String ORES_PATH = "ores";
+    public static final String STORAGE_BLOCK_PATH = "storage_blocks";
+    public static final String GEMS = "gems";
+    public static final String INGOTS_PATH = "ingots";
+    public static final String NUGGETS_PATH = "nuggets";
+    public static final String BONES_PATH = "bones";
 
     public static TagKey<Item> CHARRED_BLOCKS = createKey("charred_blocks");
     public static TagKey<Item> FROZEN_BLOCKS = createKey("frozen_blocks");
@@ -62,11 +63,11 @@ public final class IafItemTags {
     public static TagKey<Item> TEMPT_HIPPOCAMPUS = createKey("tempt_hippocampus");
     public static TagKey<Item> TEMPT_HIPPOGRYPH = createKey("tempt_hippogryph");
 
-    private static TagKey<Item> createKey(final String name) {
+    public static TagKey<Item> createKey(final String name) {
         return TagKey.create(net.minecraft.core.registries.Registries.ITEM, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
-    private static TagKey<Item> createForgeKey(final String name) {
+    public static TagKey<Item> createForgeKey(final String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 }

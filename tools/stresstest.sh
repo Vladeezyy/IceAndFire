@@ -4,12 +4,12 @@
 cd "$(dirname "$0")/.."
 . tools/common.sh
 kill_runs 'selftest|stress'
-rm -rf run/world build-stress.log
+rm -rf $RUN/world build-stress.log
 # Synchronous generation of 16 chunks per tick can exceed the 60 s of the watchdog: the test measures, the watchdog would stop it
 set_prop max-tick-time -1
 # SEED=<seed> repeats a world (the log prints the seed of every run)
 set_prop level-seed "${SEED:-}"
-timed 1800 ./gradlew runStress --console=plain "$@" > build-stress.log 2>&1 < /dev/null
+timed 1800 ./gradlew :$LOADER:runStress --console=plain "$@" > build-stress.log 2>&1 < /dev/null
 echo "exit $?"
 grep -a '\[stress\]' build-stress.log | sed -E 's/^.*\[stress\] //'
 echo "--- errors"
