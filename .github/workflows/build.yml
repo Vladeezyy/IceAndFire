@@ -1,5 +1,6 @@
 # Build on every push and pull request, then the functional self-test (tools/selftest.sh) on a headless dev server.
-# The jars and the self-test log are kept as artifacts.
+# Rampart (Citadel's model and animation classes) comes from Maven Local in this build, so it is built first from
+# Vladeezyy/rampart main. The jars and the self-test log are kept as artifacts.
 name: Build
 
 on:
@@ -19,12 +20,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/checkout@v4
+        with:
+          repository: Vladeezyy/rampart
+          ref: main
+          path: rampart
+
       # java_version from gradle.properties (21 for 1.21.x, 25 for 26.x); org.gradle.java.home points at a JDK on
       # the dev Mac and does not exist here
       - name: Prepare gradle.properties
         id: props
         run: |
-          sed -i '/^org\.gradle\.java\.home=/d' gradle.properties
+          sed -i '/^org\.gradle\.java\.home=/d' gradle.properties rampart/gradle.properties
           v=$(sed -n 's/^java_version=//p' gradle.properties | tr -d '[:space:]')
           if [ -z "$v" ]; then
             case "$(sed -n 's/^minecraft_version=//p' gradle.properties)" in 26*) v=25 ;; *) v=21 ;; esac
@@ -37,6 +44,9 @@ jobs:
           java-version: ${{ steps.props.outputs.java }}
 
       - uses: gradle/actions/setup-gradle@v4
+
+      - name: Rampart into Maven Local
+        run: cd rampart && chmod +x gradlew && ./gradlew publishToMavenLocal --console=plain
 
       - name: Build
         run: chmod +x gradlew && ./gradlew build --console=plain
