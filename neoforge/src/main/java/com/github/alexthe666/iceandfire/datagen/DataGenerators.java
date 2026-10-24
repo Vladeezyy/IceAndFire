@@ -36,14 +36,14 @@ public class DataGenerators {
         DatapackBuiltinEntriesProvider datapackProvider = new RegistryDataGenerator(output, provider);
         CompletableFuture<HolderLookup.Provider> lookupProvider = datapackProvider.getRegistryProvider();
         generator.addProvider(event.includeServer(), datapackProvider);
-        generator.addProvider(event.includeServer(), new BannerPatternTagGenerator(output, provider, helper));
-        generator.addProvider(event.includeServer(), new POITagGenerator(output, provider, helper));
-        generator.addProvider(event.includeServer(), new IafBiomeTagGenerator(output, lookupProvider, helper));
+        generator.addProvider(event.includeServer(), new BannerPatternTagGeneratorProvider(output, provider, helper));
+        generator.addProvider(event.includeServer(), new POITagGeneratorProvider(output, provider, helper));
+        generator.addProvider(event.includeServer(), new IafBiomeTagGeneratorProvider(output, lookupProvider, helper));
         generator.addProvider(event.includeClient(), new AtlasGenerator(output, provider, helper));
-        BlockTagsProvider blocktags  = new IafBlockTags(output, provider, helper);
+        BlockTagsProvider blocktags  = new IafBlockTagsProvider(output, provider, helper);
         generator.addProvider(event.includeServer(), blocktags);
-        generator.addProvider(event.includeServer(), new IafItemTags(output, provider, blocktags.contentsGetter(), helper));
-        generator.addProvider(event.includeServer(), new IafEntityTags(output, provider, helper));
+        generator.addProvider(event.includeServer(), new IafItemTagsProvider(output, provider, blocktags.contentsGetter(), helper));
+        generator.addProvider(event.includeServer(), new IafEntityTagsProvider(output, provider, helper));
         generator.addProvider(event.includeServer(), new IafRecipes(output, provider));
 
     }

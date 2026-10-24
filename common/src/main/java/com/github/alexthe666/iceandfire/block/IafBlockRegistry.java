@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.block;
 
 import net.minecraft.util.valueproviders.ConstantInt;
 import dev.vladeezyy.iceandfire.platform.BlockEntry;
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.enums.EnumDragonEgg;
 import com.github.alexthe666.iceandfire.item.BlockItemWithRender;
@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.neoforged.fml.common.Mod;
 import dev.vladeezyy.iceandfire.platform.Registrar;
 import net.minecraft.core.registries.BuiltInRegistries;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;

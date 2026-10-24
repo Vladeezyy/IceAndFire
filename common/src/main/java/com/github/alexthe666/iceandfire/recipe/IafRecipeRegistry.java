@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.recipe;
 
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.*;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
@@ -19,9 +19,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
+import dev.vladeezyy.iceandfire.bus.FMLCommonSetupEvent;
 import dev.vladeezyy.iceandfire.platform.Registrar;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 import org.jetbrains.annotations.NotNull;

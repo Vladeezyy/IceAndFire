@@ -1,11 +1,10 @@
 package com.github.alexthe666.iceandfire.misc;
 
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 

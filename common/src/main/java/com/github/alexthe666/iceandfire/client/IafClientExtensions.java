@@ -4,9 +4,9 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.item.IafClientItem;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.world.item.Item;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.Dist;
+import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 

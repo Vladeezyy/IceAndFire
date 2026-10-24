@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.event;
 
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EntityTickEvent;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.ClientProxy;
@@ -24,17 +24,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import dev.vladeezyy.iceandfire.bus.Dist;
+import dev.vladeezyy.iceandfire.bus.OnlyIn;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.event.ViewportEvent;
-import net.neoforged.neoforge.event.entity.EntityMountEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import dev.vladeezyy.iceandfire.bus.RenderLivingEvent;
+import dev.vladeezyy.iceandfire.bus.ScreenEvent;
+import dev.vladeezyy.iceandfire.bus.ViewportEvent;
+import dev.vladeezyy.iceandfire.bus.EntityMountEvent;
+import dev.vladeezyy.iceandfire.bus.LivingEvent;
+import dev.vladeezyy.iceandfire.bus.EventPriority;
+import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;

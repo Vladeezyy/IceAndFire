@@ -1,6 +1,5 @@
 package com.github.alexthe666.iceandfire;
 
-import net.neoforged.fml.common.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.config.BiomeConfig;
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
@@ -13,26 +12,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
 
 
-@EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CommonProxy {
 
-    @SubscribeEvent
-    public static void onModConfigEvent(final ModConfigEvent.Loading event) {
-        final ModConfig config = event.getConfig();
+    /** The loader calls this when a config of the mod is loaded or changed */
+    public static void onConfigLoaded(boolean client) {
         // Rebake the configs when they change
-        if (config.getSpec() == ConfigHolder.CLIENT_SPEC) {
-            IafConfig.bakeClient(config);
-        } else if (config.getSpec() == ConfigHolder.SERVER_SPEC) {
+        if (client) {
+            IafConfig.bakeClient();
+        } else {
             // We only need to initialize the biome config on the server
             BiomeConfig.init();
-            IafConfig.bakeServer(config);
+            IafConfig.bakeServer();
         }
     }
 
@@ -114,7 +106,6 @@ public class CommonProxy {
     }
 
     public void setup() {
-        NeoForge.EVENT_BUS.register(new ServerEvents());
     }
 
     public void clientInit() {

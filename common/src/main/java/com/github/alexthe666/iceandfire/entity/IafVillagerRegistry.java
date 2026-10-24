@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.entity;
 
 import java.util.Optional;
 import net.minecraft.world.item.trading.ItemCost;
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.datagen.IafProcessorLists;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
-import net.neoforged.fml.common.Mod;
 import dev.vladeezyy.iceandfire.platform.Registrar;
 import net.minecraft.core.registries.BuiltInRegistries;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;

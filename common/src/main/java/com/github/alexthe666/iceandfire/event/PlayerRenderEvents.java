@@ -8,8 +8,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.event.RenderPlayerEvent;
-import net.neoforged.bus.api.SubscribeEvent;
+import dev.vladeezyy.iceandfire.bus.RenderPlayerEvent;
+import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 
 import java.util.UUID;
 

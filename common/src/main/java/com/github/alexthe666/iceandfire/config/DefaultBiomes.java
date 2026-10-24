@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.config;
 
 import dev.vladeezyy.rampart.config.biome.BiomeEntryType;
 import dev.vladeezyy.rampart.config.biome.SpawnBiomeData;
-import net.neoforged.neoforge.common.Tags;
+import dev.vladeezyy.iceandfire.platform.Tags;
 
 import net.minecraft.tags.BiomeTags;
 import static net.neoforged.neoforge.common.Tags.Biomes.*;

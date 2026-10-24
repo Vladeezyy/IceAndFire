@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 
 import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -32,11 +32,10 @@ import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
+import dev.vladeezyy.iceandfire.bus.Dist;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
+import dev.vladeezyy.iceandfire.bus.FMLClientSetupEvent;
 
 import java.io.IOException;
 

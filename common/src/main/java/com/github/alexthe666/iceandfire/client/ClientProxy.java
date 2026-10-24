@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client;
 
-import net.neoforged.fml.common.EventBusSubscriber;
+import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.CommonProxy;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.gui.GuiMyrmexAddRoom;
@@ -22,10 +22,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import dev.vladeezyy.iceandfire.bus.Dist;
+import dev.vladeezyy.iceandfire.bus.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.fml.common.Mod;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,8 +51,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         IafKeybindRegistry.init();
-        NeoForge.EVENT_BUS.register(new PlayerRenderEvents());
-        NeoForge.EVENT_BUS.register(new ClientEvents());
     }
 
     @Override

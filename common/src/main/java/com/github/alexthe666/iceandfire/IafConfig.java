@@ -3,7 +3,6 @@ package com.github.alexthe666.iceandfire;
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.neoforged.fml.config.ModConfig;
 
 public class IafConfig {
     public static boolean customMainMenu = true;
@@ -144,7 +143,7 @@ public class IafConfig {
     public static int villagerHouseWeight = 5;
     public static boolean allowAttributeOverriding = true;
 
-    public static void bakeClient(final ModConfig config) {
+    public static void bakeClient() {
         try {
             customMainMenu = ConfigHolder.CLIENT.customMainMenu.get();
             useVanillaFont = ConfigHolder.CLIENT.useVanillaFont.get();
@@ -164,7 +163,7 @@ public class IafConfig {
         }
     }
 
-    public static void bakeServer(final ModConfig config) {
+    public static void bakeServer() {
         try {
             generateDragonSkeletons = ConfigHolder.SERVER.generateDragonSkeletons.get();
             generateDragonSkeletonChance = ConfigHolder.SERVER.generateDragonSkeletonChance.get();

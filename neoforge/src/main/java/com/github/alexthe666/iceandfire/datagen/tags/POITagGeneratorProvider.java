@@ -1,5 +1,7 @@
 package com.github.alexthe666.iceandfire.datagen.tags;
 
+import static com.github.alexthe666.iceandfire.datagen.tags.POITagGenerator.*;
+
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.datagen.IafPOITypes;
 import net.minecraft.core.HolderLookup;
@@ -15,9 +17,9 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
-public class POITagGenerator extends PoiTypeTagsProvider {
+public class POITagGeneratorProvider extends PoiTypeTagsProvider {
 
-    public POITagGenerator(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+    public POITagGeneratorProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, pLookupProvider, IceAndFire.MODID, existingFileHelper);
     }
 
@@ -26,9 +28,6 @@ public class POITagGenerator extends PoiTypeTagsProvider {
         this.tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(IafPOITypes.SCRIBE_POI);
     }
 
-    private static TagKey<PoiType> create(String name) {
-        return TagKey.create(Registries.POINT_OF_INTEREST_TYPE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
-    }
 
     @Override
     public String getName() {

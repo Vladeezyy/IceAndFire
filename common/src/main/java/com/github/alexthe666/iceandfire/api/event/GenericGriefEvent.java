@@ -2,8 +2,8 @@ package com.github.alexthe666.iceandfire.api.event;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import dev.vladeezyy.iceandfire.bus.LivingEvent;
+import dev.vladeezyy.iceandfire.bus.ICancellableEvent;
 
 /**
  * GenericGriefEvent is fired right before an entity destroys or modifies blocks in some aspect. <br>

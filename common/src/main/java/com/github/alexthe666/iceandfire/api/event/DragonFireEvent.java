@@ -2,8 +2,8 @@ package com.github.alexthe666.iceandfire.api.event;
 
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import dev.vladeezyy.iceandfire.bus.LivingEvent;
+import dev.vladeezyy.iceandfire.bus.ICancellableEvent;
 
 /**
  * DragonFireEvent is fired right before a Dragon breathes fire or ice. <br>

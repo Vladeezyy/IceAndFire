@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.client.model.util;
 
 import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.neoforged.api.distmarker.Dist;
+import dev.vladeezyy.iceandfire.bus.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
 
 public enum EnumSeaSerpentAnimations {
