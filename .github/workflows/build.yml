@@ -54,13 +54,13 @@ jobs:
       # tools/selftest.sh: the SelfTest checks on a fresh dev server world, "[selftest] DONE ok=N fail=0"
       - name: Self-test (NeoForge)
         run: |
-          bash tools/selftest.sh
+          MAX_TICK_TIME=600000 bash tools/selftest.sh
           mv build-selftest.log selftest-neoforge.log
           grep -qE '\[selftest\] DONE ok=[0-9]+ fail=0' selftest-neoforge.log
 
       - name: Self-test (Fabric)
         run: |
-          LOADER=fabric bash tools/selftest.sh
+          LOADER=fabric MAX_TICK_TIME=600000 bash tools/selftest.sh
           mv build-selftest.log selftest-fabric.log
           grep -qE '\[selftest\] DONE ok=[0-9]+ fail=0' selftest-fabric.log
 

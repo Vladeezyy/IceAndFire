@@ -266,7 +266,13 @@ public class SelfTest {
         for (int n = 0; n < 16 && genIndex < total && System.nanoTime() - start < 2_000_000_000L; n++, genIndex++) {
             int cx = 500 + genIndex % side - GEN_RADIUS;
             int cz = 500 + genIndex / side - GEN_RADIUS;
+            long chunkStart = System.nanoTime();
             level.getChunk(cx, cz);
+            long ms = (System.nanoTime() - chunkStart) / 1_000_000L;
+            if (ms > 5000) {
+                IceAndFire.LOGGER.warn("[selftest] slow chunk {} {}: {} ms, structures {}", cx, cz, ms,
+                    level.structureManager().startsForStructure(new net.minecraft.world.level.ChunkPos(cx, cz), structure -> true).size());
+            }
         }
         if (genIndex >= total) {
             genIndex = -1;
