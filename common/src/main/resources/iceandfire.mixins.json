@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.github.alexthe666.iceandfire.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ServerLevelEntityCallbacksMixin",
+    "gen.NoLakesInStructuresMixin",
+    "gen.WorldGenRegionMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

@@ -1,0 +1,101 @@
+plugins {
+    id 'multiloader-loader'
+    id 'fabric-loom'
+}
+
+repositories {
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net'
+    }
+    maven { url = 'https://maven.blamejared.com/' } // JEI
+    mavenLocal() { content { includeGroup 'dev.vladeezyy.rampart' } } // Rampart: ./gradlew publishToMavenLocal there
+}
+
+// Tests: the shared checks (common/src/selftest) and the Fabric wiring (src/selftest), a second mod in dev runs only
+sourceSets {
+    selftest {
+        java.srcDir rootProject.file('common/src/selftest/java')
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
+    }
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "dev.vladeezyy.rampart:rampart-fabric:${rampart_version}"
+    // JEI common API (Mojang names, compile only)
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly 'io.github.llamalad7:mixinextras-common:0.5.0'
+    annotationProcessor 'io.github.llamalad7:mixinextras-common:0.5.0'
+}
+
+loom {
+    accessWidenerPath = file('src/main/resources/iceandfire.accesswidener')
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+        iceandfire_selftest {
+            sourceSet sourceSets.selftest
+        }
+    }
+    runs {
+        client {
+            client()
+            runDir('run')
+        }
+        server {
+            server()
+            runDir('run')
+        }
+        // tools/selftest.sh LOADER=fabric
+        selftest {
+            server()
+            name 'Self Test'
+            source sourceSets.selftest
+            vmArg '-Diceandfire.selftest=true'
+            runDir('run')
+        }
+        // tools/stresstest.sh LOADER=fabric
+        stress {
+            server()
+            name 'Stress'
+            source sourceSets.selftest
+            vmArg '-Diceandfire.stress=true'
+            runDir('run')
+        }
+        // tools/scenetest.sh LOADER=fabric
+        scene {
+            client()
+            name 'Scene'
+            source sourceSets.selftest
+            vmArg '-Diceandfire.scene=true'
+            runDir('run')
+        }
+        // tools/nettest.sh LOADER=fabric
+        netserver {
+            server()
+            name 'Net Server'
+            source sourceSets.selftest
+            vmArg '-Diceandfire.nettest=server'
+            runDir('run-netserver')
+        }
+        netclient {
+            client()
+            name 'Net Client'
+            source sourceSets.selftest
+            vmArg '-Diceandfire.nettest=client'
+            programArgs '--quickPlayMultiplayer', 'localhost:25570', '--username', 'NetTester'
+            runDir('run')
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach { options.compilerArgs += ['-Xmaxerrs', '10000'] }

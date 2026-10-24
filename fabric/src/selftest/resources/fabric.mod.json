@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "iceandfire_selftest",
+  "version": "1.0.0",
+  "name": "Ice and Fire tests (dev only)",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.vladeezyy.iceandfire.fabric.selftest.FabricTestHooks"],
+    "client": ["dev.vladeezyy.iceandfire.fabric.selftest.FabricTestHooksClient"]
+  },
+  "depends": {
+    "iceandfire": "*"
+  }
+}
