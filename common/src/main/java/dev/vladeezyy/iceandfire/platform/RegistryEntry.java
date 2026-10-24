@@ -15,12 +15,12 @@ import java.util.function.Supplier;
  * attributes, armor materials...), pass {@link #holder()}, the registry's own {@code Holder.Reference}. Vanilla compares
  * holders by identity, so a wrapper holder stops matching once the game has saved and loaded the value.
  */
-public final class RegistryEntry<R, T extends R> implements Supplier<T> {
+public class RegistryEntry<R, T extends R> implements Supplier<T> {
     private final ResourceKey<? extends Registry<R>> registryKey;
     private final ResourceKey<R> key;
     private volatile Holder<R> holder;
 
-    RegistryEntry(ResourceKey<? extends Registry<R>> registryKey, ResourceLocation id) {
+    protected RegistryEntry(ResourceKey<? extends Registry<R>> registryKey, ResourceLocation id) {
         this.registryKey = registryKey;
         this.key = ResourceKey.create(registryKey, id);
     }

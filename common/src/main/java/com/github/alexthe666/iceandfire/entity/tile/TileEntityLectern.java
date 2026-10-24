@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
-import net.neoforged.neoforge.items.IItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.SidedInvWrapper;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.enums.EnumBestiaryPages;
@@ -73,8 +73,8 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
     public float pageHelp1;
     public float pageHelp2;
     public EnumBestiaryPages[] selectedPages = new EnumBestiaryPages[3];
-    private final IItemHandler handlerUp = new SidedInvWrapper(this, Direction.UP);
-    private final IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
+    private final ItemHandler handlerUp = new SidedInvWrapper(this, Direction.UP);
+    private final ItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
     private final Random localRand = new Random();
     private NonNullList<ItemStack> stacks = NonNullList.withSize(3, ItemStack.EMPTY);
 
@@ -304,7 +304,7 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
 
     /** Item handler of a side, registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler(@Nullable Direction facing) {
+    public ItemHandler getItemHandler(@Nullable Direction facing) {
         if (this.remove || facing == null) {
             return null;
         }

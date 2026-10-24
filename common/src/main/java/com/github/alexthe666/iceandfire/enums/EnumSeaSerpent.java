@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.enums;
 
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
+import dev.vladeezyy.iceandfire.platform.BlockEntry;
+import dev.vladeezyy.iceandfire.platform.ItemEntry;
 import com.github.alexthe666.iceandfire.block.BlockSeaSerpentScales;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.item.IafArmorMaterial;
@@ -28,12 +28,12 @@ public enum EnumSeaSerpent {
     public String resourceName;
     public ChatFormatting color;
     public IafArmorMaterial armorMaterial;
-    public DeferredItem<Item> scale;
-    public DeferredItem<Item> helmet;
-    public DeferredItem<Item> chestplate;
-    public DeferredItem<Item> leggings;
-    public DeferredItem<Item> boots;
-    public DeferredBlock<Block> scaleBlock;
+    public ItemEntry<Item> scale;
+    public ItemEntry<Item> helmet;
+    public ItemEntry<Item> chestplate;
+    public ItemEntry<Item> leggings;
+    public ItemEntry<Item> boots;
+    public BlockEntry<Block> scaleBlock;
 
     EnumSeaSerpent(ChatFormatting color) {
         this.resourceName = this.name().toLowerCase(Locale.ROOT);

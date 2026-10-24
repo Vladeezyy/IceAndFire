@@ -1,28 +1,28 @@
 package com.github.alexthe666.iceandfire.config;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import dev.vladeezyy.iceandfire.platform.ConfigSpec;
 
 public class ClientConfig {
 
-    public final ModConfigSpec.BooleanValue customMainMenu;
-    public final ModConfigSpec.BooleanValue useVanillaFont;
-    public final ModConfigSpec.BooleanValue dragonAuto3rdPerson;
+    public final ConfigSpec.BooleanValue customMainMenu;
+    public final ConfigSpec.BooleanValue useVanillaFont;
+    public final ConfigSpec.BooleanValue dragonAuto3rdPerson;
 
-    public ClientConfig(final ModConfigSpec.Builder builder) {
+    public ClientConfig(final ConfigSpec.Builder builder) {
         builder.push("general");
         this.customMainMenu = buildBoolean(builder, "Custom main menu", "all", true, "Whether to display the dragon on the main menu or not");
         this.dragonAuto3rdPerson = buildBoolean(builder, "Auto 3rd person when riding dragon", "all", true, "True if riding dragons should make the player take a 3rd person view automatically.");
         this.useVanillaFont = buildBoolean(builder, "Use Vanilla Font", "all", false, "Whether to use the vanilla font in the bestiary or not");    }
 
-    private static ModConfigSpec.BooleanValue buildBoolean(ModConfigSpec.Builder builder, String name, String catagory, boolean defaultValue, String comment){
+    private static ConfigSpec.BooleanValue buildBoolean(ConfigSpec.Builder builder, String name, String catagory, boolean defaultValue, String comment){
         return builder.comment(comment).translation(name).define(name, defaultValue);
     }
 
-    private static ModConfigSpec.IntValue buildInt(ModConfigSpec.Builder builder, String name, String catagory, int defaultValue, int min, int max, String comment){
+    private static ConfigSpec.IntValue buildInt(ConfigSpec.Builder builder, String name, String catagory, int defaultValue, int min, int max, String comment){
         return builder.comment(comment).translation(name).defineInRange(name, defaultValue, min, max);
     }
 
-    private static ModConfigSpec.DoubleValue buildDouble(ModConfigSpec.Builder builder, String name, String catagory, double defaultValue, double min, double max, String comment){
+    private static ConfigSpec.DoubleValue buildDouble(ConfigSpec.Builder builder, String name, String catagory, double defaultValue, double min, double max, String comment){
         return builder.comment(comment).translation(name).defineInRange(name, defaultValue, min, max);
     }
 }

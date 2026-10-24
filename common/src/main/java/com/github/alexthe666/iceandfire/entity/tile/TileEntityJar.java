@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityPixie;
@@ -44,7 +44,7 @@ public class TileEntityJar extends BlockEntity {
     public NonNullList<ItemStack> pixieItems = NonNullList.withSize(1, ItemStack.EMPTY);
     public float rotationYaw;
     public float prevRotationYaw;
-    private final IItemHandler downHandler = new PixieJarInvWrapper(this);
+    private final ItemHandler downHandler = new PixieJarInvWrapper(this);
     private final Random rand;
 
     public TileEntityJar(BlockPos pos, BlockState state) {
@@ -150,7 +150,7 @@ public class TileEntityJar extends BlockEntity {
 
     /** Pixie dust comes out at the bottom; registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler(@Nullable Direction facing) {
+    public ItemHandler getItemHandler(@Nullable Direction facing) {
         return facing == Direction.DOWN ? downHandler : null;
     }
 }

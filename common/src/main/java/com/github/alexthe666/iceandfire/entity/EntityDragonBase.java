@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.entity;
 
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.items.IItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -88,7 +88,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import dev.vladeezyy.iceandfire.platform.transfer.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -235,7 +235,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     private EntityDragonPart tail4Part;
     private boolean isOverAir;
 
-    private IItemHandler itemHandler = null;
+    private ItemHandler itemHandler = null;
 
     public EntityDragonBase(EntityType t, Level world, DragonType type, double minimumDamage, double maximumDamage, double minimumHealth, double maximumHealth, double minimumSpeed, double maximumSpeed) {
         super(t, world);
@@ -842,7 +842,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
 
     /** Inventory for hoppers and other mods; registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler() {
+    public ItemHandler getItemHandler() {
         return this.isAlive() ? itemHandler : null;
     }
 

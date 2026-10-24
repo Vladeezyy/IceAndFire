@@ -9,4 +9,7 @@ public interface PacketContext {
 
     /** Runs the work on the game thread */
     void enqueueWork(Runnable work);
+
+    /** Which way the packet travels (to the client or to the server) */
+    net.minecraft.network.protocol.PacketFlow flow();
 }

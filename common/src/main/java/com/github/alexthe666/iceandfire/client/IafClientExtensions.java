@@ -8,14 +8,14 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 
 @EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class IafClientExtensions {
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        for (DeferredHolder<Item, ? extends Item> holder : IafItemRegistry.ITEMS.getEntries()) {
+        for (RegistryEntry<Item, ? extends Item> holder : IafItemRegistry.ITEMS.getEntries()) {
             Item item = holder.get();
             if (item instanceof IafClientItem clientItem) {
                 clientItem.registerClientExtensions(extensions -> event.registerItem(extensions, item));

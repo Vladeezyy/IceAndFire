@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.enums;
 
-import net.neoforged.neoforge.registries.DeferredItem;
+import dev.vladeezyy.iceandfire.platform.ItemEntry;
 import com.github.alexthe666.iceandfire.item.IafArmorMaterial;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.ItemScaleArmor;
@@ -26,10 +26,10 @@ public enum EnumDragonArmor {
     public IafArmorMaterial material;
     public int armorId;
     public EnumDragonEgg eggType;
-    public DeferredItem<Item> helmet;
-    public DeferredItem<Item> chestplate;
-    public DeferredItem<Item> leggings;
-    public DeferredItem<Item> boots;
+    public ItemEntry<Item> helmet;
+    public ItemEntry<Item> chestplate;
+    public ItemEntry<Item> leggings;
+    public ItemEntry<Item> boots;
     public IafArmorMaterial armorMaterial;
 
     EnumDragonArmor(int armorId, EnumDragonEgg eggType) {

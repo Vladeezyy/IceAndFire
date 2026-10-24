@@ -12,10 +12,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 
 public class IafMobSpawnBiomeModifier implements BiomeModifier {
-    private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
+    private static final RegistryEntry<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = RegistryEntry.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
 
     public IafMobSpawnBiomeModifier() {
     }

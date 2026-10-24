@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.event.ServerEvents;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,7 +29,7 @@ public class MessageSwingArm implements CustomPacketPayload {
         public Handler() {
         }
 
-        public static void handle(MessageSwingArm message, IPayloadContext context) {
+        public static void handle(MessageSwingArm message, PacketContext context) {
             Player player = context.player();
             if (player != null) {
                 ServerEvents.onLeftClick(player, player.getItemInHand(InteractionHand.MAIN_HAND));

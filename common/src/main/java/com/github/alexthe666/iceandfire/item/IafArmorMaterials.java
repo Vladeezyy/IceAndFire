@@ -3,8 +3,8 @@ package com.github.alexthe666.iceandfire.item;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ArmorMaterial;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import dev.vladeezyy.iceandfire.platform.Registrar;
 
 public class IafArmorMaterials {
-    public static final DeferredRegister<ArmorMaterial> MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, IceAndFire.MODID);
+    public static final Registrar<ArmorMaterial> MATERIALS = Registrar.create(Registries.ARMOR_MATERIAL, IceAndFire.MODID);
 }

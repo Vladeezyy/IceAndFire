@@ -5,7 +5,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDebugRenderer;
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.MNode;
@@ -61,7 +61,7 @@ public class MessageSyncPathReached implements CustomPacketPayload {
         return LogicalSide.CLIENT;
     }
 
-    public boolean handle(IPayloadContext context) {
+    public boolean handle(PacketContext context) {
         context.enqueueWork(() -> {
 
             if (context.flow() == PacketFlow.CLIENTBOUND) {

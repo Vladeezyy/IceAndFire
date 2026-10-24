@@ -24,8 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -45,8 +45,8 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
     private static final int[] slotsTop = new int[]{0};
     public int ticksExisted;
     public int prevTicksExisted;
-    IItemHandler handlerUp = new SidedInvWrapper(this, net.minecraft.core.Direction.UP);
-    IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
+    ItemHandler handlerUp = new SidedInvWrapper(this, net.minecraft.core.Direction.UP);
+    ItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
 
     public TileEntityPodium(BlockPos pos, BlockState state) {
@@ -221,7 +221,7 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
 
     /** Item handler of a side, registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler(@Nullable Direction facing) {
+    public ItemHandler getItemHandler(@Nullable Direction facing) {
         if (this.remove || facing == null) {
             return null;
         }

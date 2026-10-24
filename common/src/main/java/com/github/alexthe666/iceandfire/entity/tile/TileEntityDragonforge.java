@@ -34,8 +34,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -63,9 +63,9 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     public int fireType;
     public int cookTime;
     public int lastDragonFlameTimer = 0;
-    private final IItemHandler handlerUp = new SidedInvWrapper(this, Direction.UP);
-    private final IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
-    private final IItemHandler handlerSide = new SidedInvWrapper(this, Direction.NORTH);
+    private final ItemHandler handlerUp = new SidedInvWrapper(this, Direction.UP);
+    private final ItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
+    private final ItemHandler handlerSide = new SidedInvWrapper(this, Direction.NORTH);
     private NonNullList<ItemStack> forgeItemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     private boolean prevAssembled;
     private boolean canAddFlameAgain = true;
@@ -370,7 +370,7 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
 
     /** Item handler of a side, registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler(@Nullable Direction facing) {
+    public ItemHandler getItemHandler(@Nullable Direction facing) {
         if (this.remove || facing == null) {
             return null;
         }

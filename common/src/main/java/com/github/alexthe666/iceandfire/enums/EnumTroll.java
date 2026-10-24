@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.enums;
 
-import net.neoforged.neoforge.registries.DeferredItem;
+import dev.vladeezyy.iceandfire.platform.ItemEntry;
 import com.github.alexthe666.iceandfire.item.IafArmorMaterial;
 import com.github.alexthe666.iceandfire.config.BiomeConfig;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
@@ -51,7 +51,7 @@ public enum EnumTroll {
 
         //leather = IafItemRegistry.deferredRegister.register("troll_leather_" + name().toLowerCase(Locale.ROOT), () -> new ItemTrollLeather(this));
 
-        //Function<EquipmentSlot, DeferredItem<Item>> genArmor = (slot) ->
+        //Function<EquipmentSlot, ItemEntry<Item>> genArmor = (slot) ->
         //        IafItemRegistry.deferredRegister.register(ItemTrollArmor.getName(this, slot), () -> new ItemTrollArmor(this, material, slot));
         //helmet = genArmor.apply(EquipmentSlot.HEAD);
         //chestplate = genArmor.apply(EquipmentSlot.CHEST);

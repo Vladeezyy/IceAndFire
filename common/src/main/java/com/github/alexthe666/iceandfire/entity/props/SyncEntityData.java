@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import dev.vladeezyy.iceandfire.platform.PacketContext;
 
 public record SyncEntityData(int entityId, CompoundTag tag) implements CustomPacketPayload {
     public static final Type<SyncEntityData> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "sync_entity_data"));
@@ -22,7 +22,7 @@ public record SyncEntityData(int entityId, CompoundTag tag) implements CustomPac
         return TYPE;
     }
 
-    public static void handle(final SyncEntityData message, final IPayloadContext context) {
+    public static void handle(final SyncEntityData message, final PacketContext context) {
         context.enqueueWork(() -> {
             Player localPlayer = context.player();
             EntityDataProvider.getCapability(localPlayer.level().getEntity(message.entityId)).ifPresent(data -> data.deserialize(message.tag));

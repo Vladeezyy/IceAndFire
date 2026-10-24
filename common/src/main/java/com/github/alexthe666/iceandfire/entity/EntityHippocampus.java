@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -57,7 +57,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import dev.vladeezyy.iceandfire.platform.transfer.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -87,7 +87,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     public float sitProgress;
     private int animationTick;
     private Animation currentAnimation;
-    private IItemHandler itemHandler = null;
+    private ItemHandler itemHandler = null;
 
     public EntityHippocampus(EntityType<? extends EntityHippocampus> entityType, Level worldIn) {
         super(entityType, worldIn);
@@ -445,7 +445,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
 
     /** Inventory for hoppers and other mods; registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler() {
+    public ItemHandler getItemHandler() {
         return this.isAlive() ? itemHandler : null;
     }
 

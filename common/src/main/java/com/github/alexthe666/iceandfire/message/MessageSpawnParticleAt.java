@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,7 +52,7 @@ public class MessageSpawnParticleAt implements CustomPacketPayload {
         public Handler() {
         }
 
-        public static void handle(final MessageSpawnParticleAt message, final IPayloadContext context) {
+        public static void handle(final MessageSpawnParticleAt message, final PacketContext context) {
 
             context.enqueueWork(() -> {
                 Player player = context.player();

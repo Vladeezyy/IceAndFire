@@ -22,14 +22,14 @@ import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import dev.vladeezyy.iceandfire.platform.Registrar;
+import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafRecipeRegistry {
-    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, IceAndFire.MODID);
-    public static final DeferredHolder<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
+    public static final Registrar<RecipeType<?>> RECIPE_TYPE = Registrar.create(Registries.RECIPE_TYPE, IceAndFire.MODID);
+    public static final RegistryEntry<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
 
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent event) {

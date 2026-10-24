@@ -40,7 +40,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import dev.vladeezyy.iceandfire.platform.Registrar;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +63,7 @@ public class IceAndFire {
 
         NeoForge.EVENT_BUS.addListener(IceAndFire::onServerStarted);
 
-        final DeferredRegister<MapCodec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, IceAndFire.MODID);
+        final Registrar<MapCodec<? extends BiomeModifier>> biomeModifiers = Registrar.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, IceAndFire.MODID);
         biomeModifiers.register(modBus);
         biomeModifiers.register("iaf_mob_spawns", IafMobSpawnBiomeModifier::makeCodec);
         biomeModifiers.register("iaf_features", IafFeatureBiomeModifier::makeCodec);

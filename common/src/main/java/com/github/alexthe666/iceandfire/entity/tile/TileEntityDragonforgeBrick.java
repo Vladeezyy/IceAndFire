@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,7 +18,7 @@ public class TileEntityDragonforgeBrick extends BlockEntity {
 
     /** The item handler of the forge core this brick belongs to; registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler(@Nullable Direction facing) {
+    public ItemHandler getItemHandler(@Nullable Direction facing) {
         TileEntityDragonforge core = getConnectedTileEntity();
         return core != null ? core.getItemHandler(facing) : null;
     }

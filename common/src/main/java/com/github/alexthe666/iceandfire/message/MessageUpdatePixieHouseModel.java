@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityJar;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityPixieHouse;
@@ -50,7 +50,7 @@ public class MessageUpdatePixieHouseModel implements CustomPacketPayload {
         public Handler() {
         }
 
-        public static void handle(final MessageUpdatePixieHouseModel message, final IPayloadContext context) {
+        public static void handle(final MessageUpdatePixieHouseModel message, final PacketContext context) {
 
             context.enqueueWork(() -> {
                 Player player = context.player();

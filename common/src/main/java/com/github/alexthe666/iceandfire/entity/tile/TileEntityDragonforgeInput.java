@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.block.BlockDragonforgeInput;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
@@ -164,7 +164,7 @@ public class TileEntityDragonforgeInput extends BlockEntity {
 
     /** The item handler of the forge core; registered in IafCapabilities. */
     @Nullable
-    public IItemHandler getItemHandler(@Nullable Direction facing) {
+    public ItemHandler getItemHandler(@Nullable Direction facing) {
         return core != null ? core.getItemHandler(facing) : null;
     }
 }

@@ -2,12 +2,12 @@ package com.github.alexthe666.iceandfire.entity.tile;
 
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
+import dev.vladeezyy.iceandfire.platform.transfer.ModifiableItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class PixieJarInvWrapper implements IItemHandlerModifiable {
+public class PixieJarInvWrapper implements ModifiableItemHandler {
 
     private final TileEntityJar tile;
 
