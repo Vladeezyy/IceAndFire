@@ -124,3 +124,14 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
 - Tests (NeoForge, macOS): selftest 29/29, scene 0 failed checks (28 mobs), net test (mount, control, flight) OK,
   stress 13/13. Same seed A/B on this machine: split 10.2 ms average tick, `main` 10.1 ms (generation 117 s vs 120 s).
 - Scripts: `LOADER=neoforge|fabric` (default neoforge), run directories in `<loader>/run`.
+- Fabric module (same branch): Fabric API where it has the event, mixins for the rest (`fabric/.../mixin`: living
+  tick, incoming damage, fall, item use tick, death drops, target change, finalize spawn, lightning, mount, projectile
+  impact; client: living/player render, screen opening, camera angles, ghost chest material), data attachments for
+  the entity data, the two biome modifiers through BiomeModifications, scribe trades through TradeOfferHelper, forge
+  bricks/inputs as item storages. Armor textures and config-dependent dragonsteel stats through common interfaces
+  (`IafArmorTextureItem`, `IafStackStatsItem`) that NeoForge's extension methods also satisfy.
+- Fabric tests (macOS): selftest 29/29, scene 0 failed checks (28 mobs), stress 13/13 with the A/B seed (7.5 ms
+  average tick, generation 111 s), net test (mount, control, flight) OK.
+- Not on Fabric yet: the pixie jar gives no dust to hoppers, dragonbone arrows are used up with Infinity, no camera roll.
+- Fixed on the way: Tabula models were read with ClassLoader#getResourceAsStream("/assets/...") (Fabric returns null
+  for the leading slash); now Class#getResourceAsStream of the mod's own class.
