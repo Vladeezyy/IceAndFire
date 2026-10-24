@@ -1,4 +1,4 @@
-package com.github.alexthe666.iceandfire.entity.props;
+package dev.vladeezyy.iceandfire.neoforge;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.neoforged.neoforge.attachment.AttachmentType;

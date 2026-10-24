@@ -34,7 +34,7 @@ public class ItemModArmor extends ArmorItem {
         return super.getDescriptionId(stack);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     @Nullable
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (this.material == IafItemRegistry.MYRMEX_DESERT_ARMOR_MATERIAL.holder()) {

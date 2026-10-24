@@ -27,7 +27,7 @@ public class IafArmorMaterial {
     private final Holder<SoundEvent> sound;
     private final float toughness;
     private Ingredient repairMaterial = Ingredient.EMPTY;
-    private final Holder<ArmorMaterial> holder;
+    private final dev.vladeezyy.iceandfire.platform.RegistryEntry<ArmorMaterial, ArmorMaterial> holder;
 
     public IafArmorMaterial(String name, int durability, int[] damageReduction, int encantability, Holder<SoundEvent> sound, float toughness) {
         this.name = name;
@@ -49,7 +49,7 @@ public class IafArmorMaterial {
     }
 
     public Holder<ArmorMaterial> holder() {
-        return holder;
+        return holder.holder();
     }
 
     public String getName() {

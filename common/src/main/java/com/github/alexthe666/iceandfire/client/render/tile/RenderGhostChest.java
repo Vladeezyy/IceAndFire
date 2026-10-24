@@ -32,7 +32,7 @@ public class RenderGhostChest extends ChestRenderer<TileEntityGhostChest> {
         }
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     protected @NotNull Material getMaterial(@NotNull TileEntityGhostChest tileEntity, @NotNull ChestType chestType) {
 
         return getChestMaterial(chestType, GHOST_CHEST, GHOST_CHEST_LEFT, GHOST_CHEST_RIGHT);

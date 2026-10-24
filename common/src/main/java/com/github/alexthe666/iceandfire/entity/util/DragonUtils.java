@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.Nullable;
@@ -143,7 +142,7 @@ public class DragonUtils {
                 double d3 = Vector3d.distanceTo(raytraceresult);
 
                 if (d3 < d2 || d2 == 0.0D) {
-                    if (entity1.getRootVehicle() == rider.getRootVehicle() && !rider.canRiderInteract()) {
+                    if (entity1.getRootVehicle() == rider.getRootVehicle() && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canRiderInteract(rider)) {
                         if (d2 == 0.0D) {
                             pointedEntity = entity1;
                         }
@@ -317,7 +316,7 @@ public class DragonUtils {
     }
 
     public static boolean canDragonBreak(final BlockState state, final Entity entity) {
-        if (!EventHooks.canEntityGrief(entity.level(), entity)) {
+        if (!dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canEntityGrief(entity.level(), entity)) {
             return false;
         }
 

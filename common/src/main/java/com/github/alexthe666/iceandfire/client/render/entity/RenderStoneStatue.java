@@ -100,7 +100,7 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
 
         matrixStackIn.pushPose();
         float yaw = entityIn.yRotO + (entityIn.getYRot() - entityIn.yRotO) * partialTicks;
-        boolean shouldSit = entityIn.isPassenger() && (entityIn.getVehicle() != null && entityIn.getVehicle().shouldRiderSit());
+        boolean shouldSit = entityIn.isPassenger() && (entityIn.getVehicle() != null && dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.shouldRiderSit(entityIn.getVehicle()));
         model.young = entityIn.isBaby();
         model.riding = shouldSit;
         model.attackTime = entityIn.getAttackAnim(partialTicks);

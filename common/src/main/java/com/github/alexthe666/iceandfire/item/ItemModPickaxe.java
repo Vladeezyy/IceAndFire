@@ -25,10 +25,10 @@ public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<
         super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1, -2.8F)));
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
-        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers(stack);
+        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<
         return dragonsteelModifiers;
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public int getMaxDamage(ItemStack stack) {
         return isDragonsteel(getTier()) ? IafConfig.dragonsteelBaseDurability : getTier().getUses();
     }

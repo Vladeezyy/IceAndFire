@@ -45,4 +45,17 @@ public interface ClientPlatform {
     default boolean isNameplateInRenderDistance(Entity entity, double distanceSq) {
         return distanceSq <= 4096.0D;
     }
+
+    /** Fires the loader's "before a living entity is drawn" event for a renderer that draws by itself; true skips it */
+    <T extends LivingEntity, M extends net.minecraft.client.model.EntityModel<T>> boolean renderLivingPre(T entity, net.minecraft.client.renderer.entity.LivingEntityRenderer<T, M> renderer, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource buffers, int light);
+
+    /** The matching "after" event */
+    <T extends LivingEntity, M extends net.minecraft.client.model.EntityModel<T>> void renderLivingPost(T entity, net.minecraft.client.renderer.entity.LivingEntityRenderer<T, M> renderer, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource buffers, int light);
+
+    /** What the loader adds to the title screen (NeoForge: the mod count and warnings) */
+    default void renderMainMenu(net.minecraft.client.gui.screens.Screen screen, net.minecraft.client.gui.GuiGraphics graphics, net.minecraft.client.gui.Font font, int width, int height, int alpha) {
+    }
+
+    /** The render layer of a block (NeoForge: ItemBlockRenderTypes, Fabric: BlockRenderLayerMap) */
+    void setRenderLayer(net.minecraft.world.level.block.Block block, net.minecraft.client.renderer.RenderType type);
 }

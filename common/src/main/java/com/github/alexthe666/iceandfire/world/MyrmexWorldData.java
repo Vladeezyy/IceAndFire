@@ -42,7 +42,7 @@ public class MyrmexWorldData extends SavedData {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
             DimensionDataStorage storage = overworld.getDataStorage();
-            MyrmexWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag)), IDENTIFIER);
+            MyrmexWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag), null), IDENTIFIER);
             if (data != null) {
                 data.world = world;
                 data.setDirty();

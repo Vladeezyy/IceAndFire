@@ -49,6 +49,7 @@ public class BlockDragonforgeInput extends BaseEntityBlock implements IDragonPro
         super(
             Properties
                 .of()
+                .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .dynamicShape()
@@ -65,10 +66,6 @@ public class BlockDragonforgeInput extends BaseEntityBlock implements IDragonPro
     }
 
 
-    @Override
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.BLOCK;
-    }
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, BlockHitResult resultIn) {

@@ -25,10 +25,10 @@ public class ItemModShovel extends ShovelItem implements DragonSteelOverrides<It
         super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1.5F, -3.0F)));
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
-        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers(stack);
+        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ItemModShovel extends ShovelItem implements DragonSteelOverrides<It
         return dragonsteelModifiers;
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public int getMaxDamage(ItemStack stack) {
         return isDragonsteel(getTier()) ? IafConfig.dragonsteelBaseDurability : getTier().getUses();
     }

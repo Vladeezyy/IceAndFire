@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRenderer<T> {
 
     // The item floats above the podium; formerly BlockEntity#getRenderBoundingBox
-    @Override
+    // NeoForge extension method (no vanilla override)
     public @NotNull AABB getRenderBoundingBox(@NotNull T podium) {
         return new AABB(podium.getBlockPos().getX(), podium.getBlockPos().getY(), podium.getBlockPos().getZ(), podium.getBlockPos().getX() + 1, podium.getBlockPos().getY() + 3, podium.getBlockPos().getZ() + 1);
     }

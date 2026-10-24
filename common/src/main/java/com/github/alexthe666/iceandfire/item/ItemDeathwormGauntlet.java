@@ -22,14 +22,13 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemDeathwormGauntlet extends Item implements IafClientItem {
+public class ItemDeathwormGauntlet extends Item {
 
     private boolean deathwormReceded = true;
     private boolean deathwormLaunched = false;
@@ -39,18 +38,6 @@ public class ItemDeathwormGauntlet extends Item implements IafClientItem {
         super(new Item.Properties().durability(500)/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
-
-        consumer.accept(new IClientItemExtensions() {
-            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new RenderDeathWormGauntlet(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        });
-    }
 
     @Override
     public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
@@ -105,7 +92,7 @@ public class ItemDeathwormGauntlet extends Item implements IafClientItem {
         }
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return !ItemStack.isSameItem(oldStack, newStack);
     }

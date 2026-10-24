@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.entity.tile.TileEntityJar;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
 
 
 public class MessageUpdatePixieJar implements CustomPacketPayload {

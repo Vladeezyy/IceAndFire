@@ -8,7 +8,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent;
 
 public class WorldEventContext {
     public static final WorldEventContext INSTANCE = new WorldEventContext();

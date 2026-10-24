@@ -5,7 +5,6 @@ import com.github.alexthe666.iceandfire.client.ClientProxy;
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.entity.IafVillagerRegistry;
-import com.github.alexthe666.iceandfire.entity.props.IafAttachments;
 import com.github.alexthe666.iceandfire.entity.props.SyncEntityData;
 import com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry;
 import com.github.alexthe666.iceandfire.inventory.IafContainerRegistry;
@@ -47,7 +46,7 @@ public class IceAndFire {
         PROXY.init();
         // the registry classes queue their entries (Registrar) when loaded, in the original's order
         IafArmorMaterials.MATERIALS.getRegistryKey();
-        IafAttachments.ATTACHMENTS.getRegistryKey();
+        
         IafItemRegistry.ITEMS.getRegistryKey();
         IafBlockRegistry.BLOCKS.getRegistryKey();
         IafTabRegistry.TAB_REGISTER.getRegistryKey();

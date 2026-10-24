@@ -10,7 +10,6 @@ import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import dev.vladeezyy.iceandfire.bus.EntityJoinLevelEvent;
 import dev.vladeezyy.iceandfire.bus.PlayerEvent;
 import dev.vladeezyy.iceandfire.bus.EntityTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = IceAndFire.MODID)
@@ -42,7 +41,7 @@ public class CapabilityHandler {
         if (entity.level().isClientSide() || !(entity instanceof LivingEntity)) {
             return;
         }
-        EntityDataProvider.getCapability(entity).ifPresent(data -> PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new SyncEntityData(entity.getId(), data.serialize())));
+        EntityDataProvider.getCapability(entity).ifPresent(data -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.sendToTrackingAndSelf(entity, new SyncEntityData(entity.getId(), data.serialize())));
     }
 
     public static @Nullable Player getLocalPlayer() {

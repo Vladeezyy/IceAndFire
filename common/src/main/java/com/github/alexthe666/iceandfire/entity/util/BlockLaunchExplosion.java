@@ -94,7 +94,7 @@ public class BlockLaunchExplosion extends Explosion {
                     this.world.getProfiler().push("explosion_blocks");
 
                     Vec3 Vector3d = new Vec3(this.x, this.y, this.z);
-                    blockstate.onBlockExploded(this.world, blockpos, this);
+                    dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onBlockExploded(blockstate, this.world, blockpos, this);
                     FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, world);
                     fallingBlockEntity.setStartPos(blockpos1);
                     fallingBlockEntity.setPos(blockpos1.getX() + 0.5D, blockpos1.getY() + 0.5D, blockpos1.getZ() + 0.5D);

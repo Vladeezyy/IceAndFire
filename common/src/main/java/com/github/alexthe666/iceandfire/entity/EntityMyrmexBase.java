@@ -123,7 +123,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     public static boolean isEdibleBlock(BlockState blockState) {
-        return blockState.is(BlockTags.create(IafTagRegistry.MYRMEX_HARVESTABLES));
+        return blockState.is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK, IafTagRegistry.MYRMEX_HARVESTABLES));
     }
 
     public static int getRandomCaste(Level world, RandomSource random, boolean royal) {
@@ -808,7 +808,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         if (ItemStack.isSameItem(superStack, stack) && ItemStack.matches(superStack, stack)) {
             return stack;
         } else {
-            EquipmentSlot inventorySlot = stack.getEquipmentSlot();
+            EquipmentSlot inventorySlot = this.getEquipmentSlotForItem(stack);
             int i = inventorySlot.getIndex() - 300;
             if (i >= 0 && i < this.villagerInventory.getContainerSize()) {
                 this.villagerInventory.setItem(i, stack);

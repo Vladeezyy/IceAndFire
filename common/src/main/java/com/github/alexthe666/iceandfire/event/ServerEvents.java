@@ -69,7 +69,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import dev.vladeezyy.iceandfire.bus.LootTableLoadEvent;
 import dev.vladeezyy.iceandfire.bus.EntityStruckByLightningEvent;
 import dev.vladeezyy.iceandfire.bus.ProjectileImpactEvent;
-import net.neoforged.neoforge.event.entity.living.*;
+import dev.vladeezyy.iceandfire.bus.LivingChangeTargetEvent;
+import dev.vladeezyy.iceandfire.bus.LivingDeathEvent;
+import dev.vladeezyy.iceandfire.bus.LivingDropsEvent;
+import dev.vladeezyy.iceandfire.bus.LivingEntityUseItemEvent;
+import dev.vladeezyy.iceandfire.bus.LivingFallEvent;
 import dev.vladeezyy.iceandfire.bus.AttackEntityEvent;
 import dev.vladeezyy.iceandfire.bus.PlayerEvent;
 import dev.vladeezyy.iceandfire.bus.PlayerInteractEvent;
@@ -582,8 +586,8 @@ public class ServerEvents {
 
         if (condition1 || eventName.equals(BuiltInLootTables.VILLAGE_CARTOGRAPHER)) {
             LootPoolEntryContainer.Builder item = LootItem.lootTableItem(IafItemRegistry.MANUSCRIPT.get()).setQuality(20).setWeight(5);
-            LootPool.Builder builder = new LootPool.Builder().name("iaf_manuscript").add(item).when(LootItemRandomChanceCondition.randomChance(0.35f)).setRolls(UniformGenerator.between(1, 4)).setBonusRolls(UniformGenerator.between(0, 3));
-            event.getTable().addPool(builder.build());
+            LootPool.Builder builder = new LootPool.Builder().add(item).when(LootItemRandomChanceCondition.randomChance(0.35f)).setRolls(UniformGenerator.between(1, 4)).setBonusRolls(UniformGenerator.between(0, 3));
+            event.addPool("iaf_manuscript", builder);
         }
         if (condition1
                 || eventName.equals(BuiltInLootTables.IGLOO_CHEST)
@@ -593,8 +597,8 @@ public class ServerEvents {
 
 
             LootPoolEntryContainer.Builder item = LootItem.lootTableItem(IafItemRegistry.SILVER_INGOT.get()).setQuality(15).setWeight(12);
-            LootPool.Builder builder = new LootPool.Builder().name("iaf_silver_ingot").add(item).when(LootItemRandomChanceCondition.randomChance(0.5f)).setRolls(UniformGenerator.between(1, 3)).setBonusRolls(UniformGenerator.between(0, 3));
-            event.getTable().addPool(builder.build());
+            LootPool.Builder builder = new LootPool.Builder().add(item).when(LootItemRandomChanceCondition.randomChance(0.5f)).setRolls(UniformGenerator.between(1, 3)).setBonusRolls(UniformGenerator.between(0, 3));
+            event.addPool("iaf_silver_ingot", builder);
 
         } else if ((event.getName().equals(WorldGenFireDragonCave.FIRE_DRAGON_CHEST)
                 || event.getName().equals(WorldGenFireDragonCave.FIRE_DRAGON_CHEST_MALE)
@@ -603,8 +607,8 @@ public class ServerEvents {
                 || event.getName().equals(WorldGenLightningDragonCave.LIGHTNING_DRAGON_CHEST)
                 || event.getName().equals(WorldGenLightningDragonCave.LIGHTNING_DRAGON_CHEST_MALE))) {
             LootPoolEntryContainer.Builder item = LootItem.lootTableItem(IafItemRegistry.WEEZER_BLUE_ALBUM.get()).setQuality(100).setWeight(1);
-            LootPool.Builder builder = new LootPool.Builder().name("iaf_weezer").add(item).when(LootItemRandomChanceCondition.randomChance(0.01f)).setRolls(UniformGenerator.between(1, 1));
-            event.getTable().addPool(builder.build());
+            LootPool.Builder builder = new LootPool.Builder().add(item).when(LootItemRandomChanceCondition.randomChance(0.01f)).setRolls(UniformGenerator.between(1, 1));
+            event.addPool("iaf_weezer", builder);
         }
     }
 

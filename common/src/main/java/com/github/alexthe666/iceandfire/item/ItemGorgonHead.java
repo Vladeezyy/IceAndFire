@@ -28,7 +28,6 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -36,24 +35,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ItemGorgonHead extends Item implements IafClientItem {
+public class ItemGorgonHead extends Item {
 
     public ItemGorgonHead() {
         super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(1));
     }
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
-
-        consumer.accept(new IClientItemExtensions() {
-            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new RenderGorgonHead(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        });
-    }
 
     @Override
     public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
@@ -103,7 +90,7 @@ public class ItemGorgonHead extends Item implements IafClientItem {
                 double d3 = Vector3d.distanceTo(optional.get());
 
                 if (d3 < d2 || d2 == 0.0D) {
-                    if (entity1.getRootVehicle() == entity.getRootVehicle() && !entity.canRiderInteract()) {
+                    if (entity1.getRootVehicle() == entity.getRootVehicle() && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canRiderInteract(entity)) {
                         if (d2 == 0.0D) {
                             pointedEntity = entity1;
                         }

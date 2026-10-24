@@ -27,13 +27,13 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.item.Items;
 import dev.vladeezyy.iceandfire.bus.Dist;
-import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import dev.vladeezyy.iceandfire.bus.FMLClientSetupEvent;
 
@@ -124,12 +124,11 @@ public class IafClientSetup {
 
     }
 
-    @SubscribeEvent
-    public static void setupShaders(RegisterShadersEvent event) throws IOException {
-        ResourceProvider provider = event.getResourceProvider();
-        event.registerShader(new ShaderInstance(provider, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "rendertype_dread_portal"), DefaultVertexFormat.POSITION_COLOR), (p_172782_) -> {
-            rendertypeDreadPortalShader = p_172782_;
-        });
+    /** The dread portal shader; the loader loads it (NeoForge: RegisterShadersEvent, Fabric: CoreShaderRegistrationCallback) */
+    public static final ResourceLocation DREAD_PORTAL_SHADER = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "rendertype_dread_portal");
+
+    public static void setRendertypeDreadPortalShader(ShaderInstance shader) {
+        rendertypeDreadPortalShader = shader;
     }
 
     public static ShaderInstance getRendertypeDreadPortalShader() {
@@ -151,48 +150,48 @@ public class IafClientSetup {
                 e.printStackTrace();
             }
 
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.GOLD_PILE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.SILVER_PILE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.LECTERN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_OAK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_BIRCH.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_SPRUCE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_JUNGLE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_ACACIA.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_DARK_OAK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_CRIMSON.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_WARPED.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_MANGROVE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PODIUM_CHERRY.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.FIRE_LILY.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.FROST_LILY.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.LIGHTNING_LILY.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DRAGON_ICE_SPIKES.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.MYRMEX_DESERT_RESIN_BLOCK.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.MYRMEX_DESERT_RESIN_GLASS.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.MYRMEX_JUNGLE_RESIN_BLOCK.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.MYRMEX_JUNGLE_RESIN_GLASS.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.MYRMEX_DESERT_BIOLIGHT.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.MYRMEX_JUNGLE_BIOLIGHT.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DREAD_STONE_FACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DREAD_TORCH.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.BURNT_TORCH.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.EGG_IN_ICE.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.JAR_EMPTY.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.JAR_PIXIE_0.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.JAR_PIXIE_1.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.JAR_PIXIE_2.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.JAR_PIXIE_3.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.JAR_PIXIE_4.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_MUSHROOM_BROWN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_MUSHROOM_RED.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_OAK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_BIRCH.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_SPRUCE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_DARK_OAK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DREAD_SPAWNER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.DREAD_TORCH_WALL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(IafBlockRegistry.BURNT_TORCH_WALL.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.GOLD_PILE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.SILVER_PILE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.LECTERN.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_OAK.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_BIRCH.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_SPRUCE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_JUNGLE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_ACACIA.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_DARK_OAK.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_CRIMSON.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_WARPED.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_MANGROVE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PODIUM_CHERRY.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.FIRE_LILY.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.FROST_LILY.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.LIGHTNING_LILY.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.DRAGON_ICE_SPIKES.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.MYRMEX_DESERT_RESIN_BLOCK.get(), RenderType.translucent());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.MYRMEX_DESERT_RESIN_GLASS.get(), RenderType.translucent());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.MYRMEX_JUNGLE_RESIN_BLOCK.get(), RenderType.translucent());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.MYRMEX_JUNGLE_RESIN_GLASS.get(), RenderType.translucent());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.MYRMEX_DESERT_BIOLIGHT.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.MYRMEX_JUNGLE_BIOLIGHT.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.DREAD_STONE_FACE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.DREAD_TORCH.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.BURNT_TORCH.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.EGG_IN_ICE.get(), RenderType.translucent());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.JAR_EMPTY.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.JAR_PIXIE_0.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.JAR_PIXIE_1.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.JAR_PIXIE_2.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.JAR_PIXIE_3.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.JAR_PIXIE_4.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_MUSHROOM_BROWN.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_MUSHROOM_RED.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_OAK.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_BIRCH.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_SPRUCE.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.PIXIE_HOUSE_DARK_OAK.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.DREAD_SPAWNER.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.DREAD_TORCH_WALL.get(), RenderType.cutout());
+        dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.setRenderLayer(IafBlockRegistry.BURNT_TORCH_WALL.get(), RenderType.cutout());
         ItemPropertyFunction pulling = ItemProperties.getProperty(new ItemStack(Items.BOW), ResourceLocation.parse("pulling"));
         ItemPropertyFunction pull = (stack, worldIn, entity, p) -> {
             if (entity == null) {
@@ -203,8 +202,8 @@ public class IafClientSetup {
             }
         };
 
-            ItemProperties.register(IafItemRegistry.DRAGON_BOW.get().asItem(), ResourceLocation.parse("pulling"), pulling);
-            ItemProperties.register(IafItemRegistry.DRAGON_BOW.get().asItem(), ResourceLocation.parse("pull"), pull);
+            ItemProperties.register(IafItemRegistry.DRAGON_BOW.get().asItem(), ResourceLocation.parse("pulling"), (ClampedItemPropertyFunction) pulling::call);
+            ItemProperties.register(IafItemRegistry.DRAGON_BOW.get().asItem(), ResourceLocation.parse("pull"), (ClampedItemPropertyFunction) pull::call);
             ItemProperties.register(IafItemRegistry.DRAGON_HORN.get(), ResourceLocation.parse("iceorfire"), (stack, level, entity, p) -> {
                 return ItemDragonHorn.getDragonType(stack) * 0.25F;
             });

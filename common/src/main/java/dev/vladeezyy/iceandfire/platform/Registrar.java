@@ -104,4 +104,15 @@ public class Registrar<R> {
     public ResourceKey<? extends Registry<R>> getRegistryKey() {
         return this.registryKey;
     }
+
+    /** A recipe type named after its id (NeoForge's RecipeType.simple) */
+    public static <T extends net.minecraft.world.item.crafting.Recipe<?>> net.minecraft.world.item.crafting.RecipeType<T> recipeType(ResourceLocation id) {
+        String name = id.toString();
+        return new net.minecraft.world.item.crafting.RecipeType<>() {
+            @Override
+            public String toString() {
+                return name;
+            }
+        };
+    }
 }

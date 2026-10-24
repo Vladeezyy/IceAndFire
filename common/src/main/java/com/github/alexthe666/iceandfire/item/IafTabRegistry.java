@@ -22,13 +22,12 @@ public class IafTabRegistry {
 
     public static final List<Supplier<? extends Block>> TAB_BLOCKS_LIST = new ArrayList<>();
     public static final List<Supplier<? extends Item>> TAB_ITEMS_LIST = new ArrayList<>();
-    public static final RegistryEntry<CreativeModeTab, CreativeModeTab> TAB_BLOCKS = TAB_REGISTER.register("blocks", () -> CreativeModeTab.builder()
+    public static final RegistryEntry<CreativeModeTab, CreativeModeTab> TAB_BLOCKS = TAB_REGISTER.register("blocks", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.creativeTabBuilder()
             // Set name of tab to display
             .title(Component.translatable("itemGroup." + IceAndFire.MODID + ".blocks"))
             // Set icon of creative tab
             .icon(() -> new ItemStack(IafBlockRegistry.DRAGON_SCALE_RED.get()))
             // properly order tab after spawn egg tab
-            .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             // Add default items to tab
             .displayItems((params, output) -> {
                 TAB_BLOCKS_LIST.forEach(block -> output.accept(block.get()));
@@ -36,13 +35,12 @@ public class IafTabRegistry {
             .build()
     );
 
-    public static final RegistryEntry<CreativeModeTab, CreativeModeTab> TAB_ITEMS = TAB_REGISTER.register("items", () -> CreativeModeTab.builder()
+    public static final RegistryEntry<CreativeModeTab, CreativeModeTab> TAB_ITEMS = TAB_REGISTER.register("items", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.creativeTabBuilder()
             // Set name of tab to display
             .title(Component.translatable("itemGroup." + IceAndFire.MODID + ".items"))
             // Set icon of creative tab
             .icon(() -> new ItemStack(IafItemRegistry.DRAGON_SKULL_FIRE.get()))
             // properly order tab after block tab
-            .withTabsBefore(TAB_BLOCKS.getKey())
             // Add default items to tab
             .displayItems((params, output) -> {
                 TAB_ITEMS_LIST.forEach(block -> output.accept(block.get()));

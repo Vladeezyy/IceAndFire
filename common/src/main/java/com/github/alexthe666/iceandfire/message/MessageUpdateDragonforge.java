@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.entity.tile.TileEntityDragonforge;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
 
 
 public class MessageUpdateDragonforge implements CustomPacketPayload {

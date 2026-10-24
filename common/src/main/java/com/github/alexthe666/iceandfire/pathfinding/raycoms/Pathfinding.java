@@ -7,8 +7,6 @@ import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.thread.BlockableEventLoop;
-import net.neoforged.neoforge.common.util.LogicalSidedProvider;
-import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.*;
@@ -52,7 +50,7 @@ public final class Pathfinding {
 
         @Override
         public Thread newThread(final @NotNull Runnable runnable) throws RuntimeException {
-            BlockableEventLoop<?> workqueue = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
+            BlockableEventLoop<?> workqueue = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.currentServer();
             ClassLoader classLoader;
             if (workqueue.isSameThread()) {
                 classLoader = Thread.currentThread().getContextClassLoader();

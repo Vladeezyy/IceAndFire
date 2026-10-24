@@ -32,6 +32,38 @@ public final class Tags {
     }
 
     public static final class Biomes {
-        public static final TagKey<Biome> IS_MOUNTAIN = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", "is_mountain"));
+        public static final TagKey<Biome> IS_AQUATIC = tag("is_aquatic");
+        public static final TagKey<Biome> IS_BADLANDS = tag("is_badlands");
+        public static final TagKey<Biome> IS_BEACH = tag("is_beach");
+        public static final TagKey<Biome> IS_COLD = tag("is_cold");
+        public static final TagKey<Biome> IS_COLD_OVERWORLD = tag("is_cold/overworld");
+        public static final TagKey<Biome> IS_DENSE_VEGETATION = tag("is_dense_vegetation");
+        public static final TagKey<Biome> IS_DRY = tag("is_dry");
+        public static final TagKey<Biome> IS_DRY_OVERWORLD = tag("is_dry/overworld");
+        public static final TagKey<Biome> IS_FOREST = tag("is_forest");
+        public static final TagKey<Biome> IS_HILL = tag("is_hill");
+        public static final TagKey<Biome> IS_HOT = tag("is_hot");
+        public static final TagKey<Biome> IS_HOT_OVERWORLD = tag("is_hot/overworld");
+        public static final TagKey<Biome> IS_JUNGLE = tag("is_jungle");
+        public static final TagKey<Biome> IS_MAGICAL = tag("is_magical");
+        public static final TagKey<Biome> IS_MOUNTAIN = tag("is_mountain");
+        public static final TagKey<Biome> IS_MOUNTAIN_PEAK = tag("is_mountain/peak");
+        public static final TagKey<Biome> IS_MOUNTAIN_SLOPE = tag("is_mountain/slope");
+        public static final TagKey<Biome> IS_OCEAN = tag("is_ocean");
+        public static final TagKey<Biome> IS_OVERWORLD = tag("is_overworld");
+        public static final TagKey<Biome> IS_PLAINS = tag("is_plains");
+        public static final TagKey<Biome> IS_RARE = tag("is_rare");
+        public static final TagKey<Biome> IS_SANDY = tag("is_sandy");
+        public static final TagKey<Biome> IS_SAVANNA = tag("is_savanna");
+        public static final TagKey<Biome> IS_SNOWY = tag("is_snowy");
+        public static final TagKey<Biome> IS_SPARSE_VEGETATION = tag("is_sparse_vegetation");
+        public static final TagKey<Biome> IS_SWAMP = tag("is_swamp");
+        public static final TagKey<Biome> IS_TAIGA = tag("is_taiga");
+        public static final TagKey<Biome> IS_UNDERGROUND = tag("is_underground");
+        public static final TagKey<Biome> IS_WET_OVERWORLD = tag("is_wet/overworld");
+
+        private static TagKey<Biome> tag(String name) {
+            return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", name));
+        }
     }
 }

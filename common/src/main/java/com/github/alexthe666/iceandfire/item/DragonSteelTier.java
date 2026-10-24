@@ -6,14 +6,13 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.SimpleTier;
 
 import java.util.function.Supplier;
 
 public class DragonSteelTier {
 
     // Tiers are ordered by tags since 1.20.5: dragonsteel mines everything netherite does
-    public static final TagKey<Block> DRAGONSTEEL_TIER_TAG = BlockTags.create(ResourceLocation.parse("iceandfire:needs_dragonsteel"));
+    public static final TagKey<Block> DRAGONSTEEL_TIER_TAG = TagKey.create(net.minecraft.core.registries.Registries.BLOCK, ResourceLocation.parse("iceandfire:needs_dragonsteel"));
     public static final Tier DRAGONSTEEL_TIER_FIRE = createTierWithRepairItem(() -> Ingredient.of(IafItemRegistry.DRAGONSTEEL_FIRE_INGOT.get()));
     public static final Tier DRAGONSTEEL_TIER_ICE = createTierWithRepairItem(() -> Ingredient.of(IafItemRegistry.DRAGONSTEEL_ICE_INGOT.get()));
     public static final Tier DRAGONSTEEL_TIER_LIGHTNING = createTierWithRepairItem(() -> Ingredient.of(IafItemRegistry.DRAGONSTEEL_LIGHTNING_INGOT.get()));
@@ -21,7 +20,39 @@ public class DragonSteelTier {
     public static final Tier DRAGONSTEEL_TIER_DREAD_QUEEN = createTierWithRepairItem(() -> Ingredient.EMPTY);
 
     private static Tier createTierWithRepairItem(Supplier<Ingredient> ingredient) {
-        return new SimpleTier(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 8000, 10, 21, 10, ingredient);
+        // NeoForge's SimpleTier(incorrect blocks, uses 8000, speed 10, damage 21, enchantability 10, repair item)
+        Supplier<Ingredient> repair = com.google.common.base.Suppliers.memoize(ingredient::get);
+        return new Tier() {
+            @Override
+            public int getUses() {
+                return 8000;
+            }
+
+            @Override
+            public float getSpeed() {
+                return 10;
+            }
+
+            @Override
+            public float getAttackDamageBonus() {
+                return 21;
+            }
+
+            @Override
+            public TagKey<Block> getIncorrectBlocksForDrops() {
+                return BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
+            }
+
+            @Override
+            public int getEnchantmentValue() {
+                return 10;
+            }
+
+            @Override
+            public Ingredient getRepairIngredient() {
+                return repair.get();
+            }
+        };
     }
 
     public static boolean isDragonsteel(Tier tier) {

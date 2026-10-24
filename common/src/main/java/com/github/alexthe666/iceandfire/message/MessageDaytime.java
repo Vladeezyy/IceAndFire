@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
 
 
 public class MessageDaytime implements CustomPacketPayload {

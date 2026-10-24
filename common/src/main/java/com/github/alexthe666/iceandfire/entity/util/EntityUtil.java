@@ -48,7 +48,7 @@ public class EntityUtil {
                 return false;
             }
             part.setAddedByParent();
-        } else if (!part.isAddedToLevel()) {
+        } else if (!part.isTrackedByLevel()) {
             // Left in a section without entity access while the parent still ticks: it does not tick there, bring it back
             part.setPos(parent.getX(), parent.getY(), parent.getZ());
         }

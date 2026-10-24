@@ -39,7 +39,7 @@ public class DragonPosWorldData extends SavedData {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
             DimensionDataStorage storage = overworld.getDataStorage();
-            DragonPosWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(DragonPosWorldData::new, (tag, registries) -> new DragonPosWorldData(tag)), IDENTIFIER);
+            DragonPosWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(DragonPosWorldData::new, (tag, registries) -> new DragonPosWorldData(tag), null), IDENTIFIER);
             if (data != null) {
                 data.world = world;
                 data.setDirty();

@@ -16,7 +16,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.neoforged.neoforge.common.ItemAbilities;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityStymphalianFeather extends AbstractArrow {
@@ -60,7 +59,7 @@ public class EntityStymphalianFeather extends AbstractArrow {
                 LivingEntity LivingEntity = (LivingEntity) entityHit.getEntity();
                 LivingEntity.setArrowCount(LivingEntity.getArrowCount() - 1);
                 ItemStack itemstack1 = LivingEntity.isUsingItem() ? LivingEntity.getUseItem() : ItemStack.EMPTY;
-                if (itemstack1.getItem().canPerformAction(itemstack1, ItemAbilities.SHIELD_BLOCK)) {
+                if (dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canShieldBlock(itemstack1)) {
                     damageShield(LivingEntity, 1.0F);
                 }
             }
@@ -69,14 +68,14 @@ public class EntityStymphalianFeather extends AbstractArrow {
     }
 
     protected void damageShield(LivingEntity entity, float damage) {
-        if (damage >= 3.0F && entity.getUseItem().getItem().canPerformAction(entity.getUseItem(), ItemAbilities.SHIELD_BLOCK)) {
+        if (damage >= 3.0F && dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canShieldBlock(entity.getUseItem())) {
             ItemStack copyBeforeUse = entity.getUseItem().copy();
             int i = 1 + Mth.floor(damage);
             InteractionHand Hand = entity.getUsedItemHand();
             entity.getUseItem().hurtAndBreak(i, entity, LivingEntity.getSlotForHand(Hand));
             if (entity.getUseItem().isEmpty()) {
                 if (entity instanceof Player) {
-                    net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem((Player) entity, copyBeforeUse, Hand);
+                    dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onPlayerDestroyItem((Player) entity, copyBeforeUse, Hand);
                 }
 
                 if (Hand == net.minecraft.world.InteractionHand.MAIN_HAND) {

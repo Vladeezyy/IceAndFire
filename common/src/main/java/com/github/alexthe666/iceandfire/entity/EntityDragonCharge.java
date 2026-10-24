@@ -63,7 +63,7 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
 
             HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitMob);
 
-            if (raytraceresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
+            if (raytraceresult.getType() != HitResult.Type.MISS && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }
 

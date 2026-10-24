@@ -23,7 +23,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.world.chunk.TicketController;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -34,7 +33,8 @@ import java.util.UUID;
 
 public class ItemSummoningCrystal extends Item {
     // Chunk tickets of the summons that wait for an unloaded dragon; registered in IafItemRegistry
-    public static final TicketController CHUNK_TICKETS = new TicketController(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "summoning_crystal"));
+    /** Keeps the chunk of a summoned dragon loaded until it arrived (NeoForge's TicketController before; a vanilla ticket as forced chunks use) */
+    public static final net.minecraft.server.level.TicketType<ChunkPos> CHUNK_TICKETS = net.minecraft.server.level.TicketType.create(IceAndFire.MODID + ":summoning_crystal", java.util.Comparator.comparingLong(ChunkPos::toLong));
     /**
      * Summons waiting for their dragon to load, by dragon UUID. The original kept the state of a summon in fields
      * of the item, which exists once for the whole game: two players summoning at the same time overwrote each other.
@@ -162,11 +162,8 @@ public class ItemSummoningCrystal extends Item {
         IceAndFire.LOGGER.info("Dragon entity not loaded, loading chunk {}", pos);
 
         // try to load the chunk, and mark the entity to be summoned as soon as it gets added to the world
-        if (CHUNK_TICKETS.forceChunk(serverWorld, summoningPlayer.getUUID(), pos.x, pos.z, true, false)) {
-            DELAYED_SUMMONS.put(dragonUuid, new PendingSummon(this, dragonUuid, dragonTargetPosition, dragonTargetYaw, summoningPlayer, summoningHand, serverWorld, dragonOriginPosition, stack, serverWorld.getGameTime()));
-        } else {
-            IceAndFire.LOGGER.warn("Failed to force load chunk with Dragon {}", dragonUuid);
-        }
+        serverWorld.getChunkSource().addRegionTicket(CHUNK_TICKETS, pos, 2, pos);
+        DELAYED_SUMMONS.put(dragonUuid, new PendingSummon(this, dragonUuid, dragonTargetPosition, dragonTargetYaw, summoningPlayer, summoningHand, serverWorld, dragonOriginPosition, stack, serverWorld.getGameTime()));
 
         return InteractionResult.PASS;
     }
@@ -211,7 +208,7 @@ public class ItemSummoningCrystal extends Item {
             }
         }
 
-        CHUNK_TICKETS.forceChunk(summon.serverWorld(), summon.summoningPlayer().getUUID(), pos.x, pos.z, false, false);
+        summon.serverWorld().getChunkSource().removeRegionTicket(CHUNK_TICKETS, pos, 2, pos);
     }
 
     public record PendingSummon(ItemSummoningCrystal item, UUID dragonUuid, BlockPos dragonTargetPosition, float dragonTargetYaw, Player summoningPlayer,

@@ -26,7 +26,7 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
         int k = 0;
         int l = 0;
         Entity entity = IceAndFire.PROXY.getReferencedMob();
-        Font font = this.getMinecraft().font;
+        Font font = this.minecraft.font;
         if (entity instanceof EntityHippocampus) {
             EntityHippocampus hippo = (EntityHippocampus) entity;
             pGuiGraphics.drawString(font, hippo.getDisplayName().getString(), l + 8, 6, 4210752, false);

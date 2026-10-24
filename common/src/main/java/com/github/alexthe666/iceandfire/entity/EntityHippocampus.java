@@ -55,8 +55,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidType;
 import dev.vladeezyy.iceandfire.platform.transfer.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -154,7 +152,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     }
 
     @Override
-    public boolean isPushedByFluid(FluidType fluid) {
+    public boolean isPushedByFluid() {
         return false;
     }
 
@@ -325,7 +323,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             if (this.isGoingUp()) {
                 if (!this.isInWater() && this.onGround()) {
                     this.jumpFromGround();
-                    net.neoforged.neoforge.common.CommonHooks.onLivingJump(this);
+                    dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onLivingJump(this);
                 } else if (this.isInWater()) {
                     this.setDeltaMovement(vec3.add(0, 0.04F, 0));
                 }
@@ -547,11 +545,6 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             return hippo;
         }
         return null;
-    }
-
-    @Override
-    public boolean canDrownInFluidType(FluidType type) {
-        return false;
     }
 
     @Override

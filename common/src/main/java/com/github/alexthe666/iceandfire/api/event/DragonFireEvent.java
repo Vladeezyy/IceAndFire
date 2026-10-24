@@ -1,7 +1,6 @@
 package com.github.alexthe666.iceandfire.api.event;
 
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
-import net.neoforged.neoforge.common.NeoForge;
 import dev.vladeezyy.iceandfire.bus.LivingEvent;
 import dev.vladeezyy.iceandfire.bus.ICancellableEvent;
 

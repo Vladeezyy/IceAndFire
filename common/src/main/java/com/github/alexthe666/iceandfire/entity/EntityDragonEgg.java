@@ -138,7 +138,7 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
         DragonType dragonType = getEggType().dragonType;
 
         if (dragonType == DragonType.FIRE) {
-            if (level().getBlockState(blockPosition()).isBurning(level(), blockPosition())) {
+            if (dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.isBurning(level().getBlockState(blockPosition()), level(), blockPosition())) {
                 setDragonAge(getDragonAge() + 1);
             }
         } else if (dragonType == DragonType.ICE) {

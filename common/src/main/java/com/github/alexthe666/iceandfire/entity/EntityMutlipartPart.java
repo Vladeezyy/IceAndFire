@@ -20,7 +20,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.neoforged.neoforge.event.EventHooks;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +41,8 @@ public abstract class EntityMutlipartPart extends Entity {
     protected float damageMultiplier;
     /** Set when the parent added this part; parts are not saved (noSave), a part loaded from an old world has no owner. */
     private boolean addedByParent;
+    /** In a ticking section of its level (ServerLevelEntityCallbacksMixin; NeoForge's isAddedToLevel before) */
+    private boolean trackedByLevel;
 
     protected EntityMutlipartPart(EntityType<?> t, Level world) {
         super(t, world);
@@ -274,7 +275,7 @@ public abstract class EntityMutlipartPart extends Entity {
                 if (result.consumesAction()) {
                     this.level().gameEvent(GameEvent.ENTITY_INTERACT, living.position(), GameEvent.Context.of(player));
                     if (stack.isEmpty() && !player.getAbilities().instabuild) {
-                        EventHooks.onPlayerDestroyItem(player, copy, hand);
+                        dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onPlayerDestroyItem(player, copy, hand);
                         player.setItemInHand(hand, ItemStack.EMPTY);
                     }
                 }
@@ -296,6 +297,14 @@ public abstract class EntityMutlipartPart extends Entity {
 
     public boolean isAddedByParent() {
         return this.addedByParent;
+    }
+
+    public boolean isTrackedByLevel() {
+        return trackedByLevel;
+    }
+
+    public void setTrackedByLevel(boolean tracked) {
+        this.trackedByLevel = tracked;
     }
 
     public void setAddedByParent() {

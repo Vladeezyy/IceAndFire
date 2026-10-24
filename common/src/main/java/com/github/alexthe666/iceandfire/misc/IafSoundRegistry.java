@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.lang.reflect.Field;
 
@@ -273,23 +272,22 @@ public final class IafSoundRegistry {
         return SoundEvent.createVariableRangeEvent(soundID);
     }
 
-    @SubscribeEvent
-    public static void registerSoundEvents(final RegisterEvent event) {
-        event.register(Registries.SOUND_EVENT, helper -> {
+    /** Queues the sound events for registration (called by IceAndFire.init) */
+    public static void registerSoundEvents() {
         try {
             for (Field f : IafSoundRegistry.class.getFields()) {
                 Object obj = f.get(null);
                 if (obj instanceof SoundEvent) {
-                    helper.register(((SoundEvent) obj).getLocation(), (SoundEvent) obj);
+                    SoundEvent sound = (SoundEvent) obj;
+                    dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.register(Registries.SOUND_EVENT, sound.getLocation(), () -> sound);
                 } else if (obj instanceof SoundEvent[]) {
                     for (SoundEvent soundEvent : (SoundEvent[]) obj) {
-                        helper.register(soundEvent.getLocation(), soundEvent);
+                        dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.register(Registries.SOUND_EVENT, soundEvent.getLocation(), () -> soundEvent);
                     }
                 }
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        });
     }
 }

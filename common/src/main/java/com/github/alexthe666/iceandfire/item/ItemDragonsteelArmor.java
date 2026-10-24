@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
 
 import static com.github.alexthe666.iceandfire.item.IafItemRegistry.*;
 
-public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDragonItem, IafClientItem{
+public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDragonItem {
 
     private final IafArmorMaterial material;
 
@@ -33,28 +32,14 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
         this.material = material;
     }
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                if (itemStack.getItem() instanceof ArmorItem) {
-                    if (material == DRAGONSTEEL_FIRE_ARMOR_MATERIAL)
-                        return new ModelDragonsteelFireArmor(armorSlot);
-                    if (material == DRAGONSTEEL_ICE_ARMOR_MATERIAL)
-                        return new ModelDragonsteelIceArmor(armorSlot);
-                    if (material == DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL)
-                        return new ModelDragonsteelLightningArmor(armorSlot);
-                }
-                return _default;
-
-            }
-        });
+    public IafArmorMaterial iafMaterial() {
+        return material;
     }
 
 
+
     // The defense comes from the config, which loads after the items are registered
-    @Override
+    // NeoForge extension method (no vanilla override)
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
         EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(this.type.getSlot());
         ResourceLocation id = ResourceLocation.withDefaultNamespace("armor." + this.type.getName());
@@ -64,12 +49,12 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
                 .build();
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public int getMaxDamage(ItemStack stack) {
         if (this.type != null) {
             return material.getDurabilityForType(this.type);
         }
-        return super.getMaxDamage(stack);
+        return stack.getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0);
     }
 
     @Override
@@ -82,7 +67,7 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
         return this.material.getDefenseForType(this.getType());
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (material == DRAGONSTEEL_FIRE_ARMOR_MATERIAL) {
             return ResourceLocation.parse("iceandfire:textures/models/armor/armor_dragonsteel_fire" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));

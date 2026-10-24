@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import dev.vladeezyy.iceandfire.bus.Dist;
 import dev.vladeezyy.iceandfire.bus.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.HashSet;
 import java.util.Set;

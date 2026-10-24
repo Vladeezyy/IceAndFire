@@ -29,7 +29,7 @@ public class ItemBlindfold extends ArmorItem {
         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 50, 0, false, false));
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return ResourceLocation.parse("iceandfire:textures/models/armor/blindfold_layer_1.png");
     }

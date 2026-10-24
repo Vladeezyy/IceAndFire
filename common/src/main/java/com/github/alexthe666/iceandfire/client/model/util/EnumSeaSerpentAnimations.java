@@ -3,7 +3,6 @@ package com.github.alexthe666.iceandfire.client.model.util;
 import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import dev.vladeezyy.iceandfire.bus.Dist;
-import net.neoforged.fml.loading.FMLEnvironment;
 
 public enum EnumSeaSerpentAnimations {
     T_POSE("base"),
@@ -33,7 +32,7 @@ public enum EnumSeaSerpentAnimations {
 
 
     public static void initializeSerpentModels() {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.isClient()) {
             for (EnumSeaSerpentAnimations animation : values()) {
                 try {
                     animation.seaserpent_model = new TabulaModel(TabulaModelHandlerHelper.loadTabulaModel("/assets/iceandfire/models/tabula/seaserpent/seaserpent_" + animation.fileSuffix));

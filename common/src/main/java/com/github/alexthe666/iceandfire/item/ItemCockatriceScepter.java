@@ -104,7 +104,7 @@ public class ItemCockatriceScepter extends Item {
                     double d3 = playerEyePosition.distanceTo(optional.get());
 
                     if (d3 < d2 || d2 == 0.0D) {
-                        if (nearbyEntity.getRootVehicle() == player.getRootVehicle() && !player.canRiderInteract()) {
+                        if (nearbyEntity.getRootVehicle() == player.getRootVehicle() && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canRiderInteract(player)) {
                             if (d2 == 0.0D) {
                                 pointedEntity = nearbyEntity;
                             }

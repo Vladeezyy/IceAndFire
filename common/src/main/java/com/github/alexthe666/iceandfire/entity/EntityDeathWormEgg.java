@@ -16,12 +16,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.NotNull;
 
-public class EntityDeathWormEgg extends ThrowableItemProjectile implements IEntityWithComplexSpawn {
+public class EntityDeathWormEgg extends ThrowableItemProjectile {
 
-    private boolean giant;
+    // A synced flag instead of NeoForge's spawn data (IEntityWithComplexSpawn): the same on both loaders
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> GIANT = net.minecraft.network.syncher.SynchedEntityData.defineId(EntityDeathWormEgg.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
 
     public EntityDeathWormEgg(EntityType<? extends ThrowableItemProjectile> type, Level worldIn) {
         super(type, worldIn);
@@ -30,24 +30,24 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile implements IEnti
     public EntityDeathWormEgg(EntityType<? extends ThrowableItemProjectile> type, LivingEntity throwerIn, Level worldIn,
                               boolean giant) {
         super(type, throwerIn, worldIn);
-        this.giant = giant;
+        this.entityData.set(GIANT, giant);
     }
 
     public EntityDeathWormEgg(EntityType<? extends ThrowableItemProjectile> type, double x, double y, double z,
                               Level worldIn, boolean giant) {
         super(type, x, y, z, worldIn);
-        this.giant = giant;
+        this.entityData.set(GIANT, giant);
     }
 
 
     @Override
-    public void writeSpawnData(@NotNull RegistryFriendlyByteBuf buffer) {
-        buffer.writeBoolean(this.giant);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(GIANT, false);
     }
 
-    @Override
-    public void readSpawnData(@NotNull RegistryFriendlyByteBuf additionalData) {
-        this.giant = additionalData.readBoolean();
+    private boolean isGiant() {
+        return this.entityData.get(GIANT);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile implements IEnti
             deathworm.setTame(true, true);
             deathworm.setWormHome(blockPosition());
             deathworm.setWormAge(1);
-            deathworm.setDeathWormScale(giant ? (wormSize * 4) : wormSize);
+            deathworm.setDeathWormScale(isGiant() ? (wormSize * 4) : wormSize);
             deathworm.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
             if (thrower instanceof Player) {
                 deathworm.setOwnerUUID(thrower.getUUID());
@@ -91,6 +91,6 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile implements IEnti
 
     @Override
     protected @NotNull Item getDefaultItem() {
-        return giant ? IafItemRegistry.DEATHWORM_EGG_GIGANTIC.get() : IafItemRegistry.DEATHWORM_EGG.get();
+        return isGiant() ? IafItemRegistry.DEATHWORM_EGG_GIGANTIC.get() : IafItemRegistry.DEATHWORM_EGG.get();
     }
 }

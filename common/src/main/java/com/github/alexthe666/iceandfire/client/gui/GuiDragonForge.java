@@ -35,7 +35,7 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
 
     @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {
-        Font font = this.getMinecraft().font;
+        Font font = this.minecraft.font;
         if (tileFurnace != null) {
             String s = I18n.get("block.iceandfire.dragonforge_" + DragonType.getNameFromInt(dragonType) + "_core");
             // A long name (ru: "Сердце огненной драконьей кузни") is squeezed into the frame
@@ -75,7 +75,7 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
         BlockEntity te = IceAndFire.PROXY.getRefrencedTE();
         int j = 0;
 
-        List<DragonForgeRecipe> recipes = this.getMinecraft().level.getRecipeManager()
+        List<DragonForgeRecipe> recipes = this.minecraft.level.getRecipeManager()
                 .getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList()
                 .stream().filter(item ->
                         item.isValidInput(tileFurnace.getSlot(0).getItem()) && item.isValidBlood(tileFurnace.getSlot(1).getItem())).collect(Collectors.toList());

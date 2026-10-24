@@ -5,7 +5,7 @@ import dev.vladeezyy.rampart.config.biome.SpawnBiomeData;
 import dev.vladeezyy.iceandfire.platform.Tags;
 
 import net.minecraft.tags.BiomeTags;
-import static net.neoforged.neoforge.common.Tags.Biomes.*;
+import static dev.vladeezyy.iceandfire.platform.Tags.Biomes.*;
 
 public class DefaultBiomes {
 

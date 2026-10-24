@@ -14,14 +14,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemTrollWeapon extends SwordItem implements IafClientItem {
+public class ItemTrollWeapon extends SwordItem {
 
     public EnumTroll.Weapon weapon = EnumTroll.Weapon.AXE;
 
@@ -30,20 +29,8 @@ public class ItemTrollWeapon extends SwordItem implements IafClientItem {
         this.weapon = weapon;
     }
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
 
-        consumer.accept(new IClientItemExtensions() {
-            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new RenderTrollWeapon(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        });
-    }
-
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         return player.getAttackStrengthScale(0) < 0.95 || player.attackAnim != 0;
     }

@@ -1,6 +1,5 @@
 package com.github.alexthe666.iceandfire.recipe;
 
-import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.*;
@@ -18,7 +17,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import dev.vladeezyy.iceandfire.bus.FMLCommonSetupEvent;
 import dev.vladeezyy.iceandfire.platform.Registrar;
@@ -28,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 @EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafRecipeRegistry {
     public static final Registrar<RecipeType<?>> RECIPE_TYPE = Registrar.create(Registries.RECIPE_TYPE, IceAndFire.MODID);
-    public static final RegistryEntry<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
+    public static final RegistryEntry<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> dev.vladeezyy.iceandfire.platform.Registrar.recipeType(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
 
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent event) {
@@ -137,11 +135,8 @@ public class IafRecipeRegistry {
         });
     }
 
-    @EventBusSubscriber(modid = IceAndFire.MODID)
-    public static class GameEvents {
-        @SubscribeEvent
-        public static void registerBrewing(RegisterBrewingRecipesEvent event) {
-            event.getBuilder().addMix(Potions.WATER, IafItemRegistry.SHINY_SCALES.get(), Potions.WATER_BREATHING);
-        }
+    /** The brewing recipes (NeoForge: RegisterBrewingRecipesEvent, Fabric: FabricBrewingRecipeRegistryBuilder) */
+    public static void registerBrewing(net.minecraft.world.item.alchemy.PotionBrewing.Builder builder) {
+        builder.addMix(Potions.WATER, IafItemRegistry.SHINY_SCALES.get(), Potions.WATER_BREATHING);
     }
 }

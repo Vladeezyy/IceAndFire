@@ -15,6 +15,7 @@ public class BlockDragonBone extends RotatedPillarBlock implements IDragonProof 
         super(
             BlockBehaviour.Properties
                 .of()
+                .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .sound(SoundType.WOOD)
@@ -24,8 +25,4 @@ public class BlockDragonBone extends RotatedPillarBlock implements IDragonProof 
 
     }
 
-    @Override
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.BLOCK;
-    }
 }

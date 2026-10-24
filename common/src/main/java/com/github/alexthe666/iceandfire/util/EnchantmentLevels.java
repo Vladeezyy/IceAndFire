@@ -19,7 +19,7 @@ public final class EnchantmentLevels {
             return 0;
         }
         return level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(enchantment)
-                .map(stack::getEnchantmentLevel)
+                .map(holder -> net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(holder, stack))
                 .orElse(0);
     }
 

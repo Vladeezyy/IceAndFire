@@ -35,7 +35,7 @@ public class ItemGhostSword extends SwordItem {
         if (playerEntity.getItemInHand(InteractionHand.MAIN_HAND) != stack)
             return;
         double totalDmg = 0D;
-        for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
+        for (ItemAttributeModifiers.Entry entry : dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.attributeModifiers(stack).modifiers()) {
             if (entry.attribute().is(Attributes.ATTACK_DAMAGE) && entry.slot().test(EquipmentSlot.MAINHAND)) {
                 totalDmg += entry.modifier().amount();
             }

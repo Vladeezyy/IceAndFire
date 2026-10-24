@@ -15,8 +15,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -99,30 +97,4 @@ public class IafDamageRegistry {
         return new CustomIndirectEntityDamageSource(holder, source, indirectEntityIn);
     }
 
-    @SubscribeEvent
-    public void gatherData(GatherDataEvent event) {
-        event.getGenerator().addProvider(
-                // Tell generator to run only when server data are generating
-                event.includeServer(),
-                (DataProvider.Factory<IafDamageTypeTagsProvider>) output -> new IafDamageTypeTagsProvider(
-                        event.getGenerator().getPackOutput(),
-                        event.getLookupProvider(),
-                        MODID,
-                        event.getExistingFileHelper()
-                )
-        );
-    }
-
-    public static class IafDamageTypeTagsProvider extends DamageTypeTagsProvider {
-
-        public IafDamageTypeTagsProvider(PackOutput p_270719_, CompletableFuture<HolderLookup.Provider> p_270256_, String modId, @org.jetbrains.annotations.Nullable ExistingFileHelper existingFileHelper) {
-            super(p_270719_, p_270256_, modId, existingFileHelper);
-        }
-
-        @Override
-        public void addTags(HolderLookup.Provider pProvider) {
-            this.tag(DamageTypeTags.BYPASSES_ARMOR).add(GORGON_DMG_TYPE);
-            this.tag(DamageTypeTags.BYPASSES_EFFECTS).add(GORGON_DMG_TYPE);
-        }
-    }
 }

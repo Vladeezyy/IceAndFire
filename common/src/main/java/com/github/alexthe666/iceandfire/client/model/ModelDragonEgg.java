@@ -55,7 +55,7 @@ public class ModelDragonEgg<T extends LivingEntity> extends AdvancedEntityModel<
         if (entity instanceof EntityDragonEgg egg) {
             boolean isLocationValid = false;
             if (egg.getEggType().dragonType == DragonType.FIRE) {
-                isLocationValid = egg.level().getBlockState(egg.blockPosition()).isBurning(entity.level(), egg.blockPosition());
+                isLocationValid = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.isBurning(egg.level().getBlockState(egg.blockPosition()), entity.level(), egg.blockPosition());
             } else if (egg.getEggType().dragonType == DragonType.LIGHTNING) {
                 isLocationValid = egg.level().isRainingAt(egg.blockPosition());
             }

@@ -1,15 +1,13 @@
 package com.github.alexthe666.iceandfire.entity.props;
 
 import net.minecraft.core.HolderLookup;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
 
-public class EntityData implements INBTSerializable<CompoundTag> {
+public class EntityData {
     public FrozenData frozenData = new FrozenData();
     public ChainData chainData = new ChainData();
     public SirenData sirenData = new SirenData();
@@ -29,7 +27,7 @@ public class EntityData implements INBTSerializable<CompoundTag> {
         triggerClientUpdate = miscData.doesClientNeedUpdate() || triggerClientUpdate;
 
         if (triggerClientUpdate && !entity.level().isClientSide()) {
-            PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new SyncEntityData(entity.getId(), serialize()));
+            dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.sendToTrackingAndSelf(entity, new SyncEntityData(entity.getId(), serialize()));
         }
     }
 
@@ -51,13 +49,4 @@ public class EntityData implements INBTSerializable<CompoundTag> {
         miscData.deserialize(tag);
     }
 
-    @Override
-    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        return serialize();
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
-        deserialize(tag);
-    }
 }

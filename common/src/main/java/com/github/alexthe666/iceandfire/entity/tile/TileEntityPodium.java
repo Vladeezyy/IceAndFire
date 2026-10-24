@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import dev.vladeezyy.iceandfire.platform.transfer.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -180,7 +179,7 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
         loadAdditional(packet.getTag(), registries);
     }

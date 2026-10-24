@@ -11,7 +11,6 @@ import com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDeb
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.MNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.fml.LogicalSide;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,9 +56,6 @@ public class MessageSyncPathReached implements CustomPacketPayload {
         return new MessageSyncPathReached(reached);
     }
 
-    public LogicalSide getExecutionSide() {
-        return LogicalSide.CLIENT;
-    }
 
     public boolean handle(PacketContext context) {
         context.enqueueWork(() -> {

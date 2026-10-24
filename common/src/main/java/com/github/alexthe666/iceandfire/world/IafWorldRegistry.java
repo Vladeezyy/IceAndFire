@@ -21,7 +21,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.storage.LevelData;
-import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 import dev.vladeezyy.iceandfire.platform.Registrar;
 import net.minecraft.core.registries.BuiltInRegistries;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;
@@ -128,7 +127,8 @@ public class IafWorldRegistry {
     // Only a global variable because it's too bothersome to add it to the method call (alternative: method returns identifier or null)
     private static List<String> ADDED_FEATURES;
 
-    public static void addFeatures(Holder<Biome> biome, HashMap<String, Holder<PlacedFeature>> features, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
+    /** Adds the features of a biome to {@code builder} (NeoForge: a biome modifier, Fabric: BiomeModifications) */
+    public static void addFeatures(Holder<Biome> biome, HashMap<String, Holder<PlacedFeature>> features, java.util.function.BiConsumer<GenerationStep.Decoration, Holder<PlacedFeature>> builder) {
         ADDED_FEATURES = new ArrayList<>();
 
         if (safelyTestBiome(BiomeConfig.fireLilyBiomes, biome)) {
@@ -229,16 +229,16 @@ public class IafWorldRegistry {
         ADDED_FEATURES = null;
     }
 
-    private static void addFeatureToBiome(ResourceKey<PlacedFeature> feature, HashMap<String, Holder<PlacedFeature>> features, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
+    private static void addFeatureToBiome(ResourceKey<PlacedFeature> feature, HashMap<String, Holder<PlacedFeature>> features, java.util.function.BiConsumer<GenerationStep.Decoration, Holder<PlacedFeature>> builder) {
         addFeatureToBiome(feature, features, builder, GenerationStep.Decoration.SURFACE_STRUCTURES);
     }
 
-    private static void addFeatureToBiome(ResourceKey<PlacedFeature> featureResource, HashMap<String, Holder<PlacedFeature>> features, ModifiableBiomeInfo.BiomeInfo.Builder builder, GenerationStep.Decoration step) {
+    private static void addFeatureToBiome(ResourceKey<PlacedFeature> featureResource, HashMap<String, Holder<PlacedFeature>> features, java.util.function.BiConsumer<GenerationStep.Decoration, Holder<PlacedFeature>> builder, GenerationStep.Decoration step) {
         String identifier = featureResource.location().toString();
         Holder<PlacedFeature> feature = features.get(identifier);
 
         if (feature != null) {
-            builder.getGenerationSettings().getFeatures(step).add(feature);
+            builder.accept(step, feature);
             if (!LOADED_FEATURES.isEmpty()) LOADED_FEATURES.put(identifier, true);
             ADDED_FEATURES.add(identifier);
         } else {

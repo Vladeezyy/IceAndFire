@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDebugRenderer;
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.MNode;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.fml.LogicalSide;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -103,9 +102,5 @@ public class MessageSyncPath implements CustomPacketPayload {
         return true;
     }
 
-    public LogicalSide getExecutionSide()
-    {
-        return LogicalSide.CLIENT;
-    }
 
 }

@@ -46,6 +46,7 @@ public class BlockDragonforgeBricks extends BaseEntityBlock implements IDragonPr
         super(
             Properties
                 .of()
+                .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .dynamicShape()
@@ -61,10 +62,6 @@ public class BlockDragonforgeBricks extends BaseEntityBlock implements IDragonPr
         return "dragonforge_%s_brick".formatted(DragonType.getNameFromInt(dragonType));
     }
 
-    @Override
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.BLOCK;
-    }
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, BlockHitResult resultIn) {

@@ -1,10 +1,9 @@
-package com.github.alexthe666.iceandfire.entity.tile;
+package dev.vladeezyy.iceandfire.neoforge;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**

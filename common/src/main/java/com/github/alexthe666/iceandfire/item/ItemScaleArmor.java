@@ -19,14 +19,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonItem, IafClientItem{
+public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonItem {
 
     public EnumDragonArmor armor_type;
     public EnumDragonEgg eggType;
@@ -52,28 +51,8 @@ public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonIt
         return "item.iceandfire.dragon_helmet";
     }
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                if (itemStack.getItem() instanceof ItemScaleArmor) {
-                    DragonType dragonType = ((ItemScaleArmor) itemStack.getItem()).armor_type.eggType.dragonType;
 
-                    if (DragonType.FIRE == dragonType)
-                        return new ModelFireDragonScaleArmor(armorSlot);
-                    if (DragonType.ICE == dragonType)
-                        return new ModelIceDragonScaleArmor(armorSlot);
-                    if (DragonType.LIGHTNING == dragonType)
-                        return new ModelLightningDragonScaleArmor(armorSlot);
-                }
-                return _default;
-
-            }
-        });
-    }
-
-    @Override
+    // NeoForge extension method (no vanilla override)
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return ResourceLocation.parse("iceandfire:textures/models/armor/" + armor_type.name() + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }

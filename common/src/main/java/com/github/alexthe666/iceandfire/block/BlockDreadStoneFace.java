@@ -46,7 +46,7 @@ public class BlockDreadStoneFace extends HorizontalDirectionalBlock implements I
         if (state.getValue(PLAYER_PLACED)) {
             float f = 8f;
             //Code from super method
-            return player.getDigSpeed(state, pos) / f / (float) 30;
+            return dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.digSpeed(player, state, pos) / f / (float) 30;
         }
         return super.getDestroyProgress(state, player, worldIn, pos);
     }

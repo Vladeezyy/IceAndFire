@@ -23,10 +23,10 @@ public class ItemDragonArrow extends ArrowItem {
         return new EntityDragonArrow(IafEntityRegistry.DRAGON_ARROW.get(), shooter, level);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean isInfinite(@NotNull final ItemStack arrow, @NotNull final ItemStack bow, @NotNull final LivingEntity player) {
         // Technically this would always return false - it's more a compat layer for Apotheosis' Endless Quiver enchantment
-        boolean isInfinite = super.isInfinite(arrow, bow, player);
+        boolean isInfinite = false;
 
         if (!isInfinite) {
             isInfinite = EnchantmentLevels.has(player.level(), Enchantments.INFINITY, bow) && getClass() == ItemDragonArrow.class;

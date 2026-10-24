@@ -45,7 +45,7 @@ public class ItemAmphithereMacuahuitl extends SwordItem {
         return super.hurtEnemy(stack, targetEntity, attacker);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
         return true;
     }

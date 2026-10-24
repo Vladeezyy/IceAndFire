@@ -190,7 +190,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
         if (this.deathTime >= 200) {
             if (!this.level().isClientSide && (this.isAlwaysExperienceDropper() || this.lastHurtByPlayerTime > 0 && this.shouldDropExperience() && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))) {
                 int i = this.getBaseExperienceReward();
-                i = net.neoforged.neoforge.event.EventHooks.getExperienceDrop(this, this.lastHurtByPlayer, i);
+                i = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.experienceDrop(this, this.lastHurtByPlayer, i);
                 while (i > 0) {
                     int j = ExperienceOrb.getExperienceValue(i);
                     i -= j;

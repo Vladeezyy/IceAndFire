@@ -10,30 +10,20 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class ItemDeathwormArmor extends ArmorItem implements IafClientItem {
+public class ItemDeathwormArmor extends ArmorItem {
 
     public ItemDeathwormArmor(IafArmorMaterial material, ArmorItem.Type slot) {
         super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity LivingEntity, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                return new ModelDeathWormArmor(ModelDeathWormArmor.getBakedModel(armorSlot));
-            }
-        });
-    }
 
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (this.getMaterial() == IafItemRegistry.DEATHWORM_2_ARMOR_MATERIAL.holder()) {
             return ResourceLocation.parse("iceandfire:textures/models/armor/armor_deathworm_red" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));

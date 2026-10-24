@@ -46,6 +46,7 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
         super(
             Properties
                 .of()
+                .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.METAL)
                 .dynamicShape()
                 .strength(40, 500)
@@ -97,10 +98,6 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
         }
     }
 
-    @Override
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.BLOCK;
-    }
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {

@@ -40,7 +40,7 @@ public class TileEntityDreadSpawner extends BlockEntity implements Spawner {
 
         }
 
-        @Override
+        // NeoForge extension method (no vanilla override)
         @javax.annotation.Nullable
         public com.mojang.datafixers.util.Either<net.minecraft.world.level.block.entity.BlockEntity, net.minecraft.world.entity.Entity> getOwner() {
             return com.mojang.datafixers.util.Either.left(TileEntityDreadSpawner.this);

@@ -27,10 +27,10 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
         this.tier = toolmaterial;
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
-        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers(stack);
+        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
         return dragonsteelModifiers;
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public int getMaxDamage(ItemStack stack) {
         return isDragonsteel(getTier()) ? IafConfig.dragonsteelBaseDurability : getTier().getUses();
     }
@@ -63,7 +63,7 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
         appendHoverText(tier, stack, worldIn, tooltip, flagIn);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
         return true;
     }

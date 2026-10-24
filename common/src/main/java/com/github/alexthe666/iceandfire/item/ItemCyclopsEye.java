@@ -27,7 +27,7 @@ public class ItemCyclopsEye extends Item {
         super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(500));
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return !ItemStack.isSameItem(oldStack, newStack);
     }
@@ -54,7 +54,7 @@ public class ItemCyclopsEye extends Item {
                 }
                 if (ItemNbt.view(stack).getInt("HurtingTicks") > 120) {
                     if (world instanceof ServerLevel serverLevel) {
-                        stack.hurtAndBreak(1, serverLevel, (LivingEntity) entity, item -> {
+                        stack.hurtAndBreak(1, serverLevel, entity instanceof net.minecraft.server.level.ServerPlayer player ? player : null, item -> {
                         });
                     }
                     ItemNbt.update(stack, tag -> tag.putInt("HurtingTicks", 0));

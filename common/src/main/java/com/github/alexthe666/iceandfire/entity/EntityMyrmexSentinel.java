@@ -315,7 +315,7 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
         return super.canMove() && this.getHeldEntity() == null && !isHiding();
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean shouldRiderSit() {
         return false;
     }

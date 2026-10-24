@@ -63,7 +63,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics ms, int mouseX, int mouseY) {
-        Font font = this.getMinecraft().font;
+        Font font = this.minecraft.font;
         font.drawInBatch(this.nameable.getString(), 12, 4, 4210752, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
         font.drawInBatch(this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, 4210752, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
     }
@@ -84,9 +84,9 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
             double l = mouseX - (i + 60);
             double i1 = mouseY - (j + 14 + 19 * k);
 
-            if (l >= 0 && i1 >= 0 && l < 108 && i1 < 19 && this.menu.clickMenuButton(getMinecraft().player, k)) {
+            if (l >= 0 && i1 >= 0 && l < 108 && i1 < 19 && this.menu.clickMenuButton(this.minecraft.player, k)) {
                 flapTimer = 5;
-                this.getMinecraft().gameMode.handleInventoryButtonClick(this.menu.containerId, k);
+                this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, k);
                 return true;
             }
         }
@@ -160,7 +160,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
                 ms.blit(ENCHANTMENT_TABLE_GUI_TEXTURE, j1, j + 14 + 19 * i1, 0, 185, 108, 19);
             } else {
                 String s = "" + 3;
-                Font fontrenderer = this.getMinecraft().font;
+                Font fontrenderer = this.minecraft.font;
                 String s1 = "";
                 float textScale = 1.0F;
                 EnumBestiaryPages enchantment = this.menu.getPossiblePages()[i1];
@@ -191,7 +191,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
                         ms.pose().scale(textScale, textScale, 1);
                         fontrenderer.drawInBatch(s1, 0, 20 + 19 * i1, j2, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
                         ms.pose().popPose();
-                        fontrenderer = this.getMinecraft().font;
+                        fontrenderer = this.minecraft.font;
                         fontrenderer.drawInBatch(s, k1 + 84 - fontrenderer.width(s),
                             j + 13 + 19 * i1 + 7, j3, true, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
                     } else {
@@ -207,7 +207,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
         this.renderTooltip(ms, mouseX, mouseY);
-        boolean flag = this.getMinecraft().player.isCreative();
+        boolean flag = this.minecraft.player.isCreative();
         int i = this.menu.getManuscriptAmount();
 
         for (int j = 0; j < 3; ++j) {
@@ -269,7 +269,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
         this.open = Mth.clamp(this.open, 0.0F, 1.0F);
         float f1 = (this.flipT - this.flip) * 0.4F;
         if (flapTimer > 0) {
-            f1 = (ticks + this.getMinecraft().getTimer().getGameTimeDeltaPartialTick(false)) * 0.5F;
+            f1 = (ticks + this.minecraft.getTimer().getGameTimeDeltaPartialTick(false)) * 0.5F;
             flapTimer--;
         }
         f1 = Mth.clamp(f1, -0.2F, 0.2F);

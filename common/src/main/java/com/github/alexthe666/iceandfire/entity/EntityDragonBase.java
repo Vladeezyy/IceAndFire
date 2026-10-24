@@ -85,9 +85,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.event.EventHooks;
 import dev.vladeezyy.iceandfire.platform.transfer.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -514,7 +511,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public boolean canDestroyBlock(BlockPos pos, BlockState state) {
-        return state.getBlock().canEntityDestroy(state, level(), pos, this);
+        return dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canEntityDestroy(state, level(), pos, this);
     }
 
     @Override
@@ -1446,7 +1443,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public void breakBlock(final BlockPos position) {
-        if (NeoForge.EVENT_BUS.post(new GenericGriefEvent(this, position.getX(), position.getY(), position.getZ())).isCanceled()) {
+        if (dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, position.getX(), position.getY(), position.getZ()))) {
             return;
         }
 
@@ -1472,7 +1469,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         }
 
         if (doBreak) {
-            if (EventHooks.canEntityGrief(this.level(), this)) {
+            if (dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canEntityGrief(this.level(), this)) {
                 if (DragonUtils.canGrief(this)) {
                     // TODO :: make `force` ignore the dragon stage?
                     if (!isModelDead() && this.getDragonStage() >= 3 && (this.canMove() || this.getControllingPassenger() != null)) {
@@ -1556,7 +1553,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
 
     public abstract String getVariantName(int variant);
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean shouldRiderSit() {
         return this.getControllingPassenger() != null;
     }
@@ -2894,8 +2891,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         return FLIGHT_CHANCE_PER_TICK;
     }
 
-    @Override
-    public void onRemovedFromLevel() {
+    /** The dragon left a server level (ServerLevelEntityCallbacksMixin; NeoForge's onRemovedFromLevel before) */
+    public void onRemovedFromServerLevel() {
         if (IafConfig.chunkLoadSummonCrystal) {
             if (this.isBoundToCrystal()) {
                 DragonPosWorldData data = DragonPosWorldData.get(level());
@@ -2904,12 +2901,10 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                 }
             }
         }
-        super.onRemovedFromLevel();
     }
 
-    @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
+    /** The dragon was added to a server level (ServerLevelEntityCallbacksMixin; NeoForge's onAddedToLevel before) */
+    public void onAddedToServerLevel() {
 
         // Client and integrated server share the map in single player: only the server summons
         if (!this.level().isClientSide) {

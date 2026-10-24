@@ -26,7 +26,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import dev.vladeezyy.iceandfire.bus.Dist;
 import dev.vladeezyy.iceandfire.bus.OnlyIn;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent;
 import dev.vladeezyy.iceandfire.bus.RenderLivingEvent;
 import dev.vladeezyy.iceandfire.bus.ScreenEvent;
 import dev.vladeezyy.iceandfire.bus.ViewportEvent;

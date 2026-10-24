@@ -32,31 +32,18 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemTideTrident extends TridentItem implements IafClientItem {
+public class ItemTideTrident extends TridentItem {
 
     public ItemTideTrident() {
         super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(400).attributes(createAttributes()).component(DataComponents.TOOL, TridentItem.createToolProperties()));
     }
 
-    @Override
-    public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
-
-        consumer.accept(new IClientItemExtensions() {
-            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new RenderTideTridentItem(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        });
-    }
 
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving, int timeLeft) {
@@ -118,14 +105,14 @@ public class ItemTideTrident extends TridentItem implements IafClientItem {
     }
 
     // Piercing on top of the trident enchantments, as in the original
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean supportsEnchantment(@NotNull ItemStack stack, @NotNull Holder<Enchantment> enchantment) {
-        return enchantment.is(Enchantments.PIERCING) || super.supportsEnchantment(stack, enchantment);
+        return enchantment.is(Enchantments.PIERCING) || enchantment.value().isSupportedItem(stack);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean isPrimaryItemFor(@NotNull ItemStack stack, @NotNull Holder<Enchantment> enchantment) {
-        return enchantment.is(Enchantments.PIERCING) || super.isPrimaryItemFor(stack, enchantment);
+        return enchantment.is(Enchantments.PIERCING) || enchantment.value().isPrimaryItem(stack);
     }
 
     @Override

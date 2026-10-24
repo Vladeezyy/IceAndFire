@@ -21,7 +21,7 @@ public class ItemHydraHeart extends Item {
         super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return !ItemStack.isSameItem(oldStack, newStack);
     }

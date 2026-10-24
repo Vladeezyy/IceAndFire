@@ -91,7 +91,7 @@ public class TileEntityEggInIce extends BlockEntity {
         }
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public void handleUpdateTag(CompoundTag parentNBTTagCompound, HolderLookup.@NotNull Provider registries) {
         this.loadAdditional(parentNBTTagCompound, registries);
     }
@@ -109,7 +109,7 @@ public class TileEntityEggInIce extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override
+    // NeoForge extension method (no vanilla override)
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider registries) {
         loadAdditional(pkt.getTag(), registries);   // read from the nbt in the packet
     }

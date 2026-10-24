@@ -27,7 +27,7 @@ public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> 
     @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {
         Entity entity = IceAndFire.PROXY.getReferencedMob();
-        Font font = this.getMinecraft().font;
+        Font font = this.minecraft.font;
         if (entity instanceof EntityHippogryph) {
             EntityHippogryph hippo = (EntityHippogryph) entity;
             pGuiGraphics.drawString(font, hippo.getDisplayName().getString(), 8, 6, 4210752, false);
