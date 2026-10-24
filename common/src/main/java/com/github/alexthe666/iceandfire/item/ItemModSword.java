@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemModSword extends SwordItem implements DragonSteelOverrides<ItemModSword> {
+public class ItemModSword extends SwordItem implements DragonSteelOverrides<ItemModSword>, IafStackStatsItem {
 
     private ItemAttributeModifiers dragonsteelModifiers;
     private double dragonsteelDamage;
@@ -25,12 +25,12 @@ public class ItemModSword extends SwordItem implements DragonSteelOverrides<Item
         super(toolmaterial, new Item.Properties().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F)));
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public int getMaxDamage(ItemStack stack) {
         return isDragonsteel(getTier()) ? IafConfig.dragonsteelBaseDurability : getTier().getUses();
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
         return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();

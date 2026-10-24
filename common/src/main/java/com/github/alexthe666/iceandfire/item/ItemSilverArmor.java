@@ -15,14 +15,14 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class ItemSilverArmor extends ArmorItem {
+public class ItemSilverArmor extends ArmorItem implements IafArmorTextureItem {
 
     public ItemSilverArmor(IafArmorMaterial material, ArmorItem.Type slot) {
         super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     @Nullable
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return ResourceLocation.parse("iceandfire:textures/models/armor/" + (slot == EquipmentSlot.LEGS ? "armor_silver_metal_layer_2" : "armor_silver_metal_layer_1") + ".png");

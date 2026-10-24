@@ -8,9 +8,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,11 +18,9 @@ import java.util.*;
  * Writes the vanilla item tags that make the gear of Ice and Fire enchantable in 1.21 (swords, head_armor,
  * enchantable/durability...), from the item classes. Dev only: gradle runSelftest -Diceandfire.dumptags=<dir>.
  */
-@EventBusSubscriber(modid = IceAndFire.MODID)
 public class TagDump {
 
-    @SubscribeEvent
-    public static void onStarted(ServerStartedEvent event) {
+    public static void onStarted(net.minecraft.server.MinecraftServer server) {
         String dir = System.getProperty("iceandfire.dumptags");
         if (dir == null) {
             return;
@@ -79,7 +74,7 @@ public class TagDump {
             }
             IceAndFire.LOGGER.info("[tagdump] {} {}", entry.getKey(), entry.getValue().size());
         }
-        event.getServer().halt(false);
+        server.halt(false);
     }
 
     private static void add(Map<String, Set<String>> tags, String tag, String item) {

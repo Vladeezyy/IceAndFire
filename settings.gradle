@@ -16,4 +16,4 @@ plugins {
 rootProject.name = 'IceAndFire'
 include('common')
 include('neoforge')
-// include('fabric') // second step
+include('fabric')

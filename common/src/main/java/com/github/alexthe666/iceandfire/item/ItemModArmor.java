@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ItemModArmor extends ArmorItem {
+public class ItemModArmor extends ArmorItem implements IafArmorTextureItem {
 
     public ItemModArmor(IafArmorMaterial material, ArmorItem.Type slot) {
         super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
@@ -34,7 +34,7 @@ public class ItemModArmor extends ArmorItem {
         return super.getDescriptionId(stack);
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     @Nullable
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (this.material == IafItemRegistry.MYRMEX_DESERT_ARMOR_MATERIAL.holder()) {

@@ -166,4 +166,10 @@ public class TileEntityDragonforgeInput extends BlockEntity {
     public ItemHandler getItemHandler(@Nullable Direction facing) {
         return core != null ? core.getItemHandler(facing) : null;
     }
+
+    /** The forge core of this input, or null */
+    @Nullable
+    public TileEntityDragonforge getCore() {
+        return core;
+    }
 }

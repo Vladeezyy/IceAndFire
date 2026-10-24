@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class ItemTrollArmor extends ArmorItem {
+public class ItemTrollArmor extends ArmorItem implements IafArmorTextureItem {
 
     public EnumTroll troll;
 
@@ -45,7 +45,7 @@ public class ItemTrollArmor extends ArmorItem {
     }
 
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return ResourceLocation.parse("iceandfire:textures/models/armor/armor_troll_" + troll.name().toLowerCase(Locale.ROOT) + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }

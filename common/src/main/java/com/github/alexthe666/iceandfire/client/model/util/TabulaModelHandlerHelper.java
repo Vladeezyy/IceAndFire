@@ -19,7 +19,12 @@ public class TabulaModelHandlerHelper {
             path = path + ".tbl";
         }
 
-        InputStream stream = TabulaModelHandler.INSTANCE.getClass().getClassLoader().getResourceAsStream(path);
+        // Class#getResourceAsStream: the path is absolute ("/assets/..."), a class loader would want it without the slash
+        // (Fabric's loader returns null then); this class is in the mod's own jar
+        InputStream stream = TabulaModelHandlerHelper.class.getResourceAsStream(path);
+        if (stream == null) {
+            throw new IOException("No Tabula model " + path);
+        }
         return TabulaModelHandler.INSTANCE.loadTabulaModel(getModelJsonStream(path, stream));
     }
 

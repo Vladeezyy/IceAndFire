@@ -16,10 +16,6 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +25,6 @@ import java.util.List;
  * 64 x 64 chunks, 30 adult dragons with AI and 100 other creatures for a minute, chunk unload/reload cycles. Prints
  * "[stress]" lines with tick times and memory, and CHECK lines.
  */
-@EventBusSubscriber(modid = IceAndFire.MODID)
 public class StressTest {
     private static final boolean ENABLED = Boolean.getBoolean("iceandfire.stress");
     /** The arena: 5 x 5 forced chunks inside the generated area. */
@@ -55,25 +50,21 @@ public class StressTest {
         IceAndFire.LOGGER.info("[stress] CHECK {} {} {}", result ? "OK" : "FAIL", name, detail);
     }
 
-    @SubscribeEvent
-    public static void onStarted(ServerStartedEvent event) {
+    public static void onStarted(net.minecraft.server.MinecraftServer server) {
         if (ENABLED) {
             tick = 0;
         }
     }
 
-    @SubscribeEvent
-    public static void onTickStart(ServerTickEvent.Pre event) {
+    public static void onTickStart(net.minecraft.server.MinecraftServer server) {
         tickStart = System.nanoTime();
     }
 
-    @SubscribeEvent
-    public static void onTick(ServerTickEvent.Post event) {
+    public static void onTick(net.minecraft.server.MinecraftServer server) {
         if (tick < 0) {
             return;
         }
         tick++;
-        MinecraftServer server = event.getServer();
         ServerLevel level = server.overworld();
         long now = System.nanoTime();
         // The work of the tick, without the wait for the next one

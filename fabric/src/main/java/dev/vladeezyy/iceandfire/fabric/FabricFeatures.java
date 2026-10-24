@@ -1,0 +1,35 @@
+package dev.vladeezyy.iceandfire.fabric;
+
+/** The placed features of data/iceandfire/neoforge/biome_modifier/iaf_features.json (NeoForge reads that file) */
+final class FabricFeatures {
+    static final String[] IDS = {
+        "iceandfire:fire_dragon_roost",
+        "iceandfire:ice_dragon_roost",
+        "iceandfire:lightning_dragon_roost",
+        "iceandfire:fire_dragon_cave",
+        "iceandfire:ice_dragon_cave",
+        "iceandfire:lightning_dragon_cave",
+        "iceandfire:cyclops_cave",
+        "iceandfire:pixie_village",
+        "iceandfire:siren_island",
+        "iceandfire:hydra_cave",
+        "iceandfire:myrmex_hive_desert",
+        "iceandfire:myrmex_hive_jungle",
+        "iceandfire:spawn_death_worm",
+        "iceandfire:spawn_dragon_skeleton_lightning",
+        "iceandfire:spawn_dragon_skeleton_fire",
+        "iceandfire:spawn_dragon_skeleton_ice",
+        "iceandfire:spawn_hippocampus",
+        "iceandfire:spawn_sea_serpent",
+        "iceandfire:spawn_stymphalian_bird",
+        "iceandfire:spawn_wandering_cyclops",
+        "iceandfire:silver_ore",
+        "iceandfire:sapphire_ore",
+        "iceandfire:fire_lily",
+        "iceandfire:frost_lily",
+        "iceandfire:lightning_lily"
+    };
+
+    private FabricFeatures() {
+    }
+}

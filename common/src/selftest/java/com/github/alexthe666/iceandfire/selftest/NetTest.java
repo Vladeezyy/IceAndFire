@@ -12,12 +12,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.io.File;
 
@@ -27,7 +21,6 @@ import java.io.File;
  * adult tamed fire dragon and puts the player on it; the client flies up and forward, then gets off. Both log
  * "[nettest]" lines every second: server tick time, client tick time, fps, packets per second, game time.
  */
-@EventBusSubscriber(modid = IceAndFire.MODID)
 public class NetTest {
     private static final String MODE = System.getProperty("iceandfire.nettest", "");
 
@@ -36,29 +29,25 @@ public class NetTest {
     private static int serverTicks = -1;
     private static EntityDragonBase dragon;
 
-    @SubscribeEvent
-    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (MODE.equals("server") && event.getEntity() instanceof ServerPlayer player) {
+    public static void onLogin(net.minecraft.world.entity.player.Player joined) {
+        if (MODE.equals("server") && joined instanceof ServerPlayer player) {
             rider = player;
             serverTicks = 0;
         }
     }
 
-    @SubscribeEvent
-    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (MODE.equals("server") && event.getEntity() == rider) {
+    public static void onLogout(net.minecraft.world.entity.player.Player player) {
+        if (MODE.equals("server") && player == rider) {
             IceAndFire.LOGGER.info("[nettest] server DONE");
             rider.getServer().halt(false);
         }
     }
 
-    @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
+    public static void onServerTick(net.minecraft.server.MinecraftServer server) {
         if (serverTicks < 0 || rider == null) {
             return;
         }
         serverTicks++;
-        MinecraftServer server = event.getServer();
         if (serverTicks == 60) {
             rider.setGameMode(GameType.CREATIVE);
             BlockPos pos = rider.blockPosition().offset(4, 0, 0);
@@ -85,8 +74,7 @@ public class NetTest {
     }
 
     /** Client side: the dedicated server must not load it (Minecraft in the signatures). */
-    @EventBusSubscriber(modid = IceAndFire.MODID, value = Dist.CLIENT)
-    public static class Client {
+        public static class Client {
         // Client
         private static int riddenTicks = -1;
         private static int clientTicks;
@@ -108,7 +96,7 @@ public class NetTest {
                 return;
             }
             counterInstalled = true;
-            mc.getConnection().getConnection().channel().pipeline().addBefore("packet_handler", "nettest_counter", new io.netty.channel.ChannelInboundHandlerAdapter() {
+            channel(mc.getConnection().getConnection()).pipeline().addBefore("packet_handler", "nettest_counter", new io.netty.channel.ChannelInboundHandlerAdapter() {
                 @Override
                 public void channelRead(io.netty.channel.ChannelHandlerContext ctx, Object msg) throws Exception {
                     if (msg instanceof net.minecraft.network.protocol.BundlePacket<?> bundle) {
@@ -123,6 +111,21 @@ public class NetTest {
             });
         }
 
+        /** The netty channel of the connection (NeoForge has a getter, vanilla a private field) */
+        private static io.netty.channel.Channel channel(net.minecraft.network.Connection connection) {
+            for (java.lang.reflect.Field field : net.minecraft.network.Connection.class.getDeclaredFields()) {
+                if (field.getType() == io.netty.channel.Channel.class) {
+                    try {
+                        field.setAccessible(true);
+                        return (io.netty.channel.Channel) field.get(connection);
+                    } catch (IllegalAccessException e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+            }
+            throw new IllegalStateException("No channel in " + connection);
+        }
+
         private static String name(Object packet) {
             if (packet instanceof net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket custom) {
                 return custom.payload().type().id().getPath();
@@ -130,15 +133,13 @@ public class NetTest {
             return packet.getClass().getSimpleName().replace("Clientbound", "").replace("Packet", "");
         }
 
-        @SubscribeEvent
-        public static void onClientTickPre(ClientTickEvent.Pre event) {
+        public static void onClientTickPre() {
             if (MODE.equals("client")) {
                 tickStart = System.nanoTime();
             }
         }
 
-        @SubscribeEvent
-        public static void onClientTickPost(ClientTickEvent.Post event) {
+        public static void onClientTickPost() {
             if (!MODE.equals("client")) {
                 return;
             }

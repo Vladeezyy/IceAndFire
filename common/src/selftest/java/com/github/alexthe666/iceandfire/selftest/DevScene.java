@@ -35,10 +35,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +45,10 @@ import java.util.function.Consumer;
  * {@code iaf_scene}, shows the dragons and the other creatures, armor, the creative tabs and the bestiary, saves
  * run/screenshots/scene_*.png, logs "[scene] CHECK" lines and quits. Not part of the jar.
  */
-@EventBusSubscriber(modid = IceAndFire.MODID, value = Dist.CLIENT)
 public final class DevScene {
+    /** The other mods of the run ("id version"), set by the loader's test wiring */
+    public static java.util.function.Supplier<List<String>> OTHER_MODS = List::of;
+
     private static final boolean ENABLED = Boolean.getBoolean("iceandfire.scene");
     private static final String WORLD = "iaf_scene";
     private static final List<Pair<Integer, Consumer<Minecraft>>> STEPS = new ArrayList<>();
@@ -252,8 +250,7 @@ public final class DevScene {
         STEPS.add(Pair.of(t, action));
     }
 
-    @SubscribeEvent
-    public static void onTick(ClientTickEvent.Post event) {
+    public static void onTick() {
         if (!ENABLED) {
             return;
         }
@@ -356,11 +353,7 @@ public final class DevScene {
         player.serverLevel().setWeatherParameters(6000, 0, false, false);
         // The other mods of the run (tools/scenetest.sh -Pwith_compat)
         List<String> mods = new ArrayList<>();
-        net.neoforged.fml.ModList.get().forEachModContainer((id, container) -> {
-            if (!List.of("minecraft", "neoforge", IceAndFire.MODID, "citadel").contains(id)) {
-                mods.add(id + " " + container.getModInfo().getVersion());
-            }
-        });
+        mods.addAll(OTHER_MODS.get());
         IceAndFire.LOGGER.info("[scene] other mods: {}", mods);
     }
 

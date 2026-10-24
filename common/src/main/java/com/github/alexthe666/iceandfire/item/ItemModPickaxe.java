@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<ItemModPickaxe> {
+public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<ItemModPickaxe>, IafStackStatsItem {
 
     private ItemAttributeModifiers dragonsteelModifiers;
     private double dragonsteelDamage;
@@ -25,7 +25,7 @@ public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<
         super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 1, -2.8F)));
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
         return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();
@@ -44,7 +44,7 @@ public class ItemModPickaxe extends PickaxeItem implements DragonSteelOverrides<
         return dragonsteelModifiers;
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public int getMaxDamage(ItemStack stack) {
         return isDragonsteel(getTier()) ? IafConfig.dragonsteelBaseDurability : getTier().getUses();
     }

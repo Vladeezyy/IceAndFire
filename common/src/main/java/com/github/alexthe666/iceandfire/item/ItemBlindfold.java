@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ItemBlindfold extends ArmorItem {
+public class ItemBlindfold extends ArmorItem implements IafArmorTextureItem {
 
     public ItemBlindfold() {
         super(IafItemRegistry.BLINDFOLD_ARMOR_MATERIAL.holder(), Type.HELMET, new Item.Properties().durability(IafItemRegistry.BLINDFOLD_ARMOR_MATERIAL.getDurabilityForType(Type.HELMET)));
@@ -29,7 +29,7 @@ public class ItemBlindfold extends ArmorItem {
         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 50, 0, false, false));
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return ResourceLocation.parse("iceandfire:textures/models/armor/blindfold_layer_1.png");
     }

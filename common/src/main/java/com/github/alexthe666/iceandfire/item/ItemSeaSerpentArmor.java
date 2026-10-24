@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemSeaSerpentArmor extends ArmorItem {
+public class ItemSeaSerpentArmor extends ArmorItem implements IafArmorTextureItem {
 
     public EnumSeaSerpent armor_type;
 
@@ -49,7 +49,7 @@ public class ItemSeaSerpentArmor extends ArmorItem {
     }
 
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return ResourceLocation.parse("iceandfire:textures/models/armor/armor_tide_" + armor_type.resourceName + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }

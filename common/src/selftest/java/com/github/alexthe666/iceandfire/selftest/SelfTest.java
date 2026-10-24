@@ -30,10 +30,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +39,6 @@ import java.util.UUID;
  * Functional checks on a fresh dedicated server world (gradle runSelftest, tools/selftest.sh). Prints
  * "[selftest] CHECK OK/FAIL" lines and stops the server. Not part of the jar.
  */
-@EventBusSubscriber(modid = IceAndFire.MODID)
 public class SelfTest {
     private static final boolean ENABLED = Boolean.getBoolean("iceandfire.selftest");
     private static int tick = -1;
@@ -61,20 +56,17 @@ public class SelfTest {
         }
     }
 
-    @SubscribeEvent
-    public static void onStarted(ServerStartedEvent event) {
+    public static void onStarted(net.minecraft.server.MinecraftServer server) {
         if (ENABLED) {
             tick = 0;
         }
     }
 
-    @SubscribeEvent
-    public static void onTick(ServerTickEvent.Post event) {
+    public static void onTick(net.minecraft.server.MinecraftServer server) {
         if (tick < 0) {
             return;
         }
         tick++;
-        MinecraftServer server = event.getServer();
         ServerLevel level = server.overworld();
         try {
             if (genIndex >= 0) {
@@ -247,7 +239,7 @@ public class SelfTest {
             } else if (item instanceof net.minecraft.world.item.ArmorItem armor) {
                 repair = armor.getMaterial().value().repairIngredient().get();
             }
-            if (repair != null && repair != net.minecraft.world.item.crafting.Ingredient.EMPTY && repair.hasNoItems()) {
+            if (repair != null && repair != net.minecraft.world.item.crafting.Ingredient.EMPTY && repair.isEmpty()) {
                 noRepair.add(BuiltInRegistries.ITEM.getKey(item).getPath());
             }
         }

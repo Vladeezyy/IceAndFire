@@ -81,4 +81,11 @@ public final class NeoForgeClientPlatform implements ClientPlatform {
     public void setRenderLayer(Block block, RenderType type) {
         ItemBlockRenderTypes.setRenderLayer(block, type);
     }
+
+    @Override
+    public void registerKeyMapping(net.minecraft.client.KeyMapping mapping) {
+        // as the original: straight into the options, which exist when the mod is constructed
+        var options = net.minecraft.client.Minecraft.getInstance().options;
+        options.keyMappings = org.apache.commons.lang3.ArrayUtils.add(options.keyMappings, mapping);
+    }
 }

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["Alexthe666", "TheBv", "Vladeezyy"],
+  "contact": {
+    "sources": "${mod_sources}",
+    "issues": "${mod_issues}"
+  },
+  "license": "${license}",
+  "icon": "assets/iceandfire/textures/logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.vladeezyy.iceandfire.fabric.IceAndFireFabric"],
+    "client": ["dev.vladeezyy.iceandfire.fabric.IceAndFireFabricClient"],
+    "jei_mod_plugin": ["com.github.alexthe666.iceandfire.compat.jei.IceAndFireJEIPlugin"]
+  },
+  "mixins": ["iceandfire.fabric.mixins.json", "iceandfire.mixins.json"],
+  "accessWidener": "iceandfire.accesswidener",
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "rampart": ">=1.1.0",
+    "minecraft": "${minecraft_version}",
+    "java": ">=${java_version}"
+  }
+}

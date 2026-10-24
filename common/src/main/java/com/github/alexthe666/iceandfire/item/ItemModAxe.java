@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModAxe> {
+public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModAxe>, IafStackStatsItem {
 
     private final Tier tier;
     private ItemAttributeModifiers dragonsteelModifiers;
@@ -27,7 +27,7 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
         this.tier = toolmaterial;
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
         return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();
@@ -46,7 +46,7 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
         return dragonsteelModifiers;
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public int getMaxDamage(ItemStack stack) {
         return isDragonsteel(getTier()) ? IafConfig.dragonsteelBaseDurability : getTier().getUses();
     }

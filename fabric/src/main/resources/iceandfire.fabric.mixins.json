@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "dev.vladeezyy.iceandfire.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EntityMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "MobMixin",
+    "ProjectileMixin"
+  ],
+  "client": [
+    "client.CameraMixin",
+    "client.ChestRendererMixin",
+    "client.LivingEntityRendererMixin",
+    "client.MinecraftMixin",
+    "client.PlayerRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

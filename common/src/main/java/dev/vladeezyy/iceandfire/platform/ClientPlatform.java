@@ -58,4 +58,7 @@ public interface ClientPlatform {
 
     /** The render layer of a block (NeoForge: ItemBlockRenderTypes, Fabric: BlockRenderLayerMap) */
     void setRenderLayer(net.minecraft.world.level.block.Block block, net.minecraft.client.renderer.RenderType type);
+
+    /** Adds a key binding to the controls */
+    void registerKeyMapping(net.minecraft.client.KeyMapping mapping);
 }

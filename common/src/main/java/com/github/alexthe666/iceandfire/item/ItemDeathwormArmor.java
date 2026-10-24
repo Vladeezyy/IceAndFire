@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class ItemDeathwormArmor extends ArmorItem {
+public class ItemDeathwormArmor extends ArmorItem implements IafArmorTextureItem {
 
     public ItemDeathwormArmor(IafArmorMaterial material, ArmorItem.Type slot) {
         super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
@@ -23,7 +23,7 @@ public class ItemDeathwormArmor extends ArmorItem {
 
 
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (this.getMaterial() == IafItemRegistry.DEATHWORM_2_ARMOR_MATERIAL.holder()) {
             return ResourceLocation.parse("iceandfire:textures/models/armor/armor_deathworm_red" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));

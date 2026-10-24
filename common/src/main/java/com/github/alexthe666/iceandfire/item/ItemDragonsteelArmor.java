@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 import static com.github.alexthe666.iceandfire.item.IafItemRegistry.*;
 
-public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDragonItem {
+public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDragonItem, IafArmorTextureItem, IafStackStatsItem {
 
     private final IafArmorMaterial material;
 
@@ -39,7 +39,7 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
 
 
     // The defense comes from the config, which loads after the items are registered
-    // NeoForge extension method (no vanilla override)
+    @Override
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
         EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(this.type.getSlot());
         ResourceLocation id = ResourceLocation.withDefaultNamespace("armor." + this.type.getName());
@@ -49,7 +49,7 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
                 .build();
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public int getMaxDamage(ItemStack stack) {
         if (this.type != null) {
             return material.getDurabilityForType(this.type);
@@ -67,7 +67,7 @@ public class ItemDragonsteelArmor extends ArmorItem implements IProtectAgainstDr
         return this.material.getDefenseForType(this.getType());
     }
 
-    // NeoForge extension method (no vanilla override)
+    @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (material == DRAGONSTEEL_FIRE_ARMOR_MATERIAL) {
             return ResourceLocation.parse("iceandfire:textures/models/armor/armor_dragonsteel_fire" + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));

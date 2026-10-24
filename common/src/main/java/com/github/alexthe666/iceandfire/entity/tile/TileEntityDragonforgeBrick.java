@@ -22,7 +22,8 @@ public class TileEntityDragonforgeBrick extends BlockEntity {
         return core != null ? core.getItemHandler(facing) : null;
     }
 
-    private TileEntityDragonforge getConnectedTileEntity() {
+    /** The forge core next to this brick, or null */
+    public TileEntityDragonforge getConnectedTileEntity() {
         for (Direction facing : Direction.values()) {
             if (level.getBlockEntity(worldPosition.relative(facing)) instanceof TileEntityDragonforge forge) {
                 return forge;
