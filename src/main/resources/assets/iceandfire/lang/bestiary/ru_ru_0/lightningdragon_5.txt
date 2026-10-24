@@ -21,9 +21,9 @@
 Грозовых драконов.
 
 Пример: доспех из чешуи грозового
-дракона,бутыль крови,драконосталь,
-блок чешуи и многое другое.
-
+дракона,бутыль
+крови,драконосталь, блок чешуи и
+многое другое.
 <item><iceandfire:dragonscale_amythest 100 120 40 1>
 <item><iceandfire:armor_amythest_helmet 100 140 30 1>
 <item><iceandfire:dragonsteel_lightning_ingot 100 160 40 1>

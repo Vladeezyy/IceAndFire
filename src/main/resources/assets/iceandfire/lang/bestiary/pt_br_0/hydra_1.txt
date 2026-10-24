@@ -1,7 +1,7 @@
-Depois que sua única cabeça receber
-danos significativos, ela será
-cortada e um jato de sangue irá
-aparecer em seu lugar.
+Depois que sua única cabeça
+receber danos significativos, ela
+será cortada e um jato de sangue
+irá aparecer em seu lugar.
 
 <image><drawings_2.png 40 70 0 210 114 44 1>
 

@@ -16,8 +16,8 @@ Trolls also drop a multitude of other
 items on death. If a weapon is not
 dropped, they will drop the materials
 they created it from. Mountain trolls
-also have a chance to drop an emerald
-
+also have a chance to drop an
+emerald
 on death. Frost trolls also have the
 possibility to drop a single
 sapphire. Forest trolls can drop
@@ -29,10 +29,10 @@ leathery hides.
 
 
 
-These can be crafted into armor that
-has a very special advantage. Just
-like the troll it was crafted from,
-it is very resistant to projectile
-damage. A full set of troll armor
-has a 75% reduction of projectile
-damage.
+These can be crafted into armor
+that has a very special advantage.
+Just like the troll it was crafted
+from, it is very resistant to
+projectile damage. A full set of troll
+armor has a 75% reduction of
+projectile damage.

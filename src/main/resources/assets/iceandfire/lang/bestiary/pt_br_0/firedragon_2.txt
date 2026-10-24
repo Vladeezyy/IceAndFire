@@ -20,15 +20,15 @@ de provocar graves ferimentos.
 <image><drawings_firedragon_attacks.png 80 220 330 20 117 77 0.7>
 
 
-O dragão também tem um ataque 
-corpo-a-corpo final, no qual ele 
-eleva sua cauda para bater no alvo 
-com uma grande força cinética. Esse 
-ataque é muito eficaz, mas ele precisa 
-de um certo tempo para fazer isso. 
-Eles também batem suas asas contra 
-as presas para empurra-las para trás.
-
+O dragão também tem um ataque
+corpo-a-corpo final, no qual ele
+eleva sua cauda para bater no alvo
+com uma grande força cinética. Esse
+ataque é muito eficaz, mas ele
+precisa de um certo tempo para
+fazer isso. Eles também batem suas
+asas contra as presas para
+empurra-las para trás.
 Derrotar um dragão de qualquer estágio
 não é uma tarefa fácil. Eles sempre
 usarão ataques de longa distância, por 

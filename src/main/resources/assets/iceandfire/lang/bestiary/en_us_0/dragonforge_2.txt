@@ -20,13 +20,13 @@ need dragon bone walls.
 
 
 
-To properly power a forge, one must
-place the chained or tame dragon
-directly in front of the aperture.
-Then the dragon will begin to
-breathe flame or frost as long as
-there are valid items in the forge.
-
+To properly power a forge, one
+must place the chained or tame
+dragon directly in front of the
+aperture. Then the dragon will begin
+to breathe flame or frost as long
+as there are valid items in the
+forge.
 
 Most items, when placed in a forge,
 will be turned to ash or dragon ice

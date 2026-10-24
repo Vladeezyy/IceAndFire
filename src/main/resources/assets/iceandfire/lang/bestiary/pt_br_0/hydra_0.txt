@@ -31,11 +31,11 @@ A Hidra é caracterizada por possuir
 sopros e mordidas extremamente
 venenosas, mas também por suas
 habilidades regenerativas mágicas.
-Quando uma cabeça é cortada, duas 
-surgirão em seu lugar. Para cada 
-cabeça crescida a hidra incrementa 
-seu poder regenerativo, se tornando 
-ainda mais forte.
+Quando uma cabeça é cortada, duas
+surgirão em seu lugar. Para cada
+cabeça crescida a hidra incrementa
+seu poder regenerativo, se
+tornando ainda mais forte.
 
 A Hidra pode ter no máximo nove 
 cabeças, ela cessará sua regeneração 

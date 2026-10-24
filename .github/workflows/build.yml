@@ -1,0 +1,67 @@
+# Build on every push and pull request, then the functional self-test (tools/selftest.sh) on a headless dev server.
+# The jars and the self-test log are kept as artifacts.
+name: Build
+
+on:
+  push:
+    paths-ignore: ['**.md', 'docs/**', 'licenses/**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # java_version from gradle.properties (21 for 1.21.x, 25 for 26.x); org.gradle.java.home points at a JDK on
+      # the dev Mac and does not exist here
+      - name: Prepare gradle.properties
+        id: props
+        run: |
+          sed -i '/^org\.gradle\.java\.home=/d' gradle.properties
+          v=$(sed -n 's/^java_version=//p' gradle.properties | tr -d '[:space:]')
+          if [ -z "$v" ]; then
+            case "$(sed -n 's/^minecraft_version=//p' gradle.properties)" in 26*) v=25 ;; *) v=21 ;; esac
+          fi
+          echo "java=$v" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.props.outputs.java }}
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: chmod +x gradlew && ./gradlew build --console=plain
+
+      # tools/selftest.sh: the SelfTest checks on a fresh dev server world, "[selftest] DONE ok=N fail=0"
+      - name: Self-test
+        run: |
+          bash tools/selftest.sh
+          mv build-selftest.log selftest-neoforge.log
+          grep -qE '\[selftest\] DONE ok=[0-9]+ fail=0' selftest-neoforge.log
+
+      - name: Upload test logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: selftest-*.log
+          if-no-files-found: ignore
+
+      - name: Upload jars
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: jars
+          path: |
+            */build/libs/*.jar
+            build/libs/*.jar
+          if-no-files-found: ignore

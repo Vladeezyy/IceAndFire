@@ -1,40 +1,40 @@
-Todas as armas com quitina de Myrmex 
-são fracas contra artrópodes, mas
-causam danos adicionais contra
-Minhocas Mortíferas e Não-Artrópodes.
+Todas as armas com quitina de
+Myrmex sÃ£o fracas contra
+artrÃ³podes, mas causam danos
+adicionais contra Minhocas
+MortÃ­feras e NÃ£o-ArtrÃ³podes.
 
 
 
+FerrÃµes de Myrmex sÃ£o usados para
+a criaÃ§Ã£o de espadas venenosas
+que sÃ£o mais potentes que as armas
+myrmex normais.
 
-Ferrões de Myrmex são usados para a
-criação de espadas venenosas que são 
-mais potentes que as armas myrmex 
-normais.
 
+PedaÃ§os de resina Myrmex sÃ£o
+liberadas por myrmex de todas as
+castas. Eles produzem esse
+estranho material por si sÃ³s, mas
+eles ainda vÃ£o pegar qualquer coisa
+que puderem encontrar
+Ao jogar pedaÃ§os de resina no
+chÃ£o perto de Myrmex OperÃ¡rias,
+vocÃª poderÃ¡ aumentar sua
+reputaÃ§Ã£o com a colÃ´nia.
 
-Pedaços de resina Myrmex são liberadas
-por myrmex de todas as castas. Eles
-produzem esse estranho material por
-si sós, mas eles ainda vão pegar 
-qualquer coisa que puderem encontrar
-
-Ao jogar pedaços de resina no chão
-perto de Myrmex Operárias, você
-poderá aumentar sua reputação
-com a colônia.
-
-Reputação é um conceito importante
+ReputaÃ§Ã£o Ã© um conceito importante
 de se considerar ao lidar com
-colônias Myrmex. A reputação
-poderá ser aumentada ao presentear 
-e trocar, e poderá ser reduzida ao
-atacar ou matar qualquer membro da
-colônia.
+colÃ´nias Myrmex. A reputaÃ§Ã£o
+poderÃ¡ ser aumentada ao
+presentear e trocar, e poderÃ¡ ser
+reduzida ao atacar ou matar
+qualquer membro da colÃ´nia.
 
-A reputação padrão de humanos em
-cada colônia é 0. Aos 25, Myrmex
-se tornarão neutros. Aos 50, eles 
-permitirão negociações. Aos 75,
-eles permitirão que alguém use
-um báculo myrmex para comandar a
-colônia e seus locais.
+A reputaÃ§Ã£o padrÃ£o de humanos em
+cada colÃ´nia Ã© 0. Aos 25, Myrmex
+se tornarÃ£o neutros. Aos 50, eles 
+permitirÃ£o negociaÃ§Ãµes. Aos 75,
+eles permitirÃ£o que alguÃ©m use
+um bÃ¡culo myrmex para comandar a
+colÃ´nia e seus locais.

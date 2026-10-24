@@ -1,15 +1,15 @@
 Muito mais valorizadas que a quitina,
 Essas minhocas "domadas" não são
-controláveis em um sentido geral, 
-mas elas se recusarão a atacar seu 
-dono e também seu gado. Elas crescem 
-muito rapidamente, e atacam criaturas
-hostis. Elas não irão o acompanhar
-nem seguir qualquer ordem, ao invés
-disso elas percorrerão um local
-com um raio de 50 blocos do local
-de onde nasceram.
-
+controláveis em um sentido geral,
+mas elas se recusarão a atacar seu
+dono e também seu gado. Elas
+crescem muito rapidamente, e atacam
+criaturas hostis. Elas não irão o
+acompanhar nem seguir qualquer
+ordem, ao invés disso elas
+percorrerão um local com um raio de
+50 blocos do local de onde
+nasceram.
 Lendas até falam de ovos raros que 
 geram minhocas mortíferas gigantes.
 Deve ser esta a razão dos desertos

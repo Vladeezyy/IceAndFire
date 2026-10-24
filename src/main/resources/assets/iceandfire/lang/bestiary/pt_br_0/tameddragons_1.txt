@@ -9,13 +9,13 @@ de seu crescimento. Eu posso ver
 quantos anos ele tem, seu gênero 
 e qual nível sua fome está.
 
-Colocar um crânio de dragão no 
-topo de um bastão gera um efeito 
-interessante em dragões domesticados. 
-Ao usá-lo em um dragão, você pode 
-ordenar que a besta fique quieta ou 
-que vagueie livremente por aí.
-
+Colocar um crânio de dragão no topo
+de um bastão gera um efeito
+interessante em dragões
+domesticados. Ao usá-lo em um
+dragão, você pode ordenar que a
+besta fique quieta ou que vagueie
+livremente por aí.
 
 
 

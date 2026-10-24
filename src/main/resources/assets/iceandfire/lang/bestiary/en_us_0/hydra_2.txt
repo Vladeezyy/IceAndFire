@@ -3,9 +3,9 @@
 
 
 
-The hydra fang is a valuable item that
-can be used to craft special arrows
-which poison their targets.
+The hydra fang is a valuable item
+that can be used to craft special
+arrows which poison their targets.
 
 <recipe><iceandfire:hydra_arrow 0 minecraft:air 0 iceandfire:hydra_fang 0 minecraft:air 0 minecraft:air 0 minecraft:stick 0 minecraft:air 0 minecraft:air 0 minecraft:waterlily 0 minecraft:air 0 0 75 1>
 

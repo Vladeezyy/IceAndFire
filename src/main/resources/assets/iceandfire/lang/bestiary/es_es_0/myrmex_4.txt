@@ -15,10 +15,10 @@ exclusivamente huevos.
 
 
 
-Los bastones myrmex se pueden usar
-para modificar la estructura de las
-colonias myrmex. Llevar uno en la
-
+Los bastones myrmex se pueden
+usar para modificar la estructura
+de las colonias myrmex. Llevar uno
+en la
 mano e interactuar con un myrmex
 lo vinculará a su colonia. Al
 usarlo, se pueden eliminar ciertas

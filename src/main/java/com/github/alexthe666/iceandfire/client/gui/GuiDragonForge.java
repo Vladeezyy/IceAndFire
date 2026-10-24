@@ -38,7 +38,16 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
         Font font = this.getMinecraft().font;
         if (tileFurnace != null) {
             String s = I18n.get("block.iceandfire.dragonforge_" + DragonType.getNameFromInt(dragonType) + "_core");
-            pGuiGraphics.drawString(this.font, s, this.imageWidth / 2 - font.width(s) / 2, 6, 4210752, false);
+            // A long name (ru: "Сердце огненной драконьей кузни") is squeezed into the frame
+            int room = this.imageWidth - 12;
+            int width = font.width(s);
+            pGuiGraphics.pose().pushPose();
+            pGuiGraphics.pose().translate(this.imageWidth / 2F, 6, 0);
+            if (width > room) {
+                pGuiGraphics.pose().scale((float) room / width, 1F, 1F);
+            }
+            pGuiGraphics.drawString(this.font, s, -width / 2, 0, 4210752, false);
+            pGuiGraphics.pose().popPose();
         }
         pGuiGraphics.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, 4210752, false);
     }

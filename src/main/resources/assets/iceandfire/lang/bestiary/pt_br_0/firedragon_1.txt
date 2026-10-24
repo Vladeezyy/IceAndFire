@@ -26,13 +26,13 @@ dano.
 
 
 A explosão de fogo não é o único
-ataque elemental. O dragão também 
-pode criar uma explosão de chamas 
-em blocos solidificados. Esta bola 
-de fogo explosiva é jogada na 
-direção da presa do dragão. Somente 
-dragões experientes são capazes de 
-fazer este ataque.
+ataque elemental. O dragão também
+pode criar uma explosão de chamas
+em blocos solidificados. Esta bola de
+fogo explosiva é jogada na direção
+da presa do dragão. Somente
+dragões experientes são capazes
+de fazer este ataque.
 
 
 <image><drawings_firedragon_attacks.png 360 242 262 220 213 78 0.6>

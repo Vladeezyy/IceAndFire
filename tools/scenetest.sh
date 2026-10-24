@@ -5,8 +5,15 @@ cd "$(dirname "$0")/.."
 . tools/common.sh
 kill_runs 'runScene|iceandfire.scene'
 rm -rf run/saves/iaf_scene run/screenshots/scene_*.png build-scene.log
+# SCENE_LANG=ru_ru (or uk_ua...): the language of the client for this run, English again afterwards
+lang_option() {
+  if grep -q '^lang:' run/options.txt; then perl -pi -e "s/^lang:.*/lang:$1/" run/options.txt; else echo "lang:$1" >> run/options.txt; fi
+}
+lang_option "${SCENE_LANG:-en_us}"
 timed 900 ./gradlew runScene --console=plain "$@" > build-scene.log 2>&1 < /dev/null
-echo "exit $?"
+status=$?
+lang_option en_us
+echo "exit $status"
 grep -a -E '\[scene\] (CHECK|DONE)' build-scene.log | sed -E 's/^.*\[scene\] //'
 ls run/screenshots/ 2>/dev/null | grep scene_
 echo "--- errors"

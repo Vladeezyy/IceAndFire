@@ -54,6 +54,8 @@ adult dragon; load test with 30 adult dragons and 100 creatures, 4096 generated 
 
 ## Known issues
 
+- Dragon corpses shown as standing dragons on some servers ([#5297](https://github.com/AlexModGuy/Ice_and_Fire/issues/5297)):
+  not reproduced in the port. If you see it, please report it here with the list of your server mods.
 
 ## License
 

@@ -54,8 +54,8 @@ public final class DevScene {
     private static final boolean ENABLED = Boolean.getBoolean("iceandfire.scene");
     private static final String WORLD = "iaf_scene";
     private static final List<Pair<Integer, Consumer<Minecraft>>> STEPS = new ArrayList<>();
-    /** The close-ups start at tick 700, one creature every 30 ticks; END leaves room for 40 of them. */
-    private static final int END = 700 + 40 * 30;
+    /** The close-ups start at tick 800, one creature every 30 ticks; END leaves room for 40 of them. */
+    private static final int END = 800 + 40 * 30;
     private static boolean opened;
     private static int tick;
     private static int failures;
@@ -119,7 +119,30 @@ public final class DevScene {
             mc.setScreen(new GuiBestiary(book));
         });
         at(640, mc -> shot(mc, "bestiary"));
-        at(650, mc -> mc.setScreen(null));
+        // Pages with text (the translations must fit the page): SCENE_LANG=ru_ru tools/scenetest.sh
+        at(645, mc -> bestiaryPage(mc, "FIREDRAGON", 0));
+        at(655, mc -> shot(mc, "bestiary_firedragon_0"));
+        at(660, mc -> bestiaryPage(mc, "TAMEDDRAGONS", 1));
+        at(670, mc -> shot(mc, "bestiary_tameddragons_1"));
+        at(675, mc -> bestiaryPage(mc, "MYRMEX", 3));
+        at(685, mc -> shot(mc, "bestiary_myrmex_3"));
+        at(690, mc -> mc.setScreen(null));
+        // Screens with labels: the dragon (name, health, stage, gender, hunger), the lectern, the dragon forge
+        at(700, mc -> server(mc, DevScene::dragonScreen));
+        at(725, mc -> shot(mc, "gui_dragon"));
+        at(730, mc -> {
+            mc.setScreen(null);
+            server(mc, p -> level(p).getEntitiesOfClass(EntityDragonBase.class, p.getBoundingBox().inflate(40)).forEach(Entity::discard));
+        });
+        at(740, mc -> mc.setScreen(new com.github.alexthe666.iceandfire.client.gui.GuiLectern(
+            new com.github.alexthe666.iceandfire.inventory.ContainerLectern(0, mc.player.getInventory()), mc.player.getInventory(),
+            net.minecraft.network.chat.Component.translatable("block.iceandfire.lectern"))));
+        at(750, mc -> shot(mc, "gui_lectern"));
+        at(755, mc -> mc.setScreen(new com.github.alexthe666.iceandfire.client.gui.GuiDragonForge(
+            new com.github.alexthe666.iceandfire.inventory.ContainerDragonForge(0, mc.player.getInventory()), mc.player.getInventory(),
+            net.minecraft.network.chat.Component.translatable("iceandfire.fire_dragon_forge"))));
+        at(765, mc -> shot(mc, "gui_dragonforge"));
+        at(770, mc -> mc.setScreen(null));
         at(END + 20, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
@@ -137,7 +160,7 @@ public final class DevScene {
     }
 
     private static void addCloseUps() {
-        int t0 = 700;
+        int t0 = 800;
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
             ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
             if (id.getNamespace().equals(IceAndFire.MODID) && MOBS.contains(id.getPath())) {
@@ -167,6 +190,35 @@ public final class DevScene {
         }
     }
 
+    private static void bestiaryPage(Minecraft mc, String page, int number) {
+        if (mc.screen instanceof GuiBestiary gui) {
+            gui.pageType = com.github.alexthe666.iceandfire.enums.EnumBestiaryPages.valueOf(page);
+            gui.bookPages = number;
+            try {
+                java.lang.reflect.Field index = GuiBestiary.class.getDeclaredField("index");
+                index.setAccessible(true);
+                index.setBoolean(gui, false);
+            } catch (ReflectiveOperationException e) {
+                check("bestiary page " + page, false, e);
+            }
+        } else {
+            check("bestiary open for " + page, false, mc.screen);
+        }
+    }
+
+    /** An adult tamed fire dragon of the player, its inventory screen open. */
+    private static void dragonScreen(ServerPlayer player) {
+        // Next to the player: ContainerDragon closes beyond 8 blocks
+        BlockPos near = player.blockPosition().offset(3, 0, 0);
+        near = near.atY(level(player).getHeight(Heightmap.Types.MOTION_BLOCKING, near.getX(), near.getZ()));
+        Entity entity = place(level(player), IafEntityRegistry.FIRE_DRAGON.get(), near, 180);
+        if (entity instanceof EntityDragonBase dragon) {
+            dragon.setAgeInDays(60);
+            dragon.tame(player);
+            dragon.openInventory(player);
+        }
+    }
+
     private static ServerLevel level(ServerPlayer player) {
         return player.serverLevel();
     }
@@ -188,6 +240,10 @@ public final class DevScene {
         Entity entity = place(level, type, stage.offset(0, 0, 0), 200);
         lastCloseUp = entity;
         float size = Math.max(entity.getBbWidth(), entity.getBbHeight());
+        if (entity instanceof com.github.alexthe666.iceandfire.entity.EntitySeaSerpent serpent) {
+            // The body (its parts) is about 4.5 times its scale long, the hitbox is the head only: the camera was inside
+            size = Math.max(size, serpent.getSeaSerpentScale() * 4.5F);
+        }
         int distance = Math.max(4, (int) Math.ceil(size * 2.2F));
         look(player, stage.offset(distance / 3, Math.max(2, (int) (entity.getBbHeight() * 0.8F) + 1), distance), stage.offset(0, (int) (entity.getBbHeight() / 2), 0));
     }

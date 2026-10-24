@@ -2,37 +2,37 @@
 
 
 
-§nSoldados
-Os soldados são a primeira linha 
-de defesa da colônia. Eles ficam em
-torno de indivíduos de outras castas
-para protegê-los de outras ameaças.
+Â§nSoldados
+Os soldados sÃ£o a primeira linha de
+defesa da colÃ´nia. Eles ficam em
+torno de indivÃ­duos de outras castas
+para protegÃª-los de outras
+ameaÃ§as.
+
+
+
+Â§nMonarcas
+Os machos sÃ£o os membros
+destinados Ã  reproduÃ§Ã£o e os
+Ãºnicos membros capazes de voar. Os
+monarcas sÃ³ voam depois de um
+longo perÃ­odo de inatividade na
+colÃ´nia. Quando dois
+membros da realeza acasalam, o
+macho morre e a fÃªmea se torna
+rainha.
 
 
 
 
-§nMonarcas
-Os machos são os membros destinados
-à reprodução e os únicos membros
-capazes de voar. Os monarcas só
-voam depois de um longo período de
-inatividade na colônia. Quando dois
-
-membros da realeza acasalam, o macho
-morre e a fêmea se torna rainha.
 
 
-
-
-
-
-
-§nSentinelas
-As sentinelas são a casta de 
-operações secretas da colônia. 
-Elas observam rotas próximas de 
+Â§nSentinelas
+As sentinelas sÃ£o a casta de 
+operaÃ§Ãµes secretas da colÃ´nia. 
+Elas observam rotas prÃ³ximas de 
 forrageamento, se escondem e 
 esperam, para emboscar presas em 
 potencial e possiveis predadores 
-da colônia. Elas pertencem à mais 
-mortal casta, além da rainha.
+da colÃ´nia. Elas pertencem Ã  mais 
+mortal casta, alÃ©m da rainha.

@@ -35,7 +35,7 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | [#5369](https://github.com/AlexModGuy/Ice_and_Fire/issues/5369) | Dragon health above 1024 from config has no effect | Attribute cap: document or raise via `max_health` range |
 | [#4768](https://github.com/AlexModGuy/Ice_and_Fire/issues/4768) | Lightning dragon head twitches while flying | Animation |
 
-## Fixed so far (code done, not yet tested in game)
+## Fixed (covered by the tests in `tools/`)
 
 | Problem | Fix |
 |---|---|
@@ -87,6 +87,10 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
   by the same factor) — `client/render/entity/VanillaScale.undo`, dimensions scaled once. Adult dragon hitbox 23 → 5.25
   blocks, rider on the back (net test logs the rider position and takes a third-person shot). #4768: flight cycle
   segment skipped when only its END frame equalled the flying pose (`DragonTabulaModelAnimator`), now only when both do.
+- Tests on Windows (2026-10-19): self-test 29/29; client scene 28/28 with Sodium, Iris, Lithium, FerriteCore, ModernFix,
+  Jade, EntityCulling, AttributeFix (`-Pwith_compat`); net test: rider on the back, dismount, no errors; stress 13/13
+  (8.6 ms average tick, the queen stays 6000 ticks). Scene frames the sea serpent by its body length (the camera was
+  inside it once its hitbox stopped being scaled twice).
 - Tests on macOS: self-test 29/29, stress 13/13 (12.5 ms average tick with 30 dragons; the test hive has its queen,
   5 workers, 3 soldiers and a sentinel, 6000 ticks of /tick sprint, the queen stays), net test, scene.
 
@@ -103,4 +107,7 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
 
 ## TODO
 
-- Nothing open from the issue list; next: play-test feedback.
+- [#5297](https://github.com/AlexModGuy/Ice_and_Fire/issues/5297) dragon corpses standing on servers: not reproduced
+  (the client ticks every entity of loaded chunks in 1.21.1, the dead flag is synced data; a dragon received dead
+  starts in the pose since beta.1). Needs a report with the server mods.
+- Next: play-test feedback.

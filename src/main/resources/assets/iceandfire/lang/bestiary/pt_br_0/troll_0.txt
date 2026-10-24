@@ -1,6 +1,6 @@
-Tróis são feras terríveis que
+TrÃ³is sÃ£o feras terrÃ­veis que
 habitam cavernas do subsolo. Esses
-monstros poderosissímos podem ser 
+monstros poderosissÃ­mos podem ser 
 encontrados em cavernas abaixo de 
 florestas, montanhas, e biomas 
 gelados ao redor do mundo.
@@ -32,7 +32,7 @@ potencial.
 
 
 Golpeando pela lateral ou batendo
-diretamente na cabeça, o trol 
+diretamente na cabeÃ§a, o trol 
 acerta seu alvo com qualquer
 objeto semelhante a uma clava que 
 ele encontrar, incluindo: pilares de 
