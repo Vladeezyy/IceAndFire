@@ -260,7 +260,10 @@ public class SelfTest {
     private static void generateStep(ServerLevel level) {
         int side = GEN_RADIUS * 2;
         int total = side * side;
-        for (int n = 0; n < 16 && genIndex < total; n++, genIndex++) {
+        // up to 16 chunks, at most ~2 s per tick: a CI runner with 2 cores needs over a minute for 16 fresh chunks far
+        // from spawn, and the watchdog (60 s, kept on to catch real hangs) stopped the server there
+        long start = System.nanoTime();
+        for (int n = 0; n < 16 && genIndex < total && System.nanoTime() - start < 2_000_000_000L; n++, genIndex++) {
             int cx = 500 + genIndex % side - GEN_RADIUS;
             int cz = 500 + genIndex / side - GEN_RADIUS;
             level.getChunk(cx, cz);
