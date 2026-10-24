@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.world;
 
 import net.minecraft.world.level.border.WorldBorder;
-import com.github.alexthe666.citadel.config.biome.SpawnBiomeData;
+import dev.vladeezyy.rampart.config.biome.SpawnBiomeData;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.config.BiomeConfig;

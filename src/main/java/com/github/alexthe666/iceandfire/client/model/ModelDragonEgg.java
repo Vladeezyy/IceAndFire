@@ -1,8 +1,8 @@
 package com.github.alexthe666.iceandfire.client.model;
 
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
-import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
-import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
+import dev.vladeezyy.rampart.client.model.basic.BasicModelPart;
 import com.github.alexthe666.iceandfire.entity.DragonType;
 import com.github.alexthe666.iceandfire.entity.EntityDragonEgg;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityEggInIce;

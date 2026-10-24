@@ -32,8 +32,8 @@ config="iceandfire.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="citadel"
+    modId="rampart"
     type="required"
-    versionRange="${citadel_version_range}"
+    versionRange="${rampart_version_range}"
     ordering="AFTER"
     side="BOTH"

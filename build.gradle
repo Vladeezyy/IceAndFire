@@ -12,6 +12,7 @@ base {
 }
 
 repositories {
+    mavenLocal() { content { includeGroup 'dev.vladeezyy.rampart' } } // Rampart: ./gradlew publishToMavenLocal there
     maven {
         url = 'https://api.modrinth.com/maven'
         content { includeGroup 'maven.modrinth' }
@@ -103,7 +104,7 @@ configurations {
 }
 
 dependencies {
-    implementation "maven.modrinth:citadel:${citadel_version}"
+    implementation "dev.vladeezyy.rampart:rampart-neoforge:${rampart_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
@@ -127,7 +128,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version_range      : neo_version_range,
-            citadel_version_range  : citadel_version_range,
+            rampart_version_range  : rampart_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,

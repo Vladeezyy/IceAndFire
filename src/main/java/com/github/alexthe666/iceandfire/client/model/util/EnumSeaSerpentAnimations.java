@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model.util;
 
-import com.github.alexthe666.citadel.client.model.TabulaModel;
+import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;

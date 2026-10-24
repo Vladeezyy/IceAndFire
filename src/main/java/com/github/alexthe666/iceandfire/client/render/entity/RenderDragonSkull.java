@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import com.github.alexthe666.citadel.client.model.TabulaModel;
-import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
+import dev.vladeezyy.rampart.client.model.TabulaModel;
+import dev.vladeezyy.rampart.client.model.basic.BasicModelPart;
 import com.github.alexthe666.iceandfire.entity.EntityDragonSkull;
 import com.github.alexthe666.iceandfire.enums.EnumDragonTextures;
 import com.mojang.blaze3d.vertex.PoseStack;

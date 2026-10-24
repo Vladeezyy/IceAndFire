@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.model;
 
-import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
-import com.github.alexthe666.citadel.client.model.ModelAnimator;
+import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
+import dev.vladeezyy.rampart.client.model.ModelAnimator;
 
 public class ModelUtils {
 

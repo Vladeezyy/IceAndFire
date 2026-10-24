@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.config;
 
-import com.github.alexthe666.citadel.config.biome.SpawnBiomeConfig;
-import com.github.alexthe666.citadel.config.biome.SpawnBiomeData;
+import dev.vladeezyy.rampart.config.biome.SpawnBiomeConfig;
+import dev.vladeezyy.rampart.config.biome.SpawnBiomeData;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;

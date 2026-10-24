@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.model.ModelGorgonHead;
 import com.github.alexthe666.iceandfire.client.model.ModelGorgonHeadActive;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;

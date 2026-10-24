@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
 import net.minecraft.util.FastColor;
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.model.ModelCockatrice;
 import com.github.alexthe666.iceandfire.client.model.ModelCockatriceChick;
 import com.github.alexthe666.iceandfire.client.particle.CockatriceBeamRender;

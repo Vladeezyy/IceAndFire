@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.ai;
 
-import com.github.alexthe666.citadel.animation.IAnimatedEntity;
+import dev.vladeezyy.rampart.animation.IAnimatedEntity;
 import com.github.alexthe666.iceandfire.entity.EntityGhost;
 import com.github.alexthe666.iceandfire.entity.util.DragonUtils;
 import net.minecraft.core.BlockPos;

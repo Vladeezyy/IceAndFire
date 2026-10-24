@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
-import com.github.alexthe666.citadel.animation.IAnimatedEntity;
+import dev.vladeezyy.rampart.animation.IAnimatedEntity;
 import com.github.alexthe666.iceandfire.client.model.ModelBipedBase;
 import com.github.alexthe666.iceandfire.entity.util.IHasArmorVariant;
 import net.minecraft.client.renderer.entity.MobRenderer;

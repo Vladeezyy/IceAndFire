@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.model.ModelDragonEgg;
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexEgg;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
 import net.minecraft.util.FastColor;
-import com.github.alexthe666.citadel.animation.IAnimatedEntity;
+import dev.vladeezyy.rampart.animation.IAnimatedEntity;
 import com.github.alexthe666.iceandfire.client.model.ModelBipedBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

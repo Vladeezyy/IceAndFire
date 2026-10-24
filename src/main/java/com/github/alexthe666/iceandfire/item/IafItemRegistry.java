@@ -5,7 +5,7 @@ import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
-import com.github.alexthe666.citadel.server.item.CustomToolMaterial;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.datagen.tags.BannerPatternTagGenerator;

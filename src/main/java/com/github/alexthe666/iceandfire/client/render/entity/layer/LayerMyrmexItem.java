@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.model.ModelMyrmexBase;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderMyrmexBase;
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexBase;

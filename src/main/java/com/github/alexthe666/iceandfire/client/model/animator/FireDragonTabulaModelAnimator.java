@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model.animator;
 
-import com.github.alexthe666.citadel.client.model.TabulaModel;
+import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.client.model.util.DragonAnimationsLibrary;
 import com.github.alexthe666.iceandfire.client.model.util.EnumDragonModelTypes;
 import com.github.alexthe666.iceandfire.client.model.util.EnumDragonPoses;

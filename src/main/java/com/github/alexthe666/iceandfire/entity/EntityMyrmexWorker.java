@@ -4,7 +4,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
-import com.github.alexthe666.citadel.animation.Animation;
+import dev.vladeezyy.rampart.animation.Animation;
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.ai.*;

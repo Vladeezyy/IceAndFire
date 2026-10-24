@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.pathfinding;
 
-import com.github.alexthe666.citadel.server.entity.collision.CustomCollisionsNavigator;
+import dev.vladeezyy.rampart.server.entity.collision.CustomCollisionsNavigator;
 import com.github.alexthe666.iceandfire.entity.EntityCyclops;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathFinder;

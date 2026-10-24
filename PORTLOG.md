@@ -90,6 +90,17 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Tests on macOS: self-test 29/29, stress 13/13 (12.5 ms average tick with 30 dragons; the test hive has its queen,
   5 workers, 3 soldiers and a sentinel, 6000 ticks of /tick sprint, the queen stays), net test, scene.
 
+## Citadel → Rampart (2026-10-24)
+
+Citadel has no Fabric and no 26.x build, so Ice and Fire now depends on **Rampart** 1.1.0 (`Vladeezyy/rampart`, the
+classes of Citadel the mod uses, LGPL-3.0): Advanced/Basic models, ModelAnimator, Animation(Handler), Tabula models
+(TabulaModel, TabulaModelHandler, containers, ITabulaModelAnimator), custom collisions (ICustomCollisions,
+CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItemRenderProperties (NeoForge). Imports
+`com.github.alexthe666.citadel.*` → `dev.vladeezyy.rampart.*` (121 files), dependency `rampart` in `neoforge.mods.toml`.
+- Same scene as on Citadel (screenshots compared pair by pair: only random variants and animation phase differ),
+  self-test 29/29, stress 13/13 (average tick 8.9 ms with 28 dragons and 100 creatures, 12.5 ms on Citadel: Rampart
+  sends the animation packet only to the players tracking the creature), net test (riding a dragon) passes.
+
 ## TODO
 
 - Nothing open from the issue list; next: play-test feedback.

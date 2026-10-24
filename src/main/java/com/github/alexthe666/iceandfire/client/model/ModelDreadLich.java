@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.model;
 
-import com.github.alexthe666.citadel.animation.Animation;
-import com.github.alexthe666.citadel.client.model.ModelAnimator;
+import dev.vladeezyy.rampart.animation.Animation;
+import dev.vladeezyy.rampart.client.model.ModelAnimator;
 import com.github.alexthe666.iceandfire.client.model.util.HideableModelRenderer;
 import com.github.alexthe666.iceandfire.entity.EntityDreadLich;
 import com.github.alexthe666.iceandfire.entity.EntityDreadThrall;
