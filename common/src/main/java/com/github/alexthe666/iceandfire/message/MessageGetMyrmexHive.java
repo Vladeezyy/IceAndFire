@@ -53,7 +53,7 @@ public class MessageGetMyrmexHive implements CustomPacketPayload {
 
             context.enqueueWork(() -> {
                 MyrmexHive receivedHive = MyrmexHive.fromNBT(message.hive);
-                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow() == net.minecraft.network.protocol.PacketFlow.CLIENTBOUND) {
                     CompoundTag tag = new CompoundTag();
                     receivedHive.writeVillageDataToNBT(tag);
                     receivedHive.readVillageDataFromNBT(tag);

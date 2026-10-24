@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.common.util.Lazy;
 
 import java.util.function.Consumer;
 
@@ -19,7 +18,7 @@ public class BlockItemWithRender extends BlockItem implements IafClientItem {
     @Override
     public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new CitadelItemRenderProperties() {
-            static final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> new IceAndFireTEISR(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
+            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new IceAndFireTEISR(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {

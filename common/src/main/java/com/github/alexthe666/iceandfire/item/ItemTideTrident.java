@@ -33,7 +33,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -50,7 +49,7 @@ public class ItemTideTrident extends TridentItem implements IafClientItem {
     public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
 
         consumer.accept(new IClientItemExtensions() {
-            static final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> new RenderTideTridentItem(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
+            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new RenderTideTridentItem(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {

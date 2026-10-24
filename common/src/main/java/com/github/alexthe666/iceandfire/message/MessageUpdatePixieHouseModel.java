@@ -55,7 +55,7 @@ public class MessageUpdatePixieHouseModel implements CustomPacketPayload {
             context.enqueueWork(() -> {
                 Player player = context.player();
 
-                if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
+                if (context.flow() == net.minecraft.network.protocol.PacketFlow.CLIENTBOUND) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
                 }
 

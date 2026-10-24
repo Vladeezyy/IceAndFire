@@ -42,6 +42,13 @@ def rewrite(src):
     src = re.sub(r"import ([\w.]+);\n", imp, src)
     for a, b in WORDS:
         src = re.sub(a, b, src)
+    # packet side: NeoForge's reception side -> the packet flow
+    src = src.replace("context.flow().getReceptionSide() == LogicalSide.CLIENT", "context.flow() == net.minecraft.network.protocol.PacketFlow.CLIENTBOUND")
+    src = src.replace("context.flow().getReceptionSide() == LogicalSide.SERVER", "context.flow() == net.minecraft.network.protocol.PacketFlow.SERVERBOUND")
+    # NeoForge's Lazy -> Guava's memoizing supplier (Minecraft ships Guava)
+    src = re.sub(r"\bLazy<", "java.util.function.Supplier<", src)
+    src = src.replace("Lazy.of(", "com.google.common.base.Suppliers.memoize(")
+    src = re.sub(r"import net\.neoforged\.neoforge\.common\.util\.Lazy;\n", "", src)
     return src
 
 

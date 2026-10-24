@@ -15,7 +15,6 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -35,7 +34,7 @@ public class ItemTrollWeapon extends SwordItem implements IafClientItem {
     public void registerClientExtensions(Consumer<IClientItemExtensions> consumer) {
 
         consumer.accept(new IClientItemExtensions() {
-            static final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> new RenderTrollWeapon(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
+            static final java.util.function.Supplier<BlockEntityWithoutLevelRenderer> renderer = com.google.common.base.Suppliers.memoize(() -> new RenderTrollWeapon(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()));
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
