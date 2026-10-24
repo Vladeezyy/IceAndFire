@@ -1,9 +1,9 @@
 package com.github.alexthe666.iceandfire.client.render;
 
-import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
-import com.github.alexthe666.citadel.client.model.ITabulaModelAnimator;
-import com.github.alexthe666.citadel.client.model.TabulaModel;
-import com.github.alexthe666.citadel.client.model.container.TabulaModelContainer;
+import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
+import dev.vladeezyy.rampart.client.model.ITabulaModelAnimator;
+import dev.vladeezyy.rampart.client.model.TabulaModel;
+import dev.vladeezyy.rampart.client.model.container.TabulaModelContainer;
 
 import java.util.List;
 

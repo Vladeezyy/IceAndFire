@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
 
-import com.github.alexthe666.citadel.client.CitadelItemRenderProperties;
+import dev.vladeezyy.rampart.client.CitadelItemRenderProperties;
 import com.github.alexthe666.iceandfire.client.render.tile.IceAndFireTEISR;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

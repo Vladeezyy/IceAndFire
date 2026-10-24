@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.model;
 
-import com.github.alexthe666.citadel.animation.Animation;
-import com.github.alexthe666.citadel.animation.IAnimatedEntity;
+import dev.vladeezyy.rampart.animation.Animation;
+import dev.vladeezyy.rampart.animation.IAnimatedEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 abstract class ModelDreadBase<T extends LivingEntity & IAnimatedEntity> extends ModelBipedBase<T> {

@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.client;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import com.github.alexthe666.citadel.client.model.TabulaModel;
+import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.client.model.*;

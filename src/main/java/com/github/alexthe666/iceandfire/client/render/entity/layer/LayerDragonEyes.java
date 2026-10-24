@@ -1,8 +1,8 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
-import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
-import com.github.alexthe666.citadel.client.model.TabulaModel;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
+import dev.vladeezyy.rampart.client.model.TabulaModel;
 import com.github.alexthe666.iceandfire.client.model.util.TabulaModelHandlerHelper;
 import com.github.alexthe666.iceandfire.client.render.TabulaModelAccessor;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;

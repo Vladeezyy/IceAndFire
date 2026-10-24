@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import com.github.alexthe666.citadel.client.model.AdvancedEntityModel;
+import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerSeaSerpentAncient;
 import com.github.alexthe666.iceandfire.entity.EntitySeaSerpent;
 import com.mojang.blaze3d.vertex.PoseStack;

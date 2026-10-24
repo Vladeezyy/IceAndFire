@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model;
 
-import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
+import dev.vladeezyy.rampart.client.model.basic.BasicModelPart;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ListModel;
 import net.minecraft.world.entity.Entity;

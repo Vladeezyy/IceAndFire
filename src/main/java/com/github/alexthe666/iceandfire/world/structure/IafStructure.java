@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.world.structure;
 
-import com.github.alexthe666.citadel.config.biome.SpawnBiomeData;
+import dev.vladeezyy.rampart.config.biome.SpawnBiomeData;
 import com.github.alexthe666.iceandfire.config.BiomeConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model.util;
 
-import com.github.alexthe666.citadel.client.model.AdvancedModelBox;
+import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import net.minecraft.util.Mth;
 
