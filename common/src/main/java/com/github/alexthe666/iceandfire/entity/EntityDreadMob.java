@@ -38,7 +38,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
 
     public static Entity necromancyEntity(LivingEntity entity) {
         Entity lichSummoned = null;
-        if (entity.is(EntityTypeTags.ARTHROPOD)) {
+        if (entity.getType().is(EntityTypeTags.ARTHROPOD)) {
             lichSummoned = new EntityDreadScuttler(IafEntityRegistry.DREAD_SCUTTLER.get(), entity.level());
             float readInScale = (entity.getBbWidth() / 1.5F);
             if (entity.level()instanceof ServerLevelAccessor) {
@@ -56,7 +56,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             ((EntityDreadGhoul) lichSummoned).setSize(readInScale);
             return lichSummoned;
         }
-        if (entity.is(EntityTypeTags.UNDEAD) || entity instanceof AbstractSkeleton || entity instanceof Player) {
+        if (entity.getType().is(EntityTypeTags.UNDEAD) || entity instanceof AbstractSkeleton || entity instanceof Player) {
             lichSummoned = new EntityDreadThrall(IafEntityRegistry.DREAD_THRALL.get(), entity.level());
             EntityDreadThrall thrall = (EntityDreadThrall) lichSummoned;
             if (entity.level()instanceof ServerLevelAccessor) {

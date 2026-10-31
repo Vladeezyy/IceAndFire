@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.compat.jei.firedragonforge;
 import net.minecraft.client.renderer.RenderPipelines;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,13 +21,13 @@ public class FireDragonForgeDrawable implements IDrawable {
     }
 
     @Override
-    public void draw(@NotNull GuiGraphicsExtractor ms, int xOffset, int yOffset) {
+    public void draw(@NotNull GuiGraphics ms, int xOffset, int yOffset) {
         this.drawTexturedModalRect(ms, xOffset, yOffset, 3, 4, 170, 79);
         int scaledProgress = (Minecraft.getInstance().player.tickCount % 100) * 128 / 100;
         this.drawTexturedModalRect(ms, xOffset + 9, yOffset + 19, 0, 166, scaledProgress, 38);
     }
 
-    public void drawTexturedModalRect(GuiGraphicsExtractor ms, int x, int y, int textureX, int textureY, int width, int height) {
+    public void drawTexturedModalRect(GuiGraphics ms, int x, int y, int textureX, int textureY, int width, int height) {
         ms.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, textureX, textureY, width, height, 256, 256);
     }
 }

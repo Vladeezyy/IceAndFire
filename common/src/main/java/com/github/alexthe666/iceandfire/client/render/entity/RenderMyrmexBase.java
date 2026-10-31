@@ -1,5 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 
 import net.minecraft.util.ARGB;

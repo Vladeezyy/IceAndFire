@@ -5,7 +5,7 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
 import com.github.alexthe666.iceandfire.inventory.HippocampusContainerMenu;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -23,28 +23,27 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {
         int k = 0;
         int l = 0;
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         Font font = this.minecraft.font;
         if (entity instanceof EntityHippocampus) {
             EntityHippocampus hippo = (EntityHippocampus) entity;
-            pGuiGraphics.text(font, hippo.getDisplayName().getString(), l + 8, 6, net.minecraft.util.ARGB.opaque(4210752), false);
+            pGuiGraphics.drawString(font, hippo.getDisplayName().getString(), l + 8, 6, net.minecraft.util.ARGB.opaque(4210752), false);
         }
-        pGuiGraphics.text(font, this.playerInventoryTitle, k + 8, l + this.imageHeight - 96 + 2, net.minecraft.util.ARGB.opaque(4210752), false);
+        pGuiGraphics.drawString(font, this.playerInventoryTitle, k + 8, l + this.imageHeight - 96 + 2, net.minecraft.util.ARGB.opaque(4210752), false);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
-        super.extractRenderState(pGuiGraphics, mouseX, mouseY, partialTicks);
+        super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(pGuiGraphics, mouseX, mouseY, partialTicks);
+    protected void renderBg(GuiGraphics pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);

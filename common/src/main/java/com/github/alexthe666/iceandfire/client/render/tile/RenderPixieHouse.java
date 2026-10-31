@@ -20,12 +20,12 @@ public class RenderPixieHouse<T extends TileEntityPixieHouse> extends IafBlockEn
 
     private static final ModelPixieHouse MODEL = new ModelPixieHouse();
     private static ModelPixie MODEL_PIXIE;
-    private static final RenderType TEXTURE_0 = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_0.png"), false);
-    private static final RenderType TEXTURE_1 = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_1.png"), false);
-    private static final RenderType TEXTURE_2 = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_2.png"), false);
-    private static final RenderType TEXTURE_3 = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_3.png"), false);
-    private static final RenderType TEXTURE_4 = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_4.png"), false);
-    private static final RenderType TEXTURE_5 = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_5.png"), false);
+    private static final RenderType TEXTURE_0 = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_0.png"), false);
+    private static final RenderType TEXTURE_1 = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_1.png"), false);
+    private static final RenderType TEXTURE_2 = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_2.png"), false);
+    private static final RenderType TEXTURE_3 = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_3.png"), false);
+    private static final RenderType TEXTURE_4 = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_4.png"), false);
+    private static final RenderType TEXTURE_5 = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_5.png"), false);
     public BlockItem metaOverride;
 
     public RenderPixieHouse(BlockEntityRendererProvider.Context context) {

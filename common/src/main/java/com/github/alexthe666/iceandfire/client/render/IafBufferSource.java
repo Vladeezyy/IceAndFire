@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public final class IafBufferSource implements MultiBufferSource {
     private static final PoseStack IDENTITY = new PoseStack();
-    private static final net.minecraft.client.renderer.block.model.BlockDisplayContext BLOCK_DISPLAY = net.minecraft.client.renderer.block.model.BlockDisplayContext.create();
     // made on first use: most sources (the render events of every mob each frame) stay empty
     private Map<RenderType, Recorder> buffers;
     private java.util.List<java.util.function.Consumer<SubmitNodeCollector>> later;
@@ -42,13 +41,11 @@ public final class IafBufferSource implements MultiBufferSource {
 
     /** 1.21.1's BlockRenderDispatcher.renderSingleBlock into this source (the block from 0,0,0 to 1,1,1) */
     public void block(net.minecraft.world.level.block.state.BlockState blockState, PoseStack poseStack, int light, int overlay) {
-        net.minecraft.client.renderer.block.BlockModelRenderState state = new net.minecraft.client.renderer.block.BlockModelRenderState();
-        new net.minecraft.client.renderer.block.BlockModelResolver(net.minecraft.client.Minecraft.getInstance().getModelManager()).update(state, blockState, BLOCK_DISPLAY);
         PoseStack.Pose pose = poseStack.last().copy();
         this.later().add(collector -> {
             PoseStack stackAt = new PoseStack();
             stackAt.last().set(pose);
-            state.submit(stackAt, collector, light, overlay, 0);
+            collector.submitBlock(stackAt, blockState, light, overlay, 0);
         });
     }
 

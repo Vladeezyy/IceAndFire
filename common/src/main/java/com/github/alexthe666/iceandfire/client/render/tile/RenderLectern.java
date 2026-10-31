@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderLectern<T extends TileEntityLectern> extends IafBlockEntityRenderer<T> {
 
-    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/lectern_book.png"));
+    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/lectern_book.png"));
     private final BookModel bookModel;
 
     public RenderLectern(BlockEntityRendererProvider.Context context) {
@@ -55,7 +55,7 @@ public class RenderLectern<T extends TileEntityLectern> extends IafBlockEntityRe
         }
         float f6 = 1.29F;
 
-        this.bookModel.setupAnim(net.minecraft.client.model.object.book.BookModel.State.forAnimation(partialTicks, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), f6));
+        this.bookModel.setupAnim(new net.minecraft.client.model.object.book.BookModel.State(partialTicks, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), f6));
         com.github.alexthe666.iceandfire.client.render.IafModels.render(this.bookModel, matrixStackIn, bufferIn.getBuffer(ENCHANTMENT_TABLE_BOOK_TEXTURE), combinedLightIn, combinedOverlayIn, -1);
         matrixStackIn.popPose();
     }

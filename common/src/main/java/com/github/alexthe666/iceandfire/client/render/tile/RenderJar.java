@@ -15,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderJar<T extends TileEntityJar> extends IafBlockEntityRenderer<T> {
 
-    public static final RenderType TEXTURE_0 = RenderTypes.entityCutout(RenderPixie.TEXTURE_0, false);
-    public static final RenderType TEXTURE_1 = RenderTypes.entityCutout(RenderPixie.TEXTURE_1, false);
-    public static final RenderType TEXTURE_2 = RenderTypes.entityCutout(RenderPixie.TEXTURE_2, false);
-    public static final RenderType TEXTURE_3 = RenderTypes.entityCutout(RenderPixie.TEXTURE_3, false);
-    public static final RenderType TEXTURE_4 = RenderTypes.entityCutout(RenderPixie.TEXTURE_4, false);
-    public static final RenderType TEXTURE_5 = RenderTypes.entityCutout(RenderPixie.TEXTURE_5, false);
+    public static final RenderType TEXTURE_0 = RenderTypes.entityCutoutNoCull(RenderPixie.TEXTURE_0, false);
+    public static final RenderType TEXTURE_1 = RenderTypes.entityCutoutNoCull(RenderPixie.TEXTURE_1, false);
+    public static final RenderType TEXTURE_2 = RenderTypes.entityCutoutNoCull(RenderPixie.TEXTURE_2, false);
+    public static final RenderType TEXTURE_3 = RenderTypes.entityCutoutNoCull(RenderPixie.TEXTURE_3, false);
+    public static final RenderType TEXTURE_4 = RenderTypes.entityCutoutNoCull(RenderPixie.TEXTURE_4, false);
+    public static final RenderType TEXTURE_5 = RenderTypes.entityCutoutNoCull(RenderPixie.TEXTURE_5, false);
     public static final RenderType TEXTURE_0_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_0);
     public static final RenderType TEXTURE_1_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_1);
     public static final RenderType TEXTURE_2_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_2);

@@ -187,6 +187,7 @@ public final class IceAndFireNeoForge {
         // 26.x: the client gets only the recipe types the server sends (JEI shows the dragon forge recipes)
         bus.addListener((net.neoforged.neoforge.event.OnDatapackSyncEvent event) -> event.sendRecipes(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()));
         bus.addListener((RegisterBrewingRecipesEvent event) -> IafRecipeRegistry.registerBrewing(event.getBuilder()));
+        bus.addListener((net.neoforged.neoforge.event.village.VillagerTradesEvent event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.VillagerTradesEvent(event.getTrades(), event.getType())));
         // every listener wants living entities only
         bus.addListener((EntityTickEvent.Pre event) -> {
             if (event.getEntity() instanceof LivingEntity) {
@@ -260,7 +261,7 @@ public final class IceAndFireNeoForge {
         bus.addListener((PlayerInteractEvent.RightClickBlock event) -> interact(event, new dev.vladeezyy.iceandfire.bus.PlayerInteractEvent.RightClickBlock(event.getEntity(), event.getHand(), event.getPos(), event.getFace())));
         bus.addListener((PlayerInteractEvent.RightClickItem event) -> interact(event, new dev.vladeezyy.iceandfire.bus.PlayerInteractEvent.RightClickItem(event.getEntity(), event.getHand())));
         bus.addListener((PlayerInteractEvent.LeftClickEmpty event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.PlayerInteractEvent.LeftClickEmpty(event.getEntity())));
-        bus.addListener((net.neoforged.neoforge.event.level.block.BreakBlockEvent event) -> {
+        bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.BreakEvent event) -> {
             if (IafBus.post(new dev.vladeezyy.iceandfire.bus.BlockEvent.BreakEvent(event.getLevel(), event.getPos(), event.getState(), event.getPlayer()))) {
                 event.setCanceled(true);
             }

@@ -134,7 +134,7 @@ public class EntityChainTie extends BlockAttachedEntity {
     }
 
     @Override
-    public @NotNull InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.level().isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {

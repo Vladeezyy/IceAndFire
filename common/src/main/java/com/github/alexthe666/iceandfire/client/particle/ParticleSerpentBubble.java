@@ -7,7 +7,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SingleQuadParticle;
-import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -33,7 +33,7 @@ public class ParticleSerpentBubble extends SingleQuadParticle {
     }
 
     @Override
-    protected int getLightCoords(float partialTick) {
+    protected int getLightColor(float partialTick) {
         //If uncomment : BlockPos needs integers
 //        BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
         return 240;

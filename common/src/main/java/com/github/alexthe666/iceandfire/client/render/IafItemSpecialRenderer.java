@@ -20,8 +20,9 @@ import java.util.function.Consumer;
 
 /**
  * The items the mod draws in code (1.21.1: builtin/entity models with a BlockEntityWithoutLevelRenderer): a special
- * item model {@code iceandfire:item_renderer} that runs the 1.21.1 renderByItem into an {@link IafBufferSource}. 26.x
- * special models get no display context: the item definitions select one model per context (field {@code display}).
+ * item model {@code iceandfire:item_renderer} that runs the 1.21.1 renderByItem into an {@link IafBufferSource}. The item
+ * definitions select one model per display context (field {@code display}, as 26.x special models get no context);
+ * without the field the context of the call is used.
  */
 public class IafItemSpecialRenderer implements SpecialModelRenderer<ItemStack> {
     public static final Identifier ID = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "item_renderer");
@@ -34,12 +35,12 @@ public class IafItemSpecialRenderer implements SpecialModelRenderer<ItemStack> {
     }
 
     @Override
-    public void submit(@Nullable ItemStack stack, PoseStack poseStack, SubmitNodeCollector collector, int light, int overlay, boolean hasFoil, int outlineColor) {
+    public void submit(@Nullable ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector collector, int light, int overlay, boolean hasFoil, int outlineColor) {
         if (stack == null) {
             return;
         }
         IafBufferSource buffers = new IafBufferSource();
-        IafItemRenderers.renderer(this.kind).renderByItem(stack, this.display, poseStack, buffers, light, overlay);
+        IafItemRenderers.renderer(this.kind).renderByItem(stack, this.display != ItemDisplayContext.NONE ? this.display : displayContext, poseStack, buffers, light, overlay);
         buffers.submit(collector);
     }
 
@@ -76,7 +77,7 @@ public class IafItemSpecialRenderer implements SpecialModelRenderer<ItemStack> {
         }
     }
 
-    public record Unbaked(Kind kind, ItemDisplayContext display) implements SpecialModelRenderer.Unbaked<ItemStack> {
+    public record Unbaked(Kind kind, ItemDisplayContext display) implements SpecialModelRenderer.Unbaked {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Kind.CODEC.fieldOf("renderer").forGetter(Unbaked::kind),
             ItemDisplayContext.CODEC.optionalFieldOf("display", ItemDisplayContext.NONE).forGetter(Unbaked::display)

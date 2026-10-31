@@ -21,9 +21,8 @@ public abstract class CameraMixin {
     @Shadow
     public abstract float xRot();
 
-    // 26.x: Camera.update places the camera in alignWithEntity
-    @Inject(method = "alignWithEntity", at = @At("TAIL"))
-    private void iceandfire$angles(float partialTick, CallbackInfo ci) {
+    @Inject(method = "setup", at = @At("TAIL"))
+    private void iceandfire$angles(net.minecraft.world.level.Level level, net.minecraft.world.entity.Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
         ViewportEvent.ComputeCameraAngles event = new ViewportEvent.ComputeCameraAngles((Camera) (Object) this, partialTick, this.yRot(), this.xRot(), 0);
         IafBus.post(event);
         if (event.getYaw() != this.yRot() || event.getPitch() != this.xRot()) {

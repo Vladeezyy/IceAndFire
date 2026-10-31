@@ -10,7 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.SavedDataStorage;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class DragonPosWorldData extends SavedData {
 
     private static final String IDENTIFIER = "iceandfire_dragonPositions";
-    private static final SavedDataType<DragonPosWorldData> TYPE = IafSavedData.type("dragon_positions", DragonPosWorldData::new, DragonPosWorldData::new, (data, tag) -> data.save(tag, null));
+    private static final SavedDataType<DragonPosWorldData> TYPE = IafSavedData.type(IDENTIFIER, DragonPosWorldData::new, DragonPosWorldData::new, (data, tag) -> data.save(tag, null));
     protected final Map<UUID, BlockPos> lastDragonPositions = new HashMap<>();
     private Level world;
     private int tickCounter;

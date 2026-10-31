@@ -17,7 +17,7 @@ import com.google.common.primitives.Ints;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -146,7 +146,7 @@ public class GuiBestiary extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
         // 26.x: Screen draws the background (extractBackground) before this; a second call blurs twice and throws
         for (Renderable widget : this.renderables) {
             if (widget instanceof IndexPageButton) {
@@ -164,7 +164,7 @@ public class GuiBestiary extends Screen {
         ms.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, cornerX, cornerY, (float) (0), (float) (0), X, Y, 390, 390);
                 // Screen#render would draw the background a second time (and blur twice, which throws in 1.21)
         for (Renderable renderable : this.renderables) {
-            renderable.extractRenderState(ms, mouseX, mouseY, partialTicks);
+            renderable.render(ms, mouseX, mouseY, partialTicks);
         }
         ms.pose().pushMatrix();
         ms.pose().translate((float) (cornerX), (float) (cornerY));
@@ -174,14 +174,14 @@ public class GuiBestiary extends Screen {
             drawPerPage(ms, bookPages);
             int pageLeft = bookPages * 2 + 1;
             int pageRight = pageLeft + 1;
-            ms.text(font, "" + pageLeft, (int) ((float) centerX), (int) ((float) (centerY - (Y * 0.13))), net.minecraft.util.ARGB.opaque(0X303030), false);
-            ms.text(font, "" + pageRight, (int) ((float) centerX), (int) ((float) (centerY - (Y * 0.13))), net.minecraft.util.ARGB.opaque(0X303030), false);
+            ms.drawString(font, "" + pageLeft, (int) ((float) centerX), (int) ((float) (centerY - (Y * 0.13))), net.minecraft.util.ARGB.opaque(0X303030), false);
+            ms.drawString(font, "" + pageRight, (int) ((float) centerX), (int) ((float) (centerY - (Y * 0.13))), net.minecraft.util.ARGB.opaque(0X303030), false);
         }
         ms.pose().popMatrix();
-        this.renderables.forEach((widget -> widget.extractRenderState(ms, mouseX, mouseY, partialTicks)));
+        this.renderables.forEach((widget -> widget.render(ms, mouseX, mouseY, partialTicks)));
             }
 
-    public void drawPerPage(GuiGraphicsExtractor ms, int bookPages) {
+    public void drawPerPage(GuiGraphics ms, int bookPages) {
         imageFromTxt(ms);
         switch (this.pageType) {
             case INTRODUCTION:
@@ -788,7 +788,7 @@ public class GuiBestiary extends Screen {
         writeFromTxt(ms);
     }
 
-    public void imageFromTxt(GuiGraphicsExtractor ms) {
+    public void imageFromTxt(GuiGraphics ms) {
         String fileName = this.pageType.toString().toLowerCase(Locale.ROOT) + "_" + this.bookPages + ".txt";
         String languageName = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
         Identifier fileLoc = Identifier.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
@@ -855,7 +855,7 @@ public class GuiBestiary extends Screen {
         }
     }
 
-    private void drawRecipe(GuiGraphicsExtractor ms, ItemStack result, ItemStack[] ingredients, int x, int y, float scale) {
+    private void drawRecipe(GuiGraphics ms, ItemStack result, ItemStack[] ingredients, int x, int y, float scale) {
         // Code snippet based on Citadels GuiBasicBook
         int k = (this.width - X + 84) / 2;
         int l = (this.height - Y + 40) / 2;
@@ -868,7 +868,7 @@ public class GuiBestiary extends Screen {
             ms.pose().translate((float) (44), (float) (20));
             ms.pose().translate((float) (((x + (i % 3 * 22) * scale))), (float) (((y + (i / 3 * 22) * scale))));
             ms.pose().scale((float) (scale), (float) (scale));
-            ms.item(ingredients[i], 0, 0);
+            ms.renderItem(ingredients[i], 0, 0);
             ms.pose().popMatrix();
         }
         ms.pose().pushMatrix();
@@ -876,7 +876,7 @@ public class GuiBestiary extends Screen {
         float finScale = scale * 1.5F;
         ms.pose().translate((float) ((x + 70.0F * finScale)), (float) ((y + 10.0F * finScale)));
         ms.pose().scale((float) (finScale), (float) (finScale));
-        ms.item(result, 0, 0);
+        ms.renderItem(result, 0, 0);
         ms.pose().popMatrix();
 
         ms.pose().pushMatrix();
@@ -888,7 +888,7 @@ public class GuiBestiary extends Screen {
         ms.pose().popMatrix();
     }
 
-    public void writeFromTxt(GuiGraphicsExtractor ms) {
+    public void writeFromTxt(GuiGraphics ms) {
         String fileName = this.pageType.toString().toLowerCase(Locale.ROOT) + "_" + this.bookPages + ".txt";
         String languageName = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
         Identifier fileLoc = Identifier.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
@@ -924,9 +924,9 @@ public class GuiBestiary extends Screen {
                     x = 0;
                 }
                 if (leftPage) {
-                    ms.text(font, line, (int) (x), (int) (20 + linenumber * 10), net.minecraft.util.ARGB.opaque(0X303030), false);
+                    ms.drawString(font, line, (int) (x), (int) (20 + linenumber * 10), net.minecraft.util.ARGB.opaque(0X303030), false);
                 } else {
-                    ms.text(font, line, (int) (x), (int) ((linenumber - 19) * 10), net.minecraft.util.ARGB.opaque(0X303030), false);
+                    ms.drawString(font, line, (int) (x), (int) ((linenumber - 19) * 10), net.minecraft.util.ARGB.opaque(0X303030), false);
                 }
                 linenumber++;
                 ms.pose().popMatrix();
@@ -940,7 +940,7 @@ public class GuiBestiary extends Screen {
         // with the width of a title over 100 px ("Огненные драконы" ran over the binding)
         float scale = Math.min(2F, 190F / (10 + font.width(s)));
         ms.pose().scale((float) (scale), (float) (scale));
-        ms.text(font, s, (int) (10), (int) (2), net.minecraft.util.ARGB.opaque(0X7A756A), false);
+        ms.drawString(font, s, (int) (10), (int) (2), net.minecraft.util.ARGB.opaque(0X7A756A), false);
         ms.pose().popMatrix();
     }
 
@@ -948,26 +948,26 @@ public class GuiBestiary extends Screen {
         return font == Minecraft.getInstance().font;
     }
 
-    public void drawImage(GuiGraphicsExtractor ms, Identifier texture, int x, int y, int u, int v, int width, int height, float scale) {
+    public void drawImage(GuiGraphics ms, Identifier texture, int x, int y, int u, int v, int width, int height, float scale) {
         ms.pose().pushMatrix();
         ms.pose().scale((float) (scale / 512F), (float) (scale / 512F));
         ms.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, (float) (u), (float) (v), width, height, 512, 512);
         ms.pose().popMatrix();
     }
 
-    private void drawItemStack(GuiGraphicsExtractor ms, ItemStack stack, int x, int y, float scale) {
+    private void drawItemStack(GuiGraphics ms, ItemStack stack, int x, int y, float scale) {
         ms.pose().pushMatrix();
         ms.pose().scale((float) (scale), (float) (scale));
-        ms.item(stack, x, y);
+        ms.renderItem(stack, x, y);
         ms.pose().popMatrix();
     }
 
 
-    private void drawBlockStack(GuiGraphicsExtractor ms, ItemStack stack, int x, int y, float scale, int zScale) {
+    private void drawBlockStack(GuiGraphics ms, ItemStack stack, int x, int y, float scale, int zScale) {
         ms.pose().pushMatrix();
         ms.pose().scale((float) (scale), (float) (scale));
         ms.pose().translate((float) (0), (float) (0));
-        ms.item(stack, x, y);
+        ms.renderItem(stack, x, y);
         ms.pose().popMatrix();
     }
 }

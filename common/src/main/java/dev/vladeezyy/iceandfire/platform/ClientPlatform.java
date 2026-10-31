@@ -23,7 +23,7 @@ public interface ClientPlatform {
         .orElseThrow(() -> new IllegalStateException("No Ice and Fire client platform for this mod loader"));
 
     /** What the loader adds to the title screen (NeoForge: the mod count and warnings) */
-    default void renderMainMenu(net.minecraft.client.gui.screens.Screen screen, net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int width, int height, int alpha) {
+    default void renderMainMenu(net.minecraft.client.gui.screens.Screen screen, net.minecraft.client.gui.GuiGraphics graphics, net.minecraft.client.gui.Font font, int width, int height, int alpha) {
     }
 
     /** Adds a key binding to the controls */

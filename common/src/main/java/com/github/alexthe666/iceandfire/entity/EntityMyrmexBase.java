@@ -56,7 +56,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.item.trading.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -515,19 +515,19 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             }
         }
         if (this.getHive() == null) {
-            player.sendOverlayMessage(Component.translatable("myrmex.message.null_hive"));
+            player.displayClientMessage(Component.translatable("myrmex.message.null_hive"), true);
 
         } else {
             if (staffUUID != null && staffUUID.equals(this.getHive().hiveUUID)) {
-                player.sendOverlayMessage(Component.translatable("myrmex.message.staff_already_set"));
+                player.displayClientMessage(Component.translatable("myrmex.message.staff_already_set"), true);
             } else {
                 this.getHive().setWorld(this.level());
                 EntityMyrmexQueen queen = this.getHive().getQueen();
                 BlockPos center = this.getHive().getCenterGround();
                 if (queen != null && queen.hasCustomName()) {
-                    player.sendOverlayMessage(Component.translatable("myrmex.message.staff_set_named", queen.getName(), center.getX(), center.getY(), center.getZ()));
+                    player.displayClientMessage(Component.translatable("myrmex.message.staff_set_named", queen.getName(), center.getX(), center.getY(), center.getZ()), true);
                 } else {
-                    player.sendOverlayMessage(Component.translatable("myrmex.message.staff_set_unnamed", center.getX(), center.getY(), center.getZ()));
+                    player.displayClientMessage(Component.translatable("myrmex.message.staff_set_unnamed", center.getX(), center.getY(), center.getZ()), true);
                 }
                 ItemNbt.update(itemstack, tag -> tag.store("HiveUUID", UUIDUtil.CODEC, this.getHive().hiveUUID));
             }

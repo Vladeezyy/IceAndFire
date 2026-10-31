@@ -13,7 +13,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.SavedDataStorage;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class IafWorldData extends SavedData {
     }
 
     private static final String IDENTIFIER = IceAndFire.MODID + "_general";
-    private static final SavedDataType<IafWorldData> TYPE = IafSavedData.type("general", IafWorldData::new, IafWorldData::new, (data, tag) -> data.save(tag, null));
+    private static final SavedDataType<IafWorldData> TYPE = IafSavedData.type(IDENTIFIER, IafWorldData::new, IafWorldData::new, (data, tag) -> data.save(tag, null));
     private static final EnumMap<FeatureType, ArrayList<Map.Entry<String, BlockPos>>> LAST_GENERATED = new EnumMap<>(FeatureType.class);
     static {
         LAST_GENERATED.put(FeatureType.SURFACE, new ArrayList<>());

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemMode
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.Minecraft;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
 import dev.vladeezyy.iceandfire.platform.ClientRecipes;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -70,10 +70,9 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
         RangeSelectItemModelProperties.ID_MAPPER.put(IafItemModels.ICE_OR_FIRE, IafItemModels.IceOrFire.MAP_CODEC);
         ConditionalItemModelProperties.ID_MAPPER.put(IafItemModels.HAS_DRAGON, IafItemModels.HasDragon.MAP_CODEC);
         registerArmorRenderers();
-        // the appearance particles (ghost, siren) draw as a group of their own (NeoForge: RegisterParticleGroupsEvent)
-        net.fabricmc.fabric.api.client.particle.v1.ParticleGroupRegistry.register(com.github.alexthe666.iceandfire.client.particle.IafAppearanceParticle.GROUP, com.github.alexthe666.iceandfire.client.particle.IafAppearanceParticle.Group::new);
+        // the appearance particles (ghost, siren) draw as a group of their own: mixin.client.ParticleEngineMixin
         // the pathfinding debug lines (NeoForge: RenderLevelStageEvent after the opaque blocks)
-        LevelRenderEvents.AFTER_OPAQUE_TERRAIN.register(context -> IafBus.post(new RenderLevelStageEvent(
+        WorldRenderEvents.BEFORE_ENTITIES.register(context -> IafBus.post(new RenderLevelStageEvent(
             RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS, new PoseStack(), Minecraft.getInstance().getDeltaTracker())));
         // the dragon forge recipes for JEI (26.x clients only get the recipe serializers the server syncs)
         ClientRecipeSynchronizedEvent.EVENT.register((client, recipes) -> ClientRecipes.setDragonForge(

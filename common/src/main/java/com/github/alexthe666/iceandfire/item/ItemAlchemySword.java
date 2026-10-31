@@ -62,8 +62,8 @@ public class ItemAlchemySword extends Item implements IafTieredItem {
             }
             if (!attacker.level().isClientSide() && flag) {
                 LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
-                lightningboltentity.entityTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
-                lightningboltentity.entityTags().add(attacker.getStringUUID());
+                lightningboltentity.getTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
+                lightningboltentity.getTags().add(attacker.getStringUUID());
                 lightningboltentity.snapTo(target.position());
                 if (!target.level().isClientSide()) {
                     target.level().addFreshEntity(lightningboltentity);

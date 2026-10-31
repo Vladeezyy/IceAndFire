@@ -6,7 +6,7 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -22,7 +22,7 @@ public class IndexPageButton extends Button {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partial) {
+    protected void renderContents(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partial) {
         if (this.active) {
                                     Font font = IafConfig.useVanillaFont ? Minecraft.getInstance().font : (Font) IceAndFire.PROXY.getFontRenderer();
             boolean flag = isHoveredOrFocused();
@@ -32,7 +32,7 @@ public class IndexPageButton extends Button {
             int color = (flag ? 0x7A2410 : 0x303030) | Mth.ceil(this.alpha * 255.0F) << 24;
             Component text = this.getMessage();
             int textWidth = font.width(text);
-            pGuiGraphics.text(font, text, this.getX() + (this.width - textWidth) / 2, this.getY() + (this.height - 8) / 2, net.minecraft.util.ARGB.opaque(color), false);
+            pGuiGraphics.drawString(font, text, this.getX() + (this.width - textWidth) / 2, this.getY() + (this.height - 8) / 2, net.minecraft.util.ARGB.opaque(color), false);
         }
     }
 }

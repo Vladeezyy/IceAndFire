@@ -260,13 +260,13 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
     @Override
-    public @NotNull InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
         // Server only: the client has no parent (the interact packet of the vanilla client reaches this on the server)
         Entity parent = getParent();
         if (parent == null) {
             return InteractionResult.PASS;
         }
-        InteractionResult result = parent.interact(player, hand, location);
+        InteractionResult result = parent.interact(player, hand);
         // Player.interactOn offers the held item (dragon horn, lead...) only to living entities and a part is not one:
         // a click on a part never picked the dragon up with the horn (#5196)
         if (!result.consumesAction() && parent instanceof LivingEntity living) {

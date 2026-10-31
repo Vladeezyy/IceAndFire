@@ -76,7 +76,7 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
         matrixStackIn.pushPose();
         int heads = hydra.getHeadCount();
         translateToBody(model, matrixStackIn);
-        RenderType type = RenderTypes.entityCutoutCull(stone ? TEXTURE_STONE : getHeadTexture(hydra));
+        RenderType type = RenderTypes.entityCutoutNoCull(stone ? TEXTURE_STONE : getHeadTexture(hydra));
         for (int head = 1; head <= heads; head++) {
             matrixStackIn.pushPose();
             float bodyWidth = 0.5F;

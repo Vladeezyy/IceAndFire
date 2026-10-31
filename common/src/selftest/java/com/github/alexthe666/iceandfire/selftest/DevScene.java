@@ -266,7 +266,7 @@ public final class DevScene {
             if (mc.getLevelSource().levelExists(WORLD)) {
                 mc.createWorldOpenFlows().openWorld(WORLD, () -> mc.setScreen(new TitleScreen()));
             } else {
-                LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, new LevelSettings.DifficultySettings(Difficulty.NORMAL, false, false), true, WorldDataConfiguration.DEFAULT);
+                LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, false, Difficulty.NORMAL, true, new net.minecraft.world.level.gamerules.GameRules(WorldDataConfiguration.DEFAULT.enabledFeatures()), WorldDataConfiguration.DEFAULT);
                 mc.createWorldOpenFlows().createFreshLevel(WORLD, settings, new WorldOptions(1234L, false, false), WorldPresets::createNormalWorldDimensions, new TitleScreen());
             }
             return;
@@ -356,9 +356,9 @@ public final class DevScene {
     private static void setup(ServerPlayer player) {
         MinecraftServer server = player.level().getServer();
         player.setGameMode(GameType.CREATIVE);
-        server.getGameRules().set(GameRules.SPAWN_MOBS, false, server);
-        server.getGameRules().set(GameRules.ADVANCE_TIME, false, server);
-        server.getGameRules().set(GameRules.ADVANCE_WEATHER, false, server);
+        player.level().getGameRules().set(GameRules.SPAWN_MOBS, false, server);
+        player.level().getGameRules().set(GameRules.ADVANCE_TIME, false, server);
+        player.level().getGameRules().set(GameRules.ADVANCE_WEATHER, false, server);
         setTime(player.level(), 6000);
         player.level().getServer().getCommands().performPrefixedCommand(player.level().getServer().createCommandSourceStack().withSuppressedOutput(), "weather clear");
         // The other mods of the run (tools/scenetest.sh -Pwith_compat)

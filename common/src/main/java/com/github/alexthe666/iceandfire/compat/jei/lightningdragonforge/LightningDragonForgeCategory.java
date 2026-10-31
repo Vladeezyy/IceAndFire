@@ -41,7 +41,7 @@ public class LightningDragonForgeCategory implements IRecipeCategory<DragonForge
     }
 
     @Override
-    public void draw(@NotNull DragonForgeRecipe recipe, @NotNull mezz.jei.api.gui.ingredient.IRecipeSlotsView slots, @NotNull net.minecraft.client.gui.GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull DragonForgeRecipe recipe, @NotNull mezz.jei.api.gui.ingredient.IRecipeSlotsView slots, @NotNull net.minecraft.client.gui.GuiGraphics graphics, double mouseX, double mouseY) {
         drawable.draw(graphics, 0, 0);
     }
 

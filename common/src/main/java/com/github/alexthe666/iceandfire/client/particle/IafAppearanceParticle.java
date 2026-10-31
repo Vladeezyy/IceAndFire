@@ -8,7 +8,7 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleGroup;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.state.level.ParticleGroupRenderState;
+import net.minecraft.client.renderer.state.ParticleGroupRenderState;
 
 /**
  * A mob model in front of the camera (the ghost's scare, the siren's charm), like vanilla's elder guardian.

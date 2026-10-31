@@ -206,7 +206,7 @@ public class SelfTest {
         }
         check("every creature can die", deathFailed.isEmpty(), deathFailed);
 
-        SPAWNED.forEach(e -> level.setChunkForced(e.chunkPosition().x(), e.chunkPosition().z(), false));
+        SPAWNED.forEach(e -> level.setChunkForced(e.chunkPosition().x, e.chunkPosition().z, false));
         SPAWNED.forEach(Entity::discard);
         SPAWNED.clear();
     }
@@ -308,7 +308,7 @@ public class SelfTest {
     private static EntityDragonPart oldWorldPart;
 
     private static void partsLoadChunk(ServerLevel level, boolean load) {
-        level.setChunkForced(PARTS_CHUNK.x(), PARTS_CHUNK.z(), load);
+        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, load);
     }
 
     private static List<EntityDragonPart> parts(ServerLevel level, Entity dragon) {
@@ -354,7 +354,7 @@ public class SelfTest {
 
     private static void partsUnloaded(ServerLevel level) {
         check("dragon chunk unloaded", level.getEntity(partsDragon) == null, PARTS_CHUNK);
-        level.setChunkForced(PARTS_CHUNK.x(), PARTS_CHUNK.z(), true);
+        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, true);
     }
 
     private static void partsReloaded(ServerLevel level) {
@@ -362,7 +362,7 @@ public class SelfTest {
         List<EntityDragonPart> parts = dragon == null ? List.of() : parts(level, dragon);
         long all = dragon == null ? 0 : level.getEntitiesOfClass(EntityDragonPart.class, dragon.getBoundingBox().inflate(48)).size();
         check("dragon parts after chunk reload", dragon != null && parts.size() == 10 && all == 10, parts.size() + " owned, " + all + " near");
-        level.setChunkForced(PARTS_CHUNK.x(), PARTS_CHUNK.z(), false);
+        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, false);
     }
 
     /** Hive of #5197: the queen dug a new nest and left her hive whenever she "saw the sky", also through water. */
@@ -374,7 +374,7 @@ public class SelfTest {
     private static void hiveArea(ServerLevel level, boolean load) {
         for (int x = -3; x <= 3; x++) {
             for (int z = -3; z <= 3; z++) {
-                level.setChunkForced(HIVE_CHUNK.x() + x, HIVE_CHUNK.z() + z, load);
+                level.setChunkForced(HIVE_CHUNK.x + x, HIVE_CHUNK.z + z, load);
             }
         }
     }

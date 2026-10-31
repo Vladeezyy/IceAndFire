@@ -1082,7 +1082,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     @Override
-    public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand, @NotNull Vec3 vec) {
+    public @NotNull InteractionResult interactAt(Player player, @NotNull Vec3 vec, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         int lastDeathStage = Math.min(this.getAgeInDays() / 5, 25);
         if (stack.getItem() == IafItemRegistry.DRAGON_DEBUG_STICK.get()) {
@@ -1129,8 +1129,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             }
             return InteractionResult.SUCCESS;
         }
-        // 26.x: one interact call (1.21.1 asked interactAt first, then interact: the leash and mobInteract)
-        return super.interact(player, hand, vec);
+        return super.interactAt(player, vec, hand);
     }
 
     @Override
@@ -1253,13 +1252,13 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                         if (player.isShiftKeyDown()) {
                             if (this.hasHomePosition) {
                                 this.hasHomePosition = false;
-                                player.sendOverlayMessage(Component.translatable("dragon.command.remove_home"));
+                                player.displayClientMessage(Component.translatable("dragon.command.remove_home"), true);
                                 return InteractionResult.SUCCESS;
                             } else {
                                 BlockPos pos = this.blockPosition();
                                 this.homePos = new HomePosition(pos, this.level());
                                 this.hasHomePosition = true;
-                                player.sendOverlayMessage(Component.translatable("dragon.command.new_home", pos.getX(), pos.getY(), pos.getZ(), homePos.getDimension()));
+                                player.displayClientMessage(Component.translatable("dragon.command.new_home", pos.getX(), pos.getY(), pos.getZ(), homePos.getDimension()), true);
                                 return InteractionResult.SUCCESS;
                             }
                         } else {
@@ -1276,7 +1275,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                             } else if (this.getCommand() == 2) {
                                 commandText = "escort";
                             }
-                            player.sendOverlayMessage(Component.translatable("dragon.command." + commandText));
+                            player.displayClientMessage(Component.translatable("dragon.command." + commandText), true);
                             return InteractionResult.SUCCESS;
                         }
                     }
@@ -1372,9 +1371,9 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             final double motionZ = getRandom().nextGaussian() * 0.07D;
             final Vec3 headVec = this.getHeadPosition();
             if (!level().isClientSide()) {
-                ((ServerLevel) this.level()).sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item), headVec.x, headVec.y, headVec.z, 1, motionX, motionY, motionZ, 0.1);
+                ((ServerLevel) this.level()).sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(item)), headVec.x, headVec.y, headVec.z, 1, motionX, motionY, motionZ, 0.1);
             } else {
-                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), headVec.x, headVec.y, headVec.z, motionX, motionY, motionZ);
+                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(item)), headVec.x, headVec.y, headVec.z, motionX, motionY, motionZ);
             }
         }
     }

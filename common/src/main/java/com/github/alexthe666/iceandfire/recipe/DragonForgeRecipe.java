@@ -2,7 +2,6 @@ package com.github.alexthe666.iceandfire.recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.PlacementInfo;
-import net.minecraft.world.item.ItemStackTemplate;
 
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.mojang.serialization.MapCodec;
@@ -20,27 +19,36 @@ public class DragonForgeRecipe implements Recipe<DragonForgeInput> {
     private static final MapCodec<DragonForgeRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC.fieldOf("input").forGetter(DragonForgeRecipe::getInput),
             Ingredient.CODEC.fieldOf("blood").forGetter(DragonForgeRecipe::getBlood),
-            ItemStackTemplate.CODEC.fieldOf("result").forGetter(DragonForgeRecipe::getResult),
+            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(DragonForgeRecipe::getResult),
             com.mojang.serialization.Codec.STRING.fieldOf("dragon_type").forGetter(DragonForgeRecipe::getDragonType),
             com.mojang.serialization.Codec.INT.fieldOf("cook_time").forGetter(DragonForgeRecipe::getCookTime)
     ).apply(instance, DragonForgeRecipe::new));
     private static final StreamCodec<RegistryFriendlyByteBuf, DragonForgeRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC, DragonForgeRecipe::getInput,
             Ingredient.CONTENTS_STREAM_CODEC, DragonForgeRecipe::getBlood,
-            ItemStackTemplate.STREAM_CODEC, DragonForgeRecipe::getResult,
+            ItemStack.STREAM_CODEC, DragonForgeRecipe::getResult,
             ByteBufCodecs.STRING_UTF8, DragonForgeRecipe::getDragonType,
             ByteBufCodecs.VAR_INT, DragonForgeRecipe::getCookTime,
             DragonForgeRecipe::new);
-    /** 26.x: a serializer is a record of the two codecs */
-    public static final RecipeSerializer<DragonForgeRecipe> SERIALIZER = new RecipeSerializer<>(CODEC, STREAM_CODEC);
+    public static final RecipeSerializer<DragonForgeRecipe> SERIALIZER = new RecipeSerializer<>() {
+        @Override
+        public @NotNull MapCodec<DragonForgeRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, DragonForgeRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+    };
 
     private final Ingredient input;
     private final Ingredient blood;
-    private final ItemStackTemplate result;
+    private final ItemStack result;
     private final String dragonType;
     private final int cookTime;
 
-    public DragonForgeRecipe(Ingredient input, Ingredient blood, ItemStackTemplate result, String dragonType, int cookTime) {
+    public DragonForgeRecipe(Ingredient input, Ingredient blood, ItemStack result, String dragonType, int cookTime) {
         this.input = input;
         this.blood = blood;
         this.result = result;
@@ -64,7 +72,7 @@ public class DragonForgeRecipe implements Recipe<DragonForgeInput> {
         return dragonType;
     }
 
-    public ItemStackTemplate getResult() {
+    public ItemStack getResult() {
         return result;
     }
 
@@ -87,12 +95,12 @@ public class DragonForgeRecipe implements Recipe<DragonForgeInput> {
     }
 
     public @NotNull ItemStack getResultItem() {
-        return result.create();
+        return result.copy();
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull DragonForgeInput dragonforge) {
-        return result.create();
+    public @NotNull ItemStack assemble(@NotNull DragonForgeInput dragonforge, HolderLookup.@NotNull Provider registries) {
+        return result.copy();
     }
 
     @Override

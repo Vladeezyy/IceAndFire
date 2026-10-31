@@ -149,7 +149,7 @@ public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRen
         try {
             EntityRenderState state = manager.extractEntity(entityIn, partialTicks);
             state.shadowPieces.clear();
-            manager.submit(state, Minecraft.getInstance().gameRenderer.getGameRenderState().levelRenderState.cameraRenderState, 0, 0, 0, matrixStack, collector);
+            manager.submit(state, Minecraft.getInstance().gameRenderer.getLevelRenderState().cameraRenderState, 0, 0, 0, matrixStack, collector);
         } catch (Throwable throwable3) {
             CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
             CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being rendered");

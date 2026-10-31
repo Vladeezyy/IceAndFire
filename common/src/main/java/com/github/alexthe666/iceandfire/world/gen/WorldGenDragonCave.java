@@ -87,7 +87,7 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
             return false;
         }
         // Center the position at the "middle" of the chunk
-        position = new BlockPos((chunkPos.x() << 4) + 8, j, (chunkPos.z() << 4) + 8);
+        position = new BlockPos((chunkPos.x << 4) + 8, j, (chunkPos.z << 4) + 8);
         int dragonAge = 75 + rand.nextInt(50);
         int radius = (int) (dragonAge * 0.2F) + rand.nextInt(4);
         generateCave(worldIn, radius, 3, position, rand);

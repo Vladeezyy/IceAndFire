@@ -1,5 +1,5 @@
 package com.github.alexthe666.iceandfire.client.gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.BlockPos;
@@ -15,8 +15,8 @@ public class MyrmexDeleteButton extends Button {
 
     // 26.x: the plain button look (Button.Plain)
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        this.extractDefaultSprite(graphics);
-        this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderDefaultSprite(graphics);
+        this.renderDefaultLabel(graphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
     }
 }

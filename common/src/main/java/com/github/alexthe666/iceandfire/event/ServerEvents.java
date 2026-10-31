@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.event;
+import dev.vladeezyy.iceandfire.bus.VillagerTradesEvent;
 import com.github.alexthe666.iceandfire.entity.util.Values;
 import net.minecraft.world.entity.EntitySpawnReason;
 
@@ -300,7 +301,7 @@ public class ServerEvents {
     public void makeItemDropsFireImmune(final LivingDropsEvent event) {
         boolean makeFireImmune = false;
 
-        if (event.getSource().getDirectEntity() instanceof LightningBolt bolt && bolt.entityTags().contains(BOLT_DONT_DESTROY_LOOT)) {
+        if (event.getSource().getDirectEntity() instanceof LightningBolt bolt && bolt.getTags().contains(BOLT_DONT_DESTROY_LOOT)) {
             makeFireImmune = true;
         } else if (event.getSource().getEntity() instanceof Player player && player.getItemInHand(player.getUsedItemHand()).is(IafItemTags.MAKE_ITEM_DROPS_FIREIMMUNE)) {
             makeFireImmune = true;
@@ -639,13 +640,20 @@ public class ServerEvents {
         }
     }
 
+    @SubscribeEvent
+    public void onVillagerTrades(VillagerTradesEvent event) {
+        if (event.getType().identifier().equals(IafVillagerRegistry.SCRIBE.getId())) {
+            IafVillagerRegistry.addScribeTrades(event.getTrades());
+        }
+    }
+
     public static String BOLT_DONT_DESTROY_LOOT = "iceandfire.bolt_skip_loot";
 
     @SubscribeEvent
     public void onLightningHit(final EntityStruckByLightningEvent event) {
-        if ((event.getEntity() instanceof ItemEntity || event.getEntity() instanceof ExperienceOrb) && event.getLightning().entityTags().contains(BOLT_DONT_DESTROY_LOOT)) {
+        if ((event.getEntity() instanceof ItemEntity || event.getEntity() instanceof ExperienceOrb) && event.getLightning().getTags().contains(BOLT_DONT_DESTROY_LOOT)) {
             event.setCanceled(true);
-        } else if (event.getLightning().entityTags().contains(event.getEntity().getStringUUID())) {
+        } else if (event.getLightning().getTags().contains(event.getEntity().getStringUUID())) {
             event.setCanceled(true);
         }
     }

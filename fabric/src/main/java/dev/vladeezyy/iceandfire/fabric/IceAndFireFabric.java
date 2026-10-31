@@ -32,8 +32,8 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
-import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
+import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
@@ -51,7 +51,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacementType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.item.trading.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -81,7 +81,7 @@ public final class IceAndFireFabric implements ModInitializer {
             }
         });
         registerBiomeModifications();
-        FabricPotionBrewingBuilder.BUILD.register(IafRecipeRegistry::registerBrewing);
+        FabricBrewingRecipeRegistryBuilder.BUILD.register(IafRecipeRegistry::registerBrewing);
         // 26.x: the client gets only the recipe serializers the server syncs (JEI shows the dragon forge recipes)
         net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization.synchronizeRecipeSerializer(com.github.alexthe666.iceandfire.recipe.DragonForgeRecipe.SERIALIZER);
         registerStorages();
@@ -93,6 +93,7 @@ public final class IceAndFireFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> IceAndFire.onServerStarted());
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> FabricPlatform.server = null);
         registerGameEvents();
+        registerTrades();
 
         IceAndFire.PROXY.setup();
         IafBus.post(new dev.vladeezyy.iceandfire.bus.FMLCommonSetupEvent());
@@ -103,13 +104,13 @@ public final class IceAndFireFabric implements ModInitializer {
         IafNetwork.register(new IafNetwork.PacketRegistrar() {
             @Override
             public <T extends CustomPacketPayload> void toClient(CustomPacketPayload.Type<T> type, StreamCodec<? super RegistryFriendlyByteBuf, T> codec, BiConsumer<T, PacketContext> handler) {
-                PayloadTypeRegistry.clientboundPlay().register(type, codec);
+                PayloadTypeRegistry.playS2C().register(type, codec);
                 FabricNetwork.CLIENT_HANDLERS.put(type, handler);
             }
 
             @Override
             public <T extends CustomPacketPayload> void toServer(CustomPacketPayload.Type<T> type, StreamCodec<? super RegistryFriendlyByteBuf, T> codec, BiConsumer<T, PacketContext> handler) {
-                PayloadTypeRegistry.serverboundPlay().register(type, codec);
+                PayloadTypeRegistry.playC2S().register(type, codec);
                 ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) -> handler.accept(payload, new PacketContext() {
                     @Override
                     public Player player() {
@@ -139,23 +140,42 @@ public final class IceAndFireFabric implements ModInitializer {
             features.put(id, Holder.Reference.createStandAlone(owner, ResourceKey.create(Registries.PLACED_FEATURE, Identifier.parse(id))));
         }
         BiomeModifications.create(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features")).add(ModificationPhase.ADDITIONS, BiomeSelectors.all(),
-            (selection, context) -> IafWorldRegistry.addFeatures(selection.getBiomeHolder(), features,
+            (selection, context) -> IafWorldRegistry.addFeatures(selection.getBiomeRegistryEntry(), features,
                 (step, feature) -> context.getGenerationSettings().addFeature(step, feature.unwrapKey().orElseThrow())));
         BiomeModifications.create(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns")).add(ModificationPhase.ADDITIONS, BiomeSelectors.all(),
-            (selection, context) -> IafEntityRegistry.addSpawners(selection.getBiomeHolder(),
-                (category, spawner, weight) -> context.getMobSpawnSettings().addSpawn(category, spawner, weight)));
+            (selection, context) -> IafEntityRegistry.addSpawners(selection.getBiomeRegistryEntry(),
+                (category, spawner, weight) -> context.getSpawnSettings().addSpawn(category, spawner, weight)));
     }
 
     /** Hoppers and pipes: the forge bricks and inputs give the core's slots (NeoForge: IafCapabilities) */
     private static void registerStorages() {
         ItemStorage.SIDED.registerForBlockEntity((brick, side) -> {
             TileEntityDragonforge core = brick.getConnectedTileEntity();
-            return core != null ? ContainerStorage.of(core, side) : null;
+            return core != null ? InventoryStorage.of(core, side) : null;
         }, IafTileEntityRegistry.DRAGONFORGE_BRICK.get());
         ItemStorage.SIDED.registerForBlockEntity((input, side) -> {
             TileEntityDragonforge core = input.getCore();
-            return core != null ? ContainerStorage.of(core, side) : null;
+            return core != null ? InventoryStorage.of(core, side) : null;
         }, IafTileEntityRegistry.DRAGONFORGE_INPUT.get());
+    }
+
+    /** VillagerTradesEvent per level: the listener fills one map, only the list of the level Fabric asks for is kept */
+    private static void registerTrades() {
+        for (var profession : BuiltInRegistries.VILLAGER_PROFESSION.registryKeySet()) {
+            if (!profession.identifier().getNamespace().equals(IceAndFire.MODID)) {
+                continue;
+            }
+            for (int level = 1; level <= 5; level++) {
+                int tradeLevel = level;
+                net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper.registerVillagerOffers(profession, level, factories -> {
+                    Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = new Int2ObjectOpenHashMap<>();
+                    for (int other = 1; other <= 5; other++) {
+                        trades.put(other, other == tradeLevel ? factories : new ArrayList<>());
+                    }
+                    IafBus.post(new dev.vladeezyy.iceandfire.bus.VillagerTradesEvent(trades, profession));
+                });
+            }
+        }
     }
 
     /** The game events with a Fabric API callback; the others are mixins (dev.vladeezyy.iceandfire.fabric.mixin) */

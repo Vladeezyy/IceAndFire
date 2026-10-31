@@ -15,7 +15,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -63,10 +63,10 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor ms, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics ms, int mouseX, int mouseY) {
         Font font = this.minecraft.font;
-        ms.text(font, this.nameable.getString(), (int) (12), (int) (4), net.minecraft.util.ARGB.opaque(4210752), false);
-        ms.text(font, this.playerInventoryTitle, (int) (8), (int) (this.imageHeight - 96 + 2), net.minecraft.util.ARGB.opaque(4210752), false);
+        ms.drawString(font, this.nameable.getString(), (int) (12), (int) (4), net.minecraft.util.ARGB.opaque(4210752), false);
+        ms.drawString(font, this.playerInventoryTitle, (int) (8), (int) (this.imageHeight - 96 + 2), net.minecraft.util.ARGB.opaque(4210752), false);
     }
 
     @Override
@@ -98,15 +98,14 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(ms, mouseX, mouseY, partialTicks);
+    protected void renderBg(GuiGraphics ms, float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);
         // 26.x: the book as the enchanting table draws it (1.21.1 set up its own projection and drew the model)
         float open = Mth.lerp(partialTicks, this.oOpen, this.open);
         float flip = Mth.lerp(partialTicks, this.oFlip, this.flip);
-        ms.book(this.bookModel, ENCHANTMENT_TABLE_BOOK_TEXTURE, 40.0F, open, flip, i + 14, j + 14, i + 14 + 38, j + 14 + 31);
+        ms.submitBookModelRenderState(this.bookModel, ENCHANTMENT_TABLE_BOOK_TEXTURE, 40.0F, open, flip, i + 14, j + 14, i + 14 + 38, j + 14 + 31);
         this.menu.getManuscriptAmount();
 
         for (int i1 = 0; i1 < 3; ++i1) {
@@ -146,10 +145,10 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
                         ms.pose().pushMatrix();
                         ms.pose().translate((float) (width / 2F - 10), (float) (height / 2F - 83 + (1.0F - textScale) * 55));
                         ms.pose().scale((float) (textScale), (float) (textScale));
-                        ms.text(fontrenderer, s1, (int) (0), (int) (20 + 19 * i1), net.minecraft.util.ARGB.opaque(j2), false);
+                        ms.drawString(fontrenderer, s1, (int) (0), (int) (20 + 19 * i1), net.minecraft.util.ARGB.opaque(j2), false);
                         ms.pose().popMatrix();
                         fontrenderer = this.minecraft.font;
-                        ms.text(fontrenderer, s, (int) (k1 + 84 - fontrenderer.width(s)), (int) (j + 13 + 19 * i1 + 7), net.minecraft.util.ARGB.opaque(j3), true);
+                        ms.drawString(fontrenderer, s, (int) (k1 + 84 - fontrenderer.width(s)), (int) (j + 13 + 19 * i1 + 7), net.minecraft.util.ARGB.opaque(j3), true);
                     } else {
                         ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, j1, j + 14 + 19 * i1, (float) (0), (float) (185), 108, 19, 256, 256);
                         ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, j1 + 1, j + 15 + 19 * i1, (float) (16 * i1), (float) (239), 16, 16, 256, 256);
@@ -160,9 +159,9 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        super.extractRenderState(ms, mouseX, mouseY, partialTicks);
-        this.extractTooltip(ms, mouseX, mouseY);
+    public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+        super.render(ms, mouseX, mouseY, partialTicks);
+        this.renderTooltip(ms, mouseX, mouseY);
         boolean flag = this.minecraft.player.isCreative();
         int i = this.menu.getManuscriptAmount();
 
@@ -184,7 +183,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
                     list.add(Component.literal(textformatting + "" + s).getVisualOrderText());
                 }
 
-                this.extractTooltip(ms, mouseX, mouseY);
+                this.renderTooltip(ms, mouseX, mouseY);
                 break;
             }
         }

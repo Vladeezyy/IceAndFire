@@ -11,7 +11,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.SavedDataStorage;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class MyrmexWorldData extends SavedData {
 
     private static final String IDENTIFIER = "iceandfire_myrmex";
-    private static final SavedDataType<MyrmexWorldData> TYPE = IafSavedData.type("myrmex", MyrmexWorldData::new, MyrmexWorldData::new, (data, tag) -> data.save(tag, null));
+    private static final SavedDataType<MyrmexWorldData> TYPE = IafSavedData.type(IDENTIFIER, MyrmexWorldData::new, MyrmexWorldData::new, (data, tag) -> data.save(tag, null));
     private final List<BlockPos> villagerPositionsList = Lists.newArrayList();
     private final List<MyrmexHive> hiveList = Lists.newArrayList();
     private Level world;

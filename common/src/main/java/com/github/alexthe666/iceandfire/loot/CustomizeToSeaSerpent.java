@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,7 @@ public class CustomizeToSeaSerpent extends LootItemConditionalFunction {
     }
 
     @Override
-    public @NotNull MapCodec<CustomizeToSeaSerpent> codec() {
-        return CODEC;
+    public @NotNull LootItemFunctionType<CustomizeToSeaSerpent> getType() {
+        return IafLootRegistry.CUSTOMIZE_TO_SERPENT.get();
     }
 }

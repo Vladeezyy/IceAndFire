@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.item.trading.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -36,15 +36,41 @@ public class IafVillagerRegistry {
     public static final Registrar<PoiType> POI_TYPES = Registrar.create(BuiltInRegistries.POINT_OF_INTEREST_TYPE, IceAndFire.MODID);
     public static final RegistryEntry<PoiType, PoiType> SCRIBE_POI = POI_TYPES.register("scribe", () -> new PoiType(ImmutableSet.copyOf(IafBlockRegistry.LECTERN.get().getStateDefinition().getPossibleStates()), 1, 1));
     public static final Registrar<VillagerProfession> PROFESSIONS = Registrar.create(BuiltInRegistries.VILLAGER_PROFESSION, IceAndFire.MODID);
-    public static final RegistryEntry<VillagerProfession, VillagerProfession> SCRIBE = PROFESSIONS.register("scribe", ()-> new VillagerProfession(net.minecraft.network.chat.Component.translatable("entity.minecraft.villager.iceandfire.scribe"), (entry) -> entry.value().equals(SCRIBE_POI.get()), (entry) -> entry.value().equals(SCRIBE_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_LIBRARIAN, scribeTrades()));
+    public static final RegistryEntry<VillagerProfession, VillagerProfession> SCRIBE = PROFESSIONS.register("scribe", ()-> new VillagerProfession(net.minecraft.network.chat.Component.translatable("entity.minecraft.villager.iceandfire.scribe"), (entry) -> entry.value().equals(SCRIBE_POI.get()), (entry) -> entry.value().equals(SCRIBE_POI.get()), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_LIBRARIAN));
 
-    // 26.x: the trades are data (data/iceandfire/trade_set/scribe/level_n.json, from tools/port26/gen_trades_26.py)
-    private static it.unimi.dsi.fastutil.ints.Int2ObjectMap<net.minecraft.resources.ResourceKey<net.minecraft.world.item.trading.TradeSet>> scribeTrades() {
-        it.unimi.dsi.fastutil.ints.Int2ObjectMap<net.minecraft.resources.ResourceKey<net.minecraft.world.item.trading.TradeSet>> trades = new it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap<>();
-        for (int level = 1; level <= 5; level++) {
-            trades.put(level, net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.TRADE_SET, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "scribe/level_" + level)));
-        }
-        return trades;
+    public static void addScribeTrades(Int2ObjectMap<List<VillagerTrades.ItemListing>> trades) {
+
+        final float emeraldForItemsMultiplier = 0.05F; //Values taken from VillagerTrades.java
+        final float itemForEmeraldMultiplier = 0.05F;
+        final float rareItemForEmeraldMultiplier = 0.2F;
+        trades.get(1).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 1), new ItemStack(IafItemRegistry.MANUSCRIPT.get(), 4), 25, 2, emeraldForItemsMultiplier));
+        trades.get(1).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.BOOKSHELF, 3), new ItemStack(Items.EMERALD, 1), 8, 3, itemForEmeraldMultiplier));
+        trades.get(1).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.PAPER, 15), new ItemStack(Items.EMERALD, 2), 4, 4, itemForEmeraldMultiplier));
+        trades.get(1).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafBlockRegistry.ASH.get(), 10), new ItemStack(Items.EMERALD, 1), 8, 4, itemForEmeraldMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafItemRegistry.SILVER_INGOT.get(), 5), new ItemStack(Items.EMERALD, 1), 3, 5, itemForEmeraldMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafBlockRegistry.FIRE_LILY.get(), 8), new ItemStack(Items.EMERALD, 1), 3, 5, itemForEmeraldMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafBlockRegistry.LIGHTNING_LILY.get(), 7), new ItemStack(Items.EMERALD, 3), 2, 5, itemForEmeraldMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 3), new ItemStack(IafBlockRegistry.FROST_LILY.get(), 4), 3, 3, emeraldForItemsMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 2), new ItemStack(IafBlockRegistry.DRAGON_ICE_SPIKES.get(), 7), 2, 3, emeraldForItemsMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafItemRegistry.SAPPHIRE_GEM.get()), new ItemStack(Items.EMERALD, 2), 30, 3, rareItemForEmeraldMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 2), new ItemStack(IafBlockRegistry.JAR_EMPTY.get(), 1), 3, 4, emeraldForItemsMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 2), new ItemStack(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), 1), 40, 2, emeraldForItemsMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 2), new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get(), 1), 40, 2, emeraldForItemsMultiplier));
+        trades.get(2).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.AMETHYST_SHARD), new ItemStack(Items.EMERALD, 3), 20, 3, rareItemForEmeraldMultiplier));
+        trades.get(3).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafItemRegistry.DRAGON_BONE.get(), 6), new ItemStack(Items.EMERALD, 1), 7, 4, itemForEmeraldMultiplier));
+        trades.get(3).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafItemRegistry.CHAIN.get(), 2), new ItemStack(Items.EMERALD, 3), 4, 2, itemForEmeraldMultiplier));
+        trades.get(3).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 6), new ItemStack(IafItemRegistry.PIXIE_DUST.get(), 2), 8, 3, emeraldForItemsMultiplier));
+        trades.get(3).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 6), new ItemStack(IafItemRegistry.FIRE_DRAGON_FLESH.get(), 2), 8, 3, emeraldForItemsMultiplier));
+        trades.get(3).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 7), new ItemStack(IafItemRegistry.ICE_DRAGON_FLESH.get(), 1), 8, 3, emeraldForItemsMultiplier));
+        trades.get(3).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 8), new ItemStack(IafItemRegistry.LIGHTNING_DRAGON_FLESH.get(), 1), 8, 3, emeraldForItemsMultiplier));
+        trades.get(4).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 10), new ItemStack(IafItemRegistry.DRAGON_BONE.get(), 2), 20, 5, emeraldForItemsMultiplier));
+        trades.get(4).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 4), new ItemStack(IafItemRegistry.SHINY_SCALES.get(), 1), 5, 2, emeraldForItemsMultiplier));
+        trades.get(4).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafItemRegistry.DREAD_SHARD.get(), 5), new ItemStack(Items.EMERALD, 1), 10, 4, itemForEmeraldMultiplier));
+        trades.get(4).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 8), new ItemStack(IafItemRegistry.STYMPHALIAN_BIRD_FEATHER.get(), 12), 3, 6, emeraldForItemsMultiplier));
+        trades.get(4).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 4), new ItemStack(IafItemRegistry.TROLL_TUSK.get(), 12), 7, 3, emeraldForItemsMultiplier));
+        trades.get(5).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 15), new ItemStack(IafItemRegistry.SERPENT_FANG.get(), 3), 20, 3, emeraldForItemsMultiplier));
+        trades.get(5).add((level, entity, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 12), new ItemStack(IafItemRegistry.HYDRA_FANG.get(), 1), 20, 3, emeraldForItemsMultiplier));
+        trades.get(5).add((level, entity, random) -> new MerchantOffer(new ItemCost(IafItemRegistry.ECTOPLASM.get(), 6), new ItemStack(Items.EMERALD, 1), 7, 3, itemForEmeraldMultiplier));
     }
 
     public static void addBuildingToPool(Registry<StructureTemplatePool> templatePoolRegistry,

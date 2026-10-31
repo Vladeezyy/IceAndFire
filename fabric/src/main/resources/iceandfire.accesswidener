@@ -1,4 +1,4 @@
-accessWidener v2 official
+accessWidener v2 named
 # The same as neoforge/src/main/resources/META-INF/accesstransformer.cfg (the common code compiles with that AT)
 accessible field net/minecraft/world/entity/projectile/arrow/ThrownTrident ID_LOYALTY Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/entity/projectile/arrow/ThrownTrident ID_FOIL Lnet/minecraft/network/syncher/EntityDataAccessor;
@@ -39,7 +39,6 @@ accessible field net/minecraft/world/entity/LivingEntity useItemRemaining I
 # Dragon and death worm ground blast (BlockLaunchExplosion): the blocks a vanilla explosion would break
 accessible method net/minecraft/world/level/ServerExplosion calculateExplodedPositions ()Ljava/util/List;
 # Saved data of 1.21.1 worlds is moved to its 26.x path (IafSavedData)
-accessible field net/minecraft/world/level/storage/SavedDataStorage dataFolder Ljava/nio/file/Path;
 # Dread lich skull and other arrows read the damage (1.21.1 had getBaseDamage())
 accessible field net/minecraft/world/entity/projectile/arrow/AbstractArrow baseDamage D
 # Creative tabs fill their output from the mod (26.x: the interface is protected)

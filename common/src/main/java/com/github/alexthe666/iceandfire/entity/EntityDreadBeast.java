@@ -245,19 +245,19 @@ public class EntityDreadBeast extends EntityDreadMob implements IAnimatedEntity,
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return net.minecraft.sounds.SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC).adultSounds().growlSound().value();
+        return net.minecraft.sounds.SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC).growlSound().value();
     }
 
     @Override
     @Nullable
     protected SoundEvent getHurtSound(@NotNull DamageSource source) {
-        return net.minecraft.sounds.SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC).adultSounds().hurtSound().value();
+        return net.minecraft.sounds.SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC).hurtSound().value();
     }
 
     @Override
     @Nullable
     protected SoundEvent getDeathSound() {
-        return net.minecraft.sounds.SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC).adultSounds().deathSound().value();
+        return net.minecraft.sounds.SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC).deathSound().value();
     }
 
     @Override

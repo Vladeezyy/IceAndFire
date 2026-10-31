@@ -28,7 +28,7 @@ public class TestHive {
     public static void forceArea(ServerLevel level, ChunkPos center, boolean load) {
         for (int x = -3; x <= 3; x++) {
             for (int z = -3; z <= 3; z++) {
-                level.setChunkForced(center.x() + x, center.z() + z, load);
+                level.setChunkForced(center.x + x, center.z + z, load);
             }
         }
     }

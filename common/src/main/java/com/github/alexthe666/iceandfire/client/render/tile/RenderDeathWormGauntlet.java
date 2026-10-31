@@ -26,11 +26,11 @@ public class RenderDeathWormGauntlet implements com.github.alexthe666.iceandfire
         RenderType texture;
 
         if (stack.getItem() == IafItemRegistry.DEATHWORM_GAUNTLET_RED.get()) {
-            texture = RenderTypes.entityCutoutCull(RenderDeathWorm.TEXTURE_RED);
+            texture = RenderTypes.entityCutoutNoCull(RenderDeathWorm.TEXTURE_RED);
         } else if (stack.getItem() == IafItemRegistry.DEATHWORM_GAUNTLET_WHITE.get()) {
-            texture = RenderTypes.entityCutoutCull(RenderDeathWorm.TEXTURE_WHITE);
+            texture = RenderTypes.entityCutoutNoCull(RenderDeathWorm.TEXTURE_WHITE);
         } else {
-            texture = RenderTypes.entityCutoutCull(RenderDeathWorm.TEXTURE_YELLOW);
+            texture = RenderTypes.entityCutoutNoCull(RenderDeathWorm.TEXTURE_YELLOW);
         }
         stackIn.pushPose();
         stackIn.translate(0.5F, 0.5F, 0.5F);

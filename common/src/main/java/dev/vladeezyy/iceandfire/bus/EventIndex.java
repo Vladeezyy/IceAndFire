@@ -12,6 +12,7 @@ public final class EventIndex {
         IafBus.add(BlockEvent.BreakEvent.class, EventPriority.NORMAL, serverEvents::onBreakBlock);
         IafBus.add(EntityJoinLevelEvent.class, EventPriority.NORMAL, com.github.alexthe666.iceandfire.entity.props.CapabilityHandler::handleInitialSync);
         IafBus.add(EntityStruckByLightningEvent.class, EventPriority.NORMAL, serverEvents::onLightningHit);
+        IafBus.add(VillagerTradesEvent.class, EventPriority.NORMAL, serverEvents::onVillagerTrades);
         IafBus.add(EntityTickEvent.Pre.class, EventPriority.NORMAL, com.github.alexthe666.iceandfire.entity.props.CapabilityHandler::tickData);
         IafBus.add(EntityTickEvent.Pre.class, EventPriority.NORMAL, serverEvents::onEntityUpdate);
         IafBus.add(FMLCommonSetupEvent.class, EventPriority.NORMAL, com.github.alexthe666.iceandfire.recipe.IafRecipeRegistry::preInit);

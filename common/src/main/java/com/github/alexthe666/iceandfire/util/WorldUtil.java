@@ -46,7 +46,7 @@ public class WorldUtil {
      */
     public static boolean isChunkLoaded(final LevelAccessor world, final int x, final int z) {
         if (world.getChunkSource() instanceof ServerChunkCache serverChunkCache) {
-            final ChunkHolder holder = serverChunkCache.chunkMap.getVisibleChunkIfPresent(ChunkPos.pack(x, z));
+            final ChunkHolder holder = serverChunkCache.chunkMap.getVisibleChunkIfPresent(ChunkPos.asLong(x, z));
             if (holder != null) {
                 return holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).isSuccess();
             }
@@ -78,7 +78,7 @@ public class WorldUtil {
      * @return true if loaded
      */
     public static boolean isChunkLoaded(final LevelAccessor world, final ChunkPos pos) {
-        return isChunkLoaded(world, pos.x(), pos.z());
+        return isChunkLoaded(world, pos.x, pos.z);
     }
 
     /**
@@ -140,7 +140,7 @@ public class WorldUtil {
      * @return true if so.
      */
     public static boolean isPastTime(final Level world, final int pastTime) {
-        return world.getOverworldClockTime() % 24000 <= pastTime;
+        return world.getDayTime() % 24000 <= pastTime;
     }
 
 

@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 public class EntityDreadQueen extends EntityDreadMob implements IAnimatedEntity, IVillagerFear, IAnimalFear {
 
     public static Animation ANIMATION_SPAWN = Animation.create(40);
-    private final ServerBossEvent bossInfo = (new ServerBossEvent(this.getUUID(), this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.PROGRESS));
+    private final ServerBossEvent bossInfo = (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.PROGRESS));
     private int animationTick;
     private Animation currentAnimation;
 

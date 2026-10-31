@@ -310,12 +310,12 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                 if (player.isShiftKeyDown()) {
                     if (this.hasHomePosition) {
                         this.hasHomePosition = false;
-                        player.sendOverlayMessage(Component.translatable("hippogryph.command.remove_home"));
+                        player.displayClientMessage(Component.translatable("hippogryph.command.remove_home"), true);
                         return InteractionResult.SUCCESS;
                     } else {
                         this.homePos = this.blockPosition();
                         this.hasHomePosition = true;
-                        player.sendOverlayMessage(Component.translatable("hippogryph.command.new_home", homePos.getX(), homePos.getY(), homePos.getZ()));
+                        player.displayClientMessage(Component.translatable("hippogryph.command.new_home", homePos.getX(), homePos.getY(), homePos.getZ()), true);
                         return InteractionResult.SUCCESS;
                     }
                 } else {
@@ -323,7 +323,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                     if (this.getCommand() > 1) {
                         this.setCommand(0);
                     }
-                    player.sendOverlayMessage(Component.translatable("hippogryph.command." + (this.getCommand() == 1 ? "sit" : "stand")));
+                    player.displayClientMessage(Component.translatable("hippogryph.command." + (this.getCommand() == 1 ? "sit" : "stand")), true);
 
                 }
                 return InteractionResult.SUCCESS;
@@ -343,7 +343,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                 this.heal(5);
                 this.playSound(SoundEvents.GENERIC_EAT.value(), 1, 1);
                 for (int i = 0; i < 3; i++) {
-                    this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemstack.getItem()), this.getX() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), this.getY() + (double) (this.random.nextFloat() * this.getBbHeight()), this.getZ() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), 0, 0, 0);
+                    this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemstack), this.getX() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), this.getY() + (double) (this.random.nextFloat() * this.getBbHeight()), this.getZ() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), 0, 0, 0);
                 }
                 if (!player.isCreative()) {
                     itemstack.shrink(1);

@@ -19,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderGorgonHead implements com.github.alexthe666.iceandfire.client.render.IafLegacyItemRenderer {
 
-    private static final RenderType ACTIVE_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/gorgon/head_active.png"), false);
-    private static final RenderType INACTIVE_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/gorgon/head_inactive.png"), false);
+    private static final RenderType ACTIVE_TEXTURE = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/gorgon/head_active.png"), false);
+    private static final RenderType INACTIVE_TEXTURE = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/gorgon/head_inactive.png"), false);
     private static final AdvancedEntityModel ACTIVE_MODEL = new ModelGorgonHeadActive();
     private static final AdvancedEntityModel INACTIVE_MODEL = new ModelGorgonHead();
 

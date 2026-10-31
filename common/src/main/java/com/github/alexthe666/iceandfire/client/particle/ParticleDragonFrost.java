@@ -8,7 +8,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SingleQuadParticle;
-import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -79,10 +79,10 @@ public class ParticleDragonFrost extends SingleQuadParticle {
     }
 
     @Override
-    protected int getLightCoords(float partialTick) {
+    protected int getLightColor(float partialTick) {
         float f = 0;
         f = Mth.clamp(f, 0.0F, 1.0F);
-        int i = super.getLightCoords(partialTick);
+        int i = super.getLightColor(partialTick);
         int j = i & 255;
         int k = i >> 16 & 255;
         j = j + (int) (f * 15.0F * 16.0F);

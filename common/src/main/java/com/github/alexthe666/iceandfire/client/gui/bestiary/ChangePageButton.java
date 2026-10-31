@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.gui.bestiary;
 import net.minecraft.client.renderer.RenderPipelines;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -19,7 +19,7 @@ public class ChangePageButton extends Button {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partial) {
+    protected void renderContents(GuiGraphics matrixStack, int mouseX, int mouseY, float partial) {
         if (this.active) {
             Identifier resourceLocation = Identifier.parse("iceandfire:textures/gui/bestiary/widgets.png");
             boolean flag = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;

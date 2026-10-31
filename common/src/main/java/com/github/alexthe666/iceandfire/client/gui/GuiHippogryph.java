@@ -6,7 +6,7 @@ import com.github.alexthe666.iceandfire.entity.EntityHippogryph;
 import com.github.alexthe666.iceandfire.inventory.ContainerHippogryph;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -26,27 +26,26 @@ public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> 
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         Font font = this.minecraft.font;
         if (entity instanceof EntityHippogryph) {
             EntityHippogryph hippo = (EntityHippogryph) entity;
-            pGuiGraphics.text(font, hippo.getDisplayName().getString(), 8, 6, net.minecraft.util.ARGB.opaque(4210752), false);
+            pGuiGraphics.drawString(font, hippo.getDisplayName().getString(), 8, 6, net.minecraft.util.ARGB.opaque(4210752), false);
         }
-        pGuiGraphics.text(font, this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, net.minecraft.util.ARGB.opaque(4210752), false);
+        pGuiGraphics.drawString(font, this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, net.minecraft.util.ARGB.opaque(4210752), false);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
-        super.extractRenderState(pGuiGraphics, mouseX, mouseY, partialTicks);
-        this.extractTooltip(pGuiGraphics, mouseX, mouseY);
+        super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(pGuiGraphics, mouseX, mouseY);
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(pGuiGraphics, mouseX, mouseY, partialTicks);
+    protected void renderBg(GuiGraphics pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);

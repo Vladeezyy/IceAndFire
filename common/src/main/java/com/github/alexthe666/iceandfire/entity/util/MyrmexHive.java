@@ -247,25 +247,25 @@ public class MyrmexHive {
         }
         if (player != null) {
             if (j - i != 0) {
-                player.sendOverlayMessage(Component.translatable(j - i >= 0 ? "myrmex.message.raised_reputation" : "myrmex.message.lowered_reputation", Math.abs(j - i), j));
+                player.displayClientMessage(Component.translatable(j - i >= 0 ? "myrmex.message.raised_reputation" : "myrmex.message.lowered_reputation", Math.abs(j - i), j), true);
             }
             if (i < 25 && j >= 25) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.peaceful"));
+                player.displayClientMessage(Component.translatable("myrmex.message.peaceful"), false);
             }
             if (i >= 25 && j < 25) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.hostile"));
+                player.displayClientMessage(Component.translatable("myrmex.message.hostile"), false);
             }
             if (i < 50 && j >= 50) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.trade"));
+                player.displayClientMessage(Component.translatable("myrmex.message.trade"), false);
             }
             if (i >= 50 && j < 50) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.no_trade"));
+                player.displayClientMessage(Component.translatable("myrmex.message.no_trade"), false);
             }
             if (i < 75 && j >= 75) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.can_use_staff"));
+                player.displayClientMessage(Component.translatable("myrmex.message.can_use_staff"), false);
             }
             if (i >= 75 && j < 75) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.cant_use_staff"));
+                player.displayClientMessage(Component.translatable("myrmex.message.cant_use_staff"), false);
             }
         }
 
@@ -471,23 +471,23 @@ public class MyrmexHive {
         if (roomType == WorldGenMyrmexHive.RoomType.FOOD) {
             if (!this.foodRooms.contains(center) && !allCurrentRooms.contains(center)) {
                 this.foodRooms.add(center);
-                player.sendSystemMessage(Component.translatable("myrmex.message.added_food_room", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.added_food_room", center.getX(), center.getY(), center.getZ()), false);
             } else {
-                player.sendSystemMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()), false);
 
             }
         } else if (roomType == WorldGenMyrmexHive.RoomType.NURSERY) {
             if (!this.babyRooms.contains(center) && !allCurrentRooms.contains(center)) {
                 this.babyRooms.add(center);
-                player.sendSystemMessage(Component.translatable("myrmex.message.added_nursery_room", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.added_nursery_room", center.getX(), center.getY(), center.getZ()), false);
             } else {
-                player.sendSystemMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()), false);
             }
         } else if (!this.miscRooms.contains(center) && !allCurrentRooms.contains(center)) {
             this.miscRooms.add(center);
-            player.sendSystemMessage(Component.translatable("myrmex.message.added_misc_room", center.getX(), center.getY(), center.getZ()));
+            player.displayClientMessage(Component.translatable("myrmex.message.added_misc_room", center.getX(), center.getY(), center.getZ()), false);
         } else {
-            player.sendSystemMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()));
+            player.displayClientMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()), false);
         }
     }
 
@@ -497,17 +497,17 @@ public class MyrmexHive {
         allCurrentRooms.addAll(this.getEntranceBottoms().keySet());
         if (bottom) {
             if (allCurrentRooms.contains(center)) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()), false);
             } else {
                 this.getEntranceBottoms().put(center, facing);
-                player.sendSystemMessage(Component.translatable("myrmex.message.added_enterance_bottom", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.added_enterance_bottom", center.getX(), center.getY(), center.getZ()), false);
             }
         } else {
             if (allCurrentRooms.contains(center)) {
-                player.sendSystemMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.dupe_room", center.getX(), center.getY(), center.getZ()), false);
             } else {
                 this.getEntrances().put(center, facing);
-                player.sendSystemMessage(Component.translatable("myrmex.message.added_enterance_surface", center.getX(), center.getY(), center.getZ()));
+                player.displayClientMessage(Component.translatable("myrmex.message.added_enterance_surface", center.getX(), center.getY(), center.getZ()), false);
             }
         }
     }

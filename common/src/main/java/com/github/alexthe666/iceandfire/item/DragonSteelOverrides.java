@@ -65,13 +65,13 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
 
     default void hurtEnemy(T item, ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (item.getTier() == IafItemRegistry.SILVER_TOOL_MATERIAL) {
-            if (target.is(EntityTypeTags.UNDEAD)) {
+            if (target.getType().is(EntityTypeTags.UNDEAD)) {
                 target.hurt(attacker.level().damageSources().magic(), getAttackDamage(item) + 3.0F);
             }
         }
 
         if (item.getTier() == IafItemRegistry.MYRMEX_CHITIN_TOOL_MATERIAL) {
-            if (!target.is(EntityTypeTags.ARTHROPOD)) {
+            if (!target.getType().is(EntityTypeTags.ARTHROPOD)) {
                 target.hurt(attacker.level().damageSources().generic(), getAttackDamage(item) + 5.0F);
             }
             if (target instanceof EntityDeathWorm) {
@@ -96,8 +96,8 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
             }
             if (!attacker.level().isClientSide() && flag) {
                 LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
-                lightningboltentity.entityTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
-                lightningboltentity.entityTags().add(attacker.getStringUUID());
+                lightningboltentity.getTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
+                lightningboltentity.getTags().add(attacker.getStringUUID());
                 lightningboltentity.snapTo(target.position());
                 if (!target.level().isClientSide()) {
                     target.level().addFreshEntity(lightningboltentity);

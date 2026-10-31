@@ -7,7 +7,7 @@ import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -160,7 +160,7 @@ public class IceAndFireMainMenu extends TitleScreen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
                 int width = this.width;
         int height = this.height;
         ms.blit(RenderPipelines.GUI_TEXTURED, TABLE_TEXTURE, 0, 0, (float) (0), (float) (0), width, height, width, height);
@@ -180,7 +180,7 @@ public class IceAndFireMainMenu extends TitleScreen {
                 ms.blit(RenderPipelines.GUI_TEXTURED, drawingTextures[picture.image], (int) (picture.x * widthScale) + middleX, (int) ((picture.y * heightScale) + middleY), (float) (0), (float) (0), (int) imageScale, (int) imageScale, (int) imageScale, (int) imageScale);
                             }
         }
-        ms.text(this.minecraft.font, "Ice and Fire " + ChatFormatting.YELLOW + IceAndFire.VERSION, (int) (2), (int) (height - 10), net.minecraft.util.ARGB.opaque(0xFFFFFFFF), false);
+        ms.drawString(this.minecraft.font, "Ice and Fire " + ChatFormatting.YELLOW + IceAndFire.VERSION, (int) (2), (int) (height - 10), net.minecraft.util.ARGB.opaque(0xFFFFFFFF), false);
         ms.blit(RenderPipelines.GUI_TEXTURED, MINECRAFT_TITLE_TEXTURES, width / 2 - 256 / 2, 10, (float) (0), (float) (0), 256, 64, 256, 64);
 
         dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderMainMenu(this, ms, this.minecraft.font, width, height, l);
@@ -191,16 +191,16 @@ public class IceAndFireMainMenu extends TitleScreen {
             float f2 = 1.8F - Mth.abs(Mth.sin((float) (Util.getMillis() % 1000L) / 1000.0F * ((float) Math.PI * 2F)) * 0.1F);
             f2 = f2 * 100.0F / (float) (this.font.width(this.splashText) + 32);
             ms.pose().scale((float) (f2), (float) (f2));
-            ms.centeredText(this.font, this.splashText, 0, -8, net.minecraft.util.ARGB.opaque(16776960 | l));
+            ms.drawCenteredString(this.font, this.splashText, 0, -8, net.minecraft.util.ARGB.opaque(16776960 | l));
             ms.pose().popMatrix();
         }
 
 
         String s1 = "Copyright Mojang AB. Do not distribute!";
         Font font = this.minecraft.font;
-        ms.text(font, s1, width - this.minecraft.font.width(s1) - 2, height - 10, net.minecraft.util.ARGB.opaque(0xFFFFFFFF));
+        ms.drawString(font, s1, width - this.minecraft.font.width(s1) - 2, height - 10, net.minecraft.util.ARGB.opaque(0xFFFFFFFF));
         // the widgets (1.21.1 drew them twice, the second pass identical); Screen holds them privately on 26.x
-        super.extractRenderState(ms, mouseX, mouseY, partialTicks);
+        super.render(ms, mouseX, mouseY, partialTicks);
     }
 
     private class Picture {

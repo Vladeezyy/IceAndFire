@@ -10,7 +10,7 @@ import dev.vladeezyy.iceandfire.platform.Platform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -121,8 +121,8 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public void registerDataSerializer(Identifier id, net.minecraft.network.syncher.EntityDataSerializer<?> serializer) {
-        // 26.x Fabric refuses registerSerializer (unsynced ids): its own registry syncs them
-        net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry.register(id, serializer);
+        // Fabric refuses registerSerializer (unsynced ids): its own registry syncs them
+        net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry.register(id, serializer);
     }
 
     @Override
@@ -172,7 +172,7 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public CreativeModeTab.Builder creativeTabBuilder() {
-        return FabricCreativeModeTab.builder();
+        return FabricItemGroup.builder();
     }
 
     // --- network ---

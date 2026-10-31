@@ -159,7 +159,7 @@ public class ItemSummoningCrystal extends Item {
             return InteractionResult.PASS;
         }
 
-        ChunkPos pos = ChunkPos.containing(dragonOriginPosition);
+        ChunkPos pos = new ChunkPos(dragonOriginPosition);
         IceAndFire.LOGGER.info("Dragon entity not loaded, loading chunk {}", pos);
 
         // try to load the chunk, and mark the entity to be summoned as soon as it gets added to the world
@@ -183,14 +183,14 @@ public class ItemSummoningCrystal extends Item {
         summoningPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         summoningPlayer.playSound(SoundEvents.GLASS_BREAK, 1, 1);
         summoningPlayer.swing(summoningHand);
-        summoningPlayer.sendOverlayMessage(Component.translatable("message.iceandfire.dragonTeleport"));
+        summoningPlayer.displayClientMessage(Component.translatable("message.iceandfire.dragonTeleport"), true);
         ItemNbt.setTag(stack, new CompoundTag());
     }
 
     /** Called when the dragon of a pending summon was added to the level. */
     public static void delayedSummon(PendingSummon summon) {
         DELAYED_SUMMONS.remove(summon.dragonUuid());
-        ChunkPos pos = ChunkPos.containing(summon.dragonOriginPosition());
+        ChunkPos pos = new ChunkPos(summon.dragonOriginPosition());
 
         // make delayed summons expire if for some reason the chunk loading, or entity loading takes too long
         // wouldn't want the dragon to summon minutes later at the original position
@@ -217,6 +217,6 @@ public class ItemSummoningCrystal extends Item {
     }
 
     private static void displayClientError(Player summoningPlayer) {
-        summoningPlayer.sendOverlayMessage(Component.translatable("message.iceandfire.noDragonTeleport"));
+        summoningPlayer.displayClientMessage(Component.translatable("message.iceandfire.noDragonTeleport"), true);
     }
 }

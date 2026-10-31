@@ -3,10 +3,8 @@ package com.github.alexthe666.iceandfire.client.render;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.render.tile.RenderDreadPortal;
 import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.shaders.UniformType;
@@ -43,19 +41,19 @@ public final class IafRenderType {
             .withSampler("Sampler2")
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
             .withShaderDefine("PER_FACE_LIGHTING")
-            .withVertexFormat(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS)
+            .withVertexFormat(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS)
             .withCull(false);
     }
 
     /** The ghost: premultiplied blending (ONE, ONE_MINUS_SRC_ALPHA) as the original's ghost transparency */
     private static final RenderPipeline GHOST_PIPELINE = entity("pipeline/ghost")
-        .withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA)))
-        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .withBlend(new BlendFunction(SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA))
         .build();
     /** The crack overlay of a stone statue: translucent, only where the statue already is (equal depth) */
     private static final RenderPipeline STONE_CRACK_PIPELINE = entity("pipeline/stone_crack")
-        .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-        .withDepthStencilState(new DepthStencilState(CompareOp.EQUAL, false))
+        .withBlend(BlendFunction.TRANSLUCENT)
+        .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
+        .withDepthWrite(false)
         .build();
     /** The Dreadlands portal: assets/iceandfire/shaders/core/rendertype_dread_portal.* (5 layers as the original) */
     private static final RenderPipeline DREAD_PORTAL_PIPELINE = RenderPipeline.builder()
@@ -69,7 +67,6 @@ public final class IafRenderType {
         .withSampler("Sampler0")
         .withSampler("Sampler1")
         .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
-        .withDepthStencilState(DepthStencilState.DEFAULT)
         .build();
 
     private static final RenderType DREADLANDS_PORTAL = RenderType.create("dreadlands_portal", RenderSetup.builder(DREAD_PORTAL_PIPELINE)
@@ -109,7 +106,7 @@ public final class IafRenderType {
 
     /** A mob turned to stone: the stone texture with the cutout entity shader, culled (the original's state) */
     public static RenderType getStoneMobRenderType(float x, float y) {
-        return RenderTypes.entityCutoutCull(STONE_TEXTURE);
+        return RenderTypes.entityCutoutNoCull(STONE_TEXTURE);
     }
 
     /** Ice of a frozen mob: the translucent beacon beam shader (as the original) */

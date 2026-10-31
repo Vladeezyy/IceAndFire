@@ -134,7 +134,7 @@ public class StressTest {
     private static void generate(ServerLevel level, long now) {
         int total = GEN_SIDE * GEN_SIDE;
         for (int n = 0; n < 16 && genIndex < total; n++, genIndex++) {
-            level.getChunk(ARENA.x() - GEN_SIDE / 2 + genIndex % GEN_SIDE, ARENA.z() - GEN_SIDE / 2 + genIndex / GEN_SIDE);
+            level.getChunk(ARENA.x - GEN_SIDE / 2 + genIndex % GEN_SIDE, ARENA.z - GEN_SIDE / 2 + genIndex / GEN_SIDE);
         }
         if (genIndex % 256 == 0) {
             double seconds = (System.nanoTime() - genStart) / 1.0E9;
@@ -154,7 +154,7 @@ public class StressTest {
      * The myrmex hive of #5197 over a long time: a hive with its queen in another chunk of the generated area, about
      * five Minecraft hours run with /tick sprint (workers dig, forage and wander), the queen must still be at home.
      */
-    private static final ChunkPos HIVE = new ChunkPos(ARENA.x() + 12, ARENA.z() + 12);
+    private static final ChunkPos HIVE = new ChunkPos(ARENA.x + 12, ARENA.z + 12);
     private static final int HIVE_TICKS = 6000;
     private static int hiveStart;
     private static boolean hiveDone;
@@ -181,7 +181,7 @@ public class StressTest {
     private static void arena(ServerLevel level, boolean load) {
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
-                level.setChunkForced(ARENA.x() + x, ARENA.z() + z, load);
+                level.setChunkForced(ARENA.x + x, ARENA.z + z, load);
             }
         }
     }

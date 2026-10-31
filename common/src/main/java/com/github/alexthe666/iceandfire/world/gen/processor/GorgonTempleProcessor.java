@@ -33,8 +33,8 @@ public class GorgonTempleProcessor extends StructureProcessor {
         // Idea of workaround is detect if we are placing a waterloggable block and if so, remove the water in the world instead.
         if (infoIn2.state().getBlock() instanceof SimpleWaterloggedBlock) {
             if (worldReader.getFluidState(infoIn2.pos()).is(FluidTags.WATER)) {
-                ChunkPos currentChunk = ChunkPos.containing(infoIn2.pos());
-                worldReader.getChunk(currentChunk.x(), currentChunk.z()).setBlockState(infoIn2.pos(), Blocks.AIR.defaultBlockState(), 0);
+                ChunkPos currentChunk = new ChunkPos(infoIn2.pos());
+                worldReader.getChunk(currentChunk.x, currentChunk.z).setBlockState(infoIn2.pos(), Blocks.AIR.defaultBlockState(), 0);
             }
         }
 

@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.gui;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
@@ -15,7 +15,7 @@ public final class GuiEntityRenderUtil {
     private GuiEntityRenderUtil() {
     }
 
-    public static void renderEntityFollowsMouse(GuiGraphicsExtractor guiGraphics, int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity) {
+    public static void renderEntityFollowsMouse(GuiGraphics guiGraphics, int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity) {
         float f = (float) Math.atan(mouseX / 40.0F);
         float f1 = (float) Math.atan(mouseY / 40.0F);
         Quaternionf quaternionf = new Quaternionf().rotateZ((float) Math.PI);
@@ -43,12 +43,12 @@ public final class GuiEntityRenderUtil {
      * 1.21.1's InventoryScreen.renderEntityInInventory: the entity's feet at (x, y). 26.x draws an entity's render state
      * centred in a box (and clips to it): a box around (x, y) big enough for the mounts.
      */
-    public static void renderEntityInInventory(GuiGraphicsExtractor guiGraphics, int x, int y, float scale, Vector3f translation, Quaternionf pose, @org.jetbrains.annotations.Nullable Quaternionf cameraOrientation, LivingEntity entity) {
+    public static void renderEntityInInventory(GuiGraphics guiGraphics, int x, int y, float scale, Vector3f translation, Quaternionf pose, @org.jetbrains.annotations.Nullable Quaternionf cameraOrientation, LivingEntity entity) {
         net.minecraft.client.renderer.entity.EntityRenderer<? super LivingEntity, ?> renderer = net.minecraft.client.Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
         net.minecraft.client.renderer.entity.state.EntityRenderState state = renderer.createRenderState(entity, 1.0F);
         state.shadowPieces.clear();
         state.outlineColor = 0;
         int half = 400;
-        guiGraphics.entity(state, scale, translation, pose, cameraOrientation, x - half, y - half, x + half, y + half);
+        guiGraphics.submitEntityRenderState(state, scale, translation, pose, cameraOrientation, x - half, y - half, x + half, y + half);
     }
 }

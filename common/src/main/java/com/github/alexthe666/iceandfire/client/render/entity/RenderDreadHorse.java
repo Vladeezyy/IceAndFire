@@ -2,7 +2,6 @@ package com.github.alexthe666.iceandfire.client.render.entity;
 
 import com.github.alexthe666.iceandfire.entity.EntityDreadHorse;
 import net.minecraft.client.model.animal.equine.AbstractEquineModel;
-import net.minecraft.client.model.animal.equine.BabyHorseModel;
 import net.minecraft.client.model.animal.equine.HorseModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
@@ -20,7 +19,7 @@ public class RenderDreadHorse extends AbstractHorseRenderer<EntityDreadHorse, Eq
     private static final RenderType EYES = RenderTypes.eyes(TEXTURE_EYES);
 
     public RenderDreadHorse(EntityRendererProvider.Context context) {
-        super(context, new HorseModel(context.bakeLayer(ModelLayers.HORSE)), new BabyHorseModel(context.bakeLayer(ModelLayers.HORSE_BABY)));
+        super(context, new HorseModel(context.bakeLayer(ModelLayers.HORSE)), new HorseModel(context.bakeLayer(ModelLayers.HORSE_BABY)));
         this.addLayer(new EyesLayer<>(this) {
             @Override
             public RenderType renderType() {

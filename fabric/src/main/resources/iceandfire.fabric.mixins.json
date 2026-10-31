@@ -11,7 +11,8 @@
   ],
   "client": [
     "client.CameraMixin",
-    "client.MinecraftMixin"
+    "client.MinecraftMixin",
+    "client.ParticleEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

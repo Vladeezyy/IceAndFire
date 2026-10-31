@@ -231,7 +231,7 @@ public class PathNavigateDeathWormLand extends PathNavigation {
                             return false;
                         }
 
-                        if (pathnodetype == PathType.FIRE || pathnodetype == PathType.FIRE_IN_NEIGHBOR || pathnodetype == PathType.DAMAGING) {
+                        if (pathnodetype == PathType.DAMAGE_FIRE || pathnodetype == PathType.DANGER_FIRE || pathnodetype == PathType.DAMAGE_OTHER) {
                             return false;
                         }
                     }

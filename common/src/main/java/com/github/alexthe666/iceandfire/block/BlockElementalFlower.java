@@ -62,7 +62,7 @@ public class BlockElementalFlower extends net.minecraft.world.level.block.Vegeta
         } else if (this == IafBlockRegistry.LIGHTNING_LILY.get()) {
             return soil.is(BlockTags.DIRT) || soil.is(Blocks.SHORT_GRASS);
         } else {
-            return soil.is(BlockTags.ICE) || soil.is(BlockTags.SNOW) || soil.is(BlockTags.SUPPORT_OVERRIDE_SNOW_LAYER);
+            return soil.is(BlockTags.ICE) || soil.is(BlockTags.SNOW) || soil.is(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON);
         }
     }
 

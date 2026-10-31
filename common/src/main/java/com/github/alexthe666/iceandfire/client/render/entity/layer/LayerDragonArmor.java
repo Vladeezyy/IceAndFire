@@ -65,7 +65,7 @@ public class LayerDragonArmor extends IafEntityLayer<EntityDragonBase, IafMobRen
                 Minecraft.getInstance().getTextureManager().registerAndLoad(resourcelocation, layeredBase);
                 LAYERED_ARMOR_CACHE.put(armorTexture, resourcelocation);
             }
-            submitParent(matrixStackIn, iafCollector, iafState, RenderTypes.entityCutout(resourcelocation), packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
+            submitParent(matrixStackIn, iafCollector, iafState, RenderTypes.entityCutoutNoCull(resourcelocation), packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
         }
     }
 }
