@@ -29,7 +29,7 @@ public abstract class LivingEntityMixin {
     protected int useItemRemaining;
 
     @Shadow
-    protected int lastHurtByPlayerTime;
+    protected int lastHurtByPlayerMemoryTime;
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void iceandfire$tick(CallbackInfo ci) {
@@ -81,7 +81,7 @@ public abstract class LivingEntityMixin {
     private void iceandfire$dropDrops(ServerLevel level, DamageSource source, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
         List<ItemEntity> drops = DropCapture.stop(self);
-        if (drops != null && !IafBus.post(new LivingDropsEvent(self, source, drops, this.lastHurtByPlayerTime > 0))) {
+        if (drops != null && !IafBus.post(new LivingDropsEvent(self, source, drops, this.lastHurtByPlayerMemoryTime > 0))) {
             drops.forEach(level::addFreshEntity);
         }
     }
