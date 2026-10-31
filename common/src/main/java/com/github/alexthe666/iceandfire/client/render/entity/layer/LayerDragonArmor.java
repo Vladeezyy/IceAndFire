@@ -61,8 +61,8 @@ public class LayerDragonArmor extends IafEntityLayer<EntityDragonBase, IafMobRen
                         tex.add(EnumDragonTextures.Armor.getArmorForDragon(dragon, slot).LIGHTNINGTEXTURE.toString());
                     }
                 }
-                ArrayLayeredTexture layeredBase = new ArrayLayeredTexture(tex);
-                Minecraft.getInstance().getTextureManager().register(resourcelocation, layeredBase);
+                ArrayLayeredTexture layeredBase = new ArrayLayeredTexture(resourcelocation, tex);
+                Minecraft.getInstance().getTextureManager().registerAndLoad(resourcelocation, layeredBase);
                 LAYERED_ARMOR_CACHE.put(armorTexture, resourcelocation);
             }
             submitParent(matrixStackIn, iafCollector, iafState, RenderTypes.entityCutout(resourcelocation), packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);

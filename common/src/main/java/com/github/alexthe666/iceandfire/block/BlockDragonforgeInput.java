@@ -113,7 +113,7 @@ public class BlockDragonforgeInput extends BaseEntityBlock implements IDragonPro
     }
 
     @Override
-    public void neighborChanged(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
+    protected void neighborChanged(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @Nullable net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
         if (worldIn.getBlockEntity(pos) instanceof TileEntityDragonforgeInput) {
             ((TileEntityDragonforgeInput) worldIn.getBlockEntity(pos)).resetCore();
         }

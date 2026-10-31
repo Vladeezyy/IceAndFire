@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+
+import com.github.alexthe666.iceandfire.client.render.IafLegacyRender;import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
@@ -43,7 +44,7 @@ public class RenderTideTridentItem implements com.github.alexthe666.iceandfire.c
                 stackIn.translate(0, 0.6F, 0.0F);
             }
             stackIn.mulPose(Axis.XP.rotationDegrees(160.0F));
-            VertexConsumer glintVertexBuilder = ItemRenderer.getFoilBufferDirect(bufferIn, RenderTypes.entityCutout(RenderTideTrident.TRIDENT), false, stack.hasFoil());
+            VertexConsumer glintVertexBuilder = IafLegacyRender.foilBuffer(bufferIn, RenderTypes.entityCutout(RenderTideTrident.TRIDENT), stack.hasFoil());
             MODEL.renderToBuffer(stackIn,
                 glintVertexBuilder, combinedLightIn,
                 combinedOverlayIn, -1);

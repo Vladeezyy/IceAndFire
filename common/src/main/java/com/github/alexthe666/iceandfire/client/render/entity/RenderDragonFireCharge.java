@@ -1,11 +1,11 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
+import com.github.alexthe666.iceandfire.client.render.IafLegacyRender;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -30,7 +30,6 @@ public class RenderDragonFireCharge extends IafEntityRenderer<Fireball> {
 
     @Override
     protected void renderLegacy(@NotNull Fireball entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.0D, 0.5D, 0.0D);
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(-90.0F));

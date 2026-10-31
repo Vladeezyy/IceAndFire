@@ -136,7 +136,10 @@ public abstract class ModelBipedBase<T extends LivingEntity> extends AdvancedEnt
     }
 
     public void setModelAttributes(ModelBipedBase<T> modelIn) {
-        super.copyPropertiesTo(modelIn);
+        // 1.21.1's EntityModel#copyPropertiesTo
+        modelIn.attackTime = this.attackTime;
+        modelIn.riding = this.riding;
+        modelIn.young = this.young;
         modelIn.animator = this.animator;
         modelIn.leftArmPose = this.leftArmPose;
         modelIn.rightArmPose = this.rightArmPose;
@@ -150,19 +153,6 @@ public abstract class ModelBipedBase<T extends LivingEntity> extends AdvancedEnt
         copyFrom(modelIn.legLeft, this.legLeft);
     }
 
-    public void setModelAttributes(HumanoidModel<T> modelIn) {
-        super.copyPropertiesTo(modelIn);
-        modelIn.leftArmPose = this.leftArmPose;
-        modelIn.rightArmPose = this.rightArmPose;
-        modelIn.crouching = this.isSneak;
-        copyFrom(modelIn.head, this.head);
-        copyFrom(modelIn.hat, this.headware);
-        copyFrom(modelIn.body, this.body);
-        copyFrom(modelIn.rightArm, this.armRight);
-        copyFrom(modelIn.leftArm, this.armLeft);
-        copyFrom(modelIn.rightLeg, this.legRight);
-        copyFrom(modelIn.leftLeg, this.legLeft);
-    }
 
     public void setVisible(boolean visible) {
         this.head.invisible = !visible;

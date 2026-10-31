@@ -39,12 +39,12 @@ public class IceAndFireJEIPlugin implements IModPlugin {
     public static final Identifier LIGHTNING_DRAGON_FORGE_ID = Identifier.parse("iceandfire:lightning_dragon_forge");
 
     private void addDescription(IRecipeRegistration registry, ItemStack itemStack) {
-        registry.addIngredientInfo(itemStack, VanillaTypes.ITEM_STACK, Component.translatable(itemStack.getDescriptionId() + ".jei_desc"));
+        registry.addIngredientInfo(itemStack, VanillaTypes.ITEM_STACK, Component.translatable(itemStack.getItem().getDescriptionId() + ".jei_desc"));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        List<DragonForgeRecipe> forgeRecipeList = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        List<DragonForgeRecipe> forgeRecipeList = dev.vladeezyy.iceandfire.platform.ClientRecipes.dragonForge();
 
         List<DragonForgeRecipe> fire = forgeRecipeList.stream().filter(item -> item.getDragonType().equals("fire")).collect(Collectors.toList());
         List<DragonForgeRecipe> ice = forgeRecipeList.stream().filter(item -> item.getDragonType().equals("ice")).collect(Collectors.toList());

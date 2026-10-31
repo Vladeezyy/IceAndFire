@@ -37,4 +37,10 @@ public final class IafLegacyRender {
             source.block(state, poseStack, light, overlay);
         }
     }
+
+    /** 1.21.1's ItemRenderer.getFoilBuffer(Direct): the glint is a render type of its own on 26.x, drawn with the same vertices */
+    public static com.mojang.blaze3d.vertex.VertexConsumer foilBuffer(MultiBufferSource buffers, net.minecraft.client.renderer.rendertype.RenderType type, boolean foil) {
+        com.mojang.blaze3d.vertex.VertexConsumer base = buffers.getBuffer(type);
+        return foil ? com.mojang.blaze3d.vertex.VertexMultiConsumer.create(buffers.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityGlint()), base) : base;
+    }
 }

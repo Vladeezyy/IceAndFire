@@ -1,68 +1,47 @@
 package com.github.alexthe666.iceandfire.client.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.platform.TextureUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.ReloadableTexture;
+import net.minecraft.client.renderer.texture.TextureContents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
-public class ArrayLayeredTexture extends AbstractTexture {
-    private static final Logger LOGGER = LogManager.getLogger();
+/**
+ * The first texture with the others alpha-blended over it (dragon skin + overlays, dragon armor pieces).
+ * 26.x: a reloadable texture, loaded with TextureManager#registerAndLoad (register no longer loads).
+ */
+public class ArrayLayeredTexture extends ReloadableTexture {
     public final List<String> layeredTextureNames;
 
-    public ArrayLayeredTexture(List<String> textureNames) {
+    public ArrayLayeredTexture(Identifier id, List<String> textureNames) {
+        super(id);
         this.layeredTextureNames = textureNames;
     }
 
     @Override
-    public void load(@NotNull ResourceManager manager) {
+    public @NotNull TextureContents loadContents(@NotNull ResourceManager manager) throws IOException {
         Iterator<String> iterator = this.layeredTextureNames.iterator();
-        String s = iterator.next();
-        Optional<Resource> iresource = manager.getResource(Identifier.parse(s));
-        if (iresource.isPresent()) {
-            try {
-                NativeImage nativeimage = NativeImage.read(iresource.get().open());
-                while (iterator.hasNext()) {
-                    String s1 = iterator.next();
-                    if (s1 != null) {
-                        Optional<Resource> iresource1 = manager.getResource(Identifier.parse(s1));
-                        NativeImage nativeimage1 = NativeImage.read(iresource1.get().open());
-                        for (int i = 0; i < Math.min(nativeimage1.getHeight(), nativeimage.getHeight()); i++) {
-                            for (int j = 0; j < Math.min(nativeimage1.getWidth(), nativeimage.getWidth()); j++) {
-                                nativeimage.blendPixel(j, i, nativeimage1.getPixelRGBA(j, i));
-                            }
+        TextureContents base = TextureContents.load(manager, Identifier.parse(iterator.next()));
+        NativeImage nativeimage = base.image();
+        while (iterator.hasNext()) {
+            String s1 = iterator.next();
+            if (s1 != null) {
+                try (TextureContents layer = TextureContents.load(manager, Identifier.parse(s1))) {
+                    NativeImage nativeimage1 = layer.image();
+                    for (int i = 0; i < Math.min(nativeimage1.getHeight(), nativeimage.getHeight()); i++) {
+                        for (int j = 0; j < Math.min(nativeimage1.getWidth(), nativeimage.getWidth()); j++) {
+                            nativeimage.setPixel(j, i, ARGB.alphaBlend(nativeimage.getPixel(j, i), nativeimage1.getPixel(j, i)));
                         }
                     }
                 }
-
-                if (!RenderSystem.isOnRenderThreadOrInit()) {
-                    RenderSystem.recordRenderCall(() -> {
-                        this.loadImage(nativeimage);
-                    });
-                } else {
-                    this.loadImage(nativeimage);
-                }
-            } catch (IOException exception) {
-                LOGGER.error("Couldn't load layered image", exception);
             }
-        } else {
-            LOGGER.error("Couldn't load layered image");
         }
-
-    }
-
-    private void loadImage(NativeImage imageIn) {
-        TextureUtil.prepareImage(this.getId(), imageIn.getWidth(), imageIn.getHeight());
-        imageIn.upload(0, 0, 0, true);
+        return base;
     }
 }

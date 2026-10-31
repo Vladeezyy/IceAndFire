@@ -119,16 +119,6 @@ public class ModelDreadKnight extends ModelDreadBase<EntityDreadKnight> {
         return EntityDreadKnight.ANIMATION_SPAWN;
     }
 
-    @Override
-    public void copyPropertiesTo(@NotNull EntityModel<EntityDreadKnight> p_217111_1_) {
-        super.copyPropertiesTo(p_217111_1_);
-        if (p_217111_1_ instanceof HumanoidModel) {
-            HumanoidModel modelbiped = (HumanoidModel) p_217111_1_;
-            modelbiped.leftArmPose = this.leftArmPose;
-            modelbiped.rightArmPose = this.rightArmPose;
-            modelbiped.crouching = this.isSneak;
-        }
-    }
 
 
 }

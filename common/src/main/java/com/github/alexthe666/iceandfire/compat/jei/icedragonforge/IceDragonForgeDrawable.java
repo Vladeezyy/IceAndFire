@@ -1,17 +1,11 @@
 package com.github.alexthe666.iceandfire.compat.jei.icedragonforge;
 
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.renderer.RenderPipelines;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 public class IceDragonForgeDrawable implements IDrawable {
     private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/gui/dragonforge_ice.png");
@@ -28,19 +22,12 @@ public class IceDragonForgeDrawable implements IDrawable {
 
     @Override
     public void draw(@NotNull GuiGraphicsExtractor ms, int xOffset, int yOffset) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
         this.drawTexturedModalRect(ms, xOffset, yOffset, 3, 4, 170, 79);
         int scaledProgress = (Minecraft.getInstance().player.tickCount % 100) * 128 / 100;
         this.drawTexturedModalRect(ms, xOffset + 9, yOffset + 19, 0, 166, scaledProgress, 38);
     }
 
     public void drawTexturedModalRect(GuiGraphicsExtractor ms, int x, int y, int textureX, int textureY, int width, int height) {
-        Matrix4f matrix4f = ms.pose().last().pose();
-        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.addVertex(matrix4f, x, y + height, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
-        bufferbuilder.addVertex(matrix4f, x + width, y + height, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F);
-        bufferbuilder.addVertex(matrix4f, x + width, y, 0).setUv((float) (textureX + width) * 0.00390625F, (float) (textureY) * 0.00390625F);
-        bufferbuilder.addVertex(matrix4f, x, y, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY) * 0.00390625F);
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+        ms.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, textureX, textureY, width, height, 256, 256);
     }
 }

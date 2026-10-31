@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
-import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
+
+import net.minecraft.client.renderer.entity.state.EntityRenderState;import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
@@ -91,7 +92,7 @@ public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRen
                 matrixStackIn.mulPose(Axis.YP.rotationDegrees(riderRot+180));
                 matrixStackIn.scale(1 / dragonScale, 1 / dragonScale, 1 / dragonScale);
                 matrixStackIn.translate(0, -0.25F, 0);
-                renderEntity(passenger, 0, 0, 0, 0.0F, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+                renderEntity(passenger, 0, 0, 0, 0.0F, partialTicks, matrixStackIn, iafCollector, packedLightIn);
                 matrixStackIn.popPose();
                 ClientProxy.currentDragonRiders.add(passenger.getUUID());
             }
@@ -140,25 +141,18 @@ public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRen
     }
 
 
-    public <E extends Entity> void renderEntity(E entityIn, int x, int y, int z, float yaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLight) {
-        EntityRenderer<? super E> render = null;
+    public <E extends Entity> void renderEntity(E entityIn, int x, int y, int z, float yaw, float partialTicks, PoseStack matrixStack, SubmitNodeCollector collector, int packedLight) {
+        // 26.x: the rider's render state, submitted where the dragon holds it (its own render is cancelled while it rides)
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
         try {
-            render = manager.getRenderer(entityIn);
-
-            if (render != null) {
-                try {
-                    render.render(entityIn, 0, partialTicks, matrixStack, bufferIn, packedLight);
-                } catch (Throwable throwable1) {
-                    throw new ReportedException(CrashReport.forThrowable(throwable1, "Rendering entity in world"));
-                }
-            }
+            EntityRenderState state = manager.extractEntity(entityIn, partialTicks);
+            state.shadowPieces.clear();
+            manager.submit(state, Minecraft.getInstance().gameRenderer.getGameRenderState().levelRenderState.cameraRenderState, 0, 0, 0, matrixStack, collector);
         } catch (Throwable throwable3) {
             CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
             CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being rendered");
             entityIn.fillCrashReportCategory(crashreportcategory);
             CrashReportCategory crashreportcategory1 = crashreport.addCategory("Renderer details");
-            crashreportcategory1.setDetail("Assigned renderer", render);
             crashreportcategory1.setDetail("Location", new BlockPos(x, y, z));
             crashreportcategory1.setDetail("Rotation", yaw);
             crashreportcategory1.setDetail("Delta", partialTicks);

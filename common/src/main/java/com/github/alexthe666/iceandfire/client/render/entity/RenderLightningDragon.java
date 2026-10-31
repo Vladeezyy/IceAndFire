@@ -1,5 +1,8 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.particle.LightningBoltData;
@@ -39,9 +42,13 @@ public class RenderLightningDragon extends RenderDragonBase {
     }
 
     @Override
-    public void render(@NotNull EntityDragonBase entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        EntityLightningDragon lightningDragon = (EntityLightningDragon) entityIn;
+    public void submit(@NotNull IafMobRenderState state, @NotNull PoseStack matrixStackIn, @NotNull SubmitNodeCollector collector, @NotNull CameraRenderState camera) {
+        super.submit(state, matrixStackIn, collector, camera);
+        if (!(state.pose.entity instanceof EntityLightningDragon lightningDragon)) {
+            return;
+        }
+        float partialTicks = state.partialTick;
+        IafBufferSource bufferIn = new IafBufferSource();
         matrixStackIn.pushPose();
         if (lightningDragon.hasLightningTarget()) {
             double dist = Minecraft.getInstance().player.distanceTo(lightningDragon);
@@ -59,7 +66,7 @@ public class RenderLightningDragon extends RenderDragonBase {
             }
         }
         matrixStackIn.popPose();
-
+        bufferIn.submit(collector);
     }
 
     private static float getBoundedScale(float scale, float min, float max) {

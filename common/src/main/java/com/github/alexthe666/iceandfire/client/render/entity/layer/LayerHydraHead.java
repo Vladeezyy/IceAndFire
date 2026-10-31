@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
-import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
+
+import net.minecraft.client.renderer.texture.OverlayTexture;import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -80,7 +81,7 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
             matrixStackIn.translate(TRANSLATE[heads - 1][head - 1] * bodyWidth, 0, 0);
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(ROTATE[heads - 1][head - 1]));
             modelArr[head - 1].setupAnim(hydra, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            modelArr[head - 1].renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, LivingEntityRenderer.getOverlayCoords(hydra, 0.0F), -1);
+            modelArr[head - 1].renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(hydra.hurtTime > 0 || hydra.deathTime > 0)), -1);
             matrixStackIn.popPose();
         }
         matrixStackIn.popPose();
@@ -98,7 +99,6 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
         }
     }
 
-    @Override
     public @NotNull Identifier getTextureLocation(EntityHydra gorgon) {
         switch (gorgon.getVariant()) {
             default:

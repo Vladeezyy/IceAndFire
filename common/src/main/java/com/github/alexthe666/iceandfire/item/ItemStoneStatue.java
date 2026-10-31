@@ -74,7 +74,7 @@ public class ItemStoneStatue extends Item {
                 statue.absSnapTo(context.getClickedPos().getX() + 0.5, context.getClickedPos().getY() + 1, context.getClickedPos().getZ() + 0.5, yaw, 0);
                 if (!context.getLevel().isClientSide()) {
                     context.getLevel().addFreshEntity(statue);
-                    statue.readAdditionalSaveData(ItemNbt.getTag(stack));
+                    statue.readAdditionalSaveData(Values.input(context.getLevel().registryAccess(), ItemNbt.getTag(stack)));
                 }
                 statue.setCrackAmount(0);
 

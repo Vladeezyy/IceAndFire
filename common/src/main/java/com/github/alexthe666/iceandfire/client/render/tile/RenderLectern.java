@@ -55,7 +55,7 @@ public class RenderLectern<T extends TileEntityLectern> extends IafBlockEntityRe
         }
         float f6 = 1.29F;
 
-        this.bookModel.setupAnim(partialTicks, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), f6);
+        this.bookModel.setupAnim(net.minecraft.client.model.object.book.BookModel.State.forAnimation(partialTicks, Mth.clamp(f4, 0.0F, 1.0F), Mth.clamp(f5, 0.0F, 1.0F), f6));
         this.bookModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(ENCHANTMENT_TABLE_BOOK_TEXTURE), combinedLightIn, combinedOverlayIn, -1);
         matrixStackIn.popPose();
     }

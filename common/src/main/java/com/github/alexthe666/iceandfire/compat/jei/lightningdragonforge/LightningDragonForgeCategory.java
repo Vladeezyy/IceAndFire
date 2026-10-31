@@ -31,8 +31,18 @@ public class LightningDragonForgeCategory implements IRecipeCategory<DragonForge
     }
 
     @Override
-    public @NotNull IDrawable getBackground() {
-        return drawable;
+    public int getWidth() {
+        return drawable.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return drawable.getHeight();
+    }
+
+    @Override
+    public void draw(@NotNull DragonForgeRecipe recipe, @NotNull mezz.jei.api.gui.ingredient.IRecipeSlotsView slots, @NotNull net.minecraft.client.gui.GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+        drawable.draw(graphics, 0, 0);
     }
 
     @Override
@@ -47,6 +57,6 @@ public class LightningDragonForgeCategory implements IRecipeCategory<DragonForge
         recipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 82, 29)
                 .addIngredients(dragonForgeRecipe.getBlood());
         recipeLayoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, 144, 30)
-                .addItemStack(dragonForgeRecipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
+                .addItemStack(dragonForgeRecipe.getResultItem());
     }
 }

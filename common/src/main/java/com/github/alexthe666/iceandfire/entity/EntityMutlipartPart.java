@@ -292,11 +292,11 @@ public abstract class EntityMutlipartPart extends Entity {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         Entity parent = getParent();
-        return parent != null && parent.hurtOrSimulate(source, damage * this.damageMultiplier);
+        return parent != null && !this.isInvulnerableTo(source) && parent.hurtOrSimulate(source, damage * this.damageMultiplier);
     }
 
-    @Override
-    public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+    // Entity has no isInvulnerableTo on 26.x (LivingEntity's only); hurtServer checks it
+    public boolean isInvulnerableTo(DamageSource source) {
         return source.is(DamageTypes.FALL) || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.FALLING_BLOCK) || source.is(DamageTypes.LAVA) || source.is(DamageTypeTags.IS_FIRE) || this.isInvulnerableToBase(source);
     }
 

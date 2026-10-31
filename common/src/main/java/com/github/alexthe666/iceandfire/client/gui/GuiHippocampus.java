@@ -36,11 +36,10 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
     }
 
     @Override
-    public void render(GuiGraphicsExtractor pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
         super.extractRenderState(pGuiGraphics, mouseX, mouseY, partialTicks);
-        this.extractTooltip(pGuiGraphics, mouseX, mouseY);
     }
 
     @Override

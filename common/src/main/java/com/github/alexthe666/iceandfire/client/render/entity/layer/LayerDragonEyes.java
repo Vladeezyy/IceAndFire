@@ -73,7 +73,6 @@ public class LayerDragonEyes extends IafEntityLayer<EntityDragonBase, IafMobRend
         bufferIn.submit(iafCollector);
     }
 
-    @Override
     protected @NotNull Identifier getTextureLocation(@NotNull EntityDragonBase entityIn) {
         return null;
     }

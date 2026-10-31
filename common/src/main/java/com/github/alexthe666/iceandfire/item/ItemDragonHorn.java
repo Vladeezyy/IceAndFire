@@ -73,8 +73,7 @@ public class ItemDragonHorn extends Item {
         if (!playerIn.level().isClientSide() && hand == InteractionHand.MAIN_HAND && target instanceof EntityDragonBase && ((EntityDragonBase) target).isOwnedBy(playerIn) && getEntityTag(trueStack).isEmpty()) {
             CompoundTag newTag = new CompoundTag();
 
-            CompoundTag entityTag = new CompoundTag();
-            target.save(entityTag);
+            CompoundTag entityTag = Values.write(target.registryAccess(), target::save);
             newTag.put("EntityTag", entityTag);
 
             newTag.putString("DragonHornEntityID", BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString());

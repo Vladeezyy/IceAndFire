@@ -2,7 +2,6 @@ package com.github.alexthe666.iceandfire.client.gui;
 import net.minecraft.client.renderer.RenderPipelines;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
@@ -181,7 +180,6 @@ public class IceAndFireMainMenu extends TitleScreen {
                 ms.blit(RenderPipelines.GUI_TEXTURED, drawingTextures[picture.image], (int) (picture.x * widthScale) + middleX, (int) ((picture.y * heightScale) + middleY), (float) (0), (float) (0), (int) imageScale, (int) imageScale, (int) imageScale, (int) imageScale);
                             }
         }
-        GlStateManager._enableBlend();
         ms.text(this.minecraft.font, "Ice and Fire " + ChatFormatting.YELLOW + IceAndFire.VERSION, (int) (2), (int) (height - 10), net.minecraft.util.ARGB.opaque(0xFFFFFFFF), false);
         ms.blit(RenderPipelines.GUI_TEXTURED, MINECRAFT_TITLE_TEXTURES, width / 2 - 256 / 2, 10, (float) (0), (float) (0), 256, 64, 256, 64);
 
@@ -201,12 +199,8 @@ public class IceAndFireMainMenu extends TitleScreen {
         String s1 = "Copyright Mojang AB. Do not distribute!";
         Font font = this.minecraft.font;
         ms.text(font, s1, width - this.minecraft.font.width(s1) - 2, height - 10, net.minecraft.util.ARGB.opaque(0xFFFFFFFF));
-        for (int i = 0; i < this.renderables.size(); ++i) {
-            this.renderables.get(i).render(ms, mouseX, mouseY, partialTicks);
-        }
-        for (int i = 0; i < this.renderables.size(); i++) {
-            renderables.get(i).render(ms, mouseX, mouseY, this.minecraft.getTimer().getGameTimeDeltaPartialTick(false));
-        }
+        // the widgets (1.21.1 drew them twice, the second pass identical); Screen holds them privately on 26.x
+        super.extractRenderState(ms, mouseX, mouseY, partialTicks);
     }
 
     private class Picture {

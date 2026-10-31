@@ -37,7 +37,7 @@ public class TileEntityGhostChest extends ChestBlockEntity {
                 ThreadLocalRandom.current().nextFloat() * 360F, 0);
             if (!this.level.isClientSide()) {
                 ghost.finalizeSpawn((ServerLevel) level, ((net.minecraft.world.level.ServerLevelAccessor) level).getCurrentDifficultyAt(this.worldPosition), EntitySpawnReason.SPAWNER, null);
-                if (!player.isCreative()) {
+                if (user.getLivingEntity() instanceof Player player && !player.isCreative()) {
                     ghost.setTarget(player);
                 }
                 ghost.setPersistenceRequired();

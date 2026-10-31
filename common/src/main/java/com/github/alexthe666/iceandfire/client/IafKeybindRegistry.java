@@ -14,10 +14,10 @@ public class IafKeybindRegistry {
         // Minecraft instance is null during data gen (NeoForge)
         if (Minecraft.getInstance() == null && dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.name().equals("neoforge"))
             return;
-        dragon_fireAttack = new KeyMapping("key.dragon_fireAttack", 82, "key.categories.gameplay");
-        dragon_strike = new KeyMapping("key.dragon_strike", 71, "key.categories.gameplay");
-        dragon_down = new KeyMapping("key.dragon_down", 88, "key.categories.gameplay");
-        dragon_change_view = new KeyMapping("key.dragon_change_view", 296, "key.categories.misc");
+        dragon_fireAttack = new KeyMapping("key.dragon_fireAttack", 82, KeyMapping.Category.GAMEPLAY);
+        dragon_strike = new KeyMapping("key.dragon_strike", 71, KeyMapping.Category.GAMEPLAY);
+        dragon_down = new KeyMapping("key.dragon_down", 88, KeyMapping.Category.GAMEPLAY);
+        dragon_change_view = new KeyMapping("key.dragon_change_view", 296, KeyMapping.Category.MISC);
         // NeoForge: added to the options as in the original; Fabric: KeyBindingHelper (the options do not exist yet)
         dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.registerKeyMapping(dragon_fireAttack);
         dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.registerKeyMapping(dragon_strike);

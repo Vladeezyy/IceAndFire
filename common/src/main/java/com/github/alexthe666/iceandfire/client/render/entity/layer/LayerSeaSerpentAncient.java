@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+
+import net.minecraft.client.renderer.rendertype.RenderTypes;import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
@@ -19,7 +20,7 @@ public class LayerSeaSerpentAncient extends IafEntityLayer<EntitySeaSerpent, Iaf
     private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/seaserpent/ancient_overlay.png");
     private static final Identifier TEXTURE_BLINK = Identifier.parse("iceandfire:textures/models/seaserpent/ancient_overlay_blink.png");
 
-    public LayerSeaSerpentAncient(MobRenderer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> renderer) {
+    public LayerSeaSerpentAncient(MobRenderer renderer) {
         super(renderer);
     }
 
@@ -27,7 +28,7 @@ public class LayerSeaSerpentAncient extends IafEntityLayer<EntitySeaSerpent, Iaf
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntitySeaSerpent serpent) {
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (serpent.isAncient()) {
-            RenderType tex = RenderType.entityNoOutline(serpent.isBlinking() ? TEXTURE_BLINK : TEXTURE);
+            RenderType tex = RenderTypes.entityTranslucent(serpent.isBlinking() ? TEXTURE_BLINK : TEXTURE, false);
             submitParent(matrixStackIn, iafCollector, iafState, tex, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
 
         }

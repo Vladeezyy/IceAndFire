@@ -77,8 +77,8 @@ public class RenderDragonBase extends IafMobRenderer<EntityDragonBase, AdvancedE
                 tex.add(EnumDragonTextures.Armor.EMPTY.FIRETEXTURE.toString());
 
             }
-            ArrayLayeredTexture layeredBase = new ArrayLayeredTexture(tex);
-            Minecraft.getInstance().getTextureManager().register(resourcelocation, layeredBase);
+            ArrayLayeredTexture layeredBase = new ArrayLayeredTexture(resourcelocation, tex);
+            Minecraft.getInstance().getTextureManager().registerAndLoad(resourcelocation, layeredBase);
             LAYERED_TEXTURE_CACHE.put(baseTexture, resourcelocation);
         }
         return resourcelocation;
