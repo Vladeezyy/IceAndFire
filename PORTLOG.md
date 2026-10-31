@@ -185,9 +185,9 @@ the rest by hand. Build from the 1.21.1 branch (Loom with Mojang mappings, Java 
   API names of 0.141 (particle group through `ParticleRendererRegistry`).
 - Render types: 26.1's `entityCutout` is 1.21.11's `entityCutoutNoCull`; Rampart's default for Citadel models got it
   wrong first (the myrmex royal's wings, flat boxes, were culled away: found by comparing the scene with 26.1.2).
-- Fixed on the way (the 1.21.1 branch has the same code, not fixed there yet): a dragon eating an item another dragon had already eaten crashed the
-  server ("Empty stacks are not allowed" in the eat particles; 26.x takes the item, not a stack).
+- Fixed on the way (on every branch): a dragon eating an item another dragon had already eaten crashed the
+  server ("Empty stacks are not allowed" in the eat particles; 26.x: "Item must be non-empty").
 - Tests (macOS, both loaders): selftest 29/29, client scene 0 failed checks (screenshots match 26.1.2 up to the
-  creatures' random variants), stress 13/13 with SEED=1234 (NeoForge 15.0 ms average tick, a running average that
-  starts with a 1.7 s tick and was still falling, 729 entities; Fabric 9.2 ms; generation 107 s / 95 s), net test 0
-  failed checks.
+  creatures' random variants), stress 13/13 with SEED=1234 (NeoForge 15.0 ms average tick in a first run, 7.9 ms in a
+  second: the wild dragons' fights in the arena make the spread; Fabric 9.2 ms; 1.21.1 with the same seed: NeoForge
+  13.5 ms, Fabric 11.5 ms; generation 107 s / 95 s), net test 0 failed checks.
