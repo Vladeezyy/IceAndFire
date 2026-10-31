@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.gui;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
@@ -22,36 +23,37 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
     }
 
     @Override
-    protected void renderLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
         int k = 0;
         int l = 0;
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         Font font = this.minecraft.font;
         if (entity instanceof EntityHippocampus) {
             EntityHippocampus hippo = (EntityHippocampus) entity;
-            pGuiGraphics.drawString(font, hippo.getDisplayName().getString(), l + 8, 6, 4210752, false);
+            pGuiGraphics.text(font, hippo.getDisplayName().getString(), l + 8, 6, net.minecraft.util.ARGB.opaque(4210752), false);
         }
-        pGuiGraphics.drawString(font, this.playerInventoryTitle, k + 8, l + this.imageHeight - 96 + 2, 4210752, false);
+        pGuiGraphics.text(font, this.playerInventoryTitle, k + 8, l + this.imageHeight - 96 + 2, net.minecraft.util.ARGB.opaque(4210752), false);
     }
 
     @Override
     public void render(GuiGraphicsExtractor pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
-        super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(pGuiGraphics, mouseX, mouseY);
+        super.extractRenderState(pGuiGraphics, mouseX, mouseY, partialTicks);
+        this.extractTooltip(pGuiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(pGuiGraphics, mouseX, mouseY, partialTicks);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         if (entity instanceof EntityHippocampus) {
             EntityHippocampus hippo = (EntityHippocampus) entity;
             if (hippo.isChested()) {
-                pGuiGraphics.blit(TEXTURE, i + 79, j + 17, 0, this.imageHeight, 5 * 18, 54);
+                pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, i + 79, j + 17, (float) (0), (float) (this.imageHeight), 5 * 18, 54, 256, 256);
             }
             GuiEntityRenderUtil.renderEntityFollowsMouse(pGuiGraphics,i + 51, j + 60, 17, i + 51 - this.mousePosx, j + 75 - 50 - this.mousePosY,
                 hippo);

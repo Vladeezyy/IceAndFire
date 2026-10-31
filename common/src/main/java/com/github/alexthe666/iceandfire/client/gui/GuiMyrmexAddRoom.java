@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.gui;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import net.minecraft.client.gui.components.Renderable;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -102,24 +103,24 @@ public class GuiMyrmexAddRoom extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        super.renderBackground(ms, mouseX, mouseY, partialTicks);
+    public void extractBackground(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(ms, mouseX, mouseY, partialTicks);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindForSetup(jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE);
         int i = (this.width - 248) / 2;
         int j = (this.height - 166) / 2;
-        ms.blit(jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE, i, j, 0, 0, 248, 166);
+        ms.blit(RenderPipelines.GUI_TEXTURED, jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE, i, j, (float) (0), (float) (0), 248, 166, 256, 256);
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(ms, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
+        this.extractBackground(ms, mouseX, mouseY, partialTicks);
         init();
         int i = (this.width - 248) / 2 + 10;
         int j = (this.height - 166) / 2 + 8;
         // Screen#render would draw the background a second time (and blur twice, which throws in 1.21)
         for (Renderable renderable : this.renderables) {
-            renderable.render(ms, mouseX, mouseY, partialTicks);
+            renderable.extractRenderState(ms, mouseX, mouseY, partialTicks);
         }
         int color = this.jungle ? 0X35EA15 : 0XFFBF00;
         if (ClientProxy.getReferedClientHive() != null) {

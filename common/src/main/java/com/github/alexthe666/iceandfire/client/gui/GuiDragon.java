@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.gui;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import org.joml.Vector3f;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -28,23 +29,24 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphicsExtractor matrixStack, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor matrixStack, int mouseX, int mouseY) {
 
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(matrixStack, mouseX, mouseY, partialTicks);
+        this.extractTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphicsExtractor matrixStack, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(matrixStack, mouseX, mouseY, partialTicks);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        matrixStack.blit(texture, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        matrixStack.blit(RenderPipelines.GUI_TEXTURED, texture, k, l, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         if (entity instanceof EntityDragonBase) {
             EntityDragonBase dragon = (EntityDragonBase) entity;

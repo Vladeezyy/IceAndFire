@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.gui;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import net.minecraft.world.item.crafting.RecipeHolder;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -34,26 +35,27 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
     }
 
     @Override
-    protected void renderLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
         Font font = this.minecraft.font;
         if (tileFurnace != null) {
             String s = I18n.get("block.iceandfire.dragonforge_" + DragonType.getNameFromInt(dragonType) + "_core");
             // A long name (ru: "Сердце огненной драконьей кузни") is squeezed into the frame
             int room = this.imageWidth - 12;
             int width = font.width(s);
-            pGuiGraphics.pose().pushPose();
-            pGuiGraphics.pose().translate(this.imageWidth / 2F, 6, 0);
+            pGuiGraphics.pose().pushMatrix();
+            pGuiGraphics.pose().translate((float) (this.imageWidth / 2F), (float) (6));
             if (width > room) {
-                pGuiGraphics.pose().scale((float) room / width, 1F, 1F);
+                pGuiGraphics.pose().scale((float) ((float) room / width), (float) (1F));
             }
-            pGuiGraphics.drawString(this.font, s, -width / 2, 0, 4210752, false);
-            pGuiGraphics.pose().popPose();
+            pGuiGraphics.text(this.font, s, -width / 2, 0, net.minecraft.util.ARGB.opaque(4210752), false);
+            pGuiGraphics.pose().popMatrix();
         }
-        pGuiGraphics.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, 4210752, false);
+        pGuiGraphics.text(this.font, this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, net.minecraft.util.ARGB.opaque(4210752), false);
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.extractBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         Identifier texture = TEXTURE_FIRE;
         if (dragonType == 0) {
@@ -66,9 +68,9 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
 
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        pGuiGraphics.blit(texture, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, k, l, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);
         int i1 = this.getCookTime(126);
-        pGuiGraphics.blit(texture, k + 12, l + 23, 0, 166, i1, 38);
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, k + 12, l + 23, (float) (0), (float) (166), i1, 38, 256, 256);
     }
 
     private int getCookTime(int p_175381_1_) {
@@ -87,9 +89,9 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
     }
 
     @Override
-    public void render(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(pGuiGraphics, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(pGuiGraphics, mouseX, mouseY, partialTicks);
+        this.extractTooltip(pGuiGraphics, mouseX, mouseY);
     }
 
 }

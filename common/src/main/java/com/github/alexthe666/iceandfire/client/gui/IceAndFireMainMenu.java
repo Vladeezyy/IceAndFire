@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.gui;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.mojang.blaze3d.opengl.GlStateManager;
@@ -160,16 +161,16 @@ public class IceAndFireMainMenu extends TitleScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 int width = this.width;
         int height = this.height;
-        ms.blit(TABLE_TEXTURE, 0, 0, 0, 0, width, height, width, height);
-        ms.blit(BESTIARY_TEXTURE, 50, 0, 0, 0, width - 100, height, width - 100, height);
+        ms.blit(RenderPipelines.GUI_TEXTURED, TABLE_TEXTURE, 0, 0, (float) (0), (float) (0), width, height, width, height);
+        ms.blit(RenderPipelines.GUI_TEXTURED, BESTIARY_TEXTURE, 50, 0, (float) (0), (float) (0), width - 100, height, width - 100, height);
         float f11 = 1.0F;
         int l = Mth.ceil(f11 * 255.0F) << 24;
         if (this.isFlippingPage) {
-            ms.blit(pageFlipTextures[Math.min(5, pageFlip)], 50, 0, 0, 0, width - 100, height, width - 100, height);
+            ms.blit(RenderPipelines.GUI_TEXTURED, pageFlipTextures[Math.min(5, pageFlip)], 50, 0, (float) (0), (float) (0), width - 100, height, width - 100, height);
         } else {
             int middleX = width / 2;
             int middleY = height / 5;
@@ -179,32 +180,31 @@ public class IceAndFireMainMenu extends TitleScreen {
             for (Picture picture : drawnPictures) {
                 float alpha = (picture.alpha * globalAlpha + 0.01F);
                                 RenderSystem.setShaderColor(1, 1, 1, 1);
-                ms.blit(drawingTextures[picture.image], (int) (picture.x * widthScale) + middleX, (int) ((picture.y * heightScale) + middleY), 0, 0, (int) imageScale, (int) imageScale, (int) imageScale, (int) imageScale);
+                ms.blit(RenderPipelines.GUI_TEXTURED, drawingTextures[picture.image], (int) (picture.x * widthScale) + middleX, (int) ((picture.y * heightScale) + middleY), (float) (0), (float) (0), (int) imageScale, (int) imageScale, (int) imageScale, (int) imageScale);
                             }
         }
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager._enableBlend();
         this.minecraft.font.drawInBatch("Ice and Fire " + ChatFormatting.YELLOW + IceAndFire.VERSION, 2, height - 10, 0xFFFFFFFF, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        ms.blit(MINECRAFT_TITLE_TEXTURES, width / 2 - 256 / 2, 10, 0, 0, 256, 64, 256, 64);
+        ms.blit(RenderPipelines.GUI_TEXTURED, MINECRAFT_TITLE_TEXTURES, width / 2 - 256 / 2, 10, (float) (0), (float) (0), 256, 64, 256, 64);
 
         dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderMainMenu(this, ms, this.minecraft.font, width, height, l);
         if (this.splashText != null) {
-            ms.pose().pushPose();
-            ms.pose().translate((this.width / 2 + 90), 70.0D, 0.0D);
-            ms.pose().mulPose(Axis.ZP.rotationDegrees(-20.0F));
+            ms.pose().pushMatrix();
+            ms.pose().translate((float) ((this.width / 2 + 90)), (float) (70.0D));
+            ms.pose().rotate((float) Math.toRadians(-20.0F));
             float f2 = 1.8F - Mth.abs(Mth.sin((float) (Util.getMillis() % 1000L) / 1000.0F * ((float) Math.PI * 2F)) * 0.1F);
             f2 = f2 * 100.0F / (float) (this.font.width(this.splashText) + 32);
-            ms.pose().scale(f2, f2, f2);
-            ms.drawCenteredString(this.font, this.splashText, 0, -8, 16776960 | l);
-            ms.pose().popPose();
+            ms.pose().scale((float) (f2), (float) (f2));
+            ms.centeredText(this.font, this.splashText, 0, -8, net.minecraft.util.ARGB.opaque(16776960 | l));
+            ms.pose().popMatrix();
         }
 
 
         String s1 = "Copyright Mojang AB. Do not distribute!";
         Font font = this.minecraft.font;
-        ms.drawString(font, s1, width - this.minecraft.font.width(s1) - 2,
-            height - 10, 0xFFFFFFFF);
+        ms.text(font, s1, width - this.minecraft.font.width(s1) - 2, height - 10, net.minecraft.util.ARGB.opaque(0xFFFFFFFF));
         for (int i = 0; i < this.renderables.size(); ++i) {
             this.renderables.get(i).render(ms, mouseX, mouseY, partialTicks);
         }
