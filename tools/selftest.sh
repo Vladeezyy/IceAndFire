@@ -8,8 +8,7 @@ rm -rf $RUN/world build-selftest.log
 # The watchdog stays on here (tools/stresstest.sh turns it off)
 # MAX_TICK_TIME=<ms> for slow machines (CI): the checks report slow chunks instead of the watchdog stopping the run
 set_prop max-tick-time "${MAX_TICK_TIME:-60000}"
-timed 1200 ./gradlew :$LOADER:runSelftest --console=plain "$@" > build-selftest.log 2>&1 < /dev/null
-echo "exit $?"
+run_watched build-selftest.log 1200 ./gradlew :$LOADER:runSelftest --console=plain "$@" < /dev/null
 grep -a -E '\[selftest\] (CHECK|DONE|slow)' build-selftest.log | sed -E 's/^.*\[selftest\] //'
 echo "--- errors"
 grep -a -E '/(ERROR|FATAL)\]|Caused by|Exception|UUID of added entity' build-selftest.log | grep -v 'NoSuchFileException: server.properties\|\[selftest\] CHECK' | sed -E 's/^\[[^]]*\] //' | cut -c1-300 | sort | uniq -c | sort -rn | head -30

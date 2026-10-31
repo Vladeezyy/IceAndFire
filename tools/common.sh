@@ -4,6 +4,10 @@
 #   set_prop <key> <value>   set a key in $RUN/server.properties (creates the file)
 # LOADER=neoforge (default) or fabric: its run directory and Gradle runs
 LOADER="${LOADER:-neoforge}"
+# The hang watchdog of the knowledge base (testing/hang-watchdog.md): run_watched for clients and servers that stop by
+# themselves, wait_started for a server in the background; kill_dev stops this project's game processes on a hang
+. tools/watchdog.sh
+kill_dev() { kill_runs '.'; }
 RUN="$LOADER/run"
 
 kill_runs() {
@@ -35,6 +39,8 @@ mkdir -p "$RUN"
 [ -f $RUN/server.properties ] || printf 'online-mode=false\nspawn-protection=0\n' > $RUN/server.properties
 # Its own port: another test server on this machine may hold 25565 (IAF_PORT=<port> to change)
 set_prop server-port "${IAF_PORT:-25581}"
+# 26.x pauses a server that has been empty for 60 s (pause-when-empty-seconds): the tests run without players
+set_prop pause-when-empty-seconds 0
 # A fresh client shows the accessibility (narrator) screen on its first start and waits there: quick play, scenes and
 # the net test never get past it. Turned off before the first start.
 if [ ! -f $RUN/options.txt ]; then
