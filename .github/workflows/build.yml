@@ -4,7 +4,9 @@
 name: Build
 
 on:
+  # branches only: a release tag (v2.1.13-beta.4+26.3) would build with the Rampart of main and fail
   push:
+    branches: ['**']
     paths-ignore: ['**.md', 'docs/**', 'licenses/**']
   pull_request:
   workflow_dispatch:
