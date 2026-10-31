@@ -70,6 +70,8 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
         RangeSelectItemModelProperties.ID_MAPPER.put(IafItemModels.ICE_OR_FIRE, IafItemModels.IceOrFire.MAP_CODEC);
         ConditionalItemModelProperties.ID_MAPPER.put(IafItemModels.HAS_DRAGON, IafItemModels.HasDragon.MAP_CODEC);
         registerArmorRenderers();
+        // the appearance particles (ghost, siren) draw as a group of their own (NeoForge: RegisterParticleGroupsEvent)
+        net.fabricmc.fabric.api.client.particle.v1.ParticleGroupRegistry.register(com.github.alexthe666.iceandfire.client.particle.IafAppearanceParticle.GROUP, com.github.alexthe666.iceandfire.client.particle.IafAppearanceParticle.Group::new);
         // the pathfinding debug lines (NeoForge: RenderLevelStageEvent after the opaque blocks)
         LevelRenderEvents.AFTER_OPAQUE_TERRAIN.register(context -> IafBus.post(new RenderLevelStageEvent(
             RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS, new PoseStack(), Minecraft.getInstance().getDeltaTracker())));

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.state.level.ParticleGroupRenderState;
  * 26.x draws particles by group: the loaders register {@link #GROUP} (NeoForge RegisterParticleGroupsEvent, Fabric a mixin).
  */
 public abstract class IafAppearanceParticle extends Particle {
-    public static final ParticleRenderType GROUP = new ParticleRenderType("ICEANDFIRE_APPEARANCES");
+    public static final ParticleRenderType GROUP = new ParticleRenderType("iceandfire_appearances");
 
     protected IafAppearanceParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
