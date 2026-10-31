@@ -1,85 +1,164 @@
 package dev.vladeezyy.iceandfire.neoforge;
 
 import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
-import dev.vladeezyy.iceandfire.platform.transfer.ModifiableItemHandler;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
-/** The common item handlers of Ice and Fire as NeoForge capabilities and back (wrappers unwrap each other) */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+/**
+ * The common item handlers of Ice and Fire as NeoForge 26.x resource handlers (Capabilities.Item):
+ * transactions are journaled per slot and applied to the common handler on the root commit.
+ */
 public final class NeoForgeTransfer {
+    /** One adapter per common handler (hoppers ask every few ticks) */
+    private static final Map<ItemHandler, Items> ADAPTERS = new WeakHashMap<>();
+
     private NeoForgeTransfer() {}
 
-
     @Nullable
-    public static IItemHandler toNeo(@Nullable ItemHandler handler) {
+    public static synchronized ResourceHandler<ItemResource> toNeo(@Nullable ItemHandler handler) {
         if (handler == null) {
             return null;
         }
-        if (handler instanceof FromNeoItems wrapped) {
-            return wrapped.neo;
+        Items adapter = ADAPTERS.get(handler);
+        if (adapter == null || adapter.size() != handler.getSlots()) {
+            adapter = new Items(handler);
+            ADAPTERS.put(handler, adapter);
         }
-        return handler instanceof ModifiableItemHandler modifiable ? new ToNeoModifiableItems(modifiable) : new ToNeoItems(handler);
+        return adapter;
     }
 
-    @Nullable
-    public static ItemHandler fromNeo(@Nullable IItemHandler handler) {
-        if (handler == null) {
-            return null;
-        }
-        if (handler instanceof ToNeoItems wrapped) {
-            return wrapped.handler;
-        }
-        return new FromNeoItems(handler);
+    private static int clamp(long value) {
+        return (int) Math.min(Integer.MAX_VALUE, Math.max(0, value));
     }
 
-    static class ToNeoItems implements IItemHandler {
-        final ItemHandler handler;
+    private record SlotState(ItemResource resource, int in, int out) {}
 
-        ToNeoItems(ItemHandler handler) {
+    static final class Items implements ResourceHandler<ItemResource> {
+        private final ItemHandler handler;
+        private final List<Slot> slots = new ArrayList<>();
+
+        Items(ItemHandler handler) {
             this.handler = handler;
-        }
-
-        @Override public int getSlots() { return this.handler.getSlots(); }
-        @Override public ItemStack getStackInSlot(int slot) { return this.handler.getStackInSlot(slot); }
-        @Override public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) { return this.handler.insertItem(slot, stack, simulate); }
-        @Override public ItemStack extractItem(int slot, int amount, boolean simulate) { return this.handler.extractItem(slot, amount, simulate); }
-        @Override public int getSlotLimit(int slot) { return this.handler.getSlotLimit(slot); }
-        @Override public boolean isItemValid(int slot, ItemStack stack) { return this.handler.isItemValid(slot, stack); }
-    }
-
-    static final class ToNeoModifiableItems extends ToNeoItems implements IItemHandlerModifiable {
-        ToNeoModifiableItems(ModifiableItemHandler handler) {
-            super(handler);
+            for (int i = 0; i < handler.getSlots(); i++) this.slots.add(new Slot(handler, i));
         }
 
         @Override
-        public void setStackInSlot(int slot, ItemStack stack) {
-            ((ModifiableItemHandler) this.handler).setStackInSlot(slot, stack);
+        public int size() {
+            return this.slots.size();
         }
-    }
-
-    static final class FromNeoItems implements ModifiableItemHandler {
-        final IItemHandler neo;
-
-        FromNeoItems(IItemHandler neo) {
-            this.neo = neo;
-        }
-
-        @Override public int getSlots() { return this.neo.getSlots(); }
-        @Override public ItemStack getStackInSlot(int slot) { return this.neo.getStackInSlot(slot); }
-        @Override public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) { return this.neo.insertItem(slot, stack, simulate); }
-        @Override public ItemStack extractItem(int slot, int amount, boolean simulate) { return this.neo.extractItem(slot, amount, simulate); }
-        @Override public int getSlotLimit(int slot) { return this.neo.getSlotLimit(slot); }
-        @Override public boolean isItemValid(int slot, ItemStack stack) { return this.neo.isItemValid(slot, stack); }
 
         @Override
-        public void setStackInSlot(int slot, ItemStack stack) {
-            if (this.neo instanceof IItemHandlerModifiable modifiable) {
-                modifiable.setStackInSlot(slot, stack);
-            }
+        public ItemResource getResource(int index) {
+            return this.slots.get(index).resource();
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            return this.slots.get(index).amount();
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, ItemResource resource) {
+            int limit = this.handler.getSlotLimit(index);
+            return resource.isEmpty() ? limit : Math.min(limit, resource.getMaxStackSize());
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            return this.handler.isItemValid(index, resource.toStack());
+        }
+
+        @Override
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            return this.slots.get(index).insert(resource, amount, transaction);
+        }
+
+        @Override
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            return this.slots.get(index).extract(resource, amount, transaction);
         }
     }
 
+    private static final class Slot extends SnapshotJournal<SlotState> {
+        private final ItemHandler handler;
+        private final int slot;
+        private ItemResource pending = ItemResource.EMPTY;
+        private int in;
+        private int out;
+
+        Slot(ItemHandler handler, int slot) {
+            this.handler = handler;
+            this.slot = slot;
+        }
+
+        ItemResource resource() {
+            ItemStack current = this.handler.getStackInSlot(this.slot);
+            if (current.isEmpty()) return this.in > 0 ? this.pending : ItemResource.EMPTY;
+            return current.getCount() - this.out <= 0 ? ItemResource.EMPTY : ItemResource.of(current);
+        }
+
+        int amount() {
+            return Math.max(0, this.handler.getStackInSlot(this.slot).getCount() + this.in - this.out);
+        }
+
+        int insert(ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            if (this.out > 0 || this.in > 0 && !resource.equals(this.pending)) return 0;
+            int wanted = clamp((long) this.in + amount);
+            ItemStack rest = this.handler.insertItem(this.slot, resource.toStack(wanted), true);
+            int accepted = Math.min(amount, wanted - rest.getCount() - this.in);
+            if (accepted <= 0) return 0;
+            this.updateSnapshots(transaction);
+            this.pending = resource;
+            this.in += accepted;
+            return accepted;
+        }
+
+        int extract(ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            if (this.in > 0) return 0;
+            ItemStack current = this.handler.getStackInSlot(this.slot);
+            if (current.isEmpty() || !resource.matches(current)) return 0;
+            ItemStack taken = this.handler.extractItem(this.slot, clamp((long) this.out + amount), true);
+            int extracted = Math.min(amount, taken.getCount() - this.out);
+            if (extracted <= 0) return 0;
+            this.updateSnapshots(transaction);
+            this.out += extracted;
+            return extracted;
+        }
+
+        @Override
+        protected SlotState createSnapshot() {
+            return new SlotState(this.pending, this.in, this.out);
+        }
+
+        @Override
+        protected void revertToSnapshot(SlotState snapshot) {
+            this.pending = snapshot.resource();
+            this.in = snapshot.in();
+            this.out = snapshot.out();
+        }
+
+        @Override
+        protected void onRootCommit(SlotState original) {
+            int inserted = this.in;
+            int extracted = this.out;
+            ItemResource resource = this.pending;
+            this.in = 0;
+            this.out = 0;
+            this.pending = ItemResource.EMPTY;
+            if (inserted > 0) this.handler.insertItem(this.slot, resource.toStack(inserted), false);
+            if (extracted > 0) this.handler.extractItem(this.slot, extracted, false);
+        }
+    }
 }

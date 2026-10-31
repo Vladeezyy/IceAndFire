@@ -34,7 +34,6 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -74,7 +73,7 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public boolean isClient() {
-        return FMLEnvironment.dist.isClient();
+        return FMLEnvironment.getDist().isClient();
     }
 
     @Override
@@ -91,6 +90,11 @@ public final class NeoForgePlatform implements Platform {
     // --- registration ---
 
     @SuppressWarnings("unchecked")
+    @Override
+    public void registerDataSerializer(Identifier id, net.minecraft.network.syncher.EntityDataSerializer<?> serializer) {
+        registerFor(net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS).register(id.getPath(), () -> serializer);
+    }
+
     private static <R> DeferredRegister<R> registerFor(ResourceKey<? extends Registry<R>> registry) {
         return (DeferredRegister<R>) REGISTERS.computeIfAbsent(registry, key -> DeferredRegister.create((ResourceKey<? extends Registry<R>>) key, IceAndFire.MODID));
     }
@@ -102,7 +106,8 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public Item spawnEgg(Supplier<? extends EntityType<? extends Mob>> type, int background, int highlight, Item.Properties properties) {
-        return new DeferredSpawnEggItem(type, background, highlight, properties);
+        // 26.x: eggs have their own textures (no colors), entity types are registered before items
+        return new net.minecraft.world.item.SpawnEggItem(properties.spawnEgg(type.get()));
     }
 
     @Override
@@ -114,7 +119,7 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public void sendToServer(CustomPacketPayload payload) {
-        PacketDistributor.sendToServer(payload);
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(payload);
     }
 
     @Override
@@ -141,7 +146,7 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public boolean canEntityGrief(Level level, @Nullable Entity entity) {
-        return EventHooks.canEntityGrief(level, entity);
+        return level instanceof net.minecraft.server.level.ServerLevel server && EventHooks.canEntityGrief(server, entity);
     }
 
     @Override
@@ -161,7 +166,8 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public boolean canShieldBlock(ItemStack stack) {
-        return stack.canPerformAction(ItemAbilities.SHIELD_BLOCK);
+        // 26.x: shields are items that block attacks (the component)
+        return stack.has(net.minecraft.core.component.DataComponents.BLOCKS_ATTACKS);
     }
 
     @Override
@@ -191,7 +197,9 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {
-        state.onBlockExploded(level, pos, explosion);
+        if (level instanceof net.minecraft.server.level.ServerLevel server) {
+            state.onBlockExploded(server, pos, explosion);
+        }
     }
 
     @Override
@@ -206,7 +214,7 @@ public final class NeoForgePlatform implements Platform {
 
     @Override
     public float digSpeed(Player player, BlockState state, BlockPos pos) {
-        return player.getDigSpeed(state, pos);
+        return player.getDestroySpeed(state, pos);
     }
 
     @Override

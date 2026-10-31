@@ -32,7 +32,10 @@ public abstract class LivingEntityRendererMixin {
         IafEntityHolder holder = (IafEntityHolder) state;
         if (holder.iceandfire$entity() instanceof LivingEntity entity) {
             IafBufferSource buffers = new IafBufferSource();
-            boolean canceled = IafBus.post(new RenderLivingEvent.Pre(entity, holder.iceandfire$partialTick(), poseStack, buffers, state.lightCoords));
+            // players: RenderPlayerEvent first, as 1.21.1's PlayerRenderer did before LivingEntityRenderer's event
+            boolean canceled = entity instanceof net.minecraft.world.entity.player.Player player
+                && IafBus.post(new dev.vladeezyy.iceandfire.bus.RenderPlayerEvent.Pre(player, holder.iceandfire$partialTick(), poseStack, buffers, state.lightCoords));
+            canceled = canceled || IafBus.post(new RenderLivingEvent.Pre(entity, holder.iceandfire$partialTick(), poseStack, buffers, state.lightCoords));
             buffers.submit(collector);
             if (canceled) {
                 ci.cancel();

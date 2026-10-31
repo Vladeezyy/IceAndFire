@@ -1,21 +1,34 @@
 package dev.vladeezyy.iceandfire.neoforge;
 
+import com.github.alexthe666.iceandfire.client.particle.IafAppearanceParticle;
+import com.github.alexthe666.iceandfire.client.render.IafItemModels;
+import com.github.alexthe666.iceandfire.client.render.IafItemSpecialRenderer;
+import com.github.alexthe666.iceandfire.client.render.IafRenderType;
+import com.github.alexthe666.iceandfire.item.IafArmorTextureItem;
+import com.github.alexthe666.iceandfire.recipe.IafRecipeRegistry;
+import dev.vladeezyy.iceandfire.platform.ClientRecipes;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.resources.model.EquipmentClientInfo;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleGroupsEvent;
+import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyEvent;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
+
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.IafClientSetup;
 import com.github.alexthe666.iceandfire.client.IafItemRenderers;
 import com.github.alexthe666.iceandfire.client.gui.IafGuiRegistry;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import dev.vladeezyy.iceandfire.bus.ClientEventIndex;
 import dev.vladeezyy.iceandfire.bus.IafBus;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
@@ -25,10 +38,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
-import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -36,8 +46,6 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.function.Supplier;
 
 /** The client side of Ice and Fire on NeoForge: client registrations and the client events posted on {@link IafBus} */
 @Mod(value = IceAndFire.MODID, dist = Dist.CLIENT)
@@ -49,13 +57,15 @@ public final class IceAndFireNeoForgeClient {
             IceAndFire.PROXY.clientInit();
         }));
         modBus.addListener(IceAndFireNeoForgeClient::registerClientExtensions);
-        modBus.addListener((RegisterShadersEvent event) -> {
-            try {
-                event.registerShader(new ShaderInstance(event.getResourceProvider(), IafClientSetup.DREAD_PORTAL_SHADER, DefaultVertexFormat.POSITION_COLOR), IafClientSetup::setRendertypeDreadPortalShader);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not load the dread portal shader", e);
+        modBus.addListener((RegisterRenderPipelinesEvent event) -> {
+            for (var pipeline : IafRenderType.pipelines()) {
+                event.registerPipeline(pipeline);
             }
         });
+        modBus.addListener((RegisterSpecialModelRendererEvent event) -> event.register(IafItemSpecialRenderer.ID, IafItemSpecialRenderer.Unbaked.MAP_CODEC));
+        modBus.addListener((RegisterRangeSelectItemModelPropertyEvent event) -> event.register(IafItemModels.ICE_OR_FIRE, IafItemModels.IceOrFire.MAP_CODEC));
+        modBus.addListener((RegisterConditionalItemModelPropertyEvent event) -> event.register(IafItemModels.HAS_DRAGON, IafItemModels.HasDragon.MAP_CODEC));
+        modBus.addListener((RegisterParticleGroupsEvent event) -> event.register(IafAppearanceParticle.GROUP, IafAppearanceParticle.Group::new));
         modBus.addListener((RegisterMenuScreensEvent event) -> IafGuiRegistry.register(new IafGuiRegistry.ScreenSink() {
             @Override
             public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void register(MenuType<? extends M> type, MenuScreens.ScreenConstructor<M, U> constructor) {
@@ -64,15 +74,11 @@ public final class IceAndFireNeoForgeClient {
         }));
 
         IEventBus bus = NeoForge.EVENT_BUS;
-        bus.addListener((RenderLivingEvent.Pre<?, ?> event) -> {
-            if (IafBus.post(pre(event))) {
-                event.setCanceled(true);
-            }
-        });
-        bus.addListener((RenderLivingEvent.Post<?, ?> event) -> IafBus.post(post(event)));
-        bus.addListener((RenderPlayerEvent.Pre event) -> {
-            if (IafBus.post(new dev.vladeezyy.iceandfire.bus.RenderPlayerEvent.Pre(event.getEntity(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight()))) {
-                event.setCanceled(true);
+        // RenderLivingEvent and RenderPlayerEvent: posted by the common LivingEntityRendererMixin on 26.x
+        // the dragon forge recipes for JEI (26.x clients only get the recipe types the server sends)
+        bus.addListener((RecipesReceivedEvent event) -> {
+            if (event.getRecipeTypes().contains(IafRecipeRegistry.DRAGON_FORGE_TYPE.get())) {
+                ClientRecipes.setDragonForge(event.getRecipeMap().byType(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList());
             }
         });
         bus.addListener((ScreenEvent.Opening event) -> {
@@ -90,48 +96,27 @@ public final class IceAndFireNeoForgeClient {
             event.setPitch(ours.getPitch());
             event.setRoll(ours.getRoll());
         });
-        bus.addListener((RenderLevelStageEvent event) -> {
-            dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent.Stage stage;
-            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS) {
-                stage = dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS;
-            } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-                stage = dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS;
-            } else {
-                return;
-            }
-            IafBus.post(new dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent(stage, event.getPoseStack(), event.getPartialTick()));
-        });
+        bus.addListener((RenderLevelStageEvent.AfterOpaqueBlocks event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent(
+            dev.vladeezyy.iceandfire.bus.RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS, event.getPoseStack(), Minecraft.getInstance().getDeltaTracker())));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static dev.vladeezyy.iceandfire.bus.RenderLivingEvent.Pre<?, ?> pre(RenderLivingEvent.Pre<?, ?> event) {
-        return new dev.vladeezyy.iceandfire.bus.RenderLivingEvent.Pre(event.getEntity(), event.getRenderer(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static dev.vladeezyy.iceandfire.bus.RenderLivingEvent.Post<?, ?> post(RenderLivingEvent.Post<?, ?> event) {
-        return new dev.vladeezyy.iceandfire.bus.RenderLivingEvent.Post(event.getEntity(), event.getRenderer(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
-    }
-
-    /** Armor models and item renderers (IafItemRenderers), formerly the items' own client extensions */
+    /** Armor models and textures (IafItemRenderers), formerly the items' own client extensions; item renderers are item model definitions on 26.x */
     private static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        IClientItemExtensions armor = new IClientItemExtensions() {
+            @Override
+            public @NotNull Model getHumanoidArmorModel(@NotNull ItemStack stack, EquipmentClientInfo.@NotNull LayerType layerType, @NotNull Model original) {
+                return IafItemRenderers.armorModel(stack, original);
+            }
+
+            @Override
+            public @NotNull Identifier getArmorTexture(@NotNull ItemStack stack, EquipmentClientInfo.@NotNull LayerType type, EquipmentClientInfo.@NotNull Layer layer, @NotNull Identifier _default) {
+                return IafItemRenderers.armorTexture(stack, _default);
+            }
+        };
         for (var entry : IafItemRegistry.ITEMS.getEntries()) {
             Item item = entry.get();
-            Supplier<BlockEntityWithoutLevelRenderer> renderer = IafItemRenderers.itemRenderer(item);
-            if (renderer != null) {
-                event.registerItem(new IClientItemExtensions() {
-                    @Override
-                    public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return renderer.get();
-                    }
-                }, item);
-            } else if (IafItemRenderers.hasArmorModel(item)) {
-                event.registerItem(new IClientItemExtensions() {
-                    @Override
-                    public @NotNull HumanoidModel<?> getHumanoidArmorModel(@NotNull LivingEntity entity, @NotNull ItemStack stack, @NotNull EquipmentSlot slot, @NotNull HumanoidModel<?> original) {
-                        return IafItemRenderers.armorModel(stack.getItem(), slot, original);
-                    }
-                }, item);
+            if (item instanceof IafArmorTextureItem) {
+                event.registerItem(armor, item);
             }
         }
     }

@@ -24,7 +24,7 @@ public class IafFeatureBiomeModifier implements BiomeModifier {
     public final HashMap<String, Holder<PlacedFeature>> featureMap = new HashMap<>();
     public IafFeatureBiomeModifier(HolderSet<PlacedFeature> features) {
         this.features = features;
-        this.features.forEach(feature -> featureMap.put(feature.unwrapKey().get().location().toString(), feature));
+        this.features.forEach(feature -> featureMap.put(feature.unwrapKey().get().identifier().toString(), feature));
     }
 
     @Override

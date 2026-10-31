@@ -59,6 +59,37 @@ public final class IafItemRenderers {
             || item instanceof ItemTrollArmor || item instanceof ItemDragonsteelArmor || item instanceof ItemScaleArmor;
     }
 
+    private static final java.util.Map<Item, HumanoidModel<?>[]> ARMOR_MODELS = new java.util.IdentityHashMap<>();
+
+    /**
+     * The armor model of a worn stack, or {@code original}. Built once per item and slot (1.21.1 baked a new model every
+     * frame); 26.x poses it from the wearer's render state when it is drawn, so one instance serves every wearer.
+     */
+    public static net.minecraft.client.model.Model<?> armorModel(net.minecraft.world.item.ItemStack stack, net.minecraft.client.model.Model<?> original) {
+        Item item = stack.getItem();
+        net.minecraft.world.item.equipment.Equippable equippable = stack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+        if (equippable == null || !hasArmorModel(item)) {
+            return original;
+        }
+        EquipmentSlot slot = equippable.slot();
+        HumanoidModel<?>[] models = ARMOR_MODELS.computeIfAbsent(item, i -> new HumanoidModel<?>[EquipmentSlot.values().length]);
+        HumanoidModel<?> model = models[slot.ordinal()];
+        if (model == null) {
+            model = armorModel(item, slot, null);
+            models[slot.ordinal()] = model;
+        }
+        return model == null ? original : model;
+    }
+
+    /** The texture an armor stack is drawn with: the item's own (IafArmorTextureItem), or {@code fallback} */
+    public static net.minecraft.resources.Identifier armorTexture(net.minecraft.world.item.ItemStack stack, net.minecraft.resources.Identifier fallback) {
+        net.minecraft.world.item.equipment.Equippable equippable = stack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+        if (equippable != null && stack.getItem() instanceof com.github.alexthe666.iceandfire.item.IafArmorTextureItem textured) {
+            return textured.getArmorTexture(stack, equippable.slot());
+        }
+        return fallback;
+    }
+
     /** The armor model of an item, or {@code original} */
     public static HumanoidModel<?> armorModel(Item item, EquipmentSlot slot, HumanoidModel<?> original) {
         if (item instanceof ItemCopperArmor) return new ModelCopperArmor(slot);
