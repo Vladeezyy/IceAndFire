@@ -255,6 +255,11 @@ public final class DevScene {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
+        // NeoForge lists the loading warnings of other mods (deprecated fields) on a screen that waits for a click
+        if (!opened && mc.screen != null && mc.screen.getClass().getSimpleName().equals("LoadingErrorScreen")) {
+            mc.setScreen(new TitleScreen());
+            return;
+        }
         if (!opened && mc.screen instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen) {
             mc.options.onboardAccessibility = false;
             mc.options.save();

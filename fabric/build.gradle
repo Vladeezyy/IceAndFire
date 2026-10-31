@@ -27,6 +27,28 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modImplementation "dev.vladeezyy.rampart:rampart-fabric:${rampart_version}"
+    // tools/scenetest.sh -Pwith_compat: the client and performance mods this one is played with (dev runs only)
+    if (project.hasProperty('with_compat')) {
+        project.properties.findAll { it.key.startsWith('compat_fabric_') }.each { k, v ->
+            modLocalRuntime "maven.modrinth:${k.substring('compat_fabric_'.length()).replace('_', '-')}:${v}"
+        }
+        // the jars these mods carry inside (Iris's shader libraries, EntityCulling's TRansition): Loom does not load nested
+        // jars in dev, so they are unpacked next to the build; Fabric API's own modules are left out (no duplicates)
+        def nested = layout.buildDirectory.dir('compat-nested').get().asFile
+        def compatMods = configurations.detachedConfiguration(*project.properties.findAll { it.key.startsWith('compat_fabric_') }.collect { k, v ->
+            dependencies.create("maven.modrinth:${k.substring('compat_fabric_'.length()).replace('_', '-')}:${v}")
+        })
+        compatMods.transitive = false
+        compatMods.files.each { jar ->
+            copy {
+                from(zipTree(jar)) { include 'META-INF/jars/*.jar'; exclude 'META-INF/jars/fabric-*' }
+                eachFile { path = name }
+                includeEmptyDirs = false
+                into nested
+            }
+        }
+        modLocalRuntime fileTree(nested) { include '*.jar' }
+    }
     // JEI common API (Mojang names, compile only)
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly 'io.github.llamalad7:mixinextras-common:0.5.0'
