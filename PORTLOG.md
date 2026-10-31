@@ -186,3 +186,23 @@ errors in common, none in the loaders. Write-up: modding-kb `porting/mc-versions
   reads happen as in 1.21.1).
 - Tests (macOS, both loaders): selftest 29/29, client scene 0 failed checks (screenshots match 26.1.2), stress 13/13
   with SEED=1234 (NeoForge 8.7 ms average tick, Fabric 6.8 ms; generation 93-95 s), net test 0 failed checks.
+
+## 26.3 (branch `mc/26.3`, on `mc/26.2`, 2026-10-31)
+NeoForge 26.3.0.99, Fabric API 0.165.0, JEI 31.17, Rampart `1.1.0+26.3`. After `port_263_input.py` (knowledge base),
+`tools/port26/port_263_iaf.py` and `port_26.py <26.3 sources>`: 556 errors in common. Write-up: modding-kb
+`porting/mc-versions/26.3/ice-and-fire.md`.
+- Features are an interface with `codec()` and configured features are data: the 15 features of the mod extend
+  `world/gen/IafFeature` (unit codec, `place(level, generator, random, origin)` → the old body on a `Context` record
+  with the names of `FeaturePlaceContext`), data in `worldgen/feature/<id>.json`.
+- Blocks without codecs, `AxeItem/ShovelItem/HoeItem` → `Properties.axe/shovel/hoe`, keys on SDL codes (the numeric
+  GLFW codes replaced by `InputConstants.KEY_*`), swing state (`swing(hand, SwingAnimation.DEFAULT, true)`,
+  `getSwingAnimation`), loot pools in code with holders, glint on the patterned shield / trimmed armor passes
+  (`setUv3` in `IafBufferSource`), dread portal shaders with `#include` and explicit locations, post effects of the
+  local player, NeoForge biome modifiers with `RegistryAccess` and `ModConfig.Type.LOCAL`.
+- `PotionBrewing` is gone: brewing recipes as data (`recipe/brewing`), the trade check reads the brewing recipes.
+- Data (`tools/port26/convert_iaf_263.py`, from the Rats/Spartan converter): features, loot `{min, max}` shorthand →
+  uniform providers, advancement entity shorthand → `entity_properties`, trades.
+- Self-test has a new check: every structure template of the mod is placed and puts blocks in the world.
+- Tests (macOS, both loaders): selftest 30/30, client scene 0 failed checks, stress 13/13 with SEED=1234 (NeoForge
+  11.9 ms average tick, Fabric 7.5 ms), net test 0 failed checks. 26.3 servers have the white list on by default, the test
+  server now turns it off.
