@@ -1,6 +1,6 @@
 # Build on every push and pull request, then the functional self-test (tools/selftest.sh) on a headless dev server.
 # Rampart (Citadel's model and animation classes) comes from Maven Local in this build, so it is built first from
-# Vladeezyy/rampart main. The jars and the self-test log are kept as artifacts.
+# the Rampart branch of the same name (mc/<version>; main for the 1.21.1 branches). The jars and the self-test log are kept as artifacts.
 name: Build
 
 on:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Vladeezyy/rampart
-          ref: main
+          ref: ${{ startsWith(github.ref_name, 'mc/') && github.ref_name || 'main' }}
           path: rampart
 
       # java_version from gradle.properties (21 for 1.21.x, 25 for 26.x); org.gradle.java.home points at a JDK on
