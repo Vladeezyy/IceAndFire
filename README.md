@@ -58,9 +58,19 @@ Please report bugs of this port here, not to the original author.
 
 ## Tested with
 
-On NeoForge 1.21.1: Sodium 0.6.13, Iris 1.8.12, Lithium 0.15.4, FerriteCore 7.0.3, ModernFix 5.27.26, Jade 15.10.6, JEI 19.64,
-EntityCulling 1.11.2, AttributeFix 21.1.3 (client scene, all creatures rendered). Dedicated server: a client riding an
-adult dragon; load test with 30 adult dragons and 100 creatures, 4096 generated chunks, chunk reload cycles.
+A client scene (every creature, armor, the creative tabs, the bestiary and the mod's screens) with these mods, on
+NeoForge and Fabric, without errors of this mod in the log (`tools/scenetest.sh -Pwith_compat`):
+
+| Minecraft | Mods |
+|---|---|
+| 1.21.1 | Sodium 0.6.13, Iris 1.8.12 (NeoForge) / 1.8.8 (Fabric), Lithium 0.15.4, FerriteCore 7.0.3, ModernFix 5.27, Jade 15.10.6, EntityCulling 1.11.3, AttributeFix 21.1.3 (NeoForge) |
+| 1.21.11 | Sodium 0.8.14, Iris 1.10.8, Lithium 0.21.4, FerriteCore 8.2.0, Jade 21.1, EntityCulling 1.11.3 |
+| 26.1.2 | Sodium 0.9.2, Iris 1.11.4, Lithium 0.24.7, FerriteCore 9.0.0, ModernFix 5.27.25 (NeoForge), Jade 26.1, EntityCulling 1.11.3 |
+| 26.2 | Sodium 0.9.2, Iris 1.11.4, Lithium 0.25.3, FerriteCore 9.0.0, Jade 26.2, EntityCulling 1.11.3 |
+| 26.3 | Sodium 0.9.3-beta.1 (NeoForge: 0.9.2 does not load on NeoForge 26.3.0.99) / 0.9.2 (Fabric), Iris 1.11.7, Lithium 0.26.3, FerriteCore 9.0.0, Jade 26.3.5, EntityCulling 1.11.3 |
+
+JEI on every version. Not checked yet: Iris with a shader pack on. Dedicated server: a client riding an adult dragon;
+load test with 30 adult dragons and 100 creatures, 4096 generated chunks, chunk reload cycles.
 
 ## Known issues
 
