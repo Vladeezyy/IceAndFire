@@ -116,14 +116,14 @@ public class SelfTest {
         check("blocks registered", blocks > 120, blocks);
         check("entity types registered", entities > 50, entities);
 
-        long recipes = server.getRecipeManager().getRecipes().stream().filter(r -> r.id().getNamespace().equals(IceAndFire.MODID)).count();
+        long recipes = server.getRecipeManager().getRecipes().stream().filter(r -> r.id().identifier().getNamespace().equals(IceAndFire.MODID)).count();
         check("recipes loaded", recipes > 300, recipes);
-        long forge = server.getRecipeManager().getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).size();
+        long forge = server.getRecipeManager().getRecipes().stream().filter(r -> r.value().getType() == IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).count();
         check("dragon forge recipes", forge >= 3, forge);
 
         int loot = 0;
         int empty = 0;
-        for (Identifier id : server.reloadableRegistries().getKeys(Registries.LOOT_TABLE)) {
+        for (Identifier id : server.reloadableRegistries().lookup().lookupOrThrow(Registries.LOOT_TABLE).listElementIds().map(ResourceKey::identifier).toList()) {
             if (id.getNamespace().equals(IceAndFire.MODID)) {
                 loot++;
                 if (server.reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, id)) == LootTable.EMPTY) {
@@ -153,12 +153,12 @@ public class SelfTest {
             // No player on the server: keep the chunks (and the entities in them) loaded
             level.setChunkForced(pos.getX() >> 4, pos.getZ() >> 4, true);
             int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) + 1;
-            Entity entity = type.create(level);
+            Entity entity = type.create(level, EntitySpawnReason.COMMAND);
             if (entity == null) {
                 failed.add(id.toString());
                 continue;
             }
-            entity.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
+            entity.snapTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
             if (entity instanceof Mob mob) {
                 mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
                 mob.setPersistenceRequired();
@@ -183,12 +183,12 @@ public class SelfTest {
         check("dragons alive", dragons == 3, dragons);
 
         // Entity data attachment survives saving (frozen state)
-        Zombie zombie = EntityType.ZOMBIE.create(level);
-        zombie.moveTo(0, 100, 0);
+        Zombie zombie = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+        zombie.snapTo(0, 100, 0);
         EntityDataProvider.getCapability(zombie).ifPresent(data -> data.frozenData.setFrozen(zombie, 120));
-        CompoundTag saved = zombie.saveWithoutId(new CompoundTag());
-        Zombie loaded = EntityType.ZOMBIE.create(level);
-        loaded.load(saved);
+        CompoundTag saved = com.github.alexthe666.iceandfire.entity.util.Values.save(zombie);
+        Zombie loaded = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+        com.github.alexthe666.iceandfire.entity.util.Values.load(loaded, saved);
         int frozen = EntityDataProvider.getCapability(loaded).map(data -> data.frozenData.frozenTicks).orElse(-1);
         check("entity data saved", frozen == 120, frozen);
 
@@ -197,7 +197,7 @@ public class SelfTest {
         for (Entity entity : SPAWNED) {
             if (entity instanceof net.minecraft.world.entity.LivingEntity living && living.isAlive()) {
                 try {
-                    living.hurt(level.damageSources().genericKill(), Float.MAX_VALUE);
+                    living.hurtServer(level, level.damageSources().genericKill(), Float.MAX_VALUE);
                 } catch (Throwable throwable) {
                     deathFailed.add(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getPath() + ": " + throwable);
                     IceAndFire.LOGGER.error("[selftest] death of {}", entity, throwable);
@@ -206,7 +206,7 @@ public class SelfTest {
         }
         check("every creature can die", deathFailed.isEmpty(), deathFailed);
 
-        SPAWNED.forEach(e -> level.setChunkForced(e.chunkPosition().x, e.chunkPosition().z, false));
+        SPAWNED.forEach(e -> level.setChunkForced(e.chunkPosition().x(), e.chunkPosition().z(), false));
         SPAWNED.forEach(Entity::discard);
         SPAWNED.clear();
     }
@@ -218,12 +218,12 @@ public class SelfTest {
         old.putBoolean("IAFStoneStatuePlayerEntity", false);
         old.putString("IAFStoneStatueEntityID", "minecraft:zombie");
         statue.set(DataComponents.CUSTOM_DATA, CustomData.of(old));
-        check("old item data readable", "minecraft:zombie".equals(ItemNbt.view(statue).getString("IAFStoneStatueEntityID")), ItemNbt.view(statue));
+        check("old item data readable", "minecraft:zombie".equals(ItemNbt.view(statue).getStringOr("IAFStoneStatueEntityID", "")), ItemNbt.view(statue));
 
         ItemNbt.update(statue, tag -> tag.putInt("Test", 3));
-        check("item data update", ItemNbt.view(statue).getInt("Test") == 3 && ItemNbt.view(statue).contains("IAFStoneStatueEntityID"), ItemNbt.view(statue));
+        check("item data update", ItemNbt.view(statue).getIntOr("Test", 0) == 3 && ItemNbt.view(statue).contains("IAFStoneStatueEntityID"), ItemNbt.view(statue));
 
-        ItemStack copy = ItemStack.parseOptional(level.registryAccess(), (CompoundTag) statue.save(level.registryAccess()));
+        ItemStack copy = com.github.alexthe666.iceandfire.entity.util.Values.parseItem(level.registryAccess(), (CompoundTag) com.github.alexthe666.iceandfire.entity.util.Values.saveItem(level.registryAccess(), statue, new CompoundTag()));
         check("item data saved", ItemStack.isSameItemSameComponents(copy, statue), copy);
 
         // Every tool and armor can be repaired: a repair ingredient made of a tag nobody fills (forge:ingots/silver of
@@ -233,13 +233,14 @@ public class SelfTest {
             if (!BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(IceAndFire.MODID)) {
                 continue;
             }
-            net.minecraft.world.item.crafting.Ingredient repair = null;
-            if (item instanceof net.minecraft.world.item.TieredItem tiered) {
-                repair = tiered.getTier().getRepairIngredient();
-            } else if (item instanceof net.minecraft.world.item.ArmorItem armor) {
-                repair = armor.getMaterial().value().repairIngredient().get();
+            // 26.x: the materials repair with an item tag (data/iceandfire/tags/item/repairs)
+            net.minecraft.tags.TagKey<net.minecraft.world.item.Item> repair = null;
+            if (item instanceof com.github.alexthe666.iceandfire.item.IafTieredItem tiered) {
+                repair = tiered.getTier().getRepairItems();
+            } else if (item instanceof com.github.alexthe666.iceandfire.item.IafArmorItem armor) {
+                repair = armor.getMaterial().vanilla().repairIngredient();
             }
-            if (repair != null && repair != net.minecraft.world.item.crafting.Ingredient.EMPTY && repair.isEmpty()) {
+            if (repair != null && !BuiltInRegistries.ITEM.getTagOrEmpty(repair).iterator().hasNext()) {
                 noRepair.add(BuiltInRegistries.ITEM.getKey(item).getPath());
             }
         }
@@ -283,16 +284,16 @@ public class SelfTest {
     /** Locates every structure of the mod (this runs their biome checks) and places it there. */
     private static void structures(MinecraftServer server, ServerLevel level) {
         var registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
-        CommandSourceStack source = server.createCommandSourceStack().withSuppressedOutput().withPermission(4);
+        CommandSourceStack source = server.createCommandSourceStack().withSuppressedOutput();
         for (String name : List.of("gorgon_temple", "graveyard", "mausoleum")) {
-            var holder = registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name)));
+            var holder = registry.getOrThrow(ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name)));
             var found = level.getChunkSource().getGenerator().findNearestMapStructure(level, net.minecraft.core.HolderSet.direct(holder), new BlockPos(0, 64, 0), 150, false);
             if (found == null) {
                 check("structure " + name + " located", false, "none within 150 chunks");
                 continue;
             }
             BlockPos pos = found.getFirst();
-            String biome = level.getBiome(pos.atY(level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()))).unwrapKey().map(k -> k.location().toString()).orElse("?");
+            String biome = level.getBiome(pos.atY(level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()))).unwrapKey().map(k -> k.identifier().toString()).orElse("?");
             check("structure " + name + " located", true, pos + " in " + biome);
         }
     }
@@ -305,7 +306,7 @@ public class SelfTest {
     private static EntityDragonPart oldWorldPart;
 
     private static void partsLoadChunk(ServerLevel level, boolean load) {
-        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, load);
+        level.setChunkForced(PARTS_CHUNK.x(), PARTS_CHUNK.z(), load);
     }
 
     private static List<EntityDragonPart> parts(ServerLevel level, Entity dragon) {
@@ -317,8 +318,8 @@ public class SelfTest {
         BlockPos pos = PARTS_CHUNK.getMiddleBlockPosition(0);
         check("parts chunk entity ticking", level.isPositionEntityTicking(pos), PARTS_CHUNK);
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) + 2;
-        EntityDragonBase dragon = IafEntityRegistry.FIRE_DRAGON.get().create(level);
-        dragon.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
+        EntityDragonBase dragon = IafEntityRegistry.FIRE_DRAGON.get().create(level, EntitySpawnReason.COMMAND);
+        dragon.snapTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
         dragon.setAgeInDays(75);
         dragon.setNoAi(true);
         dragon.setPersistenceRequired();
@@ -326,8 +327,8 @@ public class SelfTest {
         partsDragon = dragon.getUUID();
 
         // A part saved with the chunk by 1.20.1: loaded without its owner
-        oldWorldPart = IafEntityRegistry.DRAGON_MULTIPART.get().create(level);
-        oldWorldPart.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
+        oldWorldPart = IafEntityRegistry.DRAGON_MULTIPART.get().create(level, EntitySpawnReason.COMMAND);
+        oldWorldPart.snapTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
         level.addFreshEntity(oldWorldPart);
     }
 
@@ -351,7 +352,7 @@ public class SelfTest {
 
     private static void partsUnloaded(ServerLevel level) {
         check("dragon chunk unloaded", level.getEntity(partsDragon) == null, PARTS_CHUNK);
-        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, true);
+        level.setChunkForced(PARTS_CHUNK.x(), PARTS_CHUNK.z(), true);
     }
 
     private static void partsReloaded(ServerLevel level) {
@@ -359,7 +360,7 @@ public class SelfTest {
         List<EntityDragonPart> parts = dragon == null ? List.of() : parts(level, dragon);
         long all = dragon == null ? 0 : level.getEntitiesOfClass(EntityDragonPart.class, dragon.getBoundingBox().inflate(48)).size();
         check("dragon parts after chunk reload", dragon != null && parts.size() == 10 && all == 10, parts.size() + " owned, " + all + " near");
-        level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, false);
+        level.setChunkForced(PARTS_CHUNK.x(), PARTS_CHUNK.z(), false);
     }
 
     /** Hive of #5197: the queen dug a new nest and left her hive whenever she "saw the sky", also through water. */
@@ -371,7 +372,7 @@ public class SelfTest {
     private static void hiveArea(ServerLevel level, boolean load) {
         for (int x = -3; x <= 3; x++) {
             for (int z = -3; z <= 3; z++) {
-                level.setChunkForced(HIVE_CHUNK.x + x, HIVE_CHUNK.z + z, load);
+                level.setChunkForced(HIVE_CHUNK.x() + x, HIVE_CHUNK.z() + z, load);
             }
         }
     }
@@ -384,13 +385,13 @@ public class SelfTest {
         // Built in a finished world as a queen digs it (small: the surface heightmaps of the world, not of worldgen),
         // the queen placed as the worldgen does
         var gen = new com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive(true, false, net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC);
-        gen.placeSmallGen(level, level.random, center);
+        gen.placeSmallGen(level, level.getRandom(), center);
         hive = gen.hive;
-        var newQueen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level);
+        var newQueen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level, EntitySpawnReason.COMMAND);
         BlockPos ground = com.github.alexthe666.iceandfire.entity.util.MyrmexHive.getGroundedPos(level, center);
         newQueen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
         newQueen.setHive(hive);
-        newQueen.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+        newQueen.snapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
         level.addFreshEntity(newQueen);
         hivesBefore = com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level).getHivelist().size();
         IceAndFire.LOGGER.info("[selftest] hive at {} (surface {})", center, surface);

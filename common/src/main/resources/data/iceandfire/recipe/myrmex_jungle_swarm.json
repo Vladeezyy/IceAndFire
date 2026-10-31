@@ -6,15 +6,9 @@
     "RSR"
   ],
   "key": {
-    "R": {
-      "item": "iceandfire:myrmex_jungle_resin_block"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    },
-    "E": {
-      "item": "iceandfire:myrmex_jungle_egg"
-    }
+    "R": "iceandfire:myrmex_jungle_resin_block",
+    "S": "#c:rods/wooden",
+    "E": "iceandfire:myrmex_jungle_egg"
   },
   "result": {
     "id": "iceandfire:myrmex_jungle_swarm"

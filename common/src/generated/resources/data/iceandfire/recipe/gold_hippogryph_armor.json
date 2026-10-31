@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "D": {
-      "item": "minecraft:golden_horse_armor"
-    },
-    "F": {
-      "tag": "c:feathers"
-    }
+    "D": "minecraft:golden_horse_armor",
+    "F": "#c:feathers"
   },
   "pattern": [
     "FDF"

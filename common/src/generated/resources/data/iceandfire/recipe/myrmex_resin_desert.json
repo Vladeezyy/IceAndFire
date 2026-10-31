@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "R": {
-      "item": "iceandfire:myrmex_desert_resin"
-    }
+    "R": "iceandfire:myrmex_desert_resin"
   },
   "pattern": [
     "RR",

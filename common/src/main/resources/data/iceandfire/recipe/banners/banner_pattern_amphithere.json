@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "iceandfire:amphithere_feather"
-    },
-    {
-      "item": "minecraft:paper"
-    }
+    "iceandfire:amphithere_feather",
+    "minecraft:paper"
   ],
   "result": {
     "count": 1,

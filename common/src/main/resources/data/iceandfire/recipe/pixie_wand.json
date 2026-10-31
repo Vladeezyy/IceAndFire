@@ -6,15 +6,9 @@
     "B"
   ],
   "key": {
-    "D": {
-      "tag": "c:gems/diamond"
-    },
-    "B": {
-      "item": "minecraft:blaze_rod"
-    },
-    "W": {
-      "item": "iceandfire:pixie_wings"
-    }
+    "D": "#c:gems/diamond",
+    "B": "minecraft:blaze_rod",
+    "W": "iceandfire:pixie_wings"
   },
   "result": {
     "id": "iceandfire:pixie_wand"

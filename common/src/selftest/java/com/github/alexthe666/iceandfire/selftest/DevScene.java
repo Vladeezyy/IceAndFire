@@ -218,11 +218,11 @@ public final class DevScene {
     }
 
     private static ServerLevel level(ServerPlayer player) {
-        return player.serverLevel();
+        return player.level();
     }
 
     private static void closeUp(ServerPlayer player, EntityType<?> type) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         if (lastCloseUp != null) {
             lastCloseUp.discard();
         }
@@ -234,7 +234,7 @@ public final class DevScene {
         }
         IceAndFire.LOGGER.info("[scene] around the stage before {}: {}", BuiltInRegistries.ENTITY_TYPE.getKey(type), others);
         // Night for the troll (stone in daylight), day for the rest
-        level.setDayTime(BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath().equals("troll") ? 18000 : 6000);
+        setTime(level, BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath().equals("troll") ? 18000 : 6000);
         Entity entity = place(level, type, stage.offset(0, 0, 0), 200);
         lastCloseUp = entity;
         float size = Math.max(entity.getBbWidth(), entity.getBbHeight());
@@ -266,7 +266,7 @@ public final class DevScene {
             if (mc.getLevelSource().levelExists(WORLD)) {
                 mc.createWorldOpenFlows().openWorld(WORLD, () -> mc.setScreen(new TitleScreen()));
             } else {
-                LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, false, Difficulty.NORMAL, true, new GameRules(), WorldDataConfiguration.DEFAULT);
+                LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, new LevelSettings.DifficultySettings(Difficulty.NORMAL, false, false), true, WorldDataConfiguration.DEFAULT);
                 mc.createWorldOpenFlows().createFreshLevel(WORLD, settings, new WorldOptions(1234L, false, false), WorldPresets::createNormalWorldDimensions, new TitleScreen());
             }
             return;
@@ -276,7 +276,7 @@ public final class DevScene {
         }
         mc.options.pauseOnLostFocus = false;
         mc.getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
-        mc.getToasts().clear();
+        mc.getToastManager().clear();
         if (mc.screen instanceof PauseScreen) {
             mc.setScreen(null);
         }
@@ -317,8 +317,8 @@ public final class DevScene {
     }
 
     private static void shot(Minecraft mc, String name) {
-        mc.getToasts().clear();
-        Screenshot.grab(mc.gameDirectory, "scene_" + name + ".png", mc.getMainRenderTarget(), message -> IceAndFire.LOGGER.info("[scene] screenshot {}", name));
+        mc.getToastManager().clear();
+        Screenshot.grab(mc.gameDirectory, "scene_" + name + ".png", mc.getMainRenderTarget(), 1, message -> IceAndFire.LOGGER.info("[scene] screenshot {}", name));
     }
 
     private static void selectTab(Minecraft mc, CreativeModeTab tab) {
@@ -340,17 +340,17 @@ public final class DevScene {
         double dz = target.getZ() - eye.getZ();
         float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
         float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
-        player.teleportTo(player.serverLevel(), eye.getX() + 0.5, eye.getY() - 1.62, eye.getZ() + 0.5, yaw, pitch);
+        player.teleportTo(player.level(), eye.getX() + 0.5, eye.getY() - 1.62, eye.getZ() + 0.5, java.util.Set.of(), yaw, pitch, true);
     }
 
     private static void setup(ServerPlayer player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         player.setGameMode(GameType.CREATIVE);
-        server.getGameRules().getRule(GameRules.SPAWN_MOBS).set(false, server);
-        server.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, server);
-        server.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, server);
-        player.serverLevel().setDayTime(6000);
-        player.serverLevel().setWeatherParameters(6000, 0, false, false);
+        server.getGameRules().set(GameRules.SPAWN_MOBS, false, server);
+        server.getGameRules().set(GameRules.ADVANCE_TIME, false, server);
+        server.getGameRules().set(GameRules.ADVANCE_WEATHER, false, server);
+        setTime(player.level(), 6000);
+        player.level().getServer().getCommands().performPrefixedCommand(player.level().getServer().createCommandSourceStack().withSuppressedOutput(), "weather clear");
         // The other mods of the run (tools/scenetest.sh -Pwith_compat)
         List<String> mods = new ArrayList<>();
         mods.addAll(OTHER_MODS.get());
@@ -359,8 +359,8 @@ public final class DevScene {
 
     /** Flat grass stage 90 x 90 at the spawn. */
     private static void buildStage(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
-        BlockPos spawn = level.getSharedSpawnPos();
+        ServerLevel level = player.level();
+        BlockPos spawn = level.getRespawnData().pos();
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, spawn.getX(), spawn.getZ());
         stage = new BlockPos(spawn.getX(), y, spawn.getZ());
         for (int dx = -45; dx <= 45; dx++) {
@@ -375,8 +375,8 @@ public final class DevScene {
     }
 
     private static Entity place(ServerLevel level, EntityType<?> type, BlockPos pos, float yaw) {
-        Entity entity = type.create(level);
-        entity.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, yaw, 0);
+        Entity entity = type.create(level, EntitySpawnReason.COMMAND);
+        entity.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, yaw, 0);
         if (entity instanceof Mob mob) {
             mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
             mob.setNoAi(true);
@@ -390,7 +390,7 @@ public final class DevScene {
 
     /** The three dragons, adult (100 days), side by side and facing the camera. */
     private static void dragons(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         int i = -1;
         int count = 0;
         for (EntityType<?> type : List.of(IafEntityRegistry.FIRE_DRAGON.get(), IafEntityRegistry.ICE_DRAGON.get(), IafEntityRegistry.LIGHTNING_DRAGON.get())) {
@@ -406,7 +406,7 @@ public final class DevScene {
 
     /** Every other living creature of the mod in rows behind the dragons. */
     private static void creatures(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         int x = -36;
         int z = -6;
         int count = 0;
@@ -416,7 +416,7 @@ public final class DevScene {
             if (!id.getNamespace().equals(IceAndFire.MODID) || id.getPath().contains("dragon") || id.getPath().contains("multipart")) {
                 continue;
             }
-            Entity probe = type.create(level);
+            Entity probe = type.create(level, EntitySpawnReason.COMMAND);
             if (!(probe instanceof Mob)) {
                 skipped.add(id.getPath());
                 continue;
@@ -448,5 +448,10 @@ public final class DevScene {
             }
         }
         check("entities on the client", entities > 25, entities);
+    }
+
+    /** 26.x: the level time is a clock (1.21.1: setDayTime); the command sets it */
+    private static void setTime(ServerLevel level, int time) {
+        level.getServer().getCommands().performPrefixedCommand(level.getServer().createCommandSourceStack().withSuppressedOutput(), "time set " + time);
     }
 }

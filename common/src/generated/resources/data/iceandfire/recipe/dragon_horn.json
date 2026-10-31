@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "iceandfire:dragonbone"
-    },
-    "I": {
-      "tag": "c:rods/wooden"
-    }
+    "B": "iceandfire:dragonbone",
+    "I": "#c:rods/wooden"
   },
   "pattern": [
     "  B",

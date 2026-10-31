@@ -5,12 +5,8 @@
     "S "
   ],
   "key": {
-    "S": {
-      "tag": "c:rods/wooden"
-    },
-    "T": {
-      "item": "iceandfire:hippocampus_fin"
-    }
+    "S": "#c:rods/wooden",
+    "T": "iceandfire:hippocampus_fin"
   },
   "result": {
     "id": "iceandfire:hippocampus_slapper"

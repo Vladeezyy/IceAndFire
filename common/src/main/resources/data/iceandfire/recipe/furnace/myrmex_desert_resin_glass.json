@@ -1,8 +1,6 @@
 {
   "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "iceandfire:myrmex_desert_resin_block"
-  },
+  "ingredient": "iceandfire:myrmex_desert_resin_block",
   "result": {
     "id": "iceandfire:myrmex_desert_resin_glass"
   },

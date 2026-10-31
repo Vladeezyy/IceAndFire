@@ -28,7 +28,7 @@ public class TestHive {
     public static void forceArea(ServerLevel level, ChunkPos center, boolean load) {
         for (int x = -3; x <= 3; x++) {
             for (int z = -3; z <= 3; z++) {
-                level.setChunkForced(center.x + x, center.z + z, load);
+                level.setChunkForced(center.x() + x, center.z() + z, load);
             }
         }
     }
@@ -42,13 +42,13 @@ public class TestHive {
         int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE, top.getX(), top.getZ());
         BlockPos center = new BlockPos(top.getX(), Math.min(surface, level.getSeaLevel()) - 25, top.getZ());
         WorldGenMyrmexHive gen = new WorldGenMyrmexHive(true, false, NoneFeatureConfiguration.CODEC);
-        gen.placeSmallGen(level, level.random, center);
-        EntityMyrmexQueen queen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level);
+        gen.placeSmallGen(level, level.getRandom(), center);
+        EntityMyrmexQueen queen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level, EntitySpawnReason.COMMAND);
         BlockPos ground = MyrmexHive.getGroundedPos(level, center);
         queen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
         queen.setHive(gen.hive);
         queen.setPersistenceRequired();
-        queen.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+        queen.snapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
         level.addFreshEntity(queen);
         return new TestHive(gen.hive, queen, MyrmexWorldData.get(level).getHivelist().size());
     }
@@ -59,12 +59,12 @@ public class TestHive {
         int added = 0;
         for (int i = 0; i < 9; i++) {
             var type = i < 5 ? IafEntityRegistry.MYRMEX_WORKER.get() : i < 8 ? IafEntityRegistry.MYRMEX_SOLDIER.get() : IafEntityRegistry.MYRMEX_SENTINEL.get();
-            com.github.alexthe666.iceandfire.entity.EntityMyrmexBase myrmex = type.create(level);
+            com.github.alexthe666.iceandfire.entity.EntityMyrmexBase myrmex = type.create(level, EntitySpawnReason.COMMAND);
             myrmex.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
             myrmex.setHive(hive);
             myrmex.setJungleVariant(queen.isJungle());
             myrmex.setPersistenceRequired();
-            myrmex.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+            myrmex.snapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
             if (level.addFreshEntity(myrmex)) {
                 added++;
             }

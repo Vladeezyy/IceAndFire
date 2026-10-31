@@ -1,0 +1,90 @@
+{
+  "overrides": {
+    "dragon_horn": [
+      {
+        "predicate": {
+          "iceorfire": 0.25
+        },
+        "model": "iceandfire:item/dragon_horn_fire"
+      },
+      {
+        "predicate": {
+          "iceorfire": 0.5
+        },
+        "model": "iceandfire:item/dragon_horn_ice"
+      },
+      {
+        "predicate": {
+          "iceorfire": 0.75
+        },
+        "model": "iceandfire:item/dragon_horn_lightning"
+      }
+    ],
+    "dragonbone_bow": [
+      {
+        "predicate": {
+          "pulling": 1
+        },
+        "model": "iceandfire:item/dragonbone_bow_pulling_0"
+      },
+      {
+        "predicate": {
+          "pulling": 1,
+          "pull": 0.65
+        },
+        "model": "iceandfire:item/dragonbone_bow_pulling_1"
+      },
+      {
+        "predicate": {
+          "pulling": 1,
+          "pull": 0.9
+        },
+        "model": "iceandfire:item/dragonbone_bow_pulling_2"
+      }
+    ],
+    "summoning_crystal_fire": [
+      {
+        "predicate": {
+          "has_dragon": 1
+        },
+        "model": "iceandfire:item/summoning_crystal_fire_active"
+      }
+    ],
+    "summoning_crystal_ice": [
+      {
+        "predicate": {
+          "has_dragon": 1
+        },
+        "model": "iceandfire:item/summoning_crystal_ice_active"
+      }
+    ],
+    "summoning_crystal_lightning": [
+      {
+        "predicate": {
+          "has_dragon": 1
+        },
+        "model": "iceandfire:item/summoning_crystal_lightning_active"
+      }
+    ],
+    "tide_trident": [
+      {
+        "predicate": {
+          "throwing": 1
+        },
+        "model": "iceandfire:item/tide_trident_throwing"
+      }
+    ]
+  },
+  "builtin": [
+    "deathworm_gauntlet_red",
+    "deathworm_gauntlet_white",
+    "deathworm_gauntlet_yellow",
+    "dread_portal",
+    "ghost_chest",
+    "gorgon_head",
+    "pixie_house",
+    "tide_trident",
+    "tide_trident_throwing",
+    "troll_weapon"
+  ]
+}

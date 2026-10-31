@@ -1,10 +1,8 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "iceandfire:dread_stone_bricks"
-  },
+  "ingredient": "iceandfire:dread_stone_bricks",
   "result": {
-    "id": "iceandfire:dread_stone_stairs"
-  },
-  "count": 2
+    "id": "iceandfire:dread_stone_stairs",
+    "count": 2
+  }
 }

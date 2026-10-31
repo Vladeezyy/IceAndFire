@@ -39,7 +39,7 @@ public class NetTest {
     public static void onLogout(net.minecraft.world.entity.player.Player player) {
         if (MODE.equals("server") && player == rider) {
             IceAndFire.LOGGER.info("[nettest] server DONE");
-            rider.getServer().halt(false);
+            rider.level().getServer().halt(false);
         }
     }
 
@@ -51,17 +51,17 @@ public class NetTest {
         if (serverTicks == 60) {
             rider.setGameMode(GameType.CREATIVE);
             BlockPos pos = rider.blockPosition().offset(4, 0, 0);
-            int y = rider.serverLevel().getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
-            dragon = IafEntityRegistry.FIRE_DRAGON.get().create(rider.serverLevel());
-            dragon.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
-            dragon.finalizeSpawn(rider.serverLevel(), rider.serverLevel().getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
+            int y = rider.level().getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
+            dragon = IafEntityRegistry.FIRE_DRAGON.get().create(rider.level(), EntitySpawnReason.COMMAND);
+            dragon.snapTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
+            dragon.finalizeSpawn(rider.level(), rider.level().getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
             dragon.setAgeInDays(75);
             dragon.tame(rider);
             dragon.setPersistenceRequired();
-            rider.serverLevel().addFreshEntity(dragon);
+            rider.level().addFreshEntity(dragon);
         }
         if (serverTicks == 80 && dragon != null) {
-            boolean mounted = rider.startRiding(dragon, true);
+            boolean mounted = rider.startRiding(dragon, true, true);
             IceAndFire.LOGGER.info("[nettest] mounted {} stage {}", mounted, dragon.getDragonStage());
         }
         if (serverTicks % 20 == 0) {
@@ -193,7 +193,7 @@ public class NetTest {
             mc.options.keyJump.setDown(up);
             mc.options.keyUp.setDown(forward);
             if (riddenTicks == 450) {
-                Screenshot.grab(new File("."), "nettest_flying.png", mc.getMainRenderTarget(), c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
+                Screenshot.grab(new File("."), "nettest_flying.png", mc.getMainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
             }
             // Where the rider is: feet and eyes against the dragon and its saddle point, and how it looks from behind
             if (riddenTicks % 100 == 50 && mc.player.getVehicle() instanceof EntityDragonBase dragon) {
@@ -206,7 +206,7 @@ public class NetTest {
                 mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
             }
             if (riddenTicks == 490) {
-                Screenshot.grab(new File("."), "nettest_flying_third.png", mc.getMainRenderTarget(), c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
+                Screenshot.grab(new File("."), "nettest_flying_third.png", mc.getMainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
             }
             if (riddenTicks == 500) {
                 mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
@@ -222,8 +222,7 @@ public class NetTest {
             }
             if (riddenTicks == 800) {
                 IceAndFire.LOGGER.info("[nettest] client DONE, failed checks: {}", fails);
-                mc.level.disconnect();
-                mc.disconnect();
+                mc.disconnectFromWorld(net.minecraft.network.chat.Component.literal("nettest done"));
                 mc.stop();
             }
         }

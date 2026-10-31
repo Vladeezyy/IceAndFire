@@ -33,11 +33,11 @@ public class TagDump {
                 continue;
             }
             String name = id.toString();
-            if (item instanceof SwordItem) {
+            if (item instanceof com.github.alexthe666.iceandfire.item.ItemModSword) {
                 add(tags, "swords", name);
             } else if (item instanceof AxeItem) {
                 add(tags, "axes", name);
-            } else if (item instanceof PickaxeItem) {
+            } else if (item instanceof com.github.alexthe666.iceandfire.item.ItemModPickaxe) {
                 add(tags, "pickaxes", name);
             } else if (item instanceof ShovelItem) {
                 add(tags, "shovels", name);

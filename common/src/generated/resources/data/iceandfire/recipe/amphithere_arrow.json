@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "#": {
-      "tag": "c:rods/wooden"
-    },
-    "X": {
-      "item": "minecraft:flint"
-    },
-    "Y": {
-      "item": "iceandfire:amphithere_feather"
-    }
+    "#": "#c:rods/wooden",
+    "X": "minecraft:flint",
+    "Y": "iceandfire:amphithere_feather"
   },
   "pattern": [
     "X",

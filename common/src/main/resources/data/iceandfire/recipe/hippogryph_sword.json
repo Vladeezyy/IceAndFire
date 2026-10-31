@@ -6,18 +6,10 @@
     " S "
   ],
   "key": {
-    "T": {
-      "item": "iceandfire:hippogryph_talon"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "F": {
-      "tag": "c:feathers"
-    }
+    "T": "iceandfire:hippogryph_talon",
+    "S": "#c:rods/wooden",
+    "I": "#c:ingots/iron",
+    "F": "#c:feathers"
   },
   "result": {
     "id": "iceandfire:hippogryph_sword"

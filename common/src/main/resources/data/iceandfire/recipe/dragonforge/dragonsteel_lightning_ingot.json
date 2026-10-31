@@ -2,12 +2,8 @@
   "type": "iceandfire:dragonforge",
   "dragon_type": "lightning",
   "cook_time": 1000,
-  "input": {
-    "tag": "c:ingots/iron"
-  },
-  "blood": {
-    "item": "iceandfire:lightning_dragon_blood"
-  },
+  "input": "#c:ingots/iron",
+  "blood": "iceandfire:lightning_dragon_blood",
   "result": {
     "id": "iceandfire:dragonsteel_lightning_ingot"
   }

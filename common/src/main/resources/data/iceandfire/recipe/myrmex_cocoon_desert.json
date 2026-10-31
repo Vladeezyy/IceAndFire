@@ -6,12 +6,8 @@
     "RSR"
   ],
   "key": {
-    "S": {
-      "item": "iceandfire:myrmex_resin_sticky_desert"
-    },
-    "R": {
-      "item": "iceandfire:myrmex_resin_desert"
-    }
+    "S": "iceandfire:myrmex_resin_sticky_desert",
+    "R": "iceandfire:myrmex_resin_desert"
   },
   "result": {
     "id": "iceandfire:desert_myrmex_cocoon"

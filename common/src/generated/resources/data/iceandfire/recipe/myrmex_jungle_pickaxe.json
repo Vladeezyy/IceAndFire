@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "H": {
-      "tag": "c:bones/wither"
-    },
-    "M": {
-      "item": "iceandfire:myrmex_jungle_chitin"
-    }
+    "H": "#c:bones/wither",
+    "M": "iceandfire:myrmex_jungle_chitin"
   },
   "pattern": [
     "MMM",

@@ -4,6 +4,10 @@
 #   set_prop <key> <value>   set a key in $RUN/server.properties (creates the file)
 # LOADER=neoforge (default) or fabric: its run directory and Gradle runs
 LOADER="${LOADER:-neoforge}"
+# The hang watchdog of the knowledge base (testing/hang-watchdog.md): run_watched for clients and servers that stop by
+# themselves, wait_started for a server in the background; kill_dev stops this project's game processes on a hang
+. tools/watchdog.sh
+kill_dev() { kill_runs '.'; }
 RUN="$LOADER/run"
 
 kill_runs() {

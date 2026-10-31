@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "D": {
-      "item": "iceandfire:dragonbone"
-    },
-    "S": {
-      "tag": "c:strings"
-    },
-    "W": {
-      "tag": "c:bones/wither"
-    }
+    "D": "iceandfire:dragonbone",
+    "S": "#c:strings",
+    "W": "#c:bones/wither"
   },
   "pattern": [
     " DS",

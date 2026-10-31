@@ -9,8 +9,7 @@ rm -rf $RUN/world build-stress.log
 set_prop max-tick-time -1
 # SEED=<seed> repeats a world (the log prints the seed of every run)
 set_prop level-seed "${SEED:-}"
-timed 1800 ./gradlew :$LOADER:runStress --console=plain "$@" > build-stress.log 2>&1 < /dev/null
-echo "exit $?"
+run_watched build-stress.log 1800 ./gradlew :$LOADER:runStress --console=plain "$@" < /dev/null
 grep -a '\[stress\]' build-stress.log | sed -E 's/^.*\[stress\] //'
 echo "--- errors"
 grep -a -E '/(ERROR|FATAL)\]|Caused by|Exception|UUID of added entity|Can.t keep up' build-stress.log | grep -v 'NoSuchFileException: server.properties' | sed -E 's/^\[[^]]*\] //' | cut -c1-300 | sort | uniq -c | sort -rn | head -30

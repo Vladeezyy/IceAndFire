@@ -1,0 +1,125 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": "thirdperson_lefthand",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "thirdperson_lefthand"
+          }
+        }
+      },
+      {
+        "when": "thirdperson_righthand",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "thirdperson_righthand"
+          }
+        }
+      },
+      {
+        "when": "firstperson_lefthand",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "firstperson_lefthand"
+          }
+        }
+      },
+      {
+        "when": "firstperson_righthand",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "firstperson_righthand"
+          }
+        }
+      },
+      {
+        "when": "head",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "head"
+          }
+        }
+      },
+      {
+        "when": "gui",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "gui"
+          }
+        }
+      },
+      {
+        "when": "ground",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "ground"
+          }
+        }
+      },
+      {
+        "when": "fixed",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "fixed"
+          }
+        }
+      },
+      {
+        "when": "on_shelf",
+        "model": {
+          "type": "minecraft:special",
+          "base": "iceandfire:item/troll_weapon_column",
+          "model": {
+            "type": "iceandfire:item_renderer",
+            "renderer": "troll_weapon",
+            "display": "on_shelf"
+          }
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:special",
+      "base": "iceandfire:item/troll_weapon_column",
+      "model": {
+        "type": "iceandfire:item_renderer",
+        "renderer": "troll_weapon",
+        "display": "none"
+      }
+    }
+  }
+}

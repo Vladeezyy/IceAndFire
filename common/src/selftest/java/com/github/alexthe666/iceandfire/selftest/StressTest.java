@@ -128,7 +128,7 @@ public class StressTest {
     private static void generate(ServerLevel level, long now) {
         int total = GEN_SIDE * GEN_SIDE;
         for (int n = 0; n < 16 && genIndex < total; n++, genIndex++) {
-            level.getChunk(ARENA.x - GEN_SIDE / 2 + genIndex % GEN_SIDE, ARENA.z - GEN_SIDE / 2 + genIndex / GEN_SIDE);
+            level.getChunk(ARENA.x() - GEN_SIDE / 2 + genIndex % GEN_SIDE, ARENA.z() - GEN_SIDE / 2 + genIndex / GEN_SIDE);
         }
         if (genIndex % 256 == 0) {
             double seconds = (System.nanoTime() - genStart) / 1.0E9;
@@ -148,7 +148,7 @@ public class StressTest {
      * The myrmex hive of #5197 over a long time: a hive with its queen in another chunk of the generated area, about
      * five Minecraft hours run with /tick sprint (workers dig, forage and wander), the queen must still be at home.
      */
-    private static final ChunkPos HIVE = new ChunkPos(ARENA.x + 12, ARENA.z + 12);
+    private static final ChunkPos HIVE = new ChunkPos(ARENA.x() + 12, ARENA.z() + 12);
     private static final int HIVE_TICKS = 6000;
     private static int hiveStart;
     private static boolean hiveDone;
@@ -162,7 +162,7 @@ public class StressTest {
             check("myrmexes added to the test hive", testHive.populate(level) == 9, "9 workers, soldiers and a sentinel");
         } else if (t == 140) {
             check("myrmex queen in her hive", testHive.queenAtHome(level), testHive.state(level));
-            server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput().withPermission(4), "tick sprint " + HIVE_TICKS);
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput(), "tick sprint " + HIVE_TICKS);
         } else if (t > 140 && t < 140 + HIVE_TICKS && (t - 140) % 1000 == 0) {
             IceAndFire.LOGGER.info("[stress] hive after {} ticks: {}", t - 140, testHive.state(level));
         } else if (t == 160 + HIVE_TICKS) {
@@ -175,7 +175,7 @@ public class StressTest {
     private static void arena(ServerLevel level, boolean load) {
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
-                level.setChunkForced(ARENA.x + x, ARENA.z + z, load);
+                level.setChunkForced(ARENA.x() + x, ARENA.z() + z, load);
             }
         }
     }
@@ -209,11 +209,11 @@ public class StressTest {
 
     private static Entity place(ServerLevel level, EntityType<?> type, BlockPos pos) {
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) + 1;
-        Entity entity = type.create(level);
+        Entity entity = type.create(level, EntitySpawnReason.COMMAND);
         if (entity == null) {
             return null;
         }
-        entity.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, level.random.nextFloat() * 360, 0);
+        entity.snapTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, level.getRandom().nextFloat() * 360, 0);
         if (entity instanceof Mob mob) {
             mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
             mob.setPersistenceRequired();
