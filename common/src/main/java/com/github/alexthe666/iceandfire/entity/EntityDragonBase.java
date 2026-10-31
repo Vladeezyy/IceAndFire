@@ -1374,6 +1374,10 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public void spawnItemCrackParticles(Item item) {
+        // the item another dragon already ate (an empty stack: the particle refuses it and the server crashed)
+        if (item == net.minecraft.world.item.Items.AIR) {
+            return;
+        }
         for (int i = 0; i < 15; i++) {
             final double motionX = getRandom().nextGaussian() * 0.07D;
             final double motionY = getRandom().nextGaussian() * 0.07D;
