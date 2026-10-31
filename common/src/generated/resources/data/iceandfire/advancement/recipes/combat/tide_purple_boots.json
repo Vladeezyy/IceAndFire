@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:tide_purple_boots"
+        "recipes": "iceandfire:tide_purple_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

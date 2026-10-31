@@ -8,16 +8,16 @@
           "type": "item",
           "name": "minecraft:prismarine_crystals",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 1,
                 "max": 5
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 2
@@ -36,16 +36,16 @@
           "type": "item",
           "name": "minecraft:prismarine_shard",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 3
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 2
@@ -64,16 +64,16 @@
           "type": "item",
           "name": "iceandfire:shiny_scales",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 1,
                 "max": 5
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 2
@@ -86,21 +86,6 @@
     },
     {
       "name": "siren",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.025,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.035,
-            "per_level_above_first": 0.01
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -108,7 +93,25 @@
           "name": "iceandfire:siren_tear",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.025,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.035,
+              "per_level_above_first": 0.01
+            }
+          }
+        ]
+      }
     }
   ]
 }

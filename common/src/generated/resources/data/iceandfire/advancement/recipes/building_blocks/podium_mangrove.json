@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_mangrove"
+        "recipes": "iceandfire:podium_mangrove"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

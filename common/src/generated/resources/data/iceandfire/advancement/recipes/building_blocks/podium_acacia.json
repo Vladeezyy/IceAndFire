@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_acacia"
+        "recipes": "iceandfire:podium_acacia"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

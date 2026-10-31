@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonarmor_gold_body"
+        "recipes": "iceandfire:dragonarmor_gold_body"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

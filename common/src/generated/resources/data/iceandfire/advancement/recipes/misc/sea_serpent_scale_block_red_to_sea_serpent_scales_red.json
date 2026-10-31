@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:sea_serpent_scale_block_red_to_sea_serpent_scales_red"
+        "recipes": "iceandfire:sea_serpent_scale_block_red_to_sea_serpent_scales_red"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

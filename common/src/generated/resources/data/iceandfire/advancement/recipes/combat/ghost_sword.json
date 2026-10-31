@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:ghost_sword"
+        "recipes": "iceandfire:ghost_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

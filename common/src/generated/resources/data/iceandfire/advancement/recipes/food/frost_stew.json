@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:frost_stew"
+        "recipes": "iceandfire:frost_stew"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

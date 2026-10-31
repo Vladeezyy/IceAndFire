@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:bestiary"
+        "recipes": "iceandfire:bestiary"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

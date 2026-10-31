@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonforge_lightning_core_disabled"
+        "recipes": "iceandfire:dragonforge_lightning_core_disabled"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

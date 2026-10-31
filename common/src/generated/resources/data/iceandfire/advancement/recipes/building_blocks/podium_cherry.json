@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_cherry"
+        "recipes": "iceandfire:podium_cherry"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

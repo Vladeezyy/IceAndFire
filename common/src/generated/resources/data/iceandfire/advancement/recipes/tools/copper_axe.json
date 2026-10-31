@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:copper_axe"
+        "recipes": "iceandfire:copper_axe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:iron_hippogryph_armor"
+        "recipes": "iceandfire:iron_hippogryph_armor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonscale_amythest_to_dragonscales_amythest"
+        "recipes": "iceandfire:dragonscale_amythest_to_dragonscales_amythest"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

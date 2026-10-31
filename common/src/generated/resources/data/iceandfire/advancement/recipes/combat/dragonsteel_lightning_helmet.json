@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonsteel_lightning_helmet"
+        "recipes": "iceandfire:dragonsteel_lightning_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

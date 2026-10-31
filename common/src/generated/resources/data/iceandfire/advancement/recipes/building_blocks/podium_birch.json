@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_birch"
+        "recipes": "iceandfire:podium_birch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

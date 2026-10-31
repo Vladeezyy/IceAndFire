@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:skull_to_bone_meal"
+        "recipes": "iceandfire:skull_to_bone_meal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

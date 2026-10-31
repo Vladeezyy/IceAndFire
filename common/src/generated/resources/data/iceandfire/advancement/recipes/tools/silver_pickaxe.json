@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:silver_pickaxe"
+        "recipes": "iceandfire:silver_pickaxe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

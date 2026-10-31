@@ -10,11 +10,9 @@
           "name": "iceandfire:desert_myrmex_cocoon"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

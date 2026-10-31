@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:tide_teal_helmet"
+        "recipes": "iceandfire:tide_teal_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

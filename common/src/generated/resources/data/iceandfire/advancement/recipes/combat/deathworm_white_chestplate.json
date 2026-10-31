@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:deathworm_white_chestplate"
+        "recipes": "iceandfire:deathworm_white_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

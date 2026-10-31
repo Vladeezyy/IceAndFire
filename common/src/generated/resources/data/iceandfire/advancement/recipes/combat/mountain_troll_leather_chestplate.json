@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:mountain_troll_leather_chestplate"
+        "recipes": "iceandfire:mountain_troll_leather_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonsteel_fire_hoe"
+        "recipes": "iceandfire:dragonsteel_fire_hoe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

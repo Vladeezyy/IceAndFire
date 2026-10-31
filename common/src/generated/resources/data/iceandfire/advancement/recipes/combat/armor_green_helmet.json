@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:armor_green_helmet"
+        "recipes": "iceandfire:armor_green_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

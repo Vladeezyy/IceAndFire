@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:copper_hoe"
+        "recipes": "iceandfire:copper_hoe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

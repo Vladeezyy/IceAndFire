@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:myrmex_jungle_helmet"
+        "recipes": "iceandfire:myrmex_jungle_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

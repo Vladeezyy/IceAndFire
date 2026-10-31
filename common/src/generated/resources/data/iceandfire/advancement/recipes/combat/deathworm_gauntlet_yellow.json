@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:deathworm_gauntlet_yellow"
+        "recipes": "iceandfire:deathworm_gauntlet_yellow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

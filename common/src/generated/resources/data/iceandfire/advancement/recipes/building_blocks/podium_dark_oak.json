@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_dark_oak"
+        "recipes": "iceandfire:podium_dark_oak"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

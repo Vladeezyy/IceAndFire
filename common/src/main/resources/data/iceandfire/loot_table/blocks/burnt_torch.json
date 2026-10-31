@@ -10,11 +10,9 @@
           "name": "iceandfire:burnt_torch"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

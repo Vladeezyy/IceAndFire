@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonscale_electric_to_dragonscales_electric"
+        "recipes": "iceandfire:dragonscale_electric_to_dragonscales_electric"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

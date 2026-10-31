@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonscales_blue_to_dragonscale_blue"
+        "recipes": "iceandfire:dragonscales_blue_to_dragonscale_blue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

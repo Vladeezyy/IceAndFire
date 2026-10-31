@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonarmor_dragonsteel_lightning_head"
+        "recipes": "iceandfire:dragonarmor_dragonsteel_lightning_head"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

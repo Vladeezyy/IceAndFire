@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragon_ice_spikes"
+        "recipes": "iceandfire:dragon_ice_spikes"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

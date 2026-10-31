@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:earplugs"
+        "recipes": "iceandfire:earplugs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:armor_black_boots"
+        "recipes": "iceandfire:armor_black_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

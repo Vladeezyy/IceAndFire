@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragon_flute"
+        "recipes": "iceandfire:dragon_flute"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

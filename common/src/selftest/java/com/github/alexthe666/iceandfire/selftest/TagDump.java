@@ -35,13 +35,13 @@ public class TagDump {
             String name = id.toString();
             if (item instanceof com.github.alexthe666.iceandfire.item.ItemModSword) {
                 add(tags, "swords", name);
-            } else if (item instanceof AxeItem) {
+            } else if (item instanceof com.github.alexthe666.iceandfire.item.ItemModAxe) {
                 add(tags, "axes", name);
             } else if (item instanceof com.github.alexthe666.iceandfire.item.ItemModPickaxe) {
                 add(tags, "pickaxes", name);
-            } else if (item instanceof ShovelItem) {
+            } else if (item instanceof com.github.alexthe666.iceandfire.item.ItemModShovel) {
                 add(tags, "shovels", name);
-            } else if (item instanceof HoeItem) {
+            } else if (item instanceof com.github.alexthe666.iceandfire.item.ItemModHoe) {
                 add(tags, "hoes", name);
             } else if (item instanceof IafArmorItem armor) {
                 EquipmentSlot slot = armor.getEquipmentSlot();

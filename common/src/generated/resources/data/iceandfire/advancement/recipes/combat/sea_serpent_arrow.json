@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:sea_serpent_arrow"
+        "recipes": "iceandfire:sea_serpent_arrow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:tide_teal_leggings"
+        "recipes": "iceandfire:tide_teal_leggings"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

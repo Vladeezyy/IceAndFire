@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_spruce"
+        "recipes": "iceandfire:podium_spruce"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

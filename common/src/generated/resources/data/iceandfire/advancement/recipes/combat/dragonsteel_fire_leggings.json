@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonsteel_fire_leggings"
+        "recipes": "iceandfire:dragonsteel_fire_leggings"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

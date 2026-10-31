@@ -81,7 +81,8 @@ public final class IceAndFireNeoForge {
         clientSpec = NeoForgeConfig.build(ConfigHolder.CLIENT_SPEC);
         serverSpec = NeoForgeConfig.build(ConfigHolder.SERVER_SPEC);
         mod.registerConfig(ModConfig.Type.CLIENT, clientSpec);
-        mod.registerConfig(ModConfig.Type.COMMON, serverSpec);
+        // 26.3 (FML 12): COMMON is LOCAL; the file keeps its 1.21.1 name
+        mod.registerConfig(ModConfig.Type.LOCAL, serverSpec, "iceandfire-common.toml");
 
         IceAndFire.init();
         NeoForgePlatform.registerAll(modBus);

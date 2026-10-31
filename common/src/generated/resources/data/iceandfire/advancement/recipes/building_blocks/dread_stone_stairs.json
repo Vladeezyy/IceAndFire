@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dread_stone_stairs"
+        "recipes": "iceandfire:dread_stone_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

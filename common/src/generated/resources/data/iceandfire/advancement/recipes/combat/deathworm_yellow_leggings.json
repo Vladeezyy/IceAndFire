@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:deathworm_yellow_leggings"
+        "recipes": "iceandfire:deathworm_yellow_leggings"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

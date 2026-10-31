@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonarmor_silver_neck"
+        "recipes": "iceandfire:dragonarmor_silver_neck"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

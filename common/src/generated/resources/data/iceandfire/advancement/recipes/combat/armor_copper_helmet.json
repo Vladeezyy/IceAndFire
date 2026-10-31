@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:armor_copper_helmet"
+        "recipes": "iceandfire:armor_copper_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

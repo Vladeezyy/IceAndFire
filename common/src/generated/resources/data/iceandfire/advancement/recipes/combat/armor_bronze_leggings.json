@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:armor_bronze_leggings"
+        "recipes": "iceandfire:armor_bronze_leggings"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

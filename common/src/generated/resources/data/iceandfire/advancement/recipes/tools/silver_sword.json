@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:silver_sword"
+        "recipes": "iceandfire:silver_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

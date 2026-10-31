@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:myrmex_resin_jungle"
+        "recipes": "iceandfire:myrmex_resin_jungle"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

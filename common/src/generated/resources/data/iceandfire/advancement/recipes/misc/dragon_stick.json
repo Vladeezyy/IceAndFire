@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragon_stick"
+        "recipes": "iceandfire:dragon_stick"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

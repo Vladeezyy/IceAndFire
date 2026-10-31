@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragon_bone_wall"
+        "recipes": "iceandfire:dragon_bone_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

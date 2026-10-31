@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonscales_sapphire_to_dragonscale_sapphire"
+        "recipes": "iceandfire:dragonscales_sapphire_to_dragonscale_sapphire"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

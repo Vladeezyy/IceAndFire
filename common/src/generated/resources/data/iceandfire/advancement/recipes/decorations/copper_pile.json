@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:copper_pile"
+        "recipes": "iceandfire:copper_pile"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

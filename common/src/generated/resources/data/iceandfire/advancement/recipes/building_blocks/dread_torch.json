@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dread_torch"
+        "recipes": "iceandfire:dread_torch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

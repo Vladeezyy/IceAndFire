@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:cockatrice_scepter"
+        "recipes": "iceandfire:cockatrice_scepter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

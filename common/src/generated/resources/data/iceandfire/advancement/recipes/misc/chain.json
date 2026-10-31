@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:chain"
+        "recipes": "iceandfire:chain"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

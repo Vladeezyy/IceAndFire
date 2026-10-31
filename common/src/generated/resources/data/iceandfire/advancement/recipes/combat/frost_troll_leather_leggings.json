@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:frost_troll_leather_leggings"
+        "recipes": "iceandfire:frost_troll_leather_leggings"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

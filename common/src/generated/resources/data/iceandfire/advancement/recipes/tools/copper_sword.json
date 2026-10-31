@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:copper_sword"
+        "recipes": "iceandfire:copper_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

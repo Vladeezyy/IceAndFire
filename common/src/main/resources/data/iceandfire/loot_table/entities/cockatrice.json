@@ -8,16 +8,16 @@
           "type": "item",
           "name": "minecraft:feather",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 3
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -36,16 +36,16 @@
           "type": "item",
           "name": "iceandfire:witherbone",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 2
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -64,28 +64,26 @@
           "type": "item",
           "name": "minecraft:chicken",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 1,
                 "max": 3
               }
             },
             {
-              "function": "furnace_smelt",
-              "conditions": [
-                {
-                  "condition": "entity_properties",
-                  "entity": "this",
-                  "properties": {
-                    "on_fire": true
-                  }
+              "type": "furnace_smelt",
+              "condition": {
+                "type": "entity_properties",
+                "entity": "this",
+                "properties": {
+                  "on_fire": true
                 }
-              ]
+              }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -98,21 +96,6 @@
     },
     {
       "name": "cockatrice",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.025,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.035,
-            "per_level_above_first": 0.01
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -120,25 +103,28 @@
           "name": "iceandfire:cockatrice_eye",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.025,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.035,
+              "per_level_above_first": 0.01
+            }
+          }
+        ]
+      }
     },
     {
       "name": "cockatrice",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.025,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.035,
-            "per_level_above_first": 0.01
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -146,7 +132,25 @@
           "name": "iceandfire:cockatrice_skull",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.025,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.035,
+              "per_level_above_first": 0.01
+            }
+          }
+        ]
+      }
     }
   ]
 }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonforge_fire_input"
+        "recipes": "iceandfire:dragonforge_fire_input"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

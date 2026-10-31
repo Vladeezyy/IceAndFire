@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonarmor_dragonsteel_ice_neck"
+        "recipes": "iceandfire:dragonarmor_dragonsteel_ice_neck"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

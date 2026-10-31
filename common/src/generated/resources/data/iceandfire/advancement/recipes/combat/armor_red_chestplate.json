@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:armor_red_chestplate"
+        "recipes": "iceandfire:armor_red_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -8,16 +8,16 @@
           "type": "item",
           "name": "minecraft:bone",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 2
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -30,16 +30,16 @@
           "type": "item",
           "name": "iceandfire:dread_shard",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 2
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -52,21 +52,6 @@
     },
     {
       "name": "dread_key",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.1,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.15,
-            "per_level_above_first": 0.05
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -74,7 +59,25 @@
           "name": "iceandfire:dread_key",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.1,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.15,
+              "per_level_above_first": 0.05
+            }
+          }
+        ]
+      }
     }
   ]
 }

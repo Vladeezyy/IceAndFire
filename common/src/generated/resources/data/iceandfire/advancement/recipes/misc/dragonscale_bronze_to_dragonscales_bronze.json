@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonscale_bronze_to_dragonscales_bronze"
+        "recipes": "iceandfire:dragonscale_bronze_to_dragonscales_bronze"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

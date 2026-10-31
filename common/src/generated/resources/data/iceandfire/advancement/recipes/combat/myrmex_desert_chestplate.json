@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:myrmex_desert_chestplate"
+        "recipes": "iceandfire:myrmex_desert_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

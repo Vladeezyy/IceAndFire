@@ -10,11 +10,9 @@
           "name": "iceandfire:myrmex_jungle_resin_glass"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

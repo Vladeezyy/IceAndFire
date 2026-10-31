@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonsteel_ice_sword"
+        "recipes": "iceandfire:dragonsteel_ice_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

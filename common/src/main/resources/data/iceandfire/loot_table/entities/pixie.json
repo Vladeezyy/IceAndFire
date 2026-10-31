@@ -8,16 +8,16 @@
           "type": "item",
           "name": "iceandfire:pixie_dust",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 2
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -30,21 +30,6 @@
     },
     {
       "name": "if_pixie",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.025,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.035,
-            "per_level_above_first": 0.01
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -52,7 +37,25 @@
           "name": "iceandfire:pixie_wings",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.025,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.035,
+              "per_level_above_first": 0.01
+            }
+          }
+        ]
+      }
     }
   ]
 }

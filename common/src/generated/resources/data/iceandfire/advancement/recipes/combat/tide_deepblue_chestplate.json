@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:tide_deepblue_chestplate"
+        "recipes": "iceandfire:tide_deepblue_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

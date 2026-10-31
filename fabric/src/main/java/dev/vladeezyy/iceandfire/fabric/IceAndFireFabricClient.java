@@ -115,9 +115,9 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
             @SuppressWarnings("unchecked")
             Model<HumanoidRenderState> model = (Model<HumanoidRenderState>) IafItemRenderers.armorModel(stack, contextModel);
             Identifier texture = IafItemRenderers.armorTexture(stack, MissingTextureAtlasSprite.getLocation());
-            collector.submitModel(model, state, poseStack, RenderTypes.armorCutoutNoCull(texture), light, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor, null);
+            collector.submitModel(model, state, poseStack, RenderTypes.armorCutoutNoCull(texture), light, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor);
             if (stack.hasFoil()) {
-                collector.order(1).submitModel(model, state, poseStack, RenderTypes.armorEntityGlint(), light, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor, null);
+                collector.order(1).submitModel(model, state, poseStack, RenderTypes.trimmedArmorGlint(), light, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor);
             }
         }, armor.toArray(Item[]::new));
     }

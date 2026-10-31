@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:frost_troll_leather_helmet"
+        "recipes": "iceandfire:frost_troll_leather_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

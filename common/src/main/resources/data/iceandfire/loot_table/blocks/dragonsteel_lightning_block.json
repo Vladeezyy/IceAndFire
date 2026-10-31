@@ -10,11 +10,9 @@
           "name": "iceandfire:dragonsteel_lightning_block"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ]
 }

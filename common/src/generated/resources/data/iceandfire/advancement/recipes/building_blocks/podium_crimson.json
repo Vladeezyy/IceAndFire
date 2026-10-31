@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_crimson"
+        "recipes": "iceandfire:podium_crimson"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

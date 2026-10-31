@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:gold_hippogryph_armor"
+        "recipes": "iceandfire:gold_hippogryph_armor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:crackled_to_gravel"
+        "recipes": "iceandfire:crackled_to_gravel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -8,16 +8,16 @@
           "type": "item",
           "name": "iceandfire:hydra_fang",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 5
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 3
@@ -30,16 +30,16 @@
           "type": "item",
           "name": "minecraft:rotten_flesh",
           "weight": 1,
-          "functions": [
+          "modifier": [
             {
-              "function": "set_count",
+              "type": "set_count",
               "count": {
                 "min": 0,
                 "max": 4
               }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "count": {
                 "min": 0,
                 "max": 1
@@ -52,21 +52,6 @@
     },
     {
       "name": "hydra",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.1,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.2,
-            "per_level_above_first": 0.1
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -74,25 +59,28 @@
           "name": "iceandfire:hydra_heart",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.1,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.2,
+              "per_level_above_first": 0.1
+            }
+          }
+        ]
+      }
     },
     {
       "name": "hydra",
-      "conditions": [
-        {
-          "condition": "killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_enchanted_bonus",
-          "enchantment": "minecraft:looting",
-          "unenchanted_chance": 0.025,
-          "enchanted_chance": {
-            "type": "minecraft:linear",
-            "base": 0.035,
-            "per_level_above_first": 0.01
-          }
-        }
-      ],
       "rolls": 1,
       "entries": [
         {
@@ -100,7 +88,25 @@
           "name": "iceandfire:hydra_skull",
           "weight": 1
         }
-      ]
+      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance_with_enchanted_bonus",
+            "enchantment": "minecraft:looting",
+            "unenchanted_chance": 0.025,
+            "enchanted_chance": {
+              "type": "minecraft:linear",
+              "base": 0.035,
+              "per_level_above_first": 0.01
+            }
+          }
+        ]
+      }
     }
   ]
 }

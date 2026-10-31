@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:amphithere_macuahuitl"
+        "recipes": "iceandfire:amphithere_macuahuitl"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

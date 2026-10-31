@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.phys.AABB;
 
 /** A myrmex hive with its queen for the tests of #5197 (the queen left her hive). */
@@ -41,7 +40,7 @@ public class TestHive {
         BlockPos top = chunk.getMiddleBlockPosition(0);
         int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE, top.getX(), top.getZ());
         BlockPos center = new BlockPos(top.getX(), Math.min(surface, level.getSeaLevel()) - 25, top.getZ());
-        WorldGenMyrmexHive gen = new WorldGenMyrmexHive(true, false, NoneFeatureConfiguration.CODEC);
+        WorldGenMyrmexHive gen = new WorldGenMyrmexHive(true, false);
         gen.placeSmallGen(level, level.getRandom(), center);
         EntityMyrmexQueen queen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level, EntitySpawnReason.COMMAND);
         BlockPos ground = MyrmexHive.getGroundedPos(level, center);

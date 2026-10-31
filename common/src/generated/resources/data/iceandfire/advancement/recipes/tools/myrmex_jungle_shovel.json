@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:myrmex_jungle_shovel"
+        "recipes": "iceandfire:myrmex_jungle_shovel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

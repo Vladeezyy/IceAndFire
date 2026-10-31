@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:myrmex_resin_desert"
+        "recipes": "iceandfire:myrmex_resin_desert"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

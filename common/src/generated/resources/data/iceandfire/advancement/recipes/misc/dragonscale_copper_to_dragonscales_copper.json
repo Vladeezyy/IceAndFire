@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonscale_copper_to_dragonscales_copper"
+        "recipes": "iceandfire:dragonscale_copper_to_dragonscales_copper"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

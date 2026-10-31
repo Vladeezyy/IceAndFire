@@ -29,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.ArrayList;
@@ -275,7 +274,7 @@ public class SelfTest {
             long ms = (System.nanoTime() - chunkStart) / 1_000_000L;
             if (ms > 5000) {
                 IceAndFire.LOGGER.warn("[selftest] slow chunk {} {}: {} ms, structures {}", cx, cz, ms,
-                    level.structureManager().startsForStructure(new net.minecraft.world.level.ChunkPos(cx, cz), structure -> true).size());
+                    level.structureManager().startsForStructure(cx, cz, structure -> true).size());
             }
         }
         if (genIndex >= total) {
@@ -387,7 +386,7 @@ public class SelfTest {
         BlockPos center = new BlockPos(top.getX(), Math.min(surface, level.getSeaLevel()) - 25, top.getZ());
         // Built in a finished world as a queen digs it (small: the surface heightmaps of the world, not of worldgen),
         // the queen placed as the worldgen does
-        var gen = new com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive(true, false, net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC);
+        var gen = new com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive(true, false);
         gen.placeSmallGen(level, level.getRandom(), center);
         hive = gen.hive;
         var newQueen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level, EntitySpawnReason.COMMAND);

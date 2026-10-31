@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:ash"
+        "recipes": "iceandfire:ash"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonarmor_copper_tail"
+        "recipes": "iceandfire:dragonarmor_copper_tail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

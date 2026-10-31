@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:tide_trident"
+        "recipes": "iceandfire:tide_trident"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

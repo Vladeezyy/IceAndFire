@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dread_stone_bricks_chiseled"
+        "recipes": "iceandfire:dread_stone_bricks_chiseled"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

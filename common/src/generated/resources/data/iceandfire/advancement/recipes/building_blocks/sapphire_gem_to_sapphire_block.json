@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:sapphire_gem_to_sapphire_block"
+        "recipes": "iceandfire:sapphire_gem_to_sapphire_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

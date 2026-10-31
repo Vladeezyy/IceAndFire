@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:amphithere_arrow"
+        "recipes": "iceandfire:amphithere_arrow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

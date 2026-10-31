@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:silver_ingot_to_silver_nugget"
+        "recipes": "iceandfire:silver_ingot_to_silver_nugget"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

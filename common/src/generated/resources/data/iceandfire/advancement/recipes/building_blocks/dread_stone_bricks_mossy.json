@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dread_stone_bricks_mossy"
+        "recipes": "iceandfire:dread_stone_bricks_mossy"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

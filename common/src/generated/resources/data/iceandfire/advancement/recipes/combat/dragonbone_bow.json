@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonbone_bow"
+        "recipes": "iceandfire:dragonbone_bow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

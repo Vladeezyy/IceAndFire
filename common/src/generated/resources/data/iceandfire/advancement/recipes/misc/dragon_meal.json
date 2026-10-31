@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragon_meal"
+        "recipes": "iceandfire:dragon_meal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

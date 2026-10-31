@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:copper_ingot_to_nuggets"
+        "recipes": "iceandfire:copper_ingot_to_nuggets"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

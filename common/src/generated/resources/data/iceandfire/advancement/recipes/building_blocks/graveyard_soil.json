@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:graveyard_soil"
+        "recipes": "iceandfire:graveyard_soil"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

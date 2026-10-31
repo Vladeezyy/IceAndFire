@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:forest_troll_leather_boots"
+        "recipes": "iceandfire:forest_troll_leather_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

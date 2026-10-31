@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:chainmail_boots"
+        "recipes": "minecraft:chainmail_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

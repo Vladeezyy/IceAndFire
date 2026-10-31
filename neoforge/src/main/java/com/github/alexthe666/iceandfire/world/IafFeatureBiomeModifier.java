@@ -28,7 +28,7 @@ public class IafFeatureBiomeModifier implements BiomeModifier {
     }
 
     @Override
-    public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
+    public void modify(net.minecraft.core.RegistryAccess registries, Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == Phase.ADD) {
             IafWorldRegistry.addFeatures(biome, featureMap, (step, feature) -> builder.getGenerationSettings().getFeatures(step).add(feature));
         }

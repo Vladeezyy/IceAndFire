@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_warped"
+        "recipes": "iceandfire:podium_warped"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

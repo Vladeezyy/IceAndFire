@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:tide_bronze_boots"
+        "recipes": "iceandfire:tide_bronze_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

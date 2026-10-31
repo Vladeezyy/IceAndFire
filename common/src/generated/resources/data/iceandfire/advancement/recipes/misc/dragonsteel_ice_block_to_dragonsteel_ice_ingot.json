@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:dragonsteel_ice_block_to_dragonsteel_ice_ingot"
+        "recipes": "iceandfire:dragonsteel_ice_block_to_dragonsteel_ice_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

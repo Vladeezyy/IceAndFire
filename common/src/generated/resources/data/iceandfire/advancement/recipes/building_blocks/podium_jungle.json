@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "iceandfire:podium_jungle"
+        "recipes": "iceandfire:podium_jungle"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
