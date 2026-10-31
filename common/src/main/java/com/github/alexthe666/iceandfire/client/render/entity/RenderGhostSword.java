@@ -37,7 +37,7 @@ public class RenderGhostSword extends IafEntityRenderer<EntityGhostSword> {
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(0.0F));
         matrixStackIn.mulPose(Axis.ZN.rotationDegrees((entityIn.tickCount + partialTicks) * 30.0F));
         matrixStackIn.translate(0, -0.15F, 0);
-        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(IafItemRegistry.GHOST_SWORD.get()), ItemDisplayContext.GROUND, 240, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
+        com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(new ItemStack(IafItemRegistry.GHOST_SWORD.get()), ItemDisplayContext.GROUND, 240, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
         matrixStackIn.popPose();
     }
 }

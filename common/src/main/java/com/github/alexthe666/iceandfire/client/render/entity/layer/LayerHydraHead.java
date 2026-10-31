@@ -62,7 +62,8 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
         IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (entity.isInvisible()) {
-            bufferIn.submit(iafCollector);return;
+            bufferIn.submit(iafCollector);
+            return;
         }
         renderHydraHeads(renderer.getModel(), false, matrixStackIn, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
         bufferIn.submit(iafCollector);

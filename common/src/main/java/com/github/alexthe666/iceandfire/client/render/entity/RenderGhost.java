@@ -58,7 +58,8 @@ public class RenderGhost extends IafMobRenderer<EntityGhost, ModelGhost> {
         int packedLightIn = iafState.lightCoords;
         shadowRadius = 0;
         if (dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderLivingPre(entityIn, this, partialTicks, matrixStackIn, bufferIn, packedLightIn))
-            bufferIn.submit(iafCollector);return;
+            bufferIn.submit(iafCollector);
+            return;
         matrixStackIn.pushPose();
         this.model.attackTime = this.getAttackAnim(entityIn, partialTicks);
 

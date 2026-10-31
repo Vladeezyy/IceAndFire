@@ -44,7 +44,7 @@ public class LayerDragonBanner extends IafEntityLayer<EntityDragonBase, IafMobRe
             matrixStackIn.mulPose(Axis.XP.rotationDegrees(180.0F));
             matrixStackIn.pushPose();
             matrixStackIn.scale(f2, f2, f2);
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.NONE, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
+            com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(itemstack, ItemDisplayContext.NONE, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }

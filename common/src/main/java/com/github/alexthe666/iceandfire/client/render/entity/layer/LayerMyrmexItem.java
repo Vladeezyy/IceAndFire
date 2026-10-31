@@ -65,7 +65,7 @@ public class LayerMyrmexItem extends IafEntityLayer<EntityMyrmexBase, IafMobRend
                     }
                     matrixStackIn.mulPose(Axis.XP.rotationDegrees(160.0F));
                     matrixStackIn.mulPose(Axis.YP.rotationDegrees(180.0F));
-                    Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.FIXED, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
+                    com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(itemstack, ItemDisplayContext.FIXED, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
                     matrixStackIn.popPose();
                 }
                 matrixStackIn.popPose();

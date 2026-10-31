@@ -26,7 +26,7 @@ for path in ROOT.rglob('*.java'):
             name = sorted(names)[0]
             body = '\n        IafBufferSource ' + name + ' = new IafBufferSource();' + body.rstrip() + '\n        ' + name + '.submit(' + m.group(2) + ');\n    '
             # early returns submit what was drawn so far
-            body = re.sub(r'(\n\s*)return;', r'\1' + name + '.submit(' + m.group(2) + ');\1return;', body)
+            body = re.sub(r'(\n\s*)return;', r'\1' + name + '.submit(' + m.group(2) + r');\1return;', body)
             changed = True
         out += text[pos:m.end()] + body + '}'
         pos = end

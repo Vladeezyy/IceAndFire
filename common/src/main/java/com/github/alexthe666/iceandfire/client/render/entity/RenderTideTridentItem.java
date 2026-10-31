@@ -35,7 +35,7 @@ public class RenderTideTridentItem extends BlockEntityWithoutLevelRenderer {
             if (stack.isEnchanted()) {
                 tridentInventory.set(DataComponents.ENCHANTMENTS, stack.get(DataComponents.ENCHANTMENTS));
             }
-            Minecraft.getInstance().getItemRenderer().renderStatic(tridentInventory, type, type == ItemDisplayContext.GROUND ? combinedLightIn : 240, combinedOverlayIn, stackIn, bufferIn, Minecraft.getInstance().level, 0);
+            com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(tridentInventory, type, type == ItemDisplayContext.GROUND ? combinedLightIn : 240, combinedOverlayIn, stackIn, bufferIn, Minecraft.getInstance().level, 0);
         } else {
             stackIn.pushPose();
             stackIn.translate(0, 0.2F, -0.15F);
