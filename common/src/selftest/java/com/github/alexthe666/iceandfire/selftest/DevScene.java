@@ -324,6 +324,16 @@ public final class DevScene {
     private static void selectTab(Minecraft mc, CreativeModeTab tab) {
         if (mc.gui.screen() instanceof CreativeModeInventoryScreen screen) {
             try {
+                // Fabric puts the mods' tabs on further pages, and selectTab does not leave the current page: its
+                // FabricCreativeModeInventoryScreen (on the screen through a mixin) switches the page and selects
+                for (Class<?> api : screen.getClass().getInterfaces()) {
+                    if (api.getName().equals("net.fabricmc.fabric.api.client.creativetab.v1.FabricCreativeModeInventoryScreen")) {
+                        int page = (int) api.getMethod("getPage", CreativeModeTab.class).invoke(screen, tab);
+                        api.getMethod("switchToPage", int.class).invoke(screen, page);
+                        api.getMethod("setSelectedTab", CreativeModeTab.class).invoke(screen, tab);
+                        return;
+                    }
+                }
                 var select = CreativeModeInventoryScreen.class.getDeclaredMethod("selectTab", CreativeModeTab.class);
                 select.setAccessible(true);
                 select.invoke(screen, tab);
