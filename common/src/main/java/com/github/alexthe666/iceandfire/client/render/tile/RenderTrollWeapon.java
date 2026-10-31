@@ -28,7 +28,7 @@ public class RenderTrollWeapon implements com.github.alexthe666.iceandfire.clien
 
         stackIn.pushPose();
         stackIn.translate(0.5F, -0.75F, 0.5F);
-        MODEL.renderToBuffer(stackIn, bufferIn.getBuffer(RenderTypes.entityCutoutCull(weapon.TEXTURE)), combinedLightIn, combinedOverlayIn, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL, stackIn, bufferIn.getBuffer(RenderTypes.entityCutoutCull(weapon.TEXTURE)), combinedLightIn, combinedOverlayIn, -1);
         stackIn.popPose();
     }
 }

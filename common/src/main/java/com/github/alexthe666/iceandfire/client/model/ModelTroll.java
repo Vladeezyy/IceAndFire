@@ -399,6 +399,6 @@ public class ModelTroll extends ModelDragonBase<EntityTroll> {
     public void renderStatue(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, Entity living) {
         animateStatue((EntityTroll) living);
         this.log1.showModel = false;
-        this.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(this, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
     }
 }

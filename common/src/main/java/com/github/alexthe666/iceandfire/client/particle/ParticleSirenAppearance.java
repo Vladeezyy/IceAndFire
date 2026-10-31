@@ -38,7 +38,7 @@ public class ParticleSirenAppearance extends IafAppearanceParticle {
         matrixstack.scale(-1.0F, -1.0F, 1.0F);
         matrixstack.translate(0.0D, -1.101F, 1.5D);
         VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderTypes.entityTranslucent(RenderSiren.getSirenOverlayTexture(sirenType)));
-        this.model.renderToBuffer(matrixstack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(this.model, matrixstack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
     }
 }
 

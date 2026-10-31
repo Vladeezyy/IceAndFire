@@ -11,9 +11,7 @@ public class IafKeybindRegistry {
     public static KeyMapping dragon_change_view;
 
     public static void init() {
-        // Minecraft instance is null during data gen (NeoForge)
-        if (Minecraft.getInstance() == null && dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.name().equals("neoforge"))
-            return;
+        // NeoForge 26.x constructs the mod before Minecraft exists: the loader adds the keys when it asks for them
         dragon_fireAttack = new KeyMapping("key.dragon_fireAttack", 82, KeyMapping.Category.GAMEPLAY);
         dragon_strike = new KeyMapping("key.dragon_strike", 71, KeyMapping.Category.GAMEPLAY);
         dragon_down = new KeyMapping("key.dragon_down", 88, KeyMapping.Category.GAMEPLAY);

@@ -33,7 +33,7 @@ public class LayerTrollWeapon extends IafEntityLayer<EntityTroll, IafMobRenderSt
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (troll.getWeaponType() != null && !EntityGorgon.isStoneMob(troll)) {
             RenderType tex = RenderTypes.entityCutoutCull(troll.getWeaponType().TEXTURE);
-            this.getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(tex), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(this.getParentModel(), matrixStackIn, bufferIn.getBuffer(tex), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
         bufferIn.submit(iafCollector);
     }

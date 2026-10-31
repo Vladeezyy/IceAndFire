@@ -37,7 +37,7 @@ public class RenderDeathWormGauntlet implements com.github.alexthe666.iceandfire
         stackIn.pushPose();
         stackIn.pushPose();
         MODEL.animate(stack, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false));
-        MODEL.renderToBuffer(stackIn, bufferIn.getBuffer(texture), combinedLightIn, combinedOverlayIn, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL, stackIn, bufferIn.getBuffer(texture), combinedLightIn, combinedOverlayIn, -1);
         stackIn.popPose();
         stackIn.popPose();
         stackIn.popPose();

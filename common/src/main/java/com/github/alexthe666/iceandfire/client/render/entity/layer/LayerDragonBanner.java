@@ -31,6 +31,8 @@ public class LayerDragonBanner extends IafEntityLayer<EntityDragonBase, IafMobRe
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase entity) {
+        // the parts read below must hold this entity's pose (26.x poses the model when it is drawn)
+        this.poseParent(iafState);
         IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         ItemStack itemstack = entity.getItemInHand(InteractionHand.OFF_HAND);

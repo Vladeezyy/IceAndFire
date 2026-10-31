@@ -1,5 +1,6 @@
 package dev.vladeezyy.iceandfire.neoforge;
 
+import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import com.github.alexthe666.iceandfire.CommonProxy;
@@ -140,7 +141,9 @@ public final class IceAndFireNeoForge {
 
             @Override
             public <T extends CustomPacketPayload> void both(CustomPacketPayload.Type<T> type, StreamCodec<? super RegistryFriendlyByteBuf, T> codec, BiConsumer<T, PacketContext> handler) {
-                registrar.playBidirectional(type, codec, (payload, context) -> handler.accept(payload, context(context)));
+                // 26.x: a bidirectional payload names its client handler too (the common handler checks the flow)
+                IPayloadHandler<T> both = (payload, context) -> handler.accept(payload, context(context));
+                registrar.playBidirectional(type, codec, both, both);
             }
         });
     }

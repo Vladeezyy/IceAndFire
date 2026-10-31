@@ -124,7 +124,7 @@ public class ModelHydraBody extends ModelDragonBase<EntityHydra> {
     @Override
     public void renderStatue(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, Entity living) {
         this.resetToDefaultPose();
-        this.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(this, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
 
         this.resetToDefaultPose();
     }

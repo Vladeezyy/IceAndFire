@@ -135,7 +135,7 @@ public class RenderHippocampus extends IafMobRenderer<EntityHippocampus, ModelHi
                 int l = (i + 1) % j;
                 float f = ((float) (hippo.tickCount % 25) + partialTicks) / 25.0F;
                 int color = ARGB.srgbLerp(f, net.minecraft.client.color.ColorLerper.Type.SHEEP.getColor(DyeColor.byId(k)), net.minecraft.client.color.ColorLerper.Type.SHEEP.getColor(DyeColor.byId(l)));
-                this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, LivingEntityRenderer.getOverlayCoords(iafState, 0.0F), color);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(this.getParentModel(), matrixStackIn, ivertexbuilder, packedLightIn, LivingEntityRenderer.getOverlayCoords(iafState, 0.0F), color);
             }
         bufferIn.submit(iafCollector);
     }

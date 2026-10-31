@@ -128,7 +128,7 @@ public class GuiMyrmexStaff extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        this.extractBackground(ms, mouseX, mouseY, partialTicks);
+        // 26.x: Screen draws the background (extractBackground) before this; a second call blurs twice and throws
         init();
         int i = (this.width - 248) / 2 + 10;
         int j = (this.height - 166) / 2 + 8;

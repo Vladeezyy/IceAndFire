@@ -65,6 +65,7 @@ public final class IceAndFireNeoForgeClient {
         modBus.addListener((RegisterSpecialModelRendererEvent event) -> event.register(IafItemSpecialRenderer.ID, IafItemSpecialRenderer.Unbaked.MAP_CODEC));
         modBus.addListener((RegisterRangeSelectItemModelPropertyEvent event) -> event.register(IafItemModels.ICE_OR_FIRE, IafItemModels.IceOrFire.MAP_CODEC));
         modBus.addListener((RegisterConditionalItemModelPropertyEvent event) -> event.register(IafItemModels.HAS_DRAGON, IafItemModels.HasDragon.MAP_CODEC));
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent event) -> NeoForgeClientPlatform.KEYS.forEach(event::register));
         modBus.addListener((RegisterParticleGroupsEvent event) -> event.register(IafAppearanceParticle.GROUP, IafAppearanceParticle.Group::new));
         modBus.addListener((RegisterMenuScreensEvent event) -> IafGuiRegistry.register(new IafGuiRegistry.ScreenSink() {
             @Override

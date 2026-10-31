@@ -16,10 +16,11 @@ public final class NeoForgeClientPlatform implements ClientPlatform {
         }
     }
 
+    /** The mod's keys, added by RegisterKeyMappingsEvent (26.x: the options do not exist yet when the mod is built) */
+    static final java.util.List<net.minecraft.client.KeyMapping> KEYS = new java.util.ArrayList<>();
+
     @Override
     public void registerKeyMapping(net.minecraft.client.KeyMapping mapping) {
-        // as the original: straight into the options, which exist when the mod is constructed
-        var options = net.minecraft.client.Minecraft.getInstance().options;
-        options.keyMappings = org.apache.commons.lang3.ArrayUtils.add(options.keyMappings, mapping);
+        KEYS.add(mapping);
     }
 }

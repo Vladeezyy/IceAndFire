@@ -48,7 +48,7 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, T entitylivingbaseIn) {
         IafBufferSource bufferIn = new IafBufferSource();
         // the parent posed for this entity (26.x poses models when they are drawn): the armor copies its pose
-        this.getParentModel().setupAnim(iafState);
+        this.poseParent(iafState);
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.CHEST, packedLightIn, this.getSlotModel(EquipmentSlot.CHEST));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.LEGS, packedLightIn, this.getSlotModel(EquipmentSlot.LEGS));
@@ -96,9 +96,9 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
 
     private void renderArmorItem(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, boolean p_241738_5_, A modelIn, float red, float green, float blue, Identifier armorResource) {
         // 26.x: the glint is a render type of its own (1.21.1: ItemRenderer.getArmorFoilBuffer)
-        modelIn.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderTypes.armorCutoutNoCull(armorResource)), packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(modelIn, matrixStackIn, bufferIn.getBuffer(RenderTypes.armorCutoutNoCull(armorResource)), packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
         if (p_241738_5_) {
-            modelIn.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderTypes.armorEntityGlint()), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(modelIn, matrixStackIn, bufferIn.getBuffer(RenderTypes.armorEntityGlint()), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
     }
 

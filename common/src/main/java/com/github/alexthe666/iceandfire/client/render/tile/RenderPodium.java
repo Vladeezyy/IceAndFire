@@ -63,7 +63,7 @@ public class RenderPodium<T extends TileEntityPodium> extends IafBlockEntityRend
                 matrixStackIn.pushPose();
                 matrixStackIn.pushPose();
                 model.renderPodium();
-                model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderPodium.getEggTexture(item.type)), combinedLightIn, combinedOverlayIn, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, bufferIn.getBuffer(RenderPodium.getEggTexture(item.type)), combinedLightIn, combinedOverlayIn, -1);
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
@@ -74,7 +74,7 @@ public class RenderPodium<T extends TileEntityPodium> extends IafBlockEntityRend
                 matrixStackIn.pushPose();
                 matrixStackIn.pushPose();
                 model.renderPodium();
-                model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutoutCull(jungle ? RenderMyrmexEgg.EGG_JUNGLE : RenderMyrmexEgg.EGG_DESERT)), combinedLightIn, combinedOverlayIn, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutoutCull(jungle ? RenderMyrmexEgg.EGG_JUNGLE : RenderMyrmexEgg.EGG_DESERT)), combinedLightIn, combinedOverlayIn, -1);
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();

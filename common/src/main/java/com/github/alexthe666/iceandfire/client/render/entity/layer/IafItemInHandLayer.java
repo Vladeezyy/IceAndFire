@@ -38,7 +38,7 @@ public class IafItemInHandLayer<T extends LivingEntity, M extends EntityModel<? 
             return;
         }
         // the model posed for this entity before the hands are read (26.x poses it when it is drawn)
-        this.getParentModel().setupAnim(state);
+        this.poseParent(state);
         IafBufferSource buffers = new IafBufferSource();
         poseStack.pushPose();
         this.renderArmWithItem(entity, right, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, HumanoidArm.RIGHT, poseStack, buffers, light);

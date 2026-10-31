@@ -147,7 +147,7 @@ public class GuiBestiary extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        this.extractBackground(ms, mouseX, mouseY, partialTicks);
+        // 26.x: Screen draws the background (extractBackground) before this; a second call blurs twice and throws
         for (Renderable widget : this.renderables) {
             if (widget instanceof IndexPageButton) {
                 IndexPageButton button = (IndexPageButton) widget;

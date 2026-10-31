@@ -41,7 +41,7 @@ public class RenderGorgonHead implements com.github.alexthe666.iceandfire.client
         stackIn.pushPose();
         stackIn.translate(0.5F, active ? 1.5F : 1.25F, 0.5F);
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(active ? ACTIVE_TEXTURE : INACTIVE_TEXTURE);
-        model.renderToBuffer(stackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(model, stackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);
         stackIn.popPose();
     }
 

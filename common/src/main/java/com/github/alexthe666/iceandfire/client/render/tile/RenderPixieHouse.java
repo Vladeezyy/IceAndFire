@@ -103,8 +103,8 @@ public class RenderPixieHouse<T extends TileEntityPixieHouse> extends IafBlockEn
             }
             matrixStackIn.pushPose();
             MODEL_PIXIE.animateInHouse(entity);
-            MODEL_PIXIE.renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), combinedLightIn, combinedOverlayIn, -1);
-            MODEL_PIXIE.renderToBuffer(matrixStackIn, bufferIn.getBuffer(type2), combinedLightIn, combinedOverlayIn, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_PIXIE, matrixStackIn, bufferIn.getBuffer(type), combinedLightIn, combinedOverlayIn, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_PIXIE, matrixStackIn, bufferIn.getBuffer(type2), combinedLightIn, combinedOverlayIn, -1);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
             matrixStackIn.popPose();
@@ -131,7 +131,7 @@ public class RenderPixieHouse<T extends TileEntityPixieHouse> extends IafBlockEn
                 break;
         }
         matrixStackIn.pushPose();
-        MODEL.renderToBuffer(matrixStackIn, bufferIn.getBuffer(pixieType), combinedLightIn, combinedOverlayIn, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL, matrixStackIn, bufferIn.getBuffer(pixieType), combinedLightIn, combinedOverlayIn, -1);
         matrixStackIn.popPose();
         matrixStackIn.popPose();
         matrixStackIn.popPose();

@@ -30,6 +30,20 @@ public abstract class IafEntityLayer<T extends LivingEntity, S extends RampartLi
 
 	protected abstract void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, S state, T entity);
 
+	/** The state the parent model was last posed for by a layer (one render state per entity and frame) */
+	private static Object posedFor;
+
+	/**
+	 * Poses the parent model for this state now, for layers that read its parts (1.21.1 posed it before the layers;
+	 * 26.x poses it when it is drawn, after the layers ran). Once per entity and frame, however many layers ask.
+	 */
+	protected void poseParent(S state) {
+		if (posedFor != state) {
+			this.getParentModel().setupAnim(state);
+			posedFor = state;
+		}
+	}
+
 	/**
 	 * The parent model again (posed from the state when it is drawn) with another render type. {@code order} draws it
 	 * after the body (vanilla's overlays use 1; stacked overlays count up).

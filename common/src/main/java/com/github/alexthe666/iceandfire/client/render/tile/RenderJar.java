@@ -84,8 +84,8 @@ public class RenderJar<T extends TileEntityJar> extends IafBlockEntityRenderer<T
                 matrixStackIn.mulPose(Axis.YP.rotationDegrees(this.interpolateRotation(entity.prevRotationYaw, entity.rotationYaw, partialTicks)));
                 matrixStackIn.scale(0.50F, 0.50F, 0.50F);
                 MODEL_PIXIE.animateInJar(entity.hasProduced, entity, 0);
-                MODEL_PIXIE.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);
-                MODEL_PIXIE.renderToBuffer(matrixStackIn, bufferIn.getBuffer(typeGlow), combinedLightIn, combinedOverlayIn, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_PIXIE, matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_PIXIE, matrixStackIn, bufferIn.getBuffer(typeGlow), combinedLightIn, combinedOverlayIn, -1);
             }
             matrixStackIn.popPose();
             matrixStackIn.popPose();

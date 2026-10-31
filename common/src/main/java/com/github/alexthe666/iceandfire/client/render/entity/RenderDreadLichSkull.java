@@ -36,7 +36,7 @@ public class RenderDreadLichSkull extends IafEntityRenderer<EntityDreadLichSkull
             matrixStackIn.translate(0F, 0F, 0F);
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw - 180.0F));
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.eyes(TEXTURE));
-            MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_SPIRIT, matrixStackIn, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, -1);
             matrixStackIn.popPose();
         }
 

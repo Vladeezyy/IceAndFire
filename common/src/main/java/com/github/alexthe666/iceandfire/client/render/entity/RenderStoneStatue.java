@@ -140,7 +140,7 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
                 LayerHydraHead.renderHydraHeads((ModelHydraBody) model, true, matrixStackIn, bufferIn, packedLightIn, (EntityHydra) fakeEntity, 0, 0, partialTicks, 0, 0, 0);
             }
         } else {
-            model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
 
         matrixStackIn.popPose();
@@ -158,7 +158,7 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
             if (model instanceof ICustomStatueModel) {
                 ((ICustomStatueModel) model).renderStatue(matrixStackIn, ivertexbuilder2, packedLightIn, fakeEntity);
             } else {
-                model.renderToBuffer(matrixStackIn, ivertexbuilder2, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, ivertexbuilder2, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
             }
             matrixStackIn.popPose();
             matrixStackIn.popPose();

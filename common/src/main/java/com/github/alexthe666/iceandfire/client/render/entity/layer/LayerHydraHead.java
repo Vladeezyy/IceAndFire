@@ -60,6 +60,8 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityHydra entity) {
+        // the parts read below must hold this entity's pose (26.x poses the model when it is drawn)
+        this.poseParent(iafState);
         IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (entity.isInvisible()) {
@@ -81,7 +83,7 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
             matrixStackIn.translate(TRANSLATE[heads - 1][head - 1] * bodyWidth, 0, 0);
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(ROTATE[heads - 1][head - 1]));
             modelArr[head - 1].setupAnim(hydra, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            modelArr[head - 1].renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(hydra.hurtTime > 0 || hydra.deathTime > 0)), -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(modelArr[head - 1], matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(hydra.hurtTime > 0 || hydra.deathTime > 0)), -1);
             matrixStackIn.popPose();
         }
         matrixStackIn.popPose();

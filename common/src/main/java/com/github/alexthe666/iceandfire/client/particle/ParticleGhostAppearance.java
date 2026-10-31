@@ -53,7 +53,7 @@ public class ParticleGhostAppearance extends IafAppearanceParticle {
 
             VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(IafRenderType.getGhost(RenderGhost.getGhostOverlayForType(ghostEntity.getColor())));
             this.model.setupAnim(ghostEntity, 0, 0, entity.tickCount + partialTicks, 0, 0);
-            this.model.renderToBuffer(matrixstack, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(this.model, matrixstack, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
         }
 
     }

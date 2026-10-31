@@ -22,7 +22,7 @@ public class RenderEggInIce<T extends TileEntityEggInIce> extends IafBlockEntity
             matrixStackIn.translate(0.5, -0.8F, 0.5F);
             matrixStackIn.pushPose();
             model.renderFrozen(egg);
-            model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderPodium.getEggTexture(egg.type)), combinedLightIn, combinedOverlayIn, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, bufferIn.getBuffer(RenderPodium.getEggTexture(egg.type)), combinedLightIn, combinedOverlayIn, -1);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }

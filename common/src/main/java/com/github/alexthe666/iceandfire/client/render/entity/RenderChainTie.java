@@ -30,7 +30,7 @@ public class RenderChainTie extends IafEntityRenderer<EntityChainTie> {
         matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
         this.leashKnotModel.setupAnim(entityIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
-        this.leashKnotModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+        com.github.alexthe666.iceandfire.client.render.IafModels.render(this.leashKnotModel, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
             }
 

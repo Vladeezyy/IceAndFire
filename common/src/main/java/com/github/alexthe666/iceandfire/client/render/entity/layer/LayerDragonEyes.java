@@ -50,6 +50,8 @@ public class LayerDragonEyes extends IafEntityLayer<EntityDragonBase, IafMobRend
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase dragon) {
+        // the parts read below must hold this entity's pose (26.x poses the model when it is drawn)
+        this.poseParent(iafState);
         IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (dragon.shouldRenderEyes()) {
@@ -57,17 +59,17 @@ public class LayerDragonEyes extends IafEntityLayer<EntityDragonBase, IafMobRend
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(eyes);
             if (dragon instanceof EntityLightningDragon && lightningHead != null) {
                 copyPositions(lightningHead, (TabulaModel) this.getParentModel());
-                lightningHead.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(lightningHead, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
             } else if (dragon instanceof EntityIceDragon && iceHead != null) {
                 copyPositions(iceHead, (TabulaModel) this.getParentModel());
-                iceHead.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(iceHead, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
             } else if (fireHead != null) {
                 copyPositions(fireHead, (TabulaModel) this.getParentModel());
-                fireHead.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(fireHead, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
             }
             //Fallback method
             else {
-                this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(this.getParentModel(), matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
             }
         }
         bufferIn.submit(iafCollector);
