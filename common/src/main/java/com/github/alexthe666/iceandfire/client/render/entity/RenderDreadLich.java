@@ -1,13 +1,12 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
 import com.github.alexthe666.iceandfire.client.model.ModelDreadLich;
-import com.github.alexthe666.iceandfire.client.model.util.HideableLayer;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerGenericGlowing;
 import com.github.alexthe666.iceandfire.entity.EntityDreadLich;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import com.github.alexthe666.iceandfire.client.render.entity.layer.IafItemInHandLayer;
 import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
@@ -19,12 +18,12 @@ public class RenderDreadLich extends IafMobRenderer<EntityDreadLich, ModelDreadL
     public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_2.png");
     public static final Identifier TEXTURE_3 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_3.png");
     public static final Identifier TEXTURE_4 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_4.png");
-    public final HideableLayer<EntityDreadLich, ModelDreadLich, ItemInHandLayer<EntityDreadLich, ModelDreadLich>> itemLayer;
+    public final IafItemInHandLayer<EntityDreadLich, ModelDreadLich> itemLayer;
 
     public RenderDreadLich(EntityRendererProvider.Context context) {
         super(context, new ModelDreadLich(0.0F), 0.6F);
         this.addLayer(new LayerGenericGlowing<>(this, TEXTURE_EYES));
-        this.itemLayer = new HideableLayer<>(new ItemInHandLayer<>(this, context.getItemInHandRenderer()), this);
+        this.itemLayer = new IafItemInHandLayer<>(this);
         this.addLayer(this.itemLayer);
     }
 

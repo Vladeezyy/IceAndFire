@@ -6,7 +6,7 @@ import com.github.alexthe666.iceandfire.entity.EntityDreadKnight;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import com.github.alexthe666.iceandfire.client.render.entity.layer.IafItemInHandLayer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class RenderDreadKnight extends IafMobRenderer<EntityDreadKnight, ModelDr
     public RenderDreadKnight(EntityRendererProvider.Context context) {
         super(context, new ModelDreadKnight(0.0F), 0.6F);
         this.addLayer(new LayerGenericGlowing<>(this, TEXTURE_EYES));
-        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
+        this.addLayer(new IafItemInHandLayer<>(this));
     }
 
     @Override

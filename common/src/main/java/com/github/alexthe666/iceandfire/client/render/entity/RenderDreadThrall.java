@@ -1,7 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
 import com.github.alexthe666.iceandfire.client.model.ModelDreadThrall;
-import com.github.alexthe666.iceandfire.client.model.util.HideableLayer;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.IHasArmorVariantResource;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerBipedArmorMultiple;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerGenericGlowing;
@@ -9,7 +8,7 @@ import com.github.alexthe666.iceandfire.entity.EntityDreadThrall;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import com.github.alexthe666.iceandfire.client.render.entity.layer.IafItemInHandLayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
@@ -28,13 +27,13 @@ public class RenderDreadThrall extends IafMobRenderer<EntityDreadThrall, ModelDr
     public static final Identifier TEXTURE_ARMOR_5 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_6.png");
     public static final Identifier TEXTURE_ARMOR_6 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_7.png");
     public static final Identifier TEXTURE_ARMOR_7 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_8.png");
-    public final HideableLayer<EntityDreadThrall, ModelDreadThrall, ItemInHandLayer<EntityDreadThrall, ModelDreadThrall>> itemLayer;
+    public final IafItemInHandLayer<EntityDreadThrall, ModelDreadThrall> itemLayer;
 
     public RenderDreadThrall(EntityRendererProvider.Context context) {
         super(context, new ModelDreadThrall(0.0F, false), 0.6F);
 
         this.addLayer(new LayerGenericGlowing<>(this, TEXTURE_EYES));
-        this.itemLayer = new HideableLayer<>(new ItemInHandLayer<>(this, context.getItemInHandRenderer()), this);
+        this.itemLayer = new IafItemInHandLayer<>(this);
         this.addLayer(this.itemLayer);
         this.addLayer(new LayerBipedArmorMultiple<>(this,
             new ModelDreadThrall(0.5F, true), new ModelDreadThrall(1.0F, true),

@@ -15,13 +15,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerGenericGlowing<T extends LivingEntity, M extends EntityModel<T>> extends IafEntityLayer<T, IafMobRenderState, M> {
-    private final LivingEntityRenderer render;
+public class LayerGenericGlowing<T extends LivingEntity, M extends EntityModel<? super IafMobRenderState>> extends IafEntityLayer<T, IafMobRenderState, M> {
     private final Identifier texture;
 
-    public LayerGenericGlowing(LivingEntityRenderer renderIn, Identifier texture) {
+    public LayerGenericGlowing(net.minecraft.client.renderer.entity.RenderLayerParent<IafMobRenderState, M> renderIn, Identifier texture) {
         super(renderIn);
-        this.render = renderIn;
         this.texture = texture;
     }
 

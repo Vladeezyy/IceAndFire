@@ -5,7 +5,6 @@ import dev.vladeezyy.rampart.client.model.ModelAnimator;
 import com.github.alexthe666.iceandfire.client.model.util.HideableModelRenderer;
 import com.github.alexthe666.iceandfire.entity.EntityDreadLich;
 import com.github.alexthe666.iceandfire.entity.EntityDreadThrall;
-import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +12,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class ModelDreadLich extends ModelDreadBase<EntityDreadLich> implements ArmedModel {
+public class ModelDreadLich extends ModelDreadBase<EntityDreadLich> implements IafArmedModel {
     public HideableModelRenderer robe;
     public HideableModelRenderer mask;
     public HideableModelRenderer hood;
