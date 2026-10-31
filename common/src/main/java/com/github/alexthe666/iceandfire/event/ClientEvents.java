@@ -40,7 +40,8 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public class ClientEvents {
 
-    private static final Identifier SIREN_SHADER = Identifier.parse("iceandfire:shaders/post/siren.json");
+    /** assets/iceandfire/post_effect/siren.json (26.x post effect format; 26.x color_convolve has a fixed saturation) */
+    private static final Identifier SIREN_SHADER = Identifier.parse("iceandfire:siren");
 
     private final Random rand = new Random();
 
@@ -133,17 +134,17 @@ public class ClientEvents {
                 GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
                 EntityDataProvider.getCapability(player).ifPresent(data -> {
-                    if (IafConfig.sirenShader && data.sirenData.charmedBy == null && renderer.currentEffect() != null) {
-                        if (SIREN_SHADER.toString().equals(renderer.currentEffect().getName()))
-                            renderer.shutdownEffect();
+                    if (IafConfig.sirenShader && data.sirenData.charmedBy == null && renderer.currentPostEffect() != null) {
+                        if (SIREN_SHADER.equals(renderer.currentPostEffect()))
+                            renderer.clearPostEffect();
                     }
 
                     if (data.sirenData.charmedBy == null) {
                         return;
                     }
 
-                    if (IafConfig.sirenShader && !data.sirenData.isCharmed && renderer.currentEffect() != null && SIREN_SHADER.toString().equals(renderer.currentEffect().getName())) {
-                        renderer.shutdownEffect();
+                    if (IafConfig.sirenShader && !data.sirenData.isCharmed && SIREN_SHADER.equals(renderer.currentPostEffect())) {
+                        renderer.clearPostEffect();
                     }
 
                 if (data.sirenData.isCharmed) {
@@ -151,8 +152,8 @@ public class ClientEvents {
                         IceAndFire.PROXY.spawnParticle(EnumParticles.Siren_Appearance, player.getX(), player.getY(), player.getZ(), data.sirenData.charmedBy.getHairColor(), 0, 0);
                     }
 
-                        if (IafConfig.sirenShader && renderer.currentEffect() == null) {
-                            renderer.loadEffect(SIREN_SHADER);
+                        if (IafConfig.sirenShader && renderer.currentPostEffect() == null) {
+                            renderer.setPostEffect(SIREN_SHADER);
                         }
 
                     }
