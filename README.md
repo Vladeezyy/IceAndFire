@@ -1,10 +1,20 @@
-# Ice and Fire for NeoForge 1.21.1
+# Ice and Fire for NeoForge and Fabric (Minecraft 1.21.1 – 26.3)
 
 Port of [Ice and Fire](https://www.curseforge.com/minecraft/mc-mods/ice-and-fire-dragons) by Alexthe666 and TheBv
-(version 2.1.13, Forge 1.20.1) to NeoForge 1.21.1. Beta.
+(version 2.1.13, Forge 1.20.1) to NeoForge and Fabric. Beta.
 
-- Minecraft 1.21.1, NeoForge 21.1.197 or newer (tested with 21.1.262).
-- Requires [Citadel](https://modrinth.com/mod/citadel) 2.7.1+ for NeoForge 1.21.1.
+| Minecraft | NeoForge | Fabric (with Fabric API) | Branch |
+|---|---|---|---|
+| 1.21.1 | 21.1.197 or newer (tested 21.1.262) | loader 0.16.14+, API 0.116.17+ | `multiloader` |
+| 1.21.11 | 21.11.48+ | API 0.141.6+ | `mc/1.21.11` |
+| 26.1.2 | 26.1.2.121+ | API 0.155.3+ | `mc/26.1.2` |
+| 26.2 | 26.2.0.93+ | API 0.161.0+ | `mc/26.2` |
+| 26.3 | 26.3.0.99+ | API 0.165.0+ | `mc/26.3` |
+
+- One jar per Minecraft version and loader ([releases](../../releases)): `iceandfire-<loader>-<version>+<minecraft>.jar`.
+- Requires [Rampart](https://github.com/Vladeezyy/rampart) 1.1.0+ (Citadel's model and animation classes, ported) for the
+  same Minecraft version and loader; [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) is optional. Needed on the
+  server and on every client.
 - Worlds and items of the 1.20.1 version are upgraded (item data keeps its keys in `minecraft:custom_data`).
 
 Please report bugs of this port here, not to the original author.
@@ -48,7 +58,7 @@ Please report bugs of this port here, not to the original author.
 
 ## Tested with
 
-Sodium 0.6.13, Iris 1.8.12, Lithium 0.15.4, FerriteCore 7.0.3, ModernFix 5.27.26, Jade 15.10.6, JEI 19.64,
+On NeoForge 1.21.1: Sodium 0.6.13, Iris 1.8.12, Lithium 0.15.4, FerriteCore 7.0.3, ModernFix 5.27.26, Jade 15.10.6, JEI 19.64,
 EntityCulling 1.11.2, AttributeFix 21.1.3 (client scene, all creatures rendered). Dedicated server: a client riding an
 adult dragon; load test with 30 adult dragons and 100 creatures, 4096 generated chunks, chunk reload cycles.
 
