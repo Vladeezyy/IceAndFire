@@ -169,3 +169,20 @@ resources by `tools/port26/convert_iaf_26.py`. Write-up of the pitfalls: modding
   to a fight between two checks; no dragon or part is lost through the disk.
 - Net test (dedicated server, client rides an adult dragon, flies, dismounts): 0 failed checks on both loaders, client
   120 FPS while riding.
+
+## 26.2 (branch `mc/26.2`, on `mc/26.1.2`, 2026-10-31)
+NeoForge 26.2.0.93, Fabric API 0.161.0, JEI 30.48, Rampart `1.1.0+26.2`. After `tools/port26/port_262.py` (the
+knowledge base's generic script; the local copy skips `MyrmexHive.getCenter()`) and `port_26.py <26.2 sources>`: 226
+errors in common, none in the loaders. Write-up: modding-kb `porting/mc-versions/26.2/ice-and-fire.md`.
+- `MultiBufferSource` is gone: the mod's own interface of the same shape (`client/render/MultiBufferSource`), so the
+  1.21.1 drawing code stays; `VertexMultiConsumer` and `net.minecraft.util.Tuple` replaced by small classes.
+- `AgeableMob.isBaby()` is final: dragons and myrmexes keep the vanilla age in step with their growth stage, so every
+  `isBaby()` (the mod's, vanilla's, the client's) means what it meant.
+- Pipelines on bind group layouts (as vanilla's entity_cutout / end portal), structure processors as an interface with
+  `codec()` (the registry holds the codecs), `knockback(..., source, 0)`, the Fabric screen hook on `Gui.setScreen`.
+- Data (`tools/port26/convert_iaf_262.py`): entity predicates as maps of sub-predicates (15 files).
+- 26.2 logs every worldgen read outside the write zone: the dragon caves and roosts gave hundreds of thousands of lines
+  per self-test (and built a string per read); the original's `WorldGenRegionMixin` now silences that log too (the
+  reads happen as in 1.21.1).
+- Tests (macOS, both loaders): selftest 29/29, client scene 0 failed checks (screenshots match 26.1.2), stress 13/13
+  with SEED=1234 (NeoForge 8.7 ms average tick, Fabric 6.8 ms; generation 93-95 s), net test 0 failed checks.
