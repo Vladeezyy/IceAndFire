@@ -25,18 +25,8 @@ public interface ClientPlatform {
     /** The model an armor item is drawn with (other mods' items may bring their own) */
     Model armorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> original);
 
-    /** The texture of one layer of an armor item */
-    Identifier armorTexture(Entity entity, ItemStack stack, ArmorMaterial.Layer layer, boolean innerModel, EquipmentSlot slot);
 
-    /** The color of an undyed dyeable armor (vanilla: leather brown) */
-    default int armorDefaultDyeColor(ItemStack stack) {
-        return stack.is(net.minecraft.tags.ItemTags.DYEABLE) ? -6265536 : -1;
-    }
 
-    /** The tint of one armor layer; 0 skips the layer */
-    default int armorLayerTint(ItemStack stack, LivingEntity entity, ArmorMaterial.Layer layer, int layerIndex, int fallbackColor) {
-        return layer.dyeable() ? net.minecraft.util.ARGB.opaque(DyedItemColor.getOrDefault(stack, fallbackColor)) : -1;
-    }
 
     /** The still texture of a fluid on the block atlas */
     Identifier fluidStillTexture(Fluid fluid);
@@ -46,18 +36,11 @@ public interface ClientPlatform {
         return distanceSq <= 4096.0D;
     }
 
-    /** Fires the loader's "before a living entity is drawn" event for a renderer that draws by itself; true skips it */
-    <T extends LivingEntity, M extends net.minecraft.client.model.EntityModel<T>> boolean renderLivingPre(T entity, net.minecraft.client.renderer.entity.LivingEntityRenderer<T, M> renderer, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource buffers, int light);
-
-    /** The matching "after" event */
-    <T extends LivingEntity, M extends net.minecraft.client.model.EntityModel<T>> void renderLivingPost(T entity, net.minecraft.client.renderer.entity.LivingEntityRenderer<T, M> renderer, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack, net.minecraft.client.renderer.MultiBufferSource buffers, int light);
 
     /** What the loader adds to the title screen (NeoForge: the mod count and warnings) */
     default void renderMainMenu(net.minecraft.client.gui.screens.Screen screen, net.minecraft.client.gui.GuiGraphicsExtractor graphics, net.minecraft.client.gui.Font font, int width, int height, int alpha) {
     }
 
-    /** The render layer of a block (NeoForge: ItemBlockRenderTypes, Fabric: BlockRenderLayerMap) */
-    void setRenderLayer(net.minecraft.world.level.block.Block block, net.minecraft.client.renderer.RenderType type);
 
     /** Adds a key binding to the controls */
     void registerKeyMapping(net.minecraft.client.KeyMapping mapping);

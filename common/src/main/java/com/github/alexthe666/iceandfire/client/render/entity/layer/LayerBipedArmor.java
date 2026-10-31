@@ -47,6 +47,8 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, T entitylivingbaseIn) {
         IafBufferSource bufferIn = new IafBufferSource();
+        // the parent posed for this entity (26.x poses models when they are drawn): the armor copies its pose
+        this.getParentModel().setupAnim(iafState);
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.CHEST, packedLightIn, this.getSlotModel(EquipmentSlot.CHEST));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.LEGS, packedLightIn, this.getSlotModel(EquipmentSlot.LEGS));
@@ -57,9 +59,10 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
 
     private void renderEquipment(PoseStack matrixStackIn, MultiBufferSource bufferIn, T entityIn, EquipmentSlot slotType, int packedLightIn, A modelIn) {
         ItemStack itemstack = entityIn.getItemBySlot(slotType);
-        if (itemstack.getItem() instanceof IafArmorItem) {
-            ArmorItem armoritem = (IafArmorItem) itemstack.getItem();
-            if (armoritem.getEquipmentSlot() == slotType) {
+        // any armor worn in the slot (1.21.1: an ArmorItem), drawn with the mob's own armor texture
+        net.minecraft.world.item.equipment.Equippable equippable = itemstack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+        if (equippable != null && equippable.assetId().isPresent()) {
+            if (equippable.slot() == slotType) {
                 this.getParentModel().setModelAttributes(modelIn);
                 this.setModelSlotVisible(modelIn, slotType);
                 boolean flag1 = itemstack.hasFoil();
@@ -92,8 +95,11 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
     }
 
     private void renderArmorItem(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, boolean p_241738_5_, A modelIn, float red, float green, float blue, Identifier armorResource) {
-        VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(bufferIn, RenderTypes.armorCutoutNoCull(armorResource), p_241738_5_);
-        modelIn.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
+        // 26.x: the glint is a render type of its own (1.21.1: ItemRenderer.getArmorFoilBuffer)
+        modelIn.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderTypes.armorCutoutNoCull(armorResource)), packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
+        if (p_241738_5_) {
+            modelIn.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderTypes.armorEntityGlint()), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+        }
     }
 
     private A getSlotModel(EquipmentSlot equipmentSlotType) {

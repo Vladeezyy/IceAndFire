@@ -8,7 +8,10 @@
     "gen.NoLakesInStructuresMixin",
     "gen.WorldGenRegionMixin"
   ],
-  "client": [],
+  "client": [
+    "client.EntityRenderStateMixin",
+    "client.LivingEntityRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
