@@ -162,3 +162,10 @@ resources by `tools/port26/convert_iaf_26.py`. Write-up of the pitfalls: modding
 - Tests (macOS, both loaders): selftest 29/29, client scene 0 failed checks (28 mobs, GUIs, bestiary, armor), no
   errors in the logs. Test scripts run on the knowledge base's hang watchdog; empty test servers no longer pause
   (`pause-when-empty-seconds=0`).
+- Stress (SEED=1234, 4096 chunks, 30 adult dragons + 100 creatures, 5 unload/reload cycles): NeoForge 13/13, 8.6 ms
+  average tick (7.8 ms in a second run), generation 97-104 s; Fabric 13/13, 9.9 ms, generation 90 s. 1.21.1 `main`
+  had 10.1 ms (NeoForge) / 7.5 ms (Fabric) with another seed: same range (26.1 worlds differ anyway). Wild dragons kill
+  each other in the arena (the test now logs each death and every dragon gone between checks): one run lost a dragon
+  to a fight between two checks; no dragon or part is lost through the disk.
+- Net test (dedicated server, client rides an adult dragon, flies, dismounts): 0 failed checks on both loaders, client
+  120 FPS while riding.
