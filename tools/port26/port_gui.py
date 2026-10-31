@@ -93,6 +93,27 @@ for root in ROOTS:
         new = rewrite_calls(new, r'pose\(\)\.scale', lambda a: 'pose().scale((float) (%s), (float) (%s))' % (a[0], a[1]) if len(a) == 3 else None)
         new = re.sub(r'\.pose\(\)\.mulPose\(Axis\.ZP\.rotationDegrees\(([^()]*(?:\([^()]*\))?)\)\)', r'.pose().rotate((float) Math.toRadians(\1))', new)
         new = rewrite_calls(new, 'blit', blit)
+
+        # font.drawInBatch(text, x, y, color, shadow, pose, buffers, mode, bg, light) in a GUI -> graphics.text
+        def batch(a, recv):
+            if len(a) == 10 and 'pose().last().pose()' in a[5]:
+                gfx = a[5].split('.pose()')[0]
+                return gfx + '.text(' + recv + ', ' + a[0] + ', (int) (' + a[1] + '), (int) (' + a[2] + '), net.minecraft.util.ARGB.opaque(' + a[3] + '), ' + a[4] + ')'
+            return None
+        out, pos = '', 0
+        for m in re.finditer(r'((?:this\.)?(?:minecraft\.)?(?:font|fontRenderer|fontrenderer|getFont\(\)|getBestiaryFont\(\)))\.drawInBatch\(', new):
+            if m.start() < pos:
+                continue
+            end = args_end(new, m.end())
+            rep = batch(split_args(new[m.end():end - 1]), m.group(1))
+            if rep is None:
+                continue
+            out += new[pos:m.start()] + rep
+            pos = end
+        new = out + new[pos:]
+        new = re.sub(r'\n[ \t]*RenderSystem\.setShaderColor\(1(?:\.0F)?, 1(?:\.0F)?, 1(?:\.0F)?, 1(?:\.0F)?\);', '', new)
+        if re.search(r'extends (?:Button|AbstractButton)\b', new):
+            new = re.sub(r'protected void extractWidgetRenderState\(GuiGraphicsExtractor (\w+), int (\w+), int (\w+), float (\w+)\)', r'protected void extractContents(GuiGraphicsExtractor \1, int \2, int \3, float \4)', new)
         new = rewrite_calls(new, 'drawString', text_call('text'))
         new = rewrite_calls(new, 'drawCenteredString', text_call('centeredText'))
         new = re.sub(r'\.renderItem\(', '.item(', new)

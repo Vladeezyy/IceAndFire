@@ -31,11 +31,24 @@ public final class GuiEntityRenderUtil {
         entity.setXRot(-f1 * 20.0F);
         entity.yHeadRot = entity.getYRot();
         entity.yHeadRotO = entity.getYRot();
-        InventoryScreen.renderEntityInInventory(guiGraphics, x, y, scale, new Vector3f(), quaternionf, quaternionf1, entity);
+        renderEntityInInventory(guiGraphics, x, y, scale, new Vector3f(), quaternionf, quaternionf1, entity);
         entity.yBodyRot = yBodyRot;
         entity.setYRot(yRot);
         entity.setXRot(xRot);
         entity.yHeadRotO = yHeadRotO;
         entity.yHeadRot = yHeadRot;
+    }
+
+    /**
+     * 1.21.1's InventoryScreen.renderEntityInInventory: the entity's feet at (x, y). 26.x draws an entity's render state
+     * centred in a box (and clips to it): a box around (x, y) big enough for the mounts.
+     */
+    public static void renderEntityInInventory(GuiGraphicsExtractor guiGraphics, int x, int y, float scale, Vector3f translation, Quaternionf pose, @org.jetbrains.annotations.Nullable Quaternionf cameraOrientation, LivingEntity entity) {
+        net.minecraft.client.renderer.entity.EntityRenderer<? super LivingEntity, ?> renderer = net.minecraft.client.Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+        net.minecraft.client.renderer.entity.state.EntityRenderState state = renderer.createRenderState(entity, 1.0F);
+        state.shadowPieces.clear();
+        state.outlineColor = 0;
+        int half = 400;
+        guiGraphics.entity(state, scale, translation, pose, cameraOrientation, x - half, y - half, x + half, y + half);
     }
 }

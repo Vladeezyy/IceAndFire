@@ -19,7 +19,7 @@ public class ChangePageButton extends Button {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partial) {
+    protected void extractContents(GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partial) {
         if (this.active) {
             Identifier resourceLocation = Identifier.parse("iceandfire:textures/gui/bestiary/widgets.png");
             boolean flag = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;

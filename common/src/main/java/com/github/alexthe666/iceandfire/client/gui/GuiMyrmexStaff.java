@@ -121,7 +121,6 @@ public class GuiMyrmexStaff extends Screen {
     @Override
     public void extractBackground(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         super.extractBackground(ms, mouseX, mouseY, partialTicks);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - 248) / 2;
         int j = (this.height - 166) / 2;
         ms.blit(RenderPipelines.GUI_TEXTURED, jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE, i, j, (float) (0), (float) (0), 248, 166, 256, 256);
@@ -150,13 +149,13 @@ public class GuiMyrmexStaff extends Screen {
         if (ClientProxy.getReferedClientHive() != null) {
             if (!ClientProxy.getReferedClientHive().colonyName.isEmpty()) {
                 String title = I18n.get("myrmex.message.colony_named", ClientProxy.getReferedClientHive().colonyName);
-                this.minecraft.font.drawInBatch(title, i + 40 - title.length() / 2, j - 3, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                ms.text(this.minecraft.font, title, (int) (i + 40 - title.length() / 2), (int) (j - 3), net.minecraft.util.ARGB.opaque(color), false);
             } else {
-                this.minecraft.font.drawInBatch(I18n.get("myrmex.message.colony"), i + 80, j - 3, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                ms.text(this.minecraft.font, I18n.get("myrmex.message.colony"), (int) (i + 80), (int) (j - 3), net.minecraft.util.ARGB.opaque(color), false);
             }
             int opinion = ClientProxy.getReferedClientHive().getPlayerReputation(Minecraft.getInstance().player.getUUID());
-            this.minecraft.font.drawInBatch(I18n.get("myrmex.message.hive_opinion", opinion), i, j + 12, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-            this.minecraft.font.drawInBatch(I18n.get("myrmex.message.rooms"), i, j + 25, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+            ms.text(this.minecraft.font, I18n.get("myrmex.message.hive_opinion", opinion), (int) (i), (int) (j + 12), net.minecraft.util.ARGB.opaque(color), false);
+            ms.text(this.minecraft.font, I18n.get("myrmex.message.rooms"), (int) (i), (int) (j + 25), net.minecraft.util.ARGB.opaque(color), false);
             /*int hiveCount = 0;
             for (WorldGenMyrmexHive.RoomType type : ROOMS) {
                 List<BlockPos> roomPos = ClientProxy.getReferedClientHive().getRooms(type);
@@ -188,7 +187,7 @@ public class GuiMyrmexStaff extends Screen {
 
     private void drawRoomInfo(GuiGraphicsExtractor ms, String type, BlockPos pos, int i, int j, int color) {
         String translate = "myrmex.message.room." + type;
-        this.minecraft.font.drawInBatch(I18n.get(translate, pos.getX(), pos.getY(), pos.getZ()), i, j + 36 + hiveCount * 22, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+        ms.text(this.minecraft.font, I18n.get(translate, pos.getX(), pos.getY(), pos.getZ()), (int) (i), (int) (j + 36 + hiveCount * 22), net.minecraft.util.ARGB.opaque(color), false);
         hiveCount++;
     }
 

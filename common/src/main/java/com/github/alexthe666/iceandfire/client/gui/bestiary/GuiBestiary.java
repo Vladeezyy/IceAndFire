@@ -57,7 +57,7 @@ public class GuiBestiary extends Screen {
     public int indexPagesTotal = 1;
     protected ItemStack book;
     protected boolean index;
-    protected Font font = getFont();
+    protected Font font = getBestiaryFont();
 
     public GuiBestiary(ItemStack book) {
         super(Component.translatable("bestiary_gui"));
@@ -75,7 +75,7 @@ public class GuiBestiary extends Screen {
         index = true;
     }
 
-    private static Font getFont() {
+    private static Font getBestiaryFont() {
         if (IafConfig.useVanillaFont || !Minecraft.getInstance().options.languageCode.equalsIgnoreCase("en_us")) {
             return Minecraft.getInstance().font;
         } else {
@@ -159,7 +159,6 @@ public class GuiBestiary extends Screen {
         for (int i = 0; i < this.indexButtons.size(); i++) {
             this.indexButtons.get(i).active = i < 10 * (this.indexPages + 1) && i >= 10 * (this.indexPages) && this.index;
         }
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int cornerX = (width - X) / 2;
         int cornerY = (height - Y) / 2;
         ms.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, cornerX, cornerY, (float) (0), (float) (0), X, Y, 390, 390);
@@ -169,15 +168,14 @@ public class GuiBestiary extends Screen {
         }
         ms.pose().pushMatrix();
         ms.pose().translate((float) (cornerX), (float) (cornerY));
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int centerX = (width - X) / 2;
         int centerY = (height - Y) / 2;
         if (!index) {
             drawPerPage(ms, bookPages);
             int pageLeft = bookPages * 2 + 1;
             int pageRight = pageLeft + 1;
-            font.drawInBatch("" + pageLeft, (float) centerX, (float) (centerY - (Y * 0.13)), 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-            font.drawInBatch("" + pageRight, (float) centerX, (float) (centerY - (Y * 0.13)), 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+            ms.text(font, "" + pageLeft, (int) ((float) centerX), (int) ((float) (centerY - (Y * 0.13))), net.minecraft.util.ARGB.opaque(0X303030), false);
+            ms.text(font, "" + pageRight, (int) ((float) centerX), (int) ((float) (centerY - (Y * 0.13))), net.minecraft.util.ARGB.opaque(0X303030), false);
         }
         ms.pose().popMatrix();
         this.renderables.forEach((widget -> widget.extractRenderState(ms, mouseX, mouseY, partialTicks)));
@@ -926,9 +924,9 @@ public class GuiBestiary extends Screen {
                     x = 0;
                 }
                 if (leftPage) {
-                    font.drawInBatch(line, x, 20 + linenumber * 10, 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                    ms.text(font, line, (int) (x), (int) (20 + linenumber * 10), net.minecraft.util.ARGB.opaque(0X303030), false);
                 } else {
-                    font.drawInBatch(line, x, (linenumber - 19) * 10, 0X303030, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                    ms.text(font, line, (int) (x), (int) ((linenumber - 19) * 10), net.minecraft.util.ARGB.opaque(0X303030), false);
                 }
                 linenumber++;
                 ms.pose().popMatrix();
@@ -942,7 +940,7 @@ public class GuiBestiary extends Screen {
         // with the width of a title over 100 px ("Огненные драконы" ran over the binding)
         float scale = Math.min(2F, 190F / (10 + font.width(s)));
         ms.pose().scale((float) (scale), (float) (scale));
-        font.drawInBatch(s, 10, 2, 0X7A756A, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+        ms.text(font, s, (int) (10), (int) (2), net.minecraft.util.ARGB.opaque(0X7A756A), false);
         ms.pose().popMatrix();
     }
 
@@ -952,7 +950,6 @@ public class GuiBestiary extends Screen {
 
     public void drawImage(GuiGraphicsExtractor ms, Identifier texture, int x, int y, int u, int v, int width, int height, float scale) {
         ms.pose().pushMatrix();
-        RenderSystem.setShaderTexture(0, texture);
         ms.pose().scale((float) (scale / 512F), (float) (scale / 512F));
         ms.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, (float) (u), (float) (v), width, height, 512, 512);
         ms.pose().popMatrix();

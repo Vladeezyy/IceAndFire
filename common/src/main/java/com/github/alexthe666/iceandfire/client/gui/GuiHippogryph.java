@@ -47,8 +47,6 @@ public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> 
     @Override
     public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.extractBackground(pGuiGraphics, mouseX, mouseY, partialTicks);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);

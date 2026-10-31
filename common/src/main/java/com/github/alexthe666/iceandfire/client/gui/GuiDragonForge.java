@@ -56,7 +56,6 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
     @Override
     public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.extractBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         Identifier texture = TEXTURE_FIRE;
         if (dragonType == 0) {
             texture = TEXTURE_FIRE;
@@ -77,8 +76,8 @@ public class GuiDragonForge extends AbstractContainerScreen<ContainerDragonForge
         BlockEntity te = IceAndFire.PROXY.getRefrencedTE();
         int j = 0;
 
-        List<DragonForgeRecipe> recipes = this.minecraft.level.getRecipeManager()
-                .getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList()
+        // 26.x: the client has the recipes the server synced (ClientRecipes)
+        List<DragonForgeRecipe> recipes = dev.vladeezyy.iceandfire.platform.ClientRecipes.dragonForge()
                 .stream().filter(item ->
                         item.isValidInput(tileFurnace.getSlot(0).getItem()) && item.isValidBlood(tileFurnace.getSlot(1).getItem())).collect(Collectors.toList());
         int maxCookTime = recipes.isEmpty() ? 100 : recipes.get(0).getCookTime();

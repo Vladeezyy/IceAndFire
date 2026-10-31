@@ -28,7 +28,6 @@ public class LightningDragonForgeDrawable implements IDrawable {
 
     @Override
     public void draw(@NotNull GuiGraphicsExtractor ms, int xOffset, int yOffset) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
         this.drawTexturedModalRect(ms, xOffset, yOffset, 3, 4, 170, 79);
         int scaledProgress = (Minecraft.getInstance().player.tickCount % 100) * 128 / 100;

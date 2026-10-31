@@ -65,8 +65,8 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     @Override
     protected void extractLabels(GuiGraphicsExtractor ms, int mouseX, int mouseY) {
         Font font = this.minecraft.font;
-        font.drawInBatch(this.nameable.getString(), 12, 4, 4210752, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-        font.drawInBatch(this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, 4210752, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+        ms.text(font, this.nameable.getString(), (int) (12), (int) (4), net.minecraft.util.ARGB.opaque(4210752), false);
+        ms.text(font, this.playerInventoryTitle, (int) (8), (int) (this.imageHeight - 96 + 2), net.minecraft.util.ARGB.opaque(4210752), false);
     }
 
     @Override
@@ -77,7 +77,10 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent iafEvent, boolean iafDoubleClick) {
+        double mouseX = iafEvent.x();
+        double mouseY = iafEvent.y();
+        int mouseButton = iafEvent.button();
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
@@ -91,73 +94,25 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
                 return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(iafEvent, iafDoubleClick);
     }
 
     @Override
     public void extractBackground(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         super.extractBackground(ms, mouseX, mouseY, partialTicks);
-        Lighting.setupForFlatItems();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);
-        int k = (int) this.minecraft.getWindow().getGuiScale();
-        RenderSystem.viewport((this.width - 320) / 2 * k, (this.height - 240) / 2 * k, 320 * k, 240 * k);
-        Matrix4f matrix4f = new Matrix4f().m03(-0.34F).m13(0.23F);
-        matrix4f.mul(new Matrix4f().perspective(90.0F, 1.3333334F, 9.0F, 80.0F));
-        RenderSystem.backupProjectionMatrix();
-        RenderSystem.setProjectionMatrix(matrix4f, null);
-        ms.pose().pushMatrix();
-        ms.pose().setIdentity();
-        ms.pose().translate((float) (0.0D), (float) (3.3F));
-        float f = 5.0F;
-        ms.pose().scale((float) (5.0F), (float) (5.0F));
-        ms.pose().rotate((float) Math.toRadians(180.0F));
-        ms.pose().mulPose(Axis.XP.rotationDegrees(20.0F));
-        float f1 = Mth.lerp(partialTicks, this.oOpen, this.open);
-        ms.pose().translate((float) (((1.0F - f1) * 0.2F)), (float) (((1.0F - f1) * 0.1F)));
-        float f2 = -(1.0F - f1) * 90.0F - 90.0F;
-        ms.pose().mulPose(Axis.YP.rotationDegrees(f2));
-        ms.pose().mulPose(Axis.XP.rotationDegrees(180.0F));
-        float f3 = Mth.lerp(partialTicks, this.oFlip, this.flip) + 0.25F;
-        float f4 = Mth.lerp(partialTicks, this.oFlip, this.flip) + 0.75F;
-        f3 = (f3 - (float) Mth.floor(f3)) * 1.6F - 0.3F;
-        f4 = (f4 - (float) Mth.floor(f4)) * 1.6F - 0.3F;
-        if (f3 < 0.0F) {
-            f3 = 0.0F;
-        }
-
-        if (f4 < 0.0F) {
-            f4 = 0.0F;
-        }
-
-        if (f3 > 1.0F) {
-            f3 = 1.0F;
-        }
-
-        if (f4 > 1.0F) {
-            f4 = 1.0F;
-        }
-
-        bookModel.setupAnim(0, f3, f4, f1);
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-        VertexConsumer vertexconsumer = multibuffersource$buffersource.getBuffer(bookModel.renderType(ENCHANTMENT_TABLE_BOOK_TEXTURE));
-        bookModel.renderToBuffer(ms.pose(), vertexconsumer, 15728880, OverlayTexture.NO_OVERLAY, -1);
-        multibuffersource$buffersource.endBatch();
-        ms.pose().popMatrix();
-        RenderSystem.viewport(0, 0, this.minecraft.getWindow().getWidth(), this.minecraft.getWindow().getHeight());
-        RenderSystem.restoreProjectionMatrix();
-        Lighting.setupFor3DItems();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        // 26.x: the book as the enchanting table draws it (1.21.1 set up its own projection and drew the model)
+        float open = Mth.lerp(partialTicks, this.oOpen, this.open);
+        float flip = Mth.lerp(partialTicks, this.oFlip, this.flip);
+        ms.book(this.bookModel, ENCHANTMENT_TABLE_BOOK_TEXTURE, 40.0F, open, flip, i + 14, j + 14, i + 14 + 38, j + 14 + 31);
         this.menu.getManuscriptAmount();
 
         for (int i1 = 0; i1 < 3; ++i1) {
             int j1 = i + 60;
             int k1 = j1 + 20;
             int l1 = this.menu.getPossiblePages()[i1] == null ? -1 : this.menu.getPossiblePages()[i1].ordinal();//enchantment level
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             if (l1 == -1) {
                 ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, j1, j + 14 + 19 * i1, (float) (0), (float) (185), 108, 19, 256, 256);
             } else {
@@ -191,11 +146,10 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
                         ms.pose().pushMatrix();
                         ms.pose().translate((float) (width / 2F - 10), (float) (height / 2F - 83 + (1.0F - textScale) * 55));
                         ms.pose().scale((float) (textScale), (float) (textScale));
-                        fontrenderer.drawInBatch(s1, 0, 20 + 19 * i1, j2, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                        ms.text(fontrenderer, s1, (int) (0), (int) (20 + 19 * i1), net.minecraft.util.ARGB.opaque(j2), false);
                         ms.pose().popMatrix();
                         fontrenderer = this.minecraft.font;
-                        fontrenderer.drawInBatch(s, k1 + 84 - fontrenderer.width(s),
-                            j + 13 + 19 * i1 + 7, j3, true, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                        ms.text(fontrenderer, s, (int) (k1 + 84 - fontrenderer.width(s)), (int) (j + 13 + 19 * i1 + 7), net.minecraft.util.ARGB.opaque(j3), true);
                     } else {
                         ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, j1, j + 14 + 19 * i1, (float) (0), (float) (185), 108, 19, 256, 256);
                         ms.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_TABLE_GUI_TEXTURE, j1 + 1, j + 15 + 19 * i1, (float) (16 * i1), (float) (239), 16, 16, 256, 256);
@@ -271,7 +225,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
         this.open = Mth.clamp(this.open, 0.0F, 1.0F);
         float f1 = (this.flipT - this.flip) * 0.4F;
         if (flapTimer > 0) {
-            f1 = (ticks + this.minecraft.getTimer().getGameTimeDeltaPartialTick(false)) * 0.5F;
+            f1 = (ticks + this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(false)) * 0.5F;
             flapTimer--;
         }
         f1 = Mth.clamp(f1, -0.2F, 0.2F);

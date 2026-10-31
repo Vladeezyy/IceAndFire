@@ -105,8 +105,6 @@ public class GuiMyrmexAddRoom extends Screen {
     @Override
     public void extractBackground(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         super.extractBackground(ms, mouseX, mouseY, partialTicks);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindForSetup(jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE);
         int i = (this.width - 248) / 2;
         int j = (this.height - 166) / 2;
         ms.blit(RenderPipelines.GUI_TEXTURED, jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE, i, j, (float) (0), (float) (0), 248, 166, 256, 256);
@@ -126,11 +124,11 @@ public class GuiMyrmexAddRoom extends Screen {
         if (ClientProxy.getReferedClientHive() != null) {
             if (!ClientProxy.getReferedClientHive().colonyName.isEmpty()) {
                 String title = I18n.get("myrmex.message.colony_named", ClientProxy.getReferedClientHive().colonyName);
-                this.minecraft.font.drawInBatch(title, i + 40 - title.length() / 2, j - 3, color,false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                ms.text(this.minecraft.font, title, (int) (i + 40 - title.length() / 2), (int) (j - 3), net.minecraft.util.ARGB.opaque(color), false);
             } else {
-                this.minecraft.font.drawInBatch(I18n.get("myrmex.message.colony"), i + 80, j - 3, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+                ms.text(this.minecraft.font, I18n.get("myrmex.message.colony"), (int) (i + 80), (int) (j - 3), net.minecraft.util.ARGB.opaque(color), false);
             }
-            this.minecraft.font.drawInBatch(I18n.get("myrmex.message.create_new_room", interactPos.getX(), interactPos.getY(), interactPos.getZ()), i + 30, j + 6, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+            ms.text(this.minecraft.font, I18n.get("myrmex.message.create_new_room", interactPos.getX(), interactPos.getY(), interactPos.getZ()), (int) (i + 30), (int) (j + 6), net.minecraft.util.ARGB.opaque(color), false);
         }
     }
 

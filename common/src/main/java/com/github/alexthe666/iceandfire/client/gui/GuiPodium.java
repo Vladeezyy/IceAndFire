@@ -15,8 +15,7 @@ public class GuiPodium extends AbstractContainerScreen<ContainerPodium> {
     public static final Identifier PODUIM_TEXTURE = Identifier.parse("iceandfire:textures/gui/podium.png");
 
     public GuiPodium(ContainerPodium container, Inventory inv, Component name) {
-        super(container, inv, name);
-        this.imageHeight = 133;
+        super(container, inv, name, 176, 133);
     }
 
     @Override
@@ -38,7 +37,6 @@ public class GuiPodium extends AbstractContainerScreen<ContainerPodium> {
     @Override
     public void extractBackground(GuiGraphicsExtractor pGuiGraphics, int x, int y, float partialTicks) {
         super.extractBackground(pGuiGraphics, x, y, partialTicks);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, PODUIM_TEXTURE, i, j, (float) (0), (float) (0), this.imageWidth, this.imageHeight, 256, 256);

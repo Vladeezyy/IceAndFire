@@ -162,7 +162,6 @@ public class IceAndFireMainMenu extends TitleScreen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 int width = this.width;
         int height = this.height;
         ms.blit(RenderPipelines.GUI_TEXTURED, TABLE_TEXTURE, 0, 0, (float) (0), (float) (0), width, height, width, height);
@@ -179,14 +178,11 @@ public class IceAndFireMainMenu extends TitleScreen {
             float imageScale = Math.min(widthScale, heightScale) * 192;
             for (Picture picture : drawnPictures) {
                 float alpha = (picture.alpha * globalAlpha + 0.01F);
-                                RenderSystem.setShaderColor(1, 1, 1, 1);
                 ms.blit(RenderPipelines.GUI_TEXTURED, drawingTextures[picture.image], (int) (picture.x * widthScale) + middleX, (int) ((picture.y * heightScale) + middleY), (float) (0), (float) (0), (int) imageScale, (int) imageScale, (int) imageScale, (int) imageScale);
                             }
         }
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager._enableBlend();
-        this.minecraft.font.drawInBatch("Ice and Fire " + ChatFormatting.YELLOW + IceAndFire.VERSION, 2, height - 10, 0xFFFFFFFF, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        ms.text(this.minecraft.font, "Ice and Fire " + ChatFormatting.YELLOW + IceAndFire.VERSION, (int) (2), (int) (height - 10), net.minecraft.util.ARGB.opaque(0xFFFFFFFF), false);
         ms.blit(RenderPipelines.GUI_TEXTURED, MINECRAFT_TITLE_TEXTURES, width / 2 - 256 / 2, 10, (float) (0), (float) (0), 256, 64, 256, 64);
 
         dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderMainMenu(this, ms, this.minecraft.font, width, height, l);
