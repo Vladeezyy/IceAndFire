@@ -76,6 +76,9 @@ public final class IafItemRenderers {
         HumanoidModel<?> model = models[slot.ordinal()];
         if (model == null) {
             model = armorModel(item, slot, null);
+            if (model instanceof com.github.alexthe666.iceandfire.client.model.armor.ArmorModelBase base) {
+                base.forSlot(slot);
+            }
             models[slot.ordinal()] = model;
         }
         return model == null ? original : model;

@@ -11,10 +11,8 @@
   ],
   "client": [
     "client.CameraMixin",
-    "client.ChestRendererMixin",
-    "client.LivingEntityRendererMixin",
     "client.MinecraftMixin",
-    "client.PlayerRendererMixin"
+    "client.ParticleEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

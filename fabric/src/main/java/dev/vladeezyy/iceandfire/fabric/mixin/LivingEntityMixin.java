@@ -36,26 +36,26 @@ public abstract class LivingEntityMixin {
         IafBus.post(new EntityTickEvent.Pre((LivingEntity) (Object) this));
     }
 
-    @WrapMethod(method = "hurt")
-    private boolean iceandfire$hurt(DamageSource source, float amount, Operation<Boolean> original) {
+    @WrapMethod(method = "hurtServer")
+    private boolean iceandfire$hurt(ServerLevel level, DamageSource source, float amount, Operation<Boolean> original) {
         LivingEntity self = (LivingEntity) (Object) this;
-        if (self.level() instanceof ServerLevel && !self.isInvulnerableTo(source) && !self.isDeadOrDying()) {
+        if (!self.isInvulnerableTo(level, source) && !self.isDeadOrDying()) {
             LivingIncomingDamageEvent event = new LivingIncomingDamageEvent(self, source, amount);
             if (IafBus.post(event)) {
                 return false;
             }
             amount = event.getAmount();
         }
-        return original.call(source, amount);
+        return original.call(level, source, amount);
     }
 
     @WrapMethod(method = "causeFallDamage")
-    private boolean iceandfire$fall(float distance, float multiplier, DamageSource source, Operation<Boolean> original) {
-        LivingFallEvent event = new LivingFallEvent((LivingEntity) (Object) this, distance, multiplier);
+    private boolean iceandfire$fall(double distance, float multiplier, DamageSource source, Operation<Boolean> original) {
+        LivingFallEvent event = new LivingFallEvent((LivingEntity) (Object) this, (float) distance, multiplier);
         if (IafBus.post(event)) {
             return false;
         }
-        return original.call(event.getDistance(), event.getDamageMultiplier(), source);
+        return original.call((double) event.getDistance(), event.getDamageMultiplier(), source);
     }
 
     @Inject(method = "updateUsingItem", at = @At("HEAD"), cancellable = true)

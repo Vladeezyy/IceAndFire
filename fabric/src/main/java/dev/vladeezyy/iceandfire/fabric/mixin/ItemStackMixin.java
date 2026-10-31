@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Durability and attributes that depend on the config (dragonsteel), as NeoForge asks the item for them */
@@ -24,8 +24,13 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Redirect(method = "forEachModifier", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;getDefaultAttributeModifiers()Lnet/minecraft/world/item/component/ItemAttributeModifiers;"))
-    private ItemAttributeModifiers iceandfire$modifiers(Item item) {
-        return item instanceof IafStackStatsItem stats ? stats.getDefaultAttributeModifiers((ItemStack) (Object) this) : item.getDefaultAttributeModifiers();
+    // 26.x: items carry their modifiers as a component; the config-dependent ones (dragonsteel) replace the item's own
+    @ModifyVariable(method = "forEachModifier", at = @At("STORE"), ordinal = 0)
+    private ItemAttributeModifiers iceandfire$modifiers(ItemAttributeModifiers modifiers) {
+        ItemStack self = (ItemStack) (Object) this;
+        if (this.getItem() instanceof IafStackStatsItem stats && modifiers == this.getItem().components().get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS)) {
+            return stats.getDefaultAttributeModifiers(self);
+        }
+        return modifiers;
     }
 }

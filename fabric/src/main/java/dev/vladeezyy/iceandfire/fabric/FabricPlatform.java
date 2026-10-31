@@ -10,7 +10,7 @@ import dev.vladeezyy.iceandfire.platform.Platform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -91,12 +91,11 @@ public final class FabricPlatform implements Platform {
     @SuppressWarnings({"unchecked", "rawtypes"})
     static void registerAll() {
         Set<Identifier> order = new LinkedHashSet<>();
-        order.add(Registries.ATTRIBUTE.location());
-        order.add(Registries.DATA_COMPONENT_TYPE.location());
-        order.add(Registries.ARMOR_MATERIAL.location());
+        order.add(Registries.ATTRIBUTE.identifier());
+        order.add(Registries.DATA_COMPONENT_TYPE.identifier());
         List<Identifier> modded = new ArrayList<>();
         for (Registry<?> each : BuiltInRegistries.REGISTRY) {
-            Identifier id = each.key().location();
+            Identifier id = each.key().identifier();
             if (id.getNamespace().equals("minecraft")) {
                 order.add(id);
             } else {
@@ -110,7 +109,7 @@ public final class FabricPlatform implements Platform {
             if (entries == null) {
                 continue;
             }
-            Registry registry = BuiltInRegistries.REGISTRY.get(registryId);
+            Registry registry = BuiltInRegistries.REGISTRY.getValue(registryId);
             for (Pending entry : entries) {
                 Registry.register(registry, entry.id(), entry.factory().get());
             }
@@ -118,6 +117,12 @@ public final class FabricPlatform implements Platform {
         if (!PENDING.isEmpty()) {
             throw new IllegalStateException("Ice and Fire entries for registries that do not exist: " + PENDING.keySet());
         }
+    }
+
+    @Override
+    public void registerDataSerializer(Identifier id, net.minecraft.network.syncher.EntityDataSerializer<?> serializer) {
+        // 26.x Fabric refuses registerSerializer (unsynced ids): its own registry syncs them
+        net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry.register(id, serializer);
     }
 
     @Override
@@ -161,12 +166,13 @@ public final class FabricPlatform implements Platform {
     @Override
     @SuppressWarnings("unchecked")
     public Item spawnEgg(Supplier<? extends EntityType<? extends Mob>> type, int background, int highlight, Item.Properties properties) {
-        return new SpawnEggItem((EntityType<? extends Mob>) type.get(), background, highlight, properties);
+        // 26.x: eggs have their own textures (no colors), entity types are registered before items
+        return new SpawnEggItem(properties.spawnEgg(type.get()));
     }
 
     @Override
     public CreativeModeTab.Builder creativeTabBuilder() {
-        return FabricItemGroup.builder();
+        return FabricCreativeModeTab.builder();
     }
 
     // --- network ---
@@ -211,7 +217,7 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public boolean canEntityGrief(Level level, @Nullable Entity entity) {
-        return level.getGameRules().get(GameRules.MOB_GRIEFING);
+        return level instanceof ServerLevel server && server.getGameRules().get(GameRules.MOB_GRIEFING);
     }
 
     @Override
@@ -267,7 +273,9 @@ public final class FabricPlatform implements Platform {
     @Override
     public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        state.getBlock().wasExploded(level, pos, explosion);
+        if (level instanceof ServerLevel server) {
+            state.getBlock().wasExploded(server, pos, explosion);
+        }
     }
 
     @Override
@@ -299,7 +307,7 @@ public final class FabricPlatform implements Platform {
     public ItemAttributeModifiers attributeModifiers(ItemStack stack) {
         ItemAttributeModifiers modifiers = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
         if (modifiers.modifiers().isEmpty()) {
-            modifiers = stack.getItem() instanceof IafStackStatsItem item ? item.getDefaultAttributeModifiers(stack) : stack.getItem().getDefaultAttributeModifiers();
+            modifiers = stack.getItem() instanceof IafStackStatsItem item ? item.getDefaultAttributeModifiers(stack) : ItemAttributeModifiers.EMPTY;
         }
         return modifiers;
     }

@@ -1,5 +1,7 @@
 package dev.vladeezyy.iceandfire.neoforge;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
 import com.github.alexthe666.iceandfire.CommonProxy;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.config.ConfigHolder;
@@ -166,6 +168,19 @@ public final class IceAndFireNeoForge {
     private static void registerGameEvents(IEventBus bus) {
         bus.addListener((ServerAboutToStartEvent event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.ServerAboutToStartEvent(event.getServer())));
         bus.addListener((ServerStartedEvent event) -> IceAndFire.onServerStarted());
+        // config-dependent attributes (dragonsteel): 26.x items carry their modifiers as a component, so NeoForge never asks
+        // getDefaultAttributeModifiers(stack); the stack's own modifiers (commands) stay
+        bus.addListener((net.neoforged.neoforge.event.ItemAttributeModifierEvent event) -> {
+            ItemStack stack = event.getItemStack();
+            if (stack.getItem() instanceof com.github.alexthe666.iceandfire.item.IafStackStatsItem stats
+                && stack.get(DataComponents.ATTRIBUTE_MODIFIERS) == stack.getItem().components().get(DataComponents.ATTRIBUTE_MODIFIERS)) {
+                var ours = stats.getDefaultAttributeModifiers(stack);
+                if (ours != event.getDefaultModifiers()) {
+                    event.clearModifiers();
+                    ours.modifiers().forEach(entry -> event.addModifier(entry.attribute(), entry.modifier(), entry.slot()));
+                }
+            }
+        });
         // 26.x: the client gets only the recipe types the server sends (JEI shows the dragon forge recipes)
         bus.addListener((net.neoforged.neoforge.event.OnDatapackSyncEvent event) -> event.sendRecipes(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()));
         bus.addListener((RegisterBrewingRecipesEvent event) -> IafRecipeRegistry.registerBrewing(event.getBuilder()));

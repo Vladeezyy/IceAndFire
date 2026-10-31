@@ -32,9 +32,8 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
-import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
+import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
@@ -47,7 +46,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacementType;
@@ -83,7 +81,9 @@ public final class IceAndFireFabric implements ModInitializer {
             }
         });
         registerBiomeModifications();
-        FabricBrewingRecipeRegistryBuilder.BUILD.register(IafRecipeRegistry::registerBrewing);
+        FabricPotionBrewingBuilder.BUILD.register(IafRecipeRegistry::registerBrewing);
+        // 26.x: the client gets only the recipe serializers the server syncs (JEI shows the dragon forge recipes)
+        net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization.synchronizeRecipeSerializer(com.github.alexthe666.iceandfire.recipe.DragonForgeRecipe.SERIALIZER);
         registerStorages();
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
@@ -103,13 +103,13 @@ public final class IceAndFireFabric implements ModInitializer {
         IafNetwork.register(new IafNetwork.PacketRegistrar() {
             @Override
             public <T extends CustomPacketPayload> void toClient(CustomPacketPayload.Type<T> type, StreamCodec<? super RegistryFriendlyByteBuf, T> codec, BiConsumer<T, PacketContext> handler) {
-                PayloadTypeRegistry.playS2C().register(type, codec);
+                PayloadTypeRegistry.clientboundPlay().register(type, codec);
                 FabricNetwork.CLIENT_HANDLERS.put(type, handler);
             }
 
             @Override
             public <T extends CustomPacketPayload> void toServer(CustomPacketPayload.Type<T> type, StreamCodec<? super RegistryFriendlyByteBuf, T> codec, BiConsumer<T, PacketContext> handler) {
-                PayloadTypeRegistry.playC2S().register(type, codec);
+                PayloadTypeRegistry.serverboundPlay().register(type, codec);
                 ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) -> handler.accept(payload, new PacketContext() {
                     @Override
                     public Player player() {
@@ -139,22 +139,22 @@ public final class IceAndFireFabric implements ModInitializer {
             features.put(id, Holder.Reference.createStandAlone(owner, ResourceKey.create(Registries.PLACED_FEATURE, Identifier.parse(id))));
         }
         BiomeModifications.create(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features")).add(ModificationPhase.ADDITIONS, BiomeSelectors.all(),
-            (selection, context) -> IafWorldRegistry.addFeatures(selection.getBiomeRegistryEntry(), features,
+            (selection, context) -> IafWorldRegistry.addFeatures(selection.getBiomeHolder(), features,
                 (step, feature) -> context.getGenerationSettings().addFeature(step, feature.unwrapKey().orElseThrow())));
         BiomeModifications.create(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns")).add(ModificationPhase.ADDITIONS, BiomeSelectors.all(),
-            (selection, context) -> IafEntityRegistry.addSpawners(selection.getBiomeRegistryEntry(),
-                (category, spawner, weight) -> context.getSpawnSettings().addSpawn(category, spawner, weight)));
+            (selection, context) -> IafEntityRegistry.addSpawners(selection.getBiomeHolder(),
+                (category, spawner, weight) -> context.getMobSpawnSettings().addSpawn(category, spawner, weight)));
     }
 
     /** Hoppers and pipes: the forge bricks and inputs give the core's slots (NeoForge: IafCapabilities) */
     private static void registerStorages() {
         ItemStorage.SIDED.registerForBlockEntity((brick, side) -> {
             TileEntityDragonforge core = brick.getConnectedTileEntity();
-            return core != null ? InventoryStorage.of(core, side) : null;
+            return core != null ? ContainerStorage.of(core, side) : null;
         }, IafTileEntityRegistry.DRAGONFORGE_BRICK.get());
         ItemStorage.SIDED.registerForBlockEntity((input, side) -> {
             TileEntityDragonforge core = input.getCore();
-            return core != null ? InventoryStorage.of(core, side) : null;
+            return core != null ? ContainerStorage.of(core, side) : null;
         }, IafTileEntityRegistry.DRAGONFORGE_INPUT.get());
     }
 
@@ -182,7 +182,7 @@ public final class IceAndFireFabric implements ModInitializer {
         });
         UseItemCallback.EVENT.register((player, level, hand) -> {
             var event = new dev.vladeezyy.iceandfire.bus.PlayerInteractEvent.RightClickItem(player, hand);
-            return IafBus.post(event) ? new InteractionResultHolder<>(event.getCancellationResult(), player.getItemInHand(hand)) : InteractionResultHolder.pass(player.getItemInHand(hand));
+            return IafBus.post(event) ? event.getCancellationResult() : InteractionResult.PASS;
         });
     }
 }

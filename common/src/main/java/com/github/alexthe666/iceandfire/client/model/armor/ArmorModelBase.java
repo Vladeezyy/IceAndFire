@@ -18,6 +18,15 @@ public class ArmorModelBase extends HumanoidModel<HumanoidRenderState> {
         super(p_170677_);
     }
 
+    /** The slot the model is drawn for; its baked parts are shared between slots, so the visible parts are set when it is posed */
+    @org.jetbrains.annotations.Nullable
+    private net.minecraft.world.entity.EquipmentSlot slot;
+
+    public ArmorModelBase forSlot(net.minecraft.world.entity.EquipmentSlot slot) {
+        this.slot = slot;
+        return this;
+    }
+
     // 26.x: posed from the humanoid render state (an armor stand's state carries its part poses)
     @Override
     public void setupAnim(@NotNull HumanoidRenderState state) {
@@ -30,6 +39,20 @@ public class ArmorModelBase extends HumanoidModel<HumanoidRenderState> {
             pose(this.rightLeg, armorStand.rightLegPose);
         } else {
             super.setupAnim(state);
+        }
+        if (this.slot != null) {
+            // 1.21.1: HumanoidArmorLayer#setPartVisibility
+            boolean head = this.slot == net.minecraft.world.entity.EquipmentSlot.HEAD;
+            boolean chest = this.slot == net.minecraft.world.entity.EquipmentSlot.CHEST;
+            boolean legs = this.slot == net.minecraft.world.entity.EquipmentSlot.LEGS;
+            boolean feet = this.slot == net.minecraft.world.entity.EquipmentSlot.FEET;
+            this.head.visible = head;
+            this.hat.visible = head;
+            this.body.visible = chest || legs;
+            this.rightArm.visible = chest;
+            this.leftArm.visible = chest;
+            this.rightLeg.visible = legs || feet;
+            this.leftLeg.visible = legs || feet;
         }
     }
 

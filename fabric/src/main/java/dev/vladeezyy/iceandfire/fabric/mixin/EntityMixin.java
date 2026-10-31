@@ -29,8 +29,8 @@ public abstract class EntityMixin {
         }
     }
 
-    @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", at = @At("RETURN"))
-    private void iceandfire$mount(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;ZZ)Z", at = @At("RETURN"))
+    private void iceandfire$mount(Entity vehicle, boolean force, boolean sendEventAndTriggers, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
             IafBus.post(new EntityMountEvent((Entity) (Object) this, vehicle, true));
         }
@@ -44,9 +44,9 @@ public abstract class EntityMixin {
         }
     }
 
-    @Redirect(method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))
-    private boolean iceandfire$captureDrop(Level level, Entity drop) {
+    @Redirect(method = "spawnAtLocation(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/entity/item/ItemEntity;",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))
+    private boolean iceandfire$captureDrop(ServerLevel level, Entity drop) {
         return DropCapture.capture((Entity) (Object) this, drop) || level.addFreshEntity(drop);
     }
 }
