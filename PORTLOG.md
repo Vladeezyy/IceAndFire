@@ -135,3 +135,30 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
 - Not on Fabric yet: the pixie jar gives no dust to hoppers, dragonbone arrows are used up with Infinity, no camera roll.
 - Fixed on the way: Tabula models were read with ClassLoader#getResourceAsStream("/assets/...") (Fabric returns null
   for the leading slash); now Class#getResourceAsStream of the mod's own class.
+
+## 26.1.2 (branch `mc/26.1.2`, 2026-10-31)
+Port of the multiloader 1.21.1 code to Minecraft 26.1.2 (NeoForge 26.1.2.121, Fabric 0.155.3, Rampart 1.1.0, JEI 29).
+Mechanical rewrites in `tools/port26` (shared with the Rats port, plus `port_iaf_26.py` and the other `*_26.py`),
+resources by `tools/port26/convert_iaf_26.py`. Write-up of the pitfalls: modding-kb
+`porting/mc-versions/26.1/ice-and-fire.md`.
+- Rendering on render states and the submit collector: mob renderers on Rampart's `RampartMobRenderer`; the 1.21.1
+  drawing code of block entities, items, particles and complex layers kept through `IafBufferSource` (records the
+  vertices, submits them as custom geometry). Rampart models drawn by hand go through `IafModels.render` (pose sync);
+  layers that read the parent's parts pose it once per entity (`IafEntityLayer.poseParent`).
+- Items drawn in code: special model `iceandfire:item_renderer` chosen per display context; ghost chest on the chest
+  atlas (own `BlockEntityRenderer`, vanilla chest item model). Armor: equipment assets per material, models cached per
+  item and slot (1.21.1 baked one every frame), textures from the items (NeoForge item client extensions, Fabric
+  `ArmorRenderer`).
+- Ghost and siren appearances: a particle group of their own (NeoForge `RegisterParticleGroupsEvent`, Fabric
+  `ParticleGroupRegistry`). Dragon skins/armor: `ArrayLayeredTexture` as a reloadable texture.
+- NeoForge: item capabilities on the transfer API (journaled `ResourceHandler` over the common handlers), entity data
+  attachment on value input/output (same NBT), recipes synced for JEI (`OnDatapackSyncEvent` /
+  `RecipesReceivedEvent`), keys through `RegisterKeyMappingsEvent`. Fabric: `RecipeSynchronization` +
+  `ClientRecipeSynchronizedEvent`, `KeyMappingHelper`, mixins retargeted to 26.1 (hurtServer, causeFallDamage(double),
+  alignWithEntity, startRiding(ZZ), spawnAtLocation(Vec3)); the render mixins moved to common.
+- Fixed on the way: dread sword with enchantability 0 (26.x refuses it: material with 1, enchantable component
+  removed); dragonsteel's config attributes were ignored by NeoForge (prototype component; `ItemAttributeModifierEvent`);
+  tempt range attribute for the mod's animals; `minecraft:chain` → `minecraft:iron_chain` in the chainmail recipes.
+- Tests (macOS, both loaders): selftest 29/29, client scene 0 failed checks (28 mobs, GUIs, bestiary, armor), no
+  errors in the logs. Test scripts run on the knowledge base's hang watchdog; empty test servers no longer pause
+  (`pause-when-empty-seconds=0`).

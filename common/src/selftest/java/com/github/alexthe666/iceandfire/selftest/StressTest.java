@@ -53,6 +53,12 @@ public class StressTest {
     public static void onStarted(net.minecraft.server.MinecraftServer server) {
         if (ENABLED) {
             tick = 0;
+            // deaths of dragons in the arena (a lost dragon check tells a fight from a dragon lost on the disk)
+            dev.vladeezyy.iceandfire.bus.IafBus.add(dev.vladeezyy.iceandfire.bus.LivingDeathEvent.class, dev.vladeezyy.iceandfire.bus.EventPriority.LOWEST, event -> {
+                if (event.getEntity() instanceof EntityDragonBase dragon) {
+                    IceAndFire.LOGGER.warn("[stress] dragon {} died at tick {}: {}", dragon.getUUID(), tick, event.getSource().getLocalizedDeathMessage(dragon).getString());
+                }
+            });
         }
     }
 
@@ -231,6 +237,7 @@ public class StressTest {
     }
 
     private static int dragonsBefore = -1;
+    private static final java.util.Map<java.util.UUID, String> LAST_SEEN = new java.util.HashMap<>();
 
     /**
      * Every ticking dragon has its 10 parts, no dragon more than 10, no part without a dragon, no dragon lost. Dragons
@@ -246,6 +253,17 @@ public class StressTest {
         if (dragonsBefore < 0) {
             dragonsBefore = dragons.size();
         }
+        // a dragon gone since the last check: where it was and how it was (died in a fight, or lost on the disk)
+        java.util.Set<java.util.UUID> now = new java.util.HashSet<>();
+        dragons.forEach(dragon -> now.add(dragon.getUUID()));
+        LAST_SEEN.forEach((uuid, seen) -> {
+            if (!now.contains(uuid)) {
+                net.minecraft.world.entity.Entity anywhere = level.getEntity(uuid);
+                IceAndFire.LOGGER.warn("[stress] dragon {} gone {}: last seen {}, now {}", uuid, when, seen, anywhere == null ? "not in the level" : anywhere.position() + " removed " + anywhere.getRemovalReason());
+            }
+        });
+        LAST_SEEN.clear();
+        dragons.forEach(dragon -> LAST_SEEN.put(dragon.getUUID(), String.format("%s at %.0f %.0f %.0f, health %.1f, alive %s, ticking %s", BuiltInRegistries.ENTITY_TYPE.getKey(dragon.getType()).getPath(), dragon.getX(), dragon.getY(), dragon.getZ(), dragon.getHealth(), dragon.isAlive(), level.isPositionEntityTicking(dragon.blockPosition()))));
         check("dragon parts " + when, orphans == 0 && tooMany == 0 && withAllParts >= ticking && dragons.size() == dragonsBefore,
             dragons.size() + " dragons (" + ticking + " ticking, " + withAllParts + " with 10 parts, " + tooMany + " with more), "
                 + parts.size() + " parts, " + orphans + " without a dragon");
