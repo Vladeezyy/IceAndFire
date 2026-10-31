@@ -44,4 +44,3 @@ accessible class net/minecraft/world/item/CreativeModeTab$Output
 # Block entity types without the 1.21.1 builder (IafTileEntityRegistry)
 accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
 # The siren charm post effect (ClientEvents)
-accessible method net/minecraft/client/renderer/GameRenderer setPostEffect (Lnet/minecraft/resources/Identifier;)V
