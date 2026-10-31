@@ -168,7 +168,7 @@ public class SeaSerpentAIAttackMelee extends Goal {
     protected void checkAndPerformAttack(LivingEntity enemy) {
         if (this.attacker.isTouchingMob(enemy)) {
             this.attackTick = 20;
-            this.attacker.swing(InteractionHand.MAIN_HAND);
+            this.attacker.swing(InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             this.attacker.doHurtTarget((net.minecraft.server.level.ServerLevel) this.attacker.level(), enemy);
         }
     }

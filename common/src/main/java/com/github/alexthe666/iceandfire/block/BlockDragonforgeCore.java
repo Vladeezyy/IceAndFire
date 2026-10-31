@@ -33,11 +33,6 @@ import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry
 
 public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProof, INoTab {
 
-    // Built from mod parameters, not data: the codec only hands out this block
-    @Override
-    protected @NotNull MapCodec<? extends BlockDragonforgeCore> codec() {
-        return MapCodec.unit(this);
-    }
 
     private static boolean keepInventory;
     private final int isFire;
@@ -46,7 +41,7 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
     public BlockDragonforgeCore(int isFire, boolean activated) {
         super(
             dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
-                .pushReaction(PushReaction.BLOCK)
+                .pushReaction(PushReaction.IMMOVEABLE)
                 .mapColor(MapColor.METAL)
                 .dynamicShape()
                 .strength(40, 500)

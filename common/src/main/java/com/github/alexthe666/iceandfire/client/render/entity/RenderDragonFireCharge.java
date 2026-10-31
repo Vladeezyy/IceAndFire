@@ -32,9 +32,9 @@ public class RenderDragonFireCharge extends IafEntityRenderer<Fireball> {
     protected void renderLegacy(@NotNull Fireball entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.0D, 0.5D, 0.0D);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(-90.0F));
         matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(90.0F));
         com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderSingleBlock(isFire ? Blocks.MAGMA_BLOCK.defaultBlockState() : IafBlockRegistry.DRAGON_ICE.get().defaultBlockState(), matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY);
         matrixStackIn.popPose();
     }

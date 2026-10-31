@@ -182,7 +182,7 @@ public class ItemSummoningCrystal extends Item {
         }
         summoningPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         summoningPlayer.playSound(SoundEvents.GLASS_BREAK, 1, 1);
-        summoningPlayer.swing(summoningHand);
+        summoningPlayer.swing(summoningHand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
         summoningPlayer.sendOverlayMessage(Component.translatable("message.iceandfire.dragonTeleport"));
         ItemNbt.setTag(stack, new CompoundTag());
     }

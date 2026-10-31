@@ -39,14 +39,14 @@ public class ParticleGhostAppearance extends IafAppearanceParticle {
         if (entity instanceof EntityGhost && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
             EntityGhost ghostEntity = (EntityGhost) entity;
             PoseStack matrixstack = new PoseStack();
-            matrixstack.mulPose(renderInfo.rotation());
+            matrixstack.rotate(renderInfo.rotation());
             if (fromLeft) {
-                matrixstack.mulPose(Axis.YN.rotationDegrees(150.0F * f - 60.0F));
-                matrixstack.mulPose(Axis.ZN.rotationDegrees(150.0F * f - 60.0F));
+                matrixstack.rotate(Axis.YN.rotationDegrees(150.0F * f - 60.0F));
+                matrixstack.rotate(Axis.ZN.rotationDegrees(150.0F * f - 60.0F));
 
             } else {
-                matrixstack.mulPose(Axis.YP.rotationDegrees(150.0F * f - 60.0F));
-                matrixstack.mulPose(Axis.ZP.rotationDegrees(150.0F * f - 60.0F));
+                matrixstack.rotate(Axis.YP.rotationDegrees(150.0F * f - 60.0F));
+                matrixstack.rotate(Axis.ZP.rotationDegrees(150.0F * f - 60.0F));
             }
             matrixstack.scale(-1.0F, -1.0F, 1.0F);
             matrixstack.translate(0.0D, 0.3F, 1.25D);

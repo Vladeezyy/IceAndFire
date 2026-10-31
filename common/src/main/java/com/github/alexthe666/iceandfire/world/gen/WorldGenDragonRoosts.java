@@ -8,7 +8,6 @@ import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.entity.util.HomePosition;
 import com.github.alexthe666.iceandfire.util.WorldUtil;
 import com.github.alexthe666.iceandfire.world.IafWorldData;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -21,21 +20,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfiguration> implements TypedFeature {
+public abstract class WorldGenDragonRoosts extends IafFeature implements TypedFeature {
     protected static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     protected final Block treasureBlock;
 
-    public WorldGenDragonRoosts(final Codec<NoneFeatureConfiguration> configuration, final Block treasureBlock) {
-        super(configuration);
+    public WorldGenDragonRoosts(final Block treasureBlock) {
         this.treasureBlock = treasureBlock;
     }
 
@@ -50,7 +45,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
     }
 
     @Override
-    public boolean place(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(@NotNull final IafFeature.Context context) {
         if (!WorldUtil.canGenerate(IafConfig.generateDragonRoostChance, context.level(), context.random(), context.origin(), getId(), true)) {
             return false;
         }
@@ -103,7 +98,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
         return transform(block.defaultBlockState());
     }
 
-    private void generateDecoration(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, int radius, boolean isMale) {
+    private void generateDecoration(@NotNull final IafFeature.Context context, int radius, boolean isMale) {
         int height = (radius / 5);
         double circularArea = getCircularArea(radius, height);
 
@@ -156,7 +151,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
         });
     }
 
-    private void hollowOut(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, int radius) {
+    private void hollowOut(@NotNull final IafFeature.Context context, int radius) {
         int height = 2;
         double circularArea = getCircularArea(radius, height);
         BlockPos up = context.origin().above(height - 1);
@@ -168,7 +163,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
         });
     }
 
-    private void generateShell(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, int radius) {
+    private void generateShell(@NotNull final IafFeature.Context context, int radius) {
         int height = (radius / 5);
         double circularArea = getCircularArea(radius, height);
 
@@ -181,7 +176,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
         });
     }
 
-    private void generateSurface(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, int radius) {
+    private void generateSurface(@NotNull final IafFeature.Context context, int radius) {
         int height = 2;
         double circularArea = getCircularArea(radius, height);
 
@@ -231,7 +226,7 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
         }
     }
 
-    private void spawnDragon(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, int ageOffset, boolean isMale) {
+    private void spawnDragon(@NotNull final IafFeature.Context context, int ageOffset, boolean isMale) {
         EntityDragonBase dragon = getDragonType().create(context.level().getLevel(), net.minecraft.world.entity.EntitySpawnReason.STRUCTURE);
         dragon.setGender(isMale);
         dragon.growDragon(40 + ageOffset);
@@ -251,5 +246,5 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
 
     protected abstract BlockState transform(final BlockState block);
 
-    protected abstract void handleCustomGeneration(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, final BlockPos position, double distance);
+    protected abstract void handleCustomGeneration(@NotNull final IafFeature.Context context, final BlockPos position, double distance);
 }

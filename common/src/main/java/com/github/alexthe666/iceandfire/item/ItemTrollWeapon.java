@@ -32,16 +32,15 @@ public class ItemTrollWeapon extends Item implements IafTieredItem {
 
     // NeoForge extension method (no vanilla override)
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        return player.getAttackStrengthScale(0) < 0.95 || player.attackAnim != 0;
+        return player.getAttackStrengthScale(0) < 0.95 || player.getSwingAnimation(0) != 0;
     }
 
     public boolean onEntitySwing(LivingEntity LivingEntity, ItemStack stack) {
         if (LivingEntity instanceof Player) {
             Player player = (Player) LivingEntity;
-            if (player.getAttackStrengthScale(0) < 1 && player.attackAnim > 0) {
+            if (player.getAttackStrengthScale(0) < 1 && player.getSwingAnimation(0) > 0) {
                 return true;
             } else {
-                player.swingTime = -1;
             }
         }
         return false;
@@ -50,8 +49,7 @@ public class ItemTrollWeapon extends Item implements IafTieredItem {
     public void onUpdate(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (entityIn instanceof Player && isSelected) {
             Player player = (Player) entityIn;
-            if (player.getAttackStrengthScale(0) < 0.95 && player.attackAnim > 0) {
-                player.swingTime--;
+            if (player.getAttackStrengthScale(0) < 0.95 && player.getSwingAnimation(0) > 0) {
             }
         }
     }

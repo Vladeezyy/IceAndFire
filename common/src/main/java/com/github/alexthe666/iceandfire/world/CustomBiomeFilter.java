@@ -8,7 +8,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
     By default dragon caves (or any underground generation) would only check against the cave biome, not the surface biome)<br>
     Since the passed y position will be the lowest point of the world (e.g. -64)
 */
-public class CustomBiomeFilter extends PlacementFilter {
+public class CustomBiomeFilter implements PlacementFilter {
     private static final CustomBiomeFilter INSTANCE = new CustomBiomeFilter();
     public static MapCodec<CustomBiomeFilter> CODEC = MapCodec.unit(() -> INSTANCE);
 
@@ -26,7 +25,8 @@ public class CustomBiomeFilter extends PlacementFilter {
         return INSTANCE;
     }
 
-    protected boolean shouldPlace(final PlacementContext context, @NotNull final RandomSource random, @NotNull final BlockPos position) {
+    @Override
+    public boolean shouldPlace(final PlacementContext context, @NotNull final RandomSource random, @NotNull final BlockPos position) {
         PlacedFeature placedfeature = context.topFeature().orElseThrow(() -> new IllegalStateException("Tried to biome check an unregistered feature, or a feature that should not restrict the biome"));
         boolean hasFeature = context.generator().getBiomeGenerationSettings(context.getLevel().getBiome(position)).hasFeature(placedfeature);
 
@@ -38,7 +38,8 @@ public class CustomBiomeFilter extends PlacementFilter {
         return hasFeature;
     }
 
-    public @NotNull PlacementModifierType<?> type() {
-        return IafPlacementFilterRegistry.CUSTOM_BIOME_FILTER.get();
+    @Override
+    public @NotNull MapCodec<CustomBiomeFilter> codec() {
+        return CODEC;
     }
 }

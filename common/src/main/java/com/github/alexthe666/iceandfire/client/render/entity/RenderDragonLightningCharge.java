@@ -38,8 +38,8 @@ public class RenderDragonLightningCharge extends IafEntityRenderer<EntityDragonL
         matrixStackIn.pushPose();
         matrixStackIn.translate(0F, 0.5F, 0F);
         matrixStackIn.translate(0F, -0.25F, 0F);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw - 180.0F));
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(f * 20.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(yaw - 180.0F));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(f * 20.0F));
         matrixStackIn.translate(0F, 0.25F, 0F);
         com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_SPIRIT, matrixStackIn, ivertexbuilder2, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
@@ -47,8 +47,8 @@ public class RenderDragonLightningCharge extends IafEntityRenderer<EntityDragonL
         matrixStackIn.pushPose();
         matrixStackIn.translate(0F, 0.5F, 0F);
         matrixStackIn.translate(0F, -0.25F, 0F);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw - 180.0F));
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(f * 15.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(yaw - 180.0F));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(f * 15.0F));
         matrixStackIn.translate(0F, 0.25F, 0F);
         matrixStackIn.scale(1.5F, 1.5F, 1.5F);
         com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_SPIRIT, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
@@ -57,8 +57,8 @@ public class RenderDragonLightningCharge extends IafEntityRenderer<EntityDragonL
         matrixStackIn.pushPose();
         matrixStackIn.translate(0F, 0.75F, 0F);
         matrixStackIn.translate(0F, -0.25F, 0F);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw - 180.0F));
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(f * 10.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(yaw - 180.0F));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(f * 10.0F));
         matrixStackIn.translate(0F, 0.75F, 0F);
         matrixStackIn.scale(2.5F, 2.5F, 2.5F);
         com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_SPIRIT, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);

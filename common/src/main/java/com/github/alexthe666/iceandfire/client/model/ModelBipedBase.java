@@ -60,7 +60,7 @@ public abstract class ModelBipedBase<T extends LivingEntity> extends AdvancedEnt
         if (entityIn instanceof LivingEntity) {
             LivingEntity LivingEntity = (LivingEntity) entityIn;
             HumanoidArm Handside = LivingEntity.getMainArm();
-            return LivingEntity.swingingArm == InteractionHand.MAIN_HAND ? Handside : Handside.getOpposite();
+            return (LivingEntity.getCurrentSwing() != null ? LivingEntity.getCurrentSwing().hand() : InteractionHand.MAIN_HAND) == InteractionHand.MAIN_HAND ? Handside : Handside.getOpposite();
         } else {
             return HumanoidArm.RIGHT;
         }

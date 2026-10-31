@@ -52,7 +52,7 @@ public class RenderDragonBase extends IafMobRenderer<EntityDragonBase, AdvancedE
         // vanilla already scaled the model (and the shadow) by getIafScale(): only the dragon's own size on top
         this.shadowRadius = size * VanillaScale.undo(entity);
         float f7 = entity.prevDragonPitch + (entity.getDragonPitch() - entity.prevDragonPitch) * partialTickTime;
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(f7));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(f7));
         float s = size * VanillaScale.undo(entity);
         matrixStackIn.scale(s, s, s);
     }

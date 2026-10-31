@@ -30,12 +30,12 @@ public class RenderGhostSword extends IafEntityRenderer<EntityGhostSword> {
     @Override
     protected void renderLegacy(EntityGhostSword entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         matrixStackIn.pushPose();
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90.0F));
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90.0F));
+        matrixStackIn.rotate(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
         matrixStackIn.translate(0, 0.5F, 0);
         matrixStackIn.scale(2F, 2F, 2F);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(0.0F));
-        matrixStackIn.mulPose(Axis.ZN.rotationDegrees((entityIn.tickCount + partialTicks) * 30.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(0.0F));
+        matrixStackIn.rotate(Axis.ZN.rotationDegrees((entityIn.tickCount + partialTicks) * 30.0F));
         matrixStackIn.translate(0, -0.15F, 0);
         com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(new ItemStack(IafItemRegistry.GHOST_SWORD.get()), ItemDisplayContext.GROUND, 240, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
         matrixStackIn.popPose();

@@ -1,27 +1,23 @@
 package com.github.alexthe666.iceandfire.world.feature;
+import com.github.alexthe666.iceandfire.world.gen.IafFeature;
 import net.minecraft.world.entity.EntitySpawnReason;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.material.Fluids;
 
-public class SpawnHippocampus extends Feature<NoneFeatureConfiguration> {
+public class SpawnHippocampus extends IafFeature {
 
-    public SpawnHippocampus(Codec<NoneFeatureConfiguration> configFactoryIn) {
-        super(configFactoryIn);
+    public SpawnHippocampus() {
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(IafFeature.Context context) {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

@@ -1,7 +1,6 @@
 package com.github.alexthe666.iceandfire.world.gen;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -10,11 +9,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
+public class WorldGenDreadRuin extends IafFeature {
     private static final Identifier STRUCTURE_0 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_0");
     private static final Identifier STRUCTURE_1 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_1");
     private static final Identifier STRUCTURE_2 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_2");
@@ -30,8 +26,7 @@ public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
     private static final Identifier STRUCTURE_12 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_12");
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
-    public WorldGenDreadRuin(Codec<NoneFeatureConfiguration> configFactoryIn) {
-        super(configFactoryIn);
+    public WorldGenDreadRuin() {
     }
 
     public static Rotation getRotationFromFacing(Direction facing) {
@@ -81,7 +76,7 @@ public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(IafFeature.Context context) {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

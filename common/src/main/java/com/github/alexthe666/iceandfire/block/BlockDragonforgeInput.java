@@ -36,11 +36,6 @@ import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry
 
 public class BlockDragonforgeInput extends BaseEntityBlock implements IDragonProof {
 
-    // Built from mod parameters, not data: the codec only hands out this block
-    @Override
-    protected @NotNull MapCodec<? extends BlockDragonforgeInput> codec() {
-        return MapCodec.unit(this);
-    }
 
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
     private final int dragonType;
@@ -48,7 +43,7 @@ public class BlockDragonforgeInput extends BaseEntityBlock implements IDragonPro
     public BlockDragonforgeInput(int dragonType) {
         super(
             dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
-                .pushReaction(PushReaction.BLOCK)
+                .pushReaction(PushReaction.IMMOVEABLE)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .dynamicShape()

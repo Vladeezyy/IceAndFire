@@ -47,7 +47,7 @@ public class RenderJar<T extends TileEntityJar> extends IafBlockEntityRenderer<T
         if (hasPixie) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5F, 1.501F, 0.5F);
-            matrixStackIn.mulPose(Axis.XP.rotationDegrees(180.0F));
+            matrixStackIn.rotate(Axis.XP.rotationDegrees(180.0F));
             matrixStackIn.pushPose();
             RenderType type = TEXTURE_0;
             RenderType typeGlow = TEXTURE_0_GLO;
@@ -81,7 +81,7 @@ public class RenderJar<T extends TileEntityJar> extends IafBlockEntityRenderer<T
                 } else {
                     matrixStackIn.translate(0F, 0.60F, 0F);
                 }
-                matrixStackIn.mulPose(Axis.YP.rotationDegrees(this.interpolateRotation(entity.prevRotationYaw, entity.rotationYaw, partialTicks)));
+                matrixStackIn.rotate(Axis.YP.rotationDegrees(this.interpolateRotation(entity.prevRotationYaw, entity.rotationYaw, partialTicks)));
                 matrixStackIn.scale(0.50F, 0.50F, 0.50F);
                 MODEL_PIXIE.animateInJar(entity.hasProduced, entity, 0);
                 com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL_PIXIE, matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn, -1);

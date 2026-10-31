@@ -7,7 +7,6 @@ import com.github.alexthe666.iceandfire.entity.EntityHydra;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.world.IafWorldData;
 import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -24,25 +23,21 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
+public class WorldGenHydraCave extends IafFeature implements TypedFeature {
 
     public static final ResourceKey<LootTable> HYDRA_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/hydra_cave"));
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
-    public WorldGenHydraCave(Codec<NoneFeatureConfiguration> configFactoryIn) {
-        super(configFactoryIn);
+    public WorldGenHydraCave() {
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(IafFeature.Context context) {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();
@@ -81,7 +76,7 @@ public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> impleme
                             worldIn.setBlock(blockpos.above(), Blocks.SHORT_GRASS.defaultBlockState(), 2);
                         }
                         if (rand.nextInt(9) == 0) {
-                            Holder<ConfiguredFeature<?, ?>> holder = context.level().registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).get(TreeFeatures.SWAMP_OAK).orElse((Holder.Reference<ConfiguredFeature<?, ?>>)null);
+                            Holder<Feature> holder = context.level().registryAccess().lookupOrThrow(Registries.FEATURE).get(TreeFeatures.SWAMP_OAK).orElse(null);
                             if (holder != null)
                                 holder.value().place(worldIn, generator, rand, blockpos.above());
                         }

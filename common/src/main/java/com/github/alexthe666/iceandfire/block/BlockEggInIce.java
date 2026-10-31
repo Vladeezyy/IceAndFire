@@ -23,12 +23,7 @@ import javax.annotation.Nullable;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.EGG_IN_ICE;
 
 public class BlockEggInIce extends BaseEntityBlock {
-    public static final MapCodec<BlockEggInIce> CODEC = simpleCodec(properties -> new BlockEggInIce());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockEggInIce> codec() {
-        return CODEC;
-    }
 
     public Item itemBlock;
 
@@ -62,7 +57,7 @@ public class BlockEggInIce extends BaseEntityBlock {
     }
 
     @Override
-    public void playerDestroy(@NotNull Level worldIn, Player player, @NotNull BlockPos pos, @NotNull BlockState state, BlockEntity te, @NotNull ItemStack stack) {
+    public void playerDestroy(@NotNull net.minecraft.server.level.ServerLevel worldIn, net.minecraft.server.level.ServerPlayer player, @NotNull BlockPos pos, @NotNull BlockState state, BlockEntity te, @NotNull ItemStack stack) {
         player.awardStat(Stats.BLOCK_MINED.get(this));
         player.causeFoodExhaustion(0.005F);
     }

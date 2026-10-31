@@ -86,9 +86,9 @@ public class RenderGhost extends IafMobRenderer<EntityGhost, ModelGhost> {
         poseStack.pushPose();
         poseStack.translate(0, 0.8F + Mth.sin((ghost.tickCount + state.partialTick) * 0.15F) * 0.1F, 0);
         poseStack.scale(0.6F, 0.6F, 0.6F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+        poseStack.rotate(Axis.YP.rotationDegrees(180.0F));
         this.drawFace(poseStack, builder, overlay, alpha, 1F, 0.5F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+        poseStack.rotate(Axis.YP.rotationDegrees(180.0F));
         this.drawFace(poseStack, builder, overlay, alpha, 0.0F, 0.5F);
         poseStack.popPose();
         poseStack.popPose();

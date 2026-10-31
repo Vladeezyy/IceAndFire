@@ -85,7 +85,7 @@ public class RenderPodium<T extends TileEntityPodium> extends IafBlockEntityRend
                 float f3 = Mth.sin(f2 / 10.0F) * 0.1F + 0.1F;
                 matrixStackIn.translate(0.5F, 1.55F + f3, 0.5F);
                 float f4 = (f2 / 20.0F);
-                matrixStackIn.mulPose(Axis.YP.rotation(f4));
+                matrixStackIn.rotate(Axis.YP.rotation(f4));
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0, 0.2F, 0);
                 matrixStackIn.scale(0.65F, 0.65F, 0.65F);

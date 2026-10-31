@@ -44,8 +44,8 @@ public class LayerPixieItem extends IafEntityLayer<EntityPixie, IafMobRenderStat
                 matrixStackIn.translate(-0.075F, 0, -0.05F);
             }
             matrixStackIn.translate(0.05F, 0.55F, -0.4F);
-            matrixStackIn.mulPose(Axis.XP.rotationDegrees(200.0F));
-            matrixStackIn.mulPose(Axis.YP.rotationDegrees(180.0F));
+            matrixStackIn.rotate(Axis.XP.rotationDegrees(200.0F));
+            matrixStackIn.rotate(Axis.YP.rotationDegrees(180.0F));
             com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(itemstack, ItemDisplayContext.FIXED, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
             matrixStackIn.popPose();
         }

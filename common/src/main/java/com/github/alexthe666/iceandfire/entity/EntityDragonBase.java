@@ -1180,7 +1180,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
                     compound.put("Dragon", dragonTag);
                     ItemNbt.setTag(stack, compound);
                     this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 1, 1);
-                    player.swing(hand);
+                    player.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
                     return InteractionResult.SUCCESS;
                 }
                 this.tame(player);
@@ -1483,7 +1483,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     protected boolean isBreakable(BlockPos pos, BlockState state, float hardness, EntityDragonBase entity) {
-        return state.blocksMotion() && !state.isAir() &&
+        return state.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) && !state.isAir() &&
                 state.getFluidState().isEmpty() && !state.getShape(level(), pos).isEmpty() &&
                 state.getDestroySpeed(level(), pos) >= 0F &&
                 state.getDestroySpeed(level(), pos) <= hardness &&
@@ -2819,7 +2819,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public BlockPos getEscortPosition() {
-        return this.getOwner() != null ? new BlockPos(this.getOwner().blockPosition()) : this.blockPosition();
+        return this.getOwner() != null ? this.getOwner().blockPosition().immutable() : this.blockPosition();
     }
 
     public boolean shouldTPtoOwner() {

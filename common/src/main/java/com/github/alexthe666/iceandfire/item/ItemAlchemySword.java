@@ -57,7 +57,7 @@ public class ItemAlchemySword extends Item implements IafTieredItem {
         if (this == IafItemRegistry.DRAGONBONE_SWORD_LIGHTNING.get() && IafConfig.dragonWeaponLightningAbility) {
             boolean flag = true;
             if (attacker instanceof Player) {
-                if (attacker.attackAnim > 0.2) {
+                if (attacker.getSwingAnimation(0) > 0.2) {
                     flag = false;
                 }
             }

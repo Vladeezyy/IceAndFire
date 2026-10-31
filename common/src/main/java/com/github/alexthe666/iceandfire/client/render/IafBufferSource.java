@@ -164,6 +164,12 @@ public final class IafBufferSource implements MultiBufferSource {
             return this;
         }
 
+        @Override
+        public VertexConsumer setUv3(float u, float v) {
+            // 26.3: the glint formats' decal coordinates (vanilla's sheeted decal sets them); replayed as 0, 0
+            return this;
+        }
+
         void replay(VertexConsumer consumer) {
             for (int v = 0; v < this.count; v++) {
                 int fo = v * 8, io = v * 3;
@@ -173,6 +179,7 @@ public final class IafBufferSource implements MultiBufferSource {
                     .setUv(this.floats.getFloat(fo + 3), this.floats.getFloat(fo + 4))
                     .setUv1(overlay & 0xFFFF, overlay >>> 16)
                     .setUv2(light & 0xFFFF, light >>> 16)
+                    .setUv3(0, 0)
                     .setNormal(this.floats.getFloat(fo + 5), this.floats.getFloat(fo + 6), this.floats.getFloat(fo + 7));
             }
         }

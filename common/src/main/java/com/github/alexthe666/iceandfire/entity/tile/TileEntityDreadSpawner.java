@@ -105,4 +105,10 @@ public class TileEntityDreadSpawner extends BlockEntity implements Spawner {
         return this.spawner;
     }
 
+
+    @Override
+    public void setEntityData(net.minecraft.world.item.component.TypedEntityData<net.minecraft.world.entity.EntityType<?>> data, net.minecraft.util.RandomSource random) {
+        this.spawner.setEntityData(data, this.level, random, this.worldPosition);
+        this.setChanged();
+    }
 }

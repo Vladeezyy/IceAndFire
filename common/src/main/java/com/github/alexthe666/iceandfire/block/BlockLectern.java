@@ -34,12 +34,7 @@ import javax.annotation.Nullable;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.IAF_LECTERN;
 
 public class BlockLectern extends BaseEntityBlock {
-    public static final MapCodec<BlockLectern> CODEC = simpleCodec(properties -> new BlockLectern());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockLectern> codec() {
-        return CODEC;
-    }
 
     public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.Plane.HORIZONTAL);
     protected static final VoxelShape AABB = Block.box(4, 0, 4, 12, 19, 12);

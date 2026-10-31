@@ -53,7 +53,7 @@ public class IafStructure extends Structure {
      */
     protected boolean isBiomeValid(GenerationContext pContext, Map.Entry<String, SpawnBiomeData> validBiomes, BlockPos blockPos) {
         int y = pContext.chunkGenerator().getFirstOccupiedHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, pContext.heightAccessor(), pContext.randomState());
-        Holder<Biome> biome = pContext.chunkGenerator().getBiomeSource().getNoiseBiome(QuartPos.fromBlock(blockPos.getX()), QuartPos.fromBlock(y), QuartPos.fromBlock(blockPos.getZ()), pContext.randomState().sampler());
+        Holder<Biome> biome = pContext.chunkGenerator().getBiomeSource().createUncachedResolver(pContext.randomState()).getNoiseBiome(QuartPos.fromBlock(blockPos.getX()), QuartPos.fromBlock(y), QuartPos.fromBlock(blockPos.getZ()));
         return BiomeConfig.test(validBiomes, biome);
     }
 

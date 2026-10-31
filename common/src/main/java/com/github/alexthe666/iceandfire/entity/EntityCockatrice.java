@@ -43,7 +43,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
@@ -157,7 +157,7 @@ public class EntityCockatrice extends TamableAnimal implements IAnimatedEntity, 
                 if (entity instanceof Player) {
                     return !((Player) entity).isCreative() && !entity.isSpectator();
                 } else {
-                    return ((entity instanceof Enemy) && EntityCockatrice.this.isTame() && !(entity instanceof Creeper) && !(entity instanceof ZombifiedPiglin) && !(entity instanceof EnderMan) ||
+                    return ((entity instanceof Enemy) && EntityCockatrice.this.isTame() && !(entity instanceof Creeper) && !(entity instanceof ZombifiedPiglin) && !(entity instanceof Enderman) ||
                         ServerEvents.isCockatriceTarget(entity) && !ServerEvents.isChicken(entity));
                 }
             }

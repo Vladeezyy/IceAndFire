@@ -26,19 +26,14 @@ import javax.annotation.Nullable;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.DREAD_PORTAL;
 
 public class BlockDreadPortal extends BaseEntityBlock implements IDreadBlock {
-    public static final MapCodec<BlockDreadPortal> CODEC = simpleCodec(properties -> new BlockDreadPortal());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockDreadPortal> codec() {
-        return CODEC;
-    }
 
 
     public BlockDreadPortal() {
         super(
             dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.NONE)
-                .pushReaction(PushReaction.BLOCK)
+                .pushReaction(PushReaction.IMMOVEABLE)
                 .dynamicShape()
                 .strength(-1, 100000)
                 .lightLevel((state) -> 1)

@@ -59,7 +59,7 @@ public class RenderMyrmexBase extends IafMobRenderer<EntityMyrmexBase, AdvancedE
         scale *= VanillaScale.undo(myrmex);
         matrixStackIn.scale(scale, scale, scale);
         if (myrmex.isPassenger() && myrmex.getGrowthStage() < 2) {
-            matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
+            matrixStackIn.rotate(Axis.YP.rotationDegrees(90.0F));
         }
     }
 

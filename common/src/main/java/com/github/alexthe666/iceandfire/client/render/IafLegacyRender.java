@@ -41,7 +41,7 @@ public final class IafLegacyRender {
     /** 1.21.1's ItemRenderer.getFoilBuffer(Direct): the glint is a render type of its own on 26.x, drawn with the same vertices */
     public static com.mojang.blaze3d.vertex.VertexConsumer foilBuffer(MultiBufferSource buffers, net.minecraft.client.renderer.rendertype.RenderType type, boolean foil) {
         com.mojang.blaze3d.vertex.VertexConsumer base = buffers.getBuffer(type);
-        return foil ? new Both(buffers.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityGlint()), base) : base;
+        return foil ? new Both(buffers.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.patternedShieldGlint()), base) : base;
     }
 
     /** Every vertex to both consumers (26.2 removed VertexMultiConsumer) */
@@ -54,5 +54,6 @@ public final class IafLegacyRender {
         @Override public com.mojang.blaze3d.vertex.VertexConsumer setUv2(int u, int v) { a.setUv2(u, v); b.setUv2(u, v); return this; }
         @Override public com.mojang.blaze3d.vertex.VertexConsumer setNormal(float x, float y, float z) { a.setNormal(x, y, z); b.setNormal(x, y, z); return this; }
         @Override public com.mojang.blaze3d.vertex.VertexConsumer setLineWidth(float width) { a.setLineWidth(width); b.setLineWidth(width); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setUv3(float u, float v) { a.setUv3(u, v); b.setUv3(u, v); return this; }
     }
 }

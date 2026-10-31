@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
 import com.github.alexthe666.iceandfire.world.IafWorldData;
 import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
 import com.github.alexthe666.iceandfire.world.MyrmexWorldData;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -23,15 +22,12 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implements TypedFeature {
+public class WorldGenMyrmexHive extends IafFeature implements TypedFeature {
 
     private static final BlockState DESERT_RESIN = IafBlockRegistry.MYRMEX_DESERT_RESIN.get().defaultBlockState();
     private static final BlockState STICKY_DESERT_RESIN = IafBlockRegistry.MYRMEX_DESERT_RESIN_STICKY.get().defaultBlockState();
@@ -46,8 +42,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
     private final boolean jungle;
     private BlockPos centerOfHive;
 
-    public WorldGenMyrmexHive(boolean small, boolean jungle, Codec<NoneFeatureConfiguration> configFactoryIn) {
-        super(configFactoryIn);
+    public WorldGenMyrmexHive(boolean small, boolean jungle) {
         this.small = small;
         this.jungle = jungle;
     }
@@ -64,7 +59,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(IafFeature.Context context) {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos pos = context.origin();

@@ -67,7 +67,7 @@ public class SeaSerpentAIRandomSwimming extends RandomStrollGoal {
 
     private boolean canJumpTo(BlockPos pos, int dx, int dz, int scale) {
         BlockPos blockpos = pos.offset(dx * scale, 0, dz * scale);
-        return this.mob.level().getFluidState(blockpos).is(FluidTags.WATER) && !this.mob.level().getBlockState(blockpos).blocksMotion();
+        return this.mob.level().getFluidState(blockpos).is(FluidTags.WATER) && !this.mob.level().getBlockState(blockpos).is(net.minecraft.tags.BlockTags.BLOCKS_MOTION);
     }
 
     private boolean isAirAbove(BlockPos pos, int dx, int dz, int scale) {

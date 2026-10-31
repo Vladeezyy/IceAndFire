@@ -20,7 +20,7 @@ public class CyclopsAIAttackMelee extends MeleeAttackGoal {
             return;
         }
         if (this.mob.isWithinMeleeAttackRange(entity)) {
-            this.mob.swing(InteractionHand.MAIN_HAND);
+            this.mob.swing(InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             this.mob.doHurtTarget((net.minecraft.server.level.ServerLevel) this.mob.level(), entity);
         }
     }

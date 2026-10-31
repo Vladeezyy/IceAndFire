@@ -486,7 +486,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
         if (flag2) {
             this.onStaffInteract(player, itemstack);
-            player.swing(hand);
+            player.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             return InteractionResult.SUCCESS;
         }
         boolean flag = itemstack.getItem() == Items.NAME_TAG || itemstack.getItem() == Items.LEAD;

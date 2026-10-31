@@ -8,17 +8,14 @@ import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.datagen.tags.IafBlockTags;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
-import com.mojang.serialization.Codec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class WorldGenLightningDragonCave extends WorldGenDragonCave {
     public static ResourceKey<LootTable> LIGHTNING_DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "chest/lightning_dragon_female_cave"));
     public static ResourceKey<LootTable> LIGHTNING_DRAGON_CHEST_MALE = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "chest/lightning_dragon_male_cave"));
 
-    public WorldGenLightningDragonCave(final Codec<NoneFeatureConfiguration> configuration) {
-        super(configuration);
+    public WorldGenLightningDragonCave() {
         DRAGON_CHEST = LIGHTNING_DRAGON_CHEST;
         DRAGON_MALE_CHEST = LIGHTNING_DRAGON_CHEST_MALE;
         CEILING_DECO = new WorldGenCaveStalactites(IafBlockRegistry.CRACKLED_STONE.get(), 6);

@@ -18,13 +18,13 @@ public class CustomizeToDragon extends LootItemConditionalFunction {
 
     public static final MapCodec<CustomizeToDragon> CODEC = RecordCodecBuilder.mapCodec(instance -> commonFields(instance).apply(instance, CustomizeToDragon::new));
 
-    public CustomizeToDragon(List<LootItemCondition> conditionsIn) {
+    public CustomizeToDragon(java.util.Optional<net.minecraft.core.Holder<LootItemCondition>> conditionsIn) {
         super(conditionsIn);
     }
 
     @Override
     protected @NotNull ItemStack run(final ItemStack stack, @NotNull final LootContext context) {
-        if (!stack.isEmpty() && context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof EntityDragonBase dragon) {
+        if (!stack.isEmpty() && context.getOptional(LootContextParams.THIS_ENTITY) instanceof EntityDragonBase dragon) {
             if (stack.getItem() == IafItemRegistry.DRAGON_BONE.get()) {
                 stack.setCount(1 + dragon.getRandom().nextInt(1 + (dragon.getAgeInDays() / 25)));
                 return stack;

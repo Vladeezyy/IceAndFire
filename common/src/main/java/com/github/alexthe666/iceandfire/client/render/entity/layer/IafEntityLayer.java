@@ -49,7 +49,7 @@ public abstract class IafEntityLayer<T extends LivingEntity, S extends RampartLi
 	 * after the body (vanilla's overlays use 1; stacked overlays count up).
 	 */
 	protected void submitParent(PoseStack poseStack, SubmitNodeCollector collector, S state, RenderType type, int light, int overlay, int color, int order) {
-		collector.order(order).submitModel(this.getParentModel(), state, poseStack, type, light, overlay, color, null, state.outlineColor, null);
+		collector.order(order).submitModel(this.getParentModel(), state, poseStack, type, light, overlay, color, null, state.outlineColor);
 	}
 
 	protected void submitParent(PoseStack poseStack, SubmitNodeCollector collector, S state, RenderType type, int light) {

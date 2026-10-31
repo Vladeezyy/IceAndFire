@@ -134,17 +134,17 @@ public class ClientEvents {
                 GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
                 EntityDataProvider.getCapability(player).ifPresent(data -> {
-                    if (IafConfig.sirenShader && data.sirenData.charmedBy == null && renderer.currentPostEffect() != null) {
-                        if (SIREN_SHADER.equals(renderer.currentPostEffect()))
-                            renderer.clearPostEffect();
+                    if (IafConfig.sirenShader && data.sirenData.charmedBy == null && !localEffects(player).isEmpty()) {
+                        if (localEffects(player).contains(SIREN_SHADER))
+                            localEffects(player).remove(SIREN_SHADER);
                     }
 
                     if (data.sirenData.charmedBy == null) {
                         return;
                     }
 
-                    if (IafConfig.sirenShader && !data.sirenData.isCharmed && SIREN_SHADER.equals(renderer.currentPostEffect())) {
-                        renderer.clearPostEffect();
+                    if (IafConfig.sirenShader && !data.sirenData.isCharmed && localEffects(player).contains(SIREN_SHADER)) {
+                        localEffects(player).remove(SIREN_SHADER);
                     }
 
                 if (data.sirenData.isCharmed) {
@@ -152,8 +152,8 @@ public class ClientEvents {
                         IceAndFire.PROXY.spawnParticle(EnumParticles.Siren_Appearance, player.getX(), player.getY(), player.getZ(), data.sirenData.charmedBy.getHairColor(), 0, 0);
                     }
 
-                        if (IafConfig.sirenShader && renderer.currentPostEffect() == null) {
-                            renderer.setPostEffect(SIREN_SHADER);
+                        if (IafConfig.sirenShader && !localEffects(player).contains(SIREN_SHADER)) {
+                            localEffects(player).add(SIREN_SHADER);
                         }
 
                     }
@@ -215,5 +215,10 @@ public class ClientEvents {
                 }
             }
         }
+    }
+
+    /** The post effects the game applies for the local player (26.3: no GameRenderer post effect); other players have none */
+    private static java.util.List<net.minecraft.resources.Identifier> localEffects(Player player) {
+        return player instanceof net.minecraft.client.player.LocalPlayer local ? local.getActivePostEffects() : new java.util.ArrayList<>();
     }
 }

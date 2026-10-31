@@ -79,7 +79,7 @@ public class ItemDragonHorn extends Item {
             newTag.putString("DragonHornEntityID", BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString());
             ItemNbt.setTag(trueStack, newTag);
 
-            playerIn.swing(hand);
+            playerIn.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             playerIn.level().playSound(playerIn, playerIn.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.NEUTRAL, 3.0F, 0.75F);
             target.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.SUCCESS;

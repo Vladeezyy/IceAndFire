@@ -7,7 +7,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,16 +16,16 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockCharedPath extends DirtPathBlock {
+public class BlockCharedPath extends net.minecraft.world.level.block.PathBlock {
     public static final BooleanProperty REVERTS = BooleanProperty.create("revert");
     public Item itemBlock;
     public int dragonType;
 
     public BlockCharedPath(int dragonType) {
-        super(
+        super(net.minecraft.world.level.block.Blocks.DIRT,
             dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.PLANT)
-                .pushReaction(PushReaction.DESTROY)
+                .pushReaction(PushReaction.POPPED)
                 .sound(dragonType != 1 ? SoundType.GRAVEL : SoundType.GLASS)
                 .strength(0.6F)
                 .friction(dragonType != 1 ? 0.6F : 0.98F)

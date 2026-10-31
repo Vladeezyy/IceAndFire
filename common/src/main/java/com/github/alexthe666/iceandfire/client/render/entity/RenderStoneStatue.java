@@ -115,7 +115,7 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
         if (model instanceof BasicEntityModel basic) {
             basic.young = entityIn.isBaby();
             basic.riding = shouldSit;
-            basic.attackTime = entityIn.getAttackAnim(partialTicks);
+            basic.attackTime = entityIn.getSwingAnimation(partialTicks);
         }
         if (model instanceof AdvancedEntityModel) {
             ((AdvancedEntityModel) model).resetToDefaultPose();
@@ -133,8 +133,8 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
         }
         preRenderCallback(entityIn, matrixStackIn, partialTicks);
         matrixStackIn.translate(0, 1.5F, 0);
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(180.0F));
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(180.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(yaw));
         if (model instanceof ICustomStatueModel && fakeEntity != null) {
             ((ICustomStatueModel) model).renderStatue(matrixStackIn, ivertexbuilder, packedLightIn, fakeEntity);
             if (model instanceof ModelHydraBody && fakeEntity instanceof EntityHydra) {
@@ -154,8 +154,8 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
             matrixStackIn.pushPose();
             preRenderCallback(entityIn, matrixStackIn, partialTicks);
             matrixStackIn.translate(0, 1.5F, 0);
-            matrixStackIn.mulPose(Axis.XP.rotationDegrees(180.0F));
-            matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw));
+            matrixStackIn.rotate(Axis.XP.rotationDegrees(180.0F));
+            matrixStackIn.rotate(Axis.YP.rotationDegrees(yaw));
             if (model instanceof ICustomStatueModel) {
                 ((ICustomStatueModel) model).renderStatue(matrixStackIn, ivertexbuilder2, packedLightIn, fakeEntity);
             } else {

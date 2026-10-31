@@ -65,8 +65,8 @@ public class RenderPixieHouse<T extends TileEntityPixieHouse> extends IafBlockEn
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5F, 1.501F, 0.5F);
         matrixStackIn.pushPose();
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(180.0F));
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(rotation));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(180.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(rotation));
         if (entity != null && entity.getLevel() != null && entity.hasPixie) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0F, 0.95F, 0F);

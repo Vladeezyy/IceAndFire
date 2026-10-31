@@ -2,13 +2,13 @@ package com.github.alexthe666.iceandfire.client.render;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.render.tile.RenderDreadPortal;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
-import com.mojang.blaze3d.platform.BlendFactor;
-import com.mojang.blaze3d.PrimitiveTopology;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.pipeline.CompareOp;
+import com.mojang.renderpearl.api.pipeline.BlendFactor;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
 import net.minecraft.client.renderer.BindGroupLayouts;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
@@ -32,24 +32,28 @@ public final class IafRenderType {
         // 26.2: vanilla's entity_cutout (bind group layouts in its order: globals, matrices, fog, lighting, samplers)
         return RenderPipeline.builder()
             .withBindGroupLayout(BindGroupLayouts.GLOBALS)
-            .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+            .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+            .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
             .withBindGroupLayout(BindGroupLayouts.FOG)
-            .withBindGroupLayout(BindGroupLayouts.LIGHTING)
             .withLocation(id(location))
             .withVertexShader("core/entity")
             .withFragmentShader("core/entity")
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER0_SAMPLER2)
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+            .withBindGroupLayout(BindGroupLayouts.LIGHTING)
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER2)
             .withVertexBinding(0, DefaultVertexFormat.ENTITY)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
             .withShaderDefine("PER_FACE_LIGHTING")
             .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-            .withCull(false);
+            .withCull(false)
+            .withColorTargetState(ColorTargetState.DEFAULT);
     }
 
     /** The ghost: premultiplied blending (ONE, ONE_MINUS_SRC_ALPHA) as the original's ghost transparency */
     private static final RenderPipeline GHOST_PIPELINE = entity("pipeline/ghost")
         .withColorTargetState(new ColorTargetState(new BlendFunction(BlendFactor.ONE, BlendFactor.ONE_MINUS_SRC_ALPHA, BlendFactor.ONE, BlendFactor.ONE_MINUS_SRC_ALPHA)))
+        .withColorTargetState(ColorTargetState.DEFAULT)
         .withDepthStencilState(DepthStencilState.DEFAULT)
         .build();
     /** The crack overlay of a stone statue: translucent, only where the statue already is (equal depth) */
@@ -61,7 +65,8 @@ public final class IafRenderType {
     private static final RenderPipeline DREAD_PORTAL_PIPELINE = RenderPipeline.builder()
         // 26.2: as vanilla's end portal snippet
         .withBindGroupLayout(BindGroupLayouts.GLOBALS)
-        .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+        .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+        .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
         .withBindGroupLayout(BindGroupLayouts.FOG)
         .withLocation(id("pipeline/dread_portal"))
         .withVertexShader(id("core/rendertype_dread_portal"))
@@ -70,6 +75,7 @@ public final class IafRenderType {
         .withBindGroupLayout(BindGroupLayouts.SAMPLER0_SAMPLER1)
         .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
         .withPrimitiveTopology(PrimitiveTopology.QUADS)
+        .withColorTargetState(ColorTargetState.DEFAULT)
         .withDepthStencilState(DepthStencilState.DEFAULT)
         .build();
 

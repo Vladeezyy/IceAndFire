@@ -13,7 +13,6 @@ import com.github.alexthe666.iceandfire.entity.util.HomePosition;
 import com.github.alexthe666.iceandfire.util.ShapeBuilder;
 import com.github.alexthe666.iceandfire.world.IafWorldData;
 import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -32,9 +31,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
@@ -43,7 +39,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
+public abstract class WorldGenDragonCave extends IafFeature implements TypedFeature {
     public ResourceKey<LootTable> DRAGON_CHEST;
     public ResourceKey<LootTable> DRAGON_MALE_CHEST;
     public WorldGenCaveStalactites CEILING_DECO;
@@ -54,12 +50,11 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
     public boolean isMale;
 
-    protected WorldGenDragonCave(Codec<NoneFeatureConfiguration> codec) {
-        super(codec);
+    protected WorldGenDragonCave() {
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(IafFeature.Context context) {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

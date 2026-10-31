@@ -36,7 +36,7 @@ public class ItemPixieWand extends Item {
         boolean flag = playerIn.isCreative() || EnchantmentLevels.has(worldIn, Enchantments.INFINITY, itemStackIn);
         ItemStack itemstack = this.findAmmo(playerIn);
         playerIn.startUsingItem(hand);
-        playerIn.swing(hand);
+        playerIn.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
         if (!itemstack.isEmpty() || flag) {
             boolean flag1 = playerIn.isCreative() || this.isInfinite(itemstack, itemStackIn, playerIn);
             if (!flag1) {

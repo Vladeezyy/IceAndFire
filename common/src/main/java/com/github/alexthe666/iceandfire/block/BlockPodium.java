@@ -27,12 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockPodium extends BaseEntityBlock {
-    public static final MapCodec<BlockPodium> CODEC = simpleCodec(properties -> new BlockPodium());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockPodium> codec() {
-        return CODEC;
-    }
 
 
     protected static final VoxelShape AABB = Block.box(2, 0, 2, 14, 23, 14);

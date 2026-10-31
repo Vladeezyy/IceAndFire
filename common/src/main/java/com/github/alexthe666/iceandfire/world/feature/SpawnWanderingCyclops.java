@@ -1,10 +1,10 @@
 package com.github.alexthe666.iceandfire.world.feature;
+import com.github.alexthe666.iceandfire.world.gen.IafFeature;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityCyclops;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
@@ -13,18 +13,14 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class SpawnWanderingCyclops extends Feature<NoneFeatureConfiguration> {
+public class SpawnWanderingCyclops extends IafFeature {
 
-    public SpawnWanderingCyclops(Codec<NoneFeatureConfiguration> configFactoryIn) {
-        super(configFactoryIn);
+    public SpawnWanderingCyclops() {
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(IafFeature.Context context) {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

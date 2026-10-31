@@ -17,8 +17,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.storage.LevelData;
 import dev.vladeezyy.iceandfire.platform.Registrar;
@@ -30,36 +30,37 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class IafWorldRegistry {
-    public static final Registrar<Feature<?>> FEATURES = Registrar.create(BuiltInRegistries.FEATURE, IceAndFire.MODID);
+    // 26.3: features are data (worldgen/feature), their types are codecs; the mod's types are their features
+    public static final Registrar<MapCodec<? extends Feature>> FEATURES = Registrar.create(Registries.FEATURE_TYPE, IceAndFire.MODID);
 
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> FIRE_DRAGON_ROOST = register("fire_dragon_roost", () -> new WorldGenFireDragonRoosts(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> ICE_DRAGON_ROOST = register("ice_dragon_roost", () -> new WorldGenIceDragonRoosts(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> LIGHTNING_DRAGON_ROOST = register("lightning_dragon_roost", () -> new WorldGenLightningDragonRoosts(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> FIRE_DRAGON_CAVE = register("fire_dragon_cave", () -> new WorldGenFireDragonCave(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> ICE_DRAGON_CAVE = register("ice_dragon_cave", () -> new WorldGenIceDragonCave(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> LIGHTNING_DRAGON_CAVE = register("lightning_dragon_cave",
-            () -> new WorldGenLightningDragonCave(NoneFeatureConfiguration.CODEC));
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> FIRE_DRAGON_ROOST = register("fire_dragon_roost", () -> new WorldGenFireDragonRoosts().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> ICE_DRAGON_ROOST = register("ice_dragon_roost", () -> new WorldGenIceDragonRoosts().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> LIGHTNING_DRAGON_ROOST = register("lightning_dragon_roost", () -> new WorldGenLightningDragonRoosts().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> FIRE_DRAGON_CAVE = register("fire_dragon_cave", () -> new WorldGenFireDragonCave().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> ICE_DRAGON_CAVE = register("ice_dragon_cave", () -> new WorldGenIceDragonCave().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> LIGHTNING_DRAGON_CAVE = register("lightning_dragon_cave",
+            () -> new WorldGenLightningDragonCave().codec());
     //TODO: Should be a structure
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> CYCLOPS_CAVE = register("cyclops_cave", () -> new WorldGenCyclopsCave(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> PIXIE_VILLAGE = register("pixie_village", () -> new WorldGenPixieVillage(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SIREN_ISLAND = register("siren_island", () -> new WorldGenSirenIsland(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> HYDRA_CAVE = register("hydra_cave", () -> new WorldGenHydraCave(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> MYRMEX_HIVE_DESERT = register("myrmex_hive_desert", () -> new WorldGenMyrmexHive(false, false, NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> MYRMEX_HIVE_JUNGLE = register("myrmex_hive_jungle", () -> new WorldGenMyrmexHive(false, true, NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_DEATH_WORM = register("spawn_death_worm", () -> new SpawnDeathWorm(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_DRAGON_SKELETON_L = register("spawn_dragon_skeleton_lightning",
-            () -> new SpawnDragonSkeleton(IafEntityRegistry.LIGHTNING_DRAGON.get(), NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_DRAGON_SKELETON_F = register("spawn_dragon_skeleton_fire",
-            () -> new SpawnDragonSkeleton(IafEntityRegistry.FIRE_DRAGON.get(), NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_DRAGON_SKELETON_I = register("spawn_dragon_skeleton_ice",
-            () -> new SpawnDragonSkeleton(IafEntityRegistry.ICE_DRAGON.get(), NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_HIPPOCAMPUS = register("spawn_hippocampus", () -> new SpawnHippocampus(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_SEA_SERPENT = register("spawn_sea_serpent", () -> new SpawnSeaSerpent(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_STYMPHALIAN_BIRD = register("spawn_stymphalian_bird", () -> new SpawnStymphalianBird(NoneFeatureConfiguration.CODEC));
-    public static final RegistryEntry<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_WANDERING_CYCLOPS = register("spawn_wandering_cyclops", () -> new SpawnWanderingCyclops(NoneFeatureConfiguration.CODEC));
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> CYCLOPS_CAVE = register("cyclops_cave", () -> new WorldGenCyclopsCave().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> PIXIE_VILLAGE = register("pixie_village", () -> new WorldGenPixieVillage().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SIREN_ISLAND = register("siren_island", () -> new WorldGenSirenIsland().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> HYDRA_CAVE = register("hydra_cave", () -> new WorldGenHydraCave().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> MYRMEX_HIVE_DESERT = register("myrmex_hive_desert", () -> new WorldGenMyrmexHive(false, false).codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> MYRMEX_HIVE_JUNGLE = register("myrmex_hive_jungle", () -> new WorldGenMyrmexHive(false, true).codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_DEATH_WORM = register("spawn_death_worm", () -> new SpawnDeathWorm().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_DRAGON_SKELETON_L = register("spawn_dragon_skeleton_lightning",
+            () -> new SpawnDragonSkeleton(IafEntityRegistry.LIGHTNING_DRAGON.get()).codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_DRAGON_SKELETON_F = register("spawn_dragon_skeleton_fire",
+            () -> new SpawnDragonSkeleton(IafEntityRegistry.FIRE_DRAGON.get()).codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_DRAGON_SKELETON_I = register("spawn_dragon_skeleton_ice",
+            () -> new SpawnDragonSkeleton(IafEntityRegistry.ICE_DRAGON.get()).codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_HIPPOCAMPUS = register("spawn_hippocampus", () -> new SpawnHippocampus().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_SEA_SERPENT = register("spawn_sea_serpent", () -> new SpawnSeaSerpent().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_STYMPHALIAN_BIRD = register("spawn_stymphalian_bird", () -> new SpawnStymphalianBird().codec());
+    public static final RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> SPAWN_WANDERING_CYCLOPS = register("spawn_wandering_cyclops", () -> new SpawnWanderingCyclops().codec());
 
 
-    private static <C extends FeatureConfiguration, F extends Feature<C>> RegistryEntry<Feature<?>, F> register(final String name, final Supplier<? extends F> supplier) {
+    private static RegistryEntry<MapCodec<? extends Feature>, MapCodec<? extends Feature>> register(final String name, final Supplier<MapCodec<? extends Feature>> supplier) {
         return FEATURES.register(name, supplier);
     }
 

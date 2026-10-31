@@ -26,8 +26,8 @@ public class RenderTideTrident extends IafEntityRenderer<EntityTideTrident> {
     @Override
     protected void renderLegacy(EntityTideTrident entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         matrixStackIn.pushPose();
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90.0F));
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot()) + 90.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90.0F));
+        matrixStackIn.rotate(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot()) + 90.0F));
         VertexConsumer ivertexbuilder = IafLegacyRender.foilBuffer(bufferIn, this.tridentModel.renderType(this.getTextureLocation(entityIn)), entityIn.isFoil());
         com.github.alexthe666.iceandfire.client.render.IafModels.render(this.tridentModel, matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();

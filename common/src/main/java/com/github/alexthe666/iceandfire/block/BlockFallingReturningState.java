@@ -17,11 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockFallingReturningState extends FallingBlock {
 
-    // Built from mod parameters, not data: the codec only hands out this block
-    @Override
-    protected @NotNull MapCodec<? extends BlockFallingReturningState> codec() {
-        return MapCodec.unit(this);
-    }
 
     public static final BooleanProperty REVERTS = BooleanProperty.create("revert");
     public Item itemBlock;

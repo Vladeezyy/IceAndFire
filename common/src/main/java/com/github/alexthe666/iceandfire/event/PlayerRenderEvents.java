@@ -61,7 +61,7 @@ public class PlayerRenderEvents {
             float f3 = Mth.sin(f2 / 10.0F) * 0.1F + 0.1F;
             event.getPoseStack().translate((float) 0, event.getEntity().getBbHeight() * 1.25F, (float) 0);
             float f4 = (f2 / 20.0F) * (180F / (float) Math.PI);
-            event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f4));
+            event.getPoseStack().rotate(Axis.YP.rotationDegrees(f4));
             event.getPoseStack().pushPose();
             com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(Minecraft.getInstance().player, new ItemStack(IafItemRegistry.WEEZER_BLUE_ALBUM.get()), ItemDisplayContext.GROUND, false, event.getPoseStack(), event.getMultiBufferSource(), event.getEntity().level(), event.getPackedLight(), OverlayTexture.NO_OVERLAY, 0);
             event.getPoseStack().popPose();

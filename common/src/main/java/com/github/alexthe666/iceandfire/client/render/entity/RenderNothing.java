@@ -22,10 +22,10 @@ public class RenderNothing<T extends Entity> extends IafEntityRenderer<T> {
 
     // Only render if the debug bboxes are enabled
     @Override
-    public boolean shouldRender(@NotNull T livingEntityIn, @NotNull Frustum camera, double camX, double camY, double camZ) {
+    public boolean shouldRender(@NotNull T livingEntityIn, @NotNull Frustum camera, double camX, double camY, double camZ, float partialTicks) {
         if (!net.minecraft.client.Minecraft.getInstance().debugEntries.isCurrentlyEnabled(net.minecraft.client.gui.components.debug.DebugScreenEntries.ENTITY_HITBOXES))
             return false;
-        return super.shouldRender(livingEntityIn, camera, camX, camY, camZ);
+        return super.shouldRender(livingEntityIn, camera, camX, camY, camZ, partialTicks);
     }
 
     public @NotNull Identifier getTextureLocation(@NotNull Entity entity) {

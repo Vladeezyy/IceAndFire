@@ -25,7 +25,7 @@ public class MyrmexAITradePlayer extends Goal {
             return false;
         } else if (!this.myrmex.onGround()) {
             return false;
-        } else if (this.myrmex.hurtMarked) {
+        } else if (this.myrmex.needsSync) {
             return false;
         } else {
             Player PlayerEntity = this.myrmex.getTradingPlayer();

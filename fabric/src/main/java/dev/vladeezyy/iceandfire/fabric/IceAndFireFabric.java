@@ -32,7 +32,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
 import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
@@ -81,7 +80,6 @@ public final class IceAndFireFabric implements ModInitializer {
             }
         });
         registerBiomeModifications();
-        FabricPotionBrewingBuilder.BUILD.register(IafRecipeRegistry::registerBrewing);
         // 26.x: the client gets only the recipe serializers the server syncs (JEI shows the dragon forge recipes)
         net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization.synchronizeRecipeSerializer(com.github.alexthe666.iceandfire.recipe.DragonForgeRecipe.SERIALIZER);
         registerStorages();

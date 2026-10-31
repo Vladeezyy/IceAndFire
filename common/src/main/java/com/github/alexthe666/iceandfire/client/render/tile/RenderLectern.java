@@ -30,9 +30,9 @@ public class RenderLectern<T extends TileEntityLectern> extends IafBlockEntityRe
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5F, 1.1F, 0.5F);
         matrixStackIn.scale(0.8F, 0.8F, 0.8F);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(this.getRotation(lectern)));
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(112.0F));
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(this.getRotation(lectern)));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(112.0F));
+        matrixStackIn.rotate(Axis.YP.rotationDegrees(90.0F));
         float f4 = lectern.pageFlipPrev + (lectern.pageFlip - lectern.pageFlipPrev) * partialTicks + 0.25F;
         float f5 = lectern.pageFlipPrev + (lectern.pageFlip - lectern.pageFlipPrev) * partialTicks + 0.75F;
         f4 = (f4 - Mth.floor(f4)) * 1.6F - 0.3F;

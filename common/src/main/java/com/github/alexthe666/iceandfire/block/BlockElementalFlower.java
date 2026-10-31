@@ -19,12 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class BlockElementalFlower extends net.minecraft.world.level.block.VegetationBlock {
-    public static final MapCodec<BlockElementalFlower> CODEC = simpleCodec(properties -> new BlockElementalFlower());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockElementalFlower> codec() {
-        return CODEC;
-    }
 
     public Item itemBlock;
     protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
@@ -35,7 +30,7 @@ public class BlockElementalFlower extends net.minecraft.world.level.block.Vegeta
                 .mapColor(MapColor.PLANT)
                 .replaceable()
                 .ignitedByLava()
-                .pushReaction(PushReaction.DESTROY)
+                .pushReaction(PushReaction.POPPED)
                 .noOcclusion()
                 .noCollision()
                 .dynamicShape()

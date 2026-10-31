@@ -32,11 +32,6 @@ import javax.annotation.Nullable;
 
 public class BlockDragonforgeBricks extends BaseEntityBlock implements IDragonProof {
 
-    // Built from mod parameters, not data: the codec only hands out this block
-    @Override
-    protected @NotNull MapCodec<? extends BlockDragonforgeBricks> codec() {
-        return MapCodec.unit(this);
-    }
 
 
     public static final BooleanProperty GRILL = BooleanProperty.create("grill");
@@ -45,7 +40,7 @@ public class BlockDragonforgeBricks extends BaseEntityBlock implements IDragonPr
     public BlockDragonforgeBricks(int isFire) {
         super(
             dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
-                .pushReaction(PushReaction.BLOCK)
+                .pushReaction(PushReaction.IMMOVEABLE)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .dynamicShape()

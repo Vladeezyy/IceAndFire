@@ -81,7 +81,7 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
             matrixStackIn.pushPose();
             float bodyWidth = 0.5F;
             matrixStackIn.translate(TRANSLATE[heads - 1][head - 1] * bodyWidth, 0, 0);
-            matrixStackIn.mulPose(Axis.YP.rotationDegrees(ROTATE[heads - 1][head - 1]));
+            matrixStackIn.rotate(Axis.YP.rotationDegrees(ROTATE[heads - 1][head - 1]));
             modelArr[head - 1].setupAnim(hydra, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             com.github.alexthe666.iceandfire.client.render.IafModels.render(modelArr[head - 1], matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(hydra.hurtTime > 0 || hydra.deathTime > 0)), -1);
             matrixStackIn.popPose();
@@ -124,15 +124,15 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
         } else {
             matrixStackIn.translate(renderer.rotationPointX * scale, renderer.rotationPointY * scale, renderer.rotateAngleZ * scale);
             if (renderer.rotateAngleZ != 0.0F) {
-                matrixStackIn.mulPose(Axis.ZP.rotation(renderer.rotateAngleZ));
+                matrixStackIn.rotate(Axis.ZP.rotation(renderer.rotateAngleZ));
             }
 
             if (renderer.rotateAngleY != 0.0F) {
-                matrixStackIn.mulPose(Axis.YP.rotation(renderer.rotateAngleY));
+                matrixStackIn.rotate(Axis.YP.rotation(renderer.rotateAngleY));
             }
 
             if (renderer.rotateAngleX != 0.0F) {
-                matrixStackIn.mulPose(Axis.XP.rotation(renderer.rotateAngleX));
+                matrixStackIn.rotate(Axis.XP.rotation(renderer.rotateAngleX));
             }
         }
     }

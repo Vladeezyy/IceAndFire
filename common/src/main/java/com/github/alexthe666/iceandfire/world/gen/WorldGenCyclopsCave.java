@@ -10,7 +10,6 @@ import com.github.alexthe666.iceandfire.entity.EntityCyclops;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.util.WorldUtil;
 import com.github.alexthe666.iceandfire.world.IafWorldData;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -25,23 +24,19 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class WorldGenCyclopsCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
+public class WorldGenCyclopsCave extends IafFeature implements TypedFeature {
     public static final ResourceKey<LootTable> CYCLOPS_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/cyclops_cave"));
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
-    public WorldGenCyclopsCave(final Codec<NoneFeatureConfiguration> configuration) {
-        super(configuration);
+    public WorldGenCyclopsCave() {
     }
 
     @Override
-    public boolean place(final FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(final IafFeature.Context context) {
         if (!WorldUtil.canGenerate(IafConfig.spawnCyclopsCaveChance, context.level(), context.random(), context.origin(), getId(), true)) {
             return false;
         }
@@ -122,7 +117,7 @@ public class WorldGenCyclopsCave extends Feature<NoneFeatureConfiguration> imple
         return true;
     }
 
-    private static void generateShell(final FeaturePlaceContext<NoneFeatureConfiguration> context, int size) {
+    private static void generateShell(final IafFeature.Context context, int size) {
         int x = size + context.random().nextInt(2);
         int y = 12 + context.random().nextInt(2);
         int z = size + context.random().nextInt(2);

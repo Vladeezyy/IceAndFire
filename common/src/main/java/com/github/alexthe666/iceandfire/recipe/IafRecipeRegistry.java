@@ -135,8 +135,5 @@ public class IafRecipeRegistry {
         });
     }
 
-    /** The brewing recipes (NeoForge: RegisterBrewingRecipesEvent, Fabric: FabricBrewingRecipeRegistryBuilder) */
-    public static void registerBrewing(net.minecraft.world.item.alchemy.PotionBrewing.Builder builder) {
-        builder.addMix(Potions.WATER, IafItemRegistry.SHINY_SCALES.get(), Potions.WATER_BREATHING);
-    }
+    // 26.3: brewing recipes are data (data/iceandfire/recipe/brewing: water + shiny scales -> water breathing)
 }

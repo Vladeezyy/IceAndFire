@@ -56,8 +56,8 @@ public class RenderMobSkull extends IafEntityRenderer<EntityMobSkull> {
     @Override
     protected void renderLegacy(@NotNull EntityMobSkull entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
                 matrixStackIn.pushPose();
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(-180.0F));
-        matrixStackIn.mulPose(Axis.YN.rotationDegrees(180.0F - entity.getYaw()));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(-180.0F));
+        matrixStackIn.rotate(Axis.YN.rotationDegrees(180.0F - entity.getYaw()));
         float f = 0.0625F;
         float size = 1.0F;
         matrixStackIn.scale(size, size, size);

@@ -164,19 +164,19 @@ public class IafEntityRegistry {
 
     public static void addSpawners(Holder<Biome> biome, SpawnSink builder) {
         if (IafConfig.spawnHippogryphs && BiomeConfig.test(BiomeConfig.hippogryphBiomes, biome)) {
-            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.HIPPOGRYPH.get(), 1, 1), IafConfig.hippogryphSpawnRate);
+            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.HIPPOGRYPH.get(), net.minecraft.util.valueproviders.UniformInt.of(1, 1)), IafConfig.hippogryphSpawnRate);
             LOADED_ENTITIES.put("HIPPOGRYPH", true);
         }
         if (IafConfig.spawnLiches && BiomeConfig.test(BiomeConfig.mausoleumBiomes, biome)) {
-            builder.add(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.DREAD_LICH.get(), 1, 1), IafConfig.lichSpawnRate);
+            builder.add(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.DREAD_LICH.get(), net.minecraft.util.valueproviders.UniformInt.of(1, 1)), IafConfig.lichSpawnRate);
             LOADED_ENTITIES.put("DREAD_LICH", true);
         }
         if (IafConfig.spawnCockatrices && BiomeConfig.test(BiomeConfig.cockatriceBiomes, biome)) {
-            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.COCKATRICE.get(), 1, 2), IafConfig.cockatriceSpawnRate);
+            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.COCKATRICE.get(), net.minecraft.util.valueproviders.UniformInt.of(1, 2)), IafConfig.cockatriceSpawnRate);
             LOADED_ENTITIES.put("COCKATRICE", true);
         }
         if (IafConfig.spawnAmphitheres && BiomeConfig.test(BiomeConfig.amphithereBiomes, biome)) {
-            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.AMPHITHERE.get(), 1, 3), IafConfig.amphithereSpawnRate);
+            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.AMPHITHERE.get(), net.minecraft.util.valueproviders.UniformInt.of(1, 3)), IafConfig.amphithereSpawnRate);
             LOADED_ENTITIES.put("AMPHITHERE", true);
         }
         if (IafConfig.spawnTrolls && (
@@ -184,7 +184,7 @@ public class IafEntityRegistry {
     		BiomeConfig.test(BiomeConfig.snowyTrollBiomes, biome) ||
     		BiomeConfig.test(BiomeConfig.mountainTrollBiomes, biome)
 		)) {
-            builder.add(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.TROLL.get(), 1, 3), IafConfig.trollSpawnRate);
+            builder.add(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.TROLL.get(), net.minecraft.util.valueproviders.UniformInt.of(1, 3)), IafConfig.trollSpawnRate);
     		if (BiomeConfig.test(BiomeConfig.forestTrollBiomes, biome)) LOADED_ENTITIES.put("TROLL_F", true);
     		if (BiomeConfig.test(BiomeConfig.snowyTrollBiomes, biome)) LOADED_ENTITIES.put("TROLL_S", true);
     		if (BiomeConfig.test(BiomeConfig.mountainTrollBiomes, biome)) LOADED_ENTITIES.put("TROLL_M", true);

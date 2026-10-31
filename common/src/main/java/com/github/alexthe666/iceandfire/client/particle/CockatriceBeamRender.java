@@ -40,8 +40,8 @@ public class CockatriceBeamRender {
         Vector3d2 = Vector3d2.normalize();
         float f5 = (float) Math.acos(Vector3d2.y);
         float f6 = (float) Math.atan2(Vector3d2.z, Vector3d2.x);
-        matrixStackIn.mulPose(Axis.YP.rotation((float) Math.PI / 2.0F - f6));
-        matrixStackIn.mulPose(Axis.XP.rotation(f5));
+        matrixStackIn.rotate(Axis.YP.rotation((float) Math.PI / 2.0F - f6));
+        matrixStackIn.rotate(Axis.XP.rotation(f5));
         int i = 1;
         float f7 = f1 * 0.05F * -1.5F;
         float f8 = f * f;

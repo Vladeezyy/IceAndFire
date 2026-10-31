@@ -23,7 +23,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
@@ -276,9 +275,9 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), this.emeraldCount);
-            PotionBrewing brewing = trader.level().potionBrewing();
+            java.util.Set<Holder<Potion>> brewable = brewablePotions(trader);
             List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.listElements().filter((potion) -> {
-                return !potion.value().getEffects().isEmpty() && brewing.isBrewablePotion(potion);
+                return !potion.value().getEffects().isEmpty() && brewable.contains(potion);
             }).collect(Collectors.toList());
             Holder<Potion> lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
             ItemStack lvt_6_1_ = PotionContents.createItemStack(this.potionStack.getItem(), lvt_5_1_);
@@ -458,9 +457,9 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get(), this.emeraldCount);
-            PotionBrewing brewing = trader.level().potionBrewing();
+            java.util.Set<Holder<Potion>> brewable = brewablePotions(trader);
             List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.listElements().filter((potion) -> {
-                return !potion.value().getEffects().isEmpty() && brewing.isBrewablePotion(potion);
+                return !potion.value().getEffects().isEmpty() && brewable.contains(potion);
             }).collect(Collectors.toList());
             Holder<Potion> lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
             ItemStack lvt_6_1_ = PotionContents.createItemStack(this.potionStack.getItem(), lvt_5_1_);
@@ -560,5 +559,20 @@ public class MyrmexTrades {
             return new MerchantOffer(new ItemCost(lvt_3_1_.getItem(), lvt_3_1_.getCount()), new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get()), this.maxUses, this.xpValue, this.priceMultiplier);
         }
     }
-}
 
+    /** 1.21.1's PotionBrewing#isBrewablePotion: the potions the brewing recipes (data since 26.3) give */
+    private static java.util.Set<Holder<Potion>> brewablePotions(Entity trader) {
+        java.util.Set<Holder<Potion>> potions = new java.util.HashSet<>();
+        if (trader.level() instanceof net.minecraft.server.level.ServerLevel level) {
+            for (var holder : level.recipeAccess().getRecipes()) {
+                if (holder.value() instanceof net.minecraft.world.item.crafting.BrewingRecipe brewing) {
+                    var contents = brewing.getOutput().create().get(net.minecraft.core.component.DataComponents.POTION_CONTENTS);
+                    if (contents != null) {
+                        contents.potion().ifPresent(potions::add);
+                    }
+                }
+            }
+        }
+        return potions;
+    }
+}

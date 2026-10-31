@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceKey;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
@@ -14,16 +13,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import dev.vladeezyy.iceandfire.platform.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldGenIceDragonRoosts extends WorldGenDragonRoosts {
     private static final ResourceKey<LootTable> DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/ice_dragon_roost"));
 
-    public WorldGenIceDragonRoosts(final Codec<NoneFeatureConfiguration> configuration) {
-        super(configuration, IafBlockRegistry.SILVER_PILE.get());
+    public WorldGenIceDragonRoosts() {
+        super(IafBlockRegistry.SILVER_PILE.get());
     }
 
     @Override
@@ -66,7 +63,7 @@ public class WorldGenIceDragonRoosts extends WorldGenDragonRoosts {
     }
 
     @Override
-    protected void handleCustomGeneration(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, final BlockPos position, double distance) {
+    protected void handleCustomGeneration(@NotNull final IafFeature.Context context, final BlockPos position, double distance) {
         if (context.random().nextInt(1000) == 0) {
             generateRoostPile(context.level(), context.random(), getSurfacePosition(context.level(), position), IafBlockRegistry.DRAGON_ICE.get());
         }

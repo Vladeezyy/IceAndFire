@@ -44,8 +44,8 @@ public class RenderCockatrice extends IafMobRenderer<EntityCockatrice, AdvancedE
     }
 
     @Override
-    public boolean shouldRender(@NotNull EntityCockatrice livingEntityIn, @NotNull Frustum camera, double camX, double camY, double camZ) {
-        if (super.shouldRender(livingEntityIn, camera, camX, camY, camZ)) {
+    public boolean shouldRender(@NotNull EntityCockatrice livingEntityIn, @NotNull Frustum camera, double camX, double camY, double camZ, float partialTicks) {
+        if (super.shouldRender(livingEntityIn, camera, camX, camY, camZ, partialTicks)) {
             return true;
         } else {
             if (livingEntityIn.hasTargetedEntity()) {

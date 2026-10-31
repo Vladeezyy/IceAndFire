@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModAxe>, IafStackStatsItem, IafTieredItem {
+public class ItemModAxe extends Item implements DragonSteelOverrides<ItemModAxe>, IafStackStatsItem, IafTieredItem {
 
     private final CustomToolMaterial tier;
 
@@ -28,7 +28,7 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
     private double dragonsteelDamage;
 
     public ItemModAxe(CustomToolMaterial toolmaterial) {
-        super(IafToolMaterials.vanilla(toolmaterial), 5.0F, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().axe(IafToolMaterials.vanilla(toolmaterial), 5.0F, -3.0F), toolmaterial));
         this.tier = toolmaterial;
     }
 

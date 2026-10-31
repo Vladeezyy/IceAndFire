@@ -288,7 +288,7 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
             flag = true;
         }
         if (fireCooldown == 0 && !flag) {
-            this.swing(InteractionHand.MAIN_HAND);
+            this.swing(InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             this.playSound(SoundEvents.ZOMBIE_INFECT, this.getSoundVolume(), this.getVoicePitch());
             EntityDreadLichSkull skull = new EntityDreadLichSkull(IafEntityRegistry.DREAD_LICH_SKULL.get(), level(), this,
                 6);

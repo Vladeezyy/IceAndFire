@@ -25,7 +25,7 @@ public class ItemLichStaff extends Item {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         if (!worldIn.isClientSide()) {
             playerIn.startUsingItem(hand);
-            playerIn.swing(hand);
+            playerIn.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             double d2 = playerIn.getLookAngle().x;
             double d3 = playerIn.getLookAngle().y;
             double d4 = playerIn.getLookAngle().z;

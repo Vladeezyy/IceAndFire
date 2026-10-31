@@ -78,7 +78,7 @@ public class IafBlockRegistry {
     public static final BlockEntry<Block> CRACKLED_GRAVEL = register("crackled_gravel", () -> new BlockFallingReturningState(0.6F, 0F, SoundType.GRAVEL, MapColor.DIRT, Blocks.GRAVEL.defaultBlockState()));
     public static final BlockEntry<Block> CRACKLED_DIRT_PATH = register(BlockCharedPath.getNameFromType(2), () -> new BlockCharedPath(2));
 
-    public static final BlockEntry<Block> NEST = register("nest", () -> BlockGeneric.builder(0.5F, 0F, SoundType.GRAVEL, false, MapColor.PLANT, null, PushReaction.DESTROY, false));
+    public static final BlockEntry<Block> NEST = register("nest", () -> BlockGeneric.builder(0.5F, 0F, SoundType.GRAVEL, false, MapColor.PLANT, null, PushReaction.POPPED, false));
 
     public static final BlockEntry<Block> DRAGON_SCALE_RED = register("dragonscale_red", () -> new BlockDragonScales(EnumDragonEgg.RED));
     public static final BlockEntry<Block> DRAGON_SCALE_GREEN = register("dragonscale_green", () -> new BlockDragonScales(EnumDragonEgg.GREEN));

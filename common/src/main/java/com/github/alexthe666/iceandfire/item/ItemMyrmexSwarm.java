@@ -30,7 +30,7 @@ public class ItemMyrmexSwarm extends Item {
     public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         playerIn.startUsingItem(hand);
-        playerIn.swing(hand);
+        playerIn.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
         if (!playerIn.isCreative()) {
             itemStackIn.shrink(1);
             playerIn.getCooldowns().addCooldown(itemStackIn, 20);

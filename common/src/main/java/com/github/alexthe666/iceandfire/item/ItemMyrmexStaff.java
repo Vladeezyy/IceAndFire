@@ -62,7 +62,7 @@ public class ItemMyrmexStaff extends Item {
                 IceAndFire.PROXY.openMyrmexStaffGui(itemStackIn);
             }
         }
-        playerIn.swing(hand);
+        playerIn.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
         return InteractionResult.PASS;
     }
 
@@ -85,7 +85,7 @@ public class ItemMyrmexStaff extends Item {
                     IceAndFire.PROXY.openMyrmexAddRoomGui(context.getPlayer().getItemInHand(context.getHand()), context.getClickedPos(), context.getPlayer().getDirection());
                 }
             }
-            context.getPlayer().swing(context.getHand());
+            context.getPlayer().swing(context.getHand(), net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             return InteractionResult.SUCCESS;
         }
     }

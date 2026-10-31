@@ -18,12 +18,7 @@ import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockMyrmexBiolight extends net.minecraft.world.level.block.VegetationBlock {
-    public static final MapCodec<BlockMyrmexBiolight> CODEC = simpleCodec(properties -> new BlockMyrmexBiolight());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockMyrmexBiolight> codec() {
-        return CODEC;
-    }
 
 
     public static final BooleanProperty CONNECTED_DOWN = BooleanProperty.create("down");
@@ -32,7 +27,7 @@ public class BlockMyrmexBiolight extends net.minecraft.world.level.block.Vegetat
         super(
             dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.PLANT)
-                .pushReaction(PushReaction.DESTROY)
+                .pushReaction(PushReaction.POPPED)
                 .noOcclusion()
                 .noCollision()
                 .dynamicShape()

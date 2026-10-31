@@ -162,7 +162,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
         this.world = new ChunkCache(world, new BlockPos(minX, world.getMinY(), minZ), new BlockPos(maxX, world.getMaxY(), maxZ), range, world.dimensionType());
 
-        this.start = new BlockPos(start);
+        this.start = start.immutable();
         this.end = end;
 
         this.maxRange = range;
@@ -309,7 +309,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         BlockState bs = world.getBlockState(pos);
         // 1 Up when we're standing within this collision shape
         final VoxelShape collisionShape = bs.getBlockSupportShape(world, pos);
-        if (bs.blocksMotion() && collisionShape.max(Direction.Axis.X) > 0) {
+        if (bs.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) && collisionShape.max(Direction.Axis.X) > 0) {
             final double relPosX = Math.abs(entity.getX() % 1);
             final double relPosZ = Math.abs(entity.getZ() % 1);
 
@@ -325,7 +325,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         }
 
         BlockState down = world.getBlockState(pos.below());
-        while (!bs.blocksMotion() && !down.blocksMotion() && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.isLadder(down, world, pos.below(), entity) && bs.getFluidState().isEmpty()) {
+        while (!bs.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) && !down.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.isLadder(down, world, pos.below(), entity) && bs.getFluidState().isEmpty()) {
             pos.move(Direction.DOWN, 1);
             bs = down;
             down = world.getBlockState(pos.below());
@@ -720,7 +720,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @return true if so.
      */
     public boolean isLiquid(final BlockState state) {
-        return state.liquid() || (!state.blocksMotion() && !state.getFluidState().isEmpty());
+        return state.liquid() || (!state.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) && !state.getFluidState().isEmpty());
     }
 
     /**
@@ -1275,7 +1275,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
         if (!block.isAir()) {
             final VoxelShape shape = block.getBlockSupportShape(world, pos);
-            if (block.blocksMotion() && !(shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)) {
+            if (block.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) && !(shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)) {
                 if (block.getBlock() instanceof TrapDoorBlock) {
                     final BlockPos dir = pos.subtract(parentPos);
                     if (dir.getY() != 0 && dir.getX() == 0 && dir.getZ() == 0) {

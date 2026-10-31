@@ -36,7 +36,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
-import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
@@ -186,7 +185,6 @@ public final class IceAndFireNeoForge {
         });
         // 26.x: the client gets only the recipe types the server sends (JEI shows the dragon forge recipes)
         bus.addListener((net.neoforged.neoforge.event.OnDatapackSyncEvent event) -> event.sendRecipes(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()));
-        bus.addListener((RegisterBrewingRecipesEvent event) -> IafRecipeRegistry.registerBrewing(event.getBuilder()));
         // every listener wants living entities only
         bus.addListener((EntityTickEvent.Pre event) -> {
             if (event.getEntity() instanceof LivingEntity) {

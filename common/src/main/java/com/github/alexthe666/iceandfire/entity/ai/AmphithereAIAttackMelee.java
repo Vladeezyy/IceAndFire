@@ -168,7 +168,7 @@ public class AmphithereAIAttackMelee extends Goal {
         double d0 = this.getAttackReachSqr(enemy);
         if (distToEnemySqr <= d0) {
             this.attackTick = 20;
-            this.attacker.swing(InteractionHand.MAIN_HAND);
+            this.attacker.swing(InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
             this.attacker.doHurtTarget((net.minecraft.server.level.ServerLevel) this.attacker.level(), enemy);
         }
     }

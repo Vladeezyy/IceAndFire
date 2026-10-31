@@ -253,7 +253,7 @@ public class PathNavigateDeathWormLand extends PathNavigation {
             if (d0 * p_179692_8_ + d1 * p_179692_10_ >= 0.0D) {
                 Block block = this.level.getBlockState(blockpos).getBlock();
 
-                if (this.level.getBlockState(blockpos).blocksMotion() || this.level.getBlockState(blockpos).is(BlockTags.SAND)) {
+                if (this.level.getBlockState(blockpos).is(net.minecraft.tags.BlockTags.BLOCKS_MOTION) || this.level.getBlockState(blockpos).is(BlockTags.SAND)) {
                     return false;
                 }
             }

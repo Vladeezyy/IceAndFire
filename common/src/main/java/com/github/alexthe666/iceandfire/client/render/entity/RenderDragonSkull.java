@@ -54,8 +54,8 @@ public class RenderDragonSkull extends IafEntityRenderer<EntityDragonSkull> {
         }
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityTranslucent(getTextureLocation(entity)));
         matrixStackIn.pushPose();
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(-180.0F));
-        matrixStackIn.mulPose(Axis.YN.rotationDegrees(-180.0F - entity.getYaw()));
+        matrixStackIn.rotate(Axis.XP.rotationDegrees(-180.0F));
+        matrixStackIn.rotate(Axis.YN.rotationDegrees(-180.0F - entity.getYaw()));
         float f = 0.0625F;
         matrixStackIn.scale(1.0F, 1.0F, 1.0F);
         float size = getRenderSize(entity) / 3;

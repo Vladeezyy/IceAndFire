@@ -11,12 +11,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 
 public class BlockFallingGeneric extends FallingBlock {
-    public static final MapCodec<BlockFallingGeneric> CODEC = simpleCodec(BlockFallingGeneric::new);
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockFallingGeneric> codec() {
-        return CODEC;
-    }
 
     public Item itemBlock;
 

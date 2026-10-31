@@ -91,7 +91,7 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
         if (isDragonsteelLightning(item.getTier()) && IafConfig.dragonWeaponLightningAbility) {
             boolean flag = true;
             if (attacker instanceof Player) {
-                if (attacker.attackAnim > 0.2) {
+                if (attacker.getSwingAnimation(0) > 0.2) {
                     flag = false;
                 }
             }

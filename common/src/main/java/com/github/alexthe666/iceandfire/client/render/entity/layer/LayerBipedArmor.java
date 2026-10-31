@@ -98,7 +98,7 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
         // 26.x: the glint is a render type of its own (1.21.1: ItemRenderer.getArmorFoilBuffer)
         com.github.alexthe666.iceandfire.client.render.IafModels.render(modelIn, matrixStackIn, bufferIn.getBuffer(RenderTypes.armorCutoutNoCull(armorResource)), packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
         if (p_241738_5_) {
-            com.github.alexthe666.iceandfire.client.render.IafModels.render(modelIn, matrixStackIn, bufferIn.getBuffer(RenderTypes.armorEntityGlint()), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            com.github.alexthe666.iceandfire.client.render.IafModels.render(modelIn, matrixStackIn, bufferIn.getBuffer(RenderTypes.trimmedArmorGlint()), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
     }
 

@@ -49,7 +49,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -156,7 +155,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                 int down = Math.max(15, this.blockPosition().getY() - 20 + this.getRandom().nextInt(10));
                 BlockPos genPos = new BlockPos(this.getBlockX(), down, this.getBlockZ());
                 if (!dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, genPos.getX(), genPos.getY(), genPos.getZ()))) {
-                    WorldGenMyrmexHive hiveGen = new WorldGenMyrmexHive(true, this.isJungle(), NoneFeatureConfiguration.CODEC);
+                    WorldGenMyrmexHive hiveGen = new WorldGenMyrmexHive(true, this.isJungle());
                     if (!level().isClientSide() && level() instanceof ServerLevel) {
                         hiveGen.placeSmallGen((ServerLevel) level(), this.getRandom(), genPos);
                     }

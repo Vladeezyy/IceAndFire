@@ -18,13 +18,13 @@ public class CustomizeToSeaSerpent extends LootItemConditionalFunction {
 
     public static final MapCodec<CustomizeToSeaSerpent> CODEC = RecordCodecBuilder.mapCodec(instance -> commonFields(instance).apply(instance, CustomizeToSeaSerpent::new));
 
-    public CustomizeToSeaSerpent(List<LootItemCondition> conditionsIn) {
+    public CustomizeToSeaSerpent(java.util.Optional<net.minecraft.core.Holder<LootItemCondition>> conditionsIn) {
         super(conditionsIn);
     }
 
     @Override
     public @NotNull ItemStack run(ItemStack stack, @NotNull LootContext context) {
-        if (!stack.isEmpty() && context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof EntitySeaSerpent seaSerpent) {
+        if (!stack.isEmpty() && context.getOptional(LootContextParams.THIS_ENTITY) instanceof EntitySeaSerpent seaSerpent) {
             final int ancientModifier = seaSerpent.isAncient() ? 2 : 1;
             if (stack.getItem() instanceof ItemSeaSerpentScales) {
                 stack.setCount(1 + seaSerpent.getRandom().nextInt(1 + (int) Math.ceil(seaSerpent.getSeaSerpentScale() * 3 * ancientModifier)));

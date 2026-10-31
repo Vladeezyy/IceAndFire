@@ -20,12 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class BlockMyrmexCocoon extends BaseEntityBlock {
-    public static final MapCodec<BlockMyrmexCocoon> CODEC = simpleCodec(properties -> new BlockMyrmexCocoon());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockMyrmexCocoon> codec() {
-        return CODEC;
-    }
 
 
 

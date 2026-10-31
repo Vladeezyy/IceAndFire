@@ -5,9 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.LakeFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,19 +20,19 @@ public class NoLakesInStructuresMixin {
 
 
     @Inject(
-            method = "place(Lnet/minecraft/world/level/levelgen/feature/FeaturePlaceContext;)Z",
+            method = "place(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z",
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    private void iaf_noLakesInMausoleum(FeaturePlaceContext<BlockStateConfiguration> context, CallbackInfoReturnable<Boolean> cir) {
-        if(!(context.level() instanceof WorldGenRegion)) {
+    private void iaf_noLakesInMausoleum(net.minecraft.world.level.WorldGenLevel level, net.minecraft.world.level.chunk.ChunkGenerator generator, net.minecraft.util.RandomSource random, net.minecraft.core.BlockPos origin, CallbackInfoReturnable<Boolean> cir) {
+        if(!(level instanceof WorldGenRegion)) {
             return;
         }
-        Registry<Structure> configuredStructureFeatureRegistry = context.level().registryAccess().lookupOrThrow(Registries.STRUCTURE);
-        StructureManager structureManager = (context.level()).getLevel().structureManager();
+        Registry<Structure> configuredStructureFeatureRegistry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
+        StructureManager structureManager = (level).getLevel().structureManager();
         var availableStructures  = List.of(configuredStructureFeatureRegistry.getOptional(IafStructures.MAUSOLEUM),configuredStructureFeatureRegistry.getOptional(IafStructures.GRAVEYARD),configuredStructureFeatureRegistry.getOptional(IafStructures.GORGON_TEMPLE));
         for (var structure : availableStructures) {
-            if (structure.isPresent() && structureManager.getStructureAt(context.origin(), structure.get()).isValid()) {
+            if (structure.isPresent() && structureManager.getStructureAt(origin, structure.get()).isValid()) {
                 cir.setReturnValue(false);
                 return;
             }

@@ -43,7 +43,7 @@ public class LayerDragonBanner extends IafEntityLayer<EntityDragonBase, IafMobRe
             matrixStackIn.pushPose();
             postRender(StreamSupport.stream(this.renderer.getModel().getAllParts().spliterator(), false).filter(cube -> cube.boxName.equals("BodyUpper")).findFirst().get(), matrixStackIn, 0.0625F);
             matrixStackIn.translate(0, -0.2F, 0.4F);
-            matrixStackIn.mulPose(Axis.XP.rotationDegrees(180.0F));
+            matrixStackIn.rotate(Axis.XP.rotationDegrees(180.0F));
             matrixStackIn.pushPose();
             matrixStackIn.scale(f2, f2, f2);
             com.github.alexthe666.iceandfire.client.render.IafLegacyRender.renderStatic(itemstack, ItemDisplayContext.NONE, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
@@ -62,15 +62,15 @@ public class LayerDragonBanner extends IafEntityLayer<EntityDragonBase, IafMobRe
         } else {
             matrixStackIn.translate(renderer.rotationPointX * scale, renderer.rotationPointY * scale, renderer.rotationPointZ * scale);
             if (renderer.rotateAngleZ != 0.0F) {
-                matrixStackIn.mulPose(Axis.ZP.rotation(renderer.rotateAngleZ));
+                matrixStackIn.rotate(Axis.ZP.rotation(renderer.rotateAngleZ));
             }
 
             if (renderer.rotateAngleY != 0.0F) {
-                matrixStackIn.mulPose(Axis.YP.rotation(renderer.rotateAngleY));
+                matrixStackIn.rotate(Axis.YP.rotation(renderer.rotateAngleY));
             }
 
             if (renderer.rotateAngleX != 0.0F) {
-                matrixStackIn.mulPose(Axis.XP.rotation(renderer.rotateAngleX));
+                matrixStackIn.rotate(Axis.XP.rotation(renderer.rotateAngleX));
             }
         }
     }

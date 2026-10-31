@@ -94,7 +94,7 @@ public class ModelDreadKnight extends ModelDreadBase<EntityDreadKnight> {
         this.leftArmPose = HumanoidModel.ArmPose.EMPTY;
         ItemStack itemstack = livingEntityIn.getItemInHand(InteractionHand.MAIN_HAND);
 
-        if (itemstack.getItem() == Items.BOW && livingEntityIn.swinging) {
+        if (itemstack.getItem() == Items.BOW && livingEntityIn.isSwinging()) {
             if (livingEntityIn.getMainArm() == HumanoidArm.RIGHT) {
                 this.rightArmPose = HumanoidModel.ArmPose.BOW_AND_ARROW;
             } else {

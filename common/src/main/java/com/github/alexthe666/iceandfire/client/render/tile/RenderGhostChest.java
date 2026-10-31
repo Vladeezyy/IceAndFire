@@ -81,7 +81,11 @@ public class RenderGhostChest implements BlockEntityRenderer<TileEntityGhostChes
         open = 1.0F - open * open * open;
         SpriteId sprite = state.type == ChestType.LEFT ? LEFT : state.type == ChestType.RIGHT ? RIGHT : SINGLE;
         ChestModel model = state.type == ChestType.LEFT ? this.left : state.type == ChestType.RIGHT ? this.right : this.single;
-        collector.submitModel(model, open, poseStack, state.lightCoords, OverlayTexture.NO_OVERLAY, -1, sprite, this.sprites, 0, state.breakProgress);
+        collector.submitModel(model, open, poseStack, state.lightCoords, OverlayTexture.NO_OVERLAY, -1, sprite, this.sprites, 0);
+        if (state.breakProgress != null) {
+            // 26.3: the crumbling overlay is a submit of its own (as vanilla's chest)
+            collector.order(1).submitCrumblingOverlay(model, open, poseStack, sprite.renderType(model.renderType()), state.lightCoords, OverlayTexture.NO_OVERLAY, -1, state.breakProgress);
+        }
         poseStack.popPose();
     }
 }

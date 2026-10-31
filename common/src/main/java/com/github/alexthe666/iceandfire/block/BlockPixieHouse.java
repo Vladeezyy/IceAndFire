@@ -27,12 +27,7 @@ import java.util.function.Consumer;
 import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry.PIXIE_HOUSE;
 
 public class BlockPixieHouse extends BaseEntityBlock {
-    public static final MapCodec<BlockPixieHouse> CODEC = simpleCodec(properties -> new BlockPixieHouse());
 
-    @Override
-    protected @NotNull MapCodec<? extends BlockPixieHouse> codec() {
-        return CODEC;
-    }
 
     public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.Plane.HORIZONTAL);
 

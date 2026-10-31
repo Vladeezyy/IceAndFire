@@ -37,11 +37,6 @@ import static com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry
 
 public class BlockJar extends BaseEntityBlock {
 
-    // Built from mod parameters, not data: the codec only hands out this block
-    @Override
-    protected @NotNull MapCodec<? extends BlockJar> codec() {
-        return MapCodec.unit(this);
-    }
 
     protected static final VoxelShape AABB = Block.box(3, 0, 3, 13, 16, 13);
     public Item itemBlock;

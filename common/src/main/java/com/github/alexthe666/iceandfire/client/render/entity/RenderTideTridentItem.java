@@ -43,7 +43,7 @@ public class RenderTideTridentItem implements com.github.alexthe666.iceandfire.c
             } else {
                 stackIn.translate(0, 0.6F, 0.0F);
             }
-            stackIn.mulPose(Axis.XP.rotationDegrees(160.0F));
+            stackIn.rotate(Axis.XP.rotationDegrees(160.0F));
             VertexConsumer glintVertexBuilder = IafLegacyRender.foilBuffer(bufferIn, RenderTypes.entityCutout(RenderTideTrident.TRIDENT), stack.hasFoil());
             com.github.alexthe666.iceandfire.client.render.IafModels.render(MODEL, stackIn,
                 glintVertexBuilder, combinedLightIn,

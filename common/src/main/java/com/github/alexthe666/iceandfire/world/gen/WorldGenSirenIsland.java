@@ -5,7 +5,6 @@ import com.github.alexthe666.iceandfire.entity.EntitySiren;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.util.WorldUtil;
 import com.github.alexthe666.iceandfire.world.IafWorldData;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -13,19 +12,15 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class WorldGenSirenIsland extends Feature<NoneFeatureConfiguration> implements TypedFeature {
+public class WorldGenSirenIsland extends IafFeature implements TypedFeature {
 
     private final int MAX_ISLAND_RADIUS = 10;
-    public WorldGenSirenIsland(final Codec<NoneFeatureConfiguration> configuration) {
-        super(configuration);
+    public WorldGenSirenIsland() {
     }
 
     @Override
-    public boolean place(final FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public boolean place(final IafFeature.Context context) {
         if (!WorldUtil.canGenerate(IafConfig.generateSirenChance, context.level(), context.random(), context.origin(), getId(), false)) {
             return false;
         }

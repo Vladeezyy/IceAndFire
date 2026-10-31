@@ -33,8 +33,8 @@ public class ParticleSirenAppearance extends IafAppearanceParticle {
         float f = ((float) this.age + partialTicks) / (float) this.lifetime;
         float f1 = 0.05F + 0.5F * Mth.sin(f * (float) Math.PI);
         PoseStack matrixstack = new PoseStack();
-        matrixstack.mulPose(renderInfo.rotation());
-        matrixstack.mulPose(Axis.XP.rotationDegrees(150.0F * f - 60.0F));
+        matrixstack.rotate(renderInfo.rotation());
+        matrixstack.rotate(Axis.XP.rotationDegrees(150.0F * f - 60.0F));
         matrixstack.scale(-1.0F, -1.0F, 1.0F);
         matrixstack.translate(0.0D, -1.101F, 1.5D);
         VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderTypes.entityTranslucent(RenderSiren.getSirenOverlayTexture(sirenType)));

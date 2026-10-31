@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.event;
+import net.minecraft.core.Holder;
 import com.github.alexthe666.iceandfire.entity.util.Values;
 import net.minecraft.world.entity.EntitySpawnReason;
 
@@ -65,7 +66,6 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import dev.vladeezyy.iceandfire.bus.LootTableLoadEvent;
@@ -586,7 +586,7 @@ public class ServerEvents {
 
         if (condition1 || eventName.equals(BuiltInLootTables.VILLAGE_CARTOGRAPHER)) {
             LootPoolEntryContainer.Builder item = LootItem.lootTableItem(IafItemRegistry.MANUSCRIPT.get()).setQuality(20).setWeight(5);
-            LootPool.Builder builder = new LootPool.Builder().add(item).when(LootItemRandomChanceCondition.randomChance(0.35f)).setRolls(UniformGenerator.between(1, 4)).setBonusRolls(UniformGenerator.between(0, 3));
+            LootPool.Builder builder = new LootPool.Builder().add(item).when(Holder.direct(LootItemRandomChanceCondition.randomChance(0.35f).build())).setRolls(rolls(1, 4)).setBonusRolls(bonusRolls(0, 3));
             event.addPool("iaf_manuscript", builder);
         }
         if (condition1
@@ -597,7 +597,7 @@ public class ServerEvents {
 
 
             LootPoolEntryContainer.Builder item = LootItem.lootTableItem(IafItemRegistry.SILVER_INGOT.get()).setQuality(15).setWeight(12);
-            LootPool.Builder builder = new LootPool.Builder().add(item).when(LootItemRandomChanceCondition.randomChance(0.5f)).setRolls(UniformGenerator.between(1, 3)).setBonusRolls(UniformGenerator.between(0, 3));
+            LootPool.Builder builder = new LootPool.Builder().add(item).when(Holder.direct(LootItemRandomChanceCondition.randomChance(0.5f).build())).setRolls(rolls(1, 3)).setBonusRolls(bonusRolls(0, 3));
             event.addPool("iaf_silver_ingot", builder);
 
         } else if ((event.getName().equals(WorldGenFireDragonCave.FIRE_DRAGON_CHEST)
@@ -607,7 +607,7 @@ public class ServerEvents {
                 || event.getName().equals(WorldGenLightningDragonCave.LIGHTNING_DRAGON_CHEST)
                 || event.getName().equals(WorldGenLightningDragonCave.LIGHTNING_DRAGON_CHEST_MALE))) {
             LootPoolEntryContainer.Builder item = LootItem.lootTableItem(IafItemRegistry.WEEZER_BLUE_ALBUM.get()).setQuality(100).setWeight(1);
-            LootPool.Builder builder = new LootPool.Builder().add(item).when(LootItemRandomChanceCondition.randomChance(0.01f)).setRolls(UniformGenerator.between(1, 1));
+            LootPool.Builder builder = new LootPool.Builder().add(item).when(Holder.direct(LootItemRandomChanceCondition.randomChance(0.01f).build())).setRolls(rolls(1, 1));
             event.addPool("iaf_weezer", builder);
         }
     }
@@ -648,5 +648,18 @@ public class ServerEvents {
         } else if (event.getLightning().entityTags().contains(event.getEntity().getStringUUID())) {
             event.setCanceled(true);
         }
+    }
+
+    /** 1.21.1's UniformGenerator.between(min, max) as 26.3 roll counts */
+    private static Holder<net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider> rolls(int min, int max) {
+        return Holder.direct(new net.minecraft.world.level.storage.loot.providers.number.ints.UniformGenerator(
+            Holder.direct(new net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue(min)),
+            Holder.direct(new net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue(max))));
+    }
+
+    private static Holder<net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProvider> bonusRolls(float min, float max) {
+        return Holder.direct(new net.minecraft.world.level.storage.loot.providers.number.floats.UniformGenerator(
+            Holder.direct(new net.minecraft.world.level.storage.loot.providers.number.floats.ConstantValue(min)),
+            Holder.direct(new net.minecraft.world.level.storage.loot.providers.number.floats.ConstantValue(max))));
     }
 }
