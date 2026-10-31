@@ -169,3 +169,25 @@ resources by `tools/port26/convert_iaf_26.py`. Write-up of the pitfalls: modding
   to a fight between two checks; no dragon or part is lost through the disk.
 - Net test (dedicated server, client rides an adult dragon, flies, dismounts): 0 failed checks on both loaders, client
   120 FPS while riding.
+
+## 1.21.11 (branch `mc/1.21.11`, from `mc/26.1.2`, 2026-10-31)
+NeoForge 21.11.48, Fabric API 0.141.6, JEI 27.54, Rampart `1.1.0+1.21.11` (branch `mc/1.21.11` of Rampart, from its
+26.1.2). A backport: 1.21.11 renders on render states and the submit collector like 26.1, so the 26.1.2 code is the
+start. `tools/port26/backport_1_21_11.py` (imports back to the 1.21.11 packages, the GUI hooks, render types, messages;
+run once) and `backport_lines_1_21_11.py` (fixes by receiver type on the reported lines): 368 errors in common → 153,
+the rest by hand. Build from the 1.21.1 branch (Loom with Mojang mappings, Java 21). Write-up: modding-kb
+`porting/mc-versions/1.21.11/ice-and-fire.md`.
+- Back to 1.21.11: GUI on the render hooks (`renderBg`, `renderLabels`, `drawString`), scribe trades in code again
+  (VillagerTradesEvent / TradeOfferHelper; the 26.x trade set data removed), saved data under the 1.21.1 file names
+  (no move), dragon forge recipe with an ItemStack result, loot functions with LootItemFunctionType, blocks in
+  renderers through `submitBlock`, the ghost chest on chest materials, pipelines with `withBlend` /
+  `withDepthTestFunction`, the lily patches as 1.21.1's `random_patch` (1.21.11 has no trapezoid int provider), Fabric
+  API names of 0.141 (particle group through `ParticleRendererRegistry`).
+- Render types: 26.1's `entityCutout` is 1.21.11's `entityCutoutNoCull`; Rampart's default for Citadel models got it
+  wrong first (the myrmex royal's wings, flat boxes, were culled away: found by comparing the scene with 26.1.2).
+- Fixed on the way (in the 1.21.1 code too): a dragon eating an item another dragon had already eaten crashed the
+  server ("Empty stacks are not allowed" in the eat particles; 26.x takes the item, not a stack).
+- Tests (macOS, both loaders): selftest 29/29, client scene 0 failed checks (screenshots match 26.1.2 up to the
+  creatures' random variants), stress 13/13 with SEED=1234 (NeoForge 15.0 ms average tick, a running average that
+  starts with a 1.7 s tick and was still falling, 729 entities; Fabric 9.2 ms; generation 107 s / 95 s), net test 0
+  failed checks.

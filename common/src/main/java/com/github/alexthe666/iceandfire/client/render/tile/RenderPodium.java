@@ -35,18 +35,18 @@ public class RenderPodium<T extends TileEntityPodium> extends IafBlockEntityRend
 
     protected static RenderType getEggTexture(EnumDragonEgg type) {
         return switch (type) {
-            default -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_RED);
-            case GREEN -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_GREEN);
-            case BRONZE -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_BRONZE);
-            case GRAY -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_GREY);
-            case BLUE -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_BLUE);
-            case WHITE -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_WHITE);
-            case SAPPHIRE -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_SAPPHIRE);
-            case SILVER -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_SILVER);
-            case ELECTRIC -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_ELECTRIC);
-            case AMYTHEST -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_AMYTHEST);
-            case COPPER -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_COPPER);
-            case BLACK -> RenderTypes.entityCutoutNoCull(RenderDragonEgg.EGG_BLACK);
+            default -> RenderTypes.entityCutout(RenderDragonEgg.EGG_RED);
+            case GREEN -> RenderTypes.entityCutout(RenderDragonEgg.EGG_GREEN);
+            case BRONZE -> RenderTypes.entityCutout(RenderDragonEgg.EGG_BRONZE);
+            case GRAY -> RenderTypes.entityCutout(RenderDragonEgg.EGG_GREY);
+            case BLUE -> RenderTypes.entityCutout(RenderDragonEgg.EGG_BLUE);
+            case WHITE -> RenderTypes.entityCutout(RenderDragonEgg.EGG_WHITE);
+            case SAPPHIRE -> RenderTypes.entityCutout(RenderDragonEgg.EGG_SAPPHIRE);
+            case SILVER -> RenderTypes.entityCutout(RenderDragonEgg.EGG_SILVER);
+            case ELECTRIC -> RenderTypes.entityCutout(RenderDragonEgg.EGG_ELECTRIC);
+            case AMYTHEST -> RenderTypes.entityCutout(RenderDragonEgg.EGG_AMYTHEST);
+            case COPPER -> RenderTypes.entityCutout(RenderDragonEgg.EGG_COPPER);
+            case BLACK -> RenderTypes.entityCutout(RenderDragonEgg.EGG_BLACK);
         };
     }
 
@@ -74,7 +74,7 @@ public class RenderPodium<T extends TileEntityPodium> extends IafBlockEntityRend
                 matrixStackIn.pushPose();
                 matrixStackIn.pushPose();
                 model.renderPodium();
-                com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutoutNoCull(jungle ? RenderMyrmexEgg.EGG_JUNGLE : RenderMyrmexEgg.EGG_DESERT)), combinedLightIn, combinedOverlayIn, -1);
+                com.github.alexthe666.iceandfire.client.render.IafModels.render(model, matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutout(jungle ? RenderMyrmexEgg.EGG_JUNGLE : RenderMyrmexEgg.EGG_DESERT)), combinedLightIn, combinedOverlayIn, -1);
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();

@@ -72,9 +72,9 @@ public class RenderHippocampus extends IafMobRenderer<EntityHippocampus, ModelHi
         private final RenderType SADDLE_TEXTURE = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippocampus/saddle.png"), false);
         private final RenderType BRIDLE = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippocampus/bridle.png"), false);
         private final RenderType CHEST = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippocampus/chest.png"));
-        private final RenderType TEXTURE_DIAMOND = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/hippocampus/armor_diamond.png"));
-        private final RenderType TEXTURE_GOLD = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/hippocampus/armor_gold.png"));
-        private final RenderType TEXTURE_IRON = RenderTypes.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/hippocampus/armor_iron.png"));
+        private final RenderType TEXTURE_DIAMOND = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/hippocampus/armor_diamond.png"));
+        private final RenderType TEXTURE_GOLD = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/hippocampus/armor_gold.png"));
+        private final RenderType TEXTURE_IRON = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/hippocampus/armor_iron.png"));
 
         public LayerHippocampusSaddle(RenderHippocampus renderer) {
             super(renderer);

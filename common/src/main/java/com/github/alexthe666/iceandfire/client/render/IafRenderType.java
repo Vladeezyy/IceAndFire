@@ -106,7 +106,7 @@ public final class IafRenderType {
 
     /** A mob turned to stone: the stone texture with the cutout entity shader, culled (the original's state) */
     public static RenderType getStoneMobRenderType(float x, float y) {
-        return RenderTypes.entityCutoutNoCull(STONE_TEXTURE);
+        return RenderTypes.entityCutout(STONE_TEXTURE);
     }
 
     /** Ice of a frozen mob: the translucent beacon beam shader (as the original) */

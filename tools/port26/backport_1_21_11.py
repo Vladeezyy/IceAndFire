@@ -2,11 +2,15 @@
 
     python3 tools/port26/backport_1_21_11.py <vanilla 1.21.11 sources dir>
 
+Run it once on the 26.1.2 sources: the render type renames cannot tell 26.1's entityCutout from 1.21.11's, so a
+second run turns the culled cutouts into entityCutoutNoCull.
+
 - imports of Minecraft classes that 26.1 moved: back to the package of the same class name, when it is unique in the
   1.21.11 sources;
 - GUI: GuiGraphicsExtractor -> GuiGraphics, the extract* hooks -> render* (container backgrounds -> renderBg), text ->
   drawString, item -> renderItem;
-- render types: 26.1 entityCutout(.., outline) was 1.21.11 entityCutoutNoCull, entityCutoutCull was entityCutout;
+- render types: 26.1 entityCutout(.., outline) was 1.21.11 entityCutoutNoCull, entityCutoutCull was entityCutout (calls
+  and method references: Model(RenderTypes::entityCutout) culled the flat parts of Citadel models);
 - player messages: sendOverlayMessage -> displayClientMessage(.., true); ChunkPos.pack -> asLong, containing -> new.
 """
 import pathlib
@@ -46,6 +50,8 @@ RENAMES = [
     (r'\bRenderTypes\.entityCutoutZOffset\(', 'RenderTypes.entityCutoutNoCullZOffset('),
     (r'\bRenderTypes\.entityCutout\(', 'RenderTypes.entityCutoutNoCull('),
     (r'\bRenderTypes\.entityCutoutCull\(', 'RenderTypes.entityCutout('),
+    (r'\bRenderTypes::entityCutout\b', 'RenderTypes::entityCutoutNoCull'),
+    (r'\bRenderTypes::entityCutoutCull\b', 'RenderTypes::entityCutout'),
     # messages and chunk positions
     (r'\.sendOverlayMessage\(((?:[^()]|\((?:[^()]|\([^()]*\))*\))*)\)', r'.displayClientMessage(\1, true)'),
     (r'\bChunkPos\.pack\(', 'ChunkPos.asLong('),

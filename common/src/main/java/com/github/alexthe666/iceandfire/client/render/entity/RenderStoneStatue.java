@@ -102,7 +102,7 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
         }
         RenderType tex = IafRenderType.getStoneMobRenderType(200, 200);
         if (fakeEntity instanceof EntityTroll) {
-            tex = RenderTypes.entityCutoutNoCull(((EntityTroll) fakeEntity).getTrollType().TEXTURE_STONE);
+            tex = RenderTypes.entityCutout(((EntityTroll) fakeEntity).getTrollType().TEXTURE_STONE);
         }
 
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(tex);
