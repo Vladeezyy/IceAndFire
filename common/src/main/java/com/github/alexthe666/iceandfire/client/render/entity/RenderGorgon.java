@@ -21,7 +21,9 @@ public class RenderGorgon extends IafMobRenderer<EntityGorgon, ModelGorgon> {
     }
 
     @Override
-    public void scale(@NotNull EntityGorgon LivingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityGorgon LivingEntityIn = (EntityGorgon) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         stack.scale(0.85F, 0.85F, 0.85F);
     }
 

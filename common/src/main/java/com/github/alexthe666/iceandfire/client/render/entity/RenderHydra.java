@@ -24,7 +24,9 @@ public class RenderHydra extends IafMobRenderer<EntityHydra, ModelHydraBody> {
     }
 
     @Override
-    public void scale(@NotNull EntityHydra LivingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityHydra LivingEntityIn = (EntityHydra) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         stack.scale(1.75F, 1.75F, 1.75F);
     }
 

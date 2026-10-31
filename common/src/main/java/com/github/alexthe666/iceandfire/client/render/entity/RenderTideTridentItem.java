@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -20,11 +19,11 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderTideTridentItem extends BlockEntityWithoutLevelRenderer {
+public class RenderTideTridentItem implements com.github.alexthe666.iceandfire.client.render.IafLegacyItemRenderer {
     private static final ModelTideTrident MODEL = new ModelTideTrident();
 
-    public RenderTideTridentItem(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
-        super(p_172550_, p_172551_);
+    public RenderTideTridentItem() {
+        EntityModelSet p_172551_ = net.minecraft.client.Minecraft.getInstance().getEntityModels();
     }
 
     @Override

@@ -45,13 +45,13 @@ def add_import(text, fqn):
 for path in sorted(ROOT.rglob('*.java')):
     text = path.read_text(encoding='utf-8')
     new = text
-    m = re.search(r'extends (MobRenderer|LivingEntityRenderer)<(\w+), ([^{]+?)>(\s+implements [^{]+)?\s*\{', new)
+    m = re.search(r'extends (MobRenderer|LivingEntityRenderer|IafMobRenderer|IafLivingRenderer)<(\w+), ([^{]+?)>(\s+implements [^{]+)?\s*\{', new)
     if m and path.name not in ('IafMobRenderer.java', 'IafLivingRenderer.java'):
-        base = 'IafMobRenderer' if m.group(1) == 'MobRenderer' else 'IafLivingRenderer'
+        base = 'IafMobRenderer' if m.group(1) in ('MobRenderer', 'IafMobRenderer') else 'IafLivingRenderer'
         entity = m.group(2)
         new = new[:m.start()] + 'extends ' + base + '<' + entity + ', ' + m.group(3) + '>' + (m.group(4) or '') + ' {' + new[m.end():]
         new = re.sub(r'public (?:@NotNull )?Identifier getTextureLocation\(' + P + entity + r' (\w+)\)', r'protected Identifier getTexture(' + entity + r' \1)', new)
-        new = rewrite_method(new, r'protected void scale\(' + P + entity + r' (\w+), ' + P + r'PoseStack (\w+), ' + P + r'float (\w+)\)\s*\{',
+        new = rewrite_method(new, r'(?:public|protected) void scale\(' + P + entity + r' (\w+), ' + P + r'PoseStack (\w+), ' + P + r'float (\w+)\)\s*\{',
                              lambda mm: 'protected void scale(IafMobRenderState iafState, PoseStack ' + mm.group(2) + ') {',
                              lambda mm: '\n        ' + entity + ' ' + mm.group(1) + ' = (' + entity + ') iafState.pose.entity;\n        float ' + mm.group(3) + ' = iafState.partialTick;')
         new = rewrite_method(new, r'protected void setupRotations\(' + P + entity + r' (\w+), ' + P + r'PoseStack (\w+), ' + P + r'float (\w+), ' + P + r'float (\w+), ' + P + r'float (\w+), ' + P + r'float (\w+)\)\s*\{',

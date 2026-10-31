@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.entity.state.ArrowRenderState;
 
 import com.github.alexthe666.iceandfire.entity.EntityDragonArrow;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
@@ -7,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RenderDragonArrow extends ArrowRenderer<EntityDragonArrow> {
+public class RenderDragonArrow extends ArrowRenderer<EntityDragonArrow, ArrowRenderState> {
     private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/misc/dragonbone_arrow.png");
 
     public RenderDragonArrow(EntityRendererProvider.Context context) {
@@ -16,7 +17,12 @@ public class RenderDragonArrow extends ArrowRenderer<EntityDragonArrow> {
 
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull EntityDragonArrow entity) {
+    public ArrowRenderState createRenderState() {
+        return new ArrowRenderState();
+    }
+
+    @Override
+    protected @NotNull Identifier getTextureLocation(@NotNull ArrowRenderState state) {
         return TEXTURE;
     }
 }

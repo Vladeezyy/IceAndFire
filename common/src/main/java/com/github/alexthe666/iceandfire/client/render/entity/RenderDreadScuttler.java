@@ -20,7 +20,9 @@ public class RenderDreadScuttler extends IafMobRenderer<EntityDreadScuttler, Mod
     }
 
     @Override
-    public void scale(EntityDreadScuttler LivingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityDreadScuttler LivingEntityIn = (EntityDreadScuttler) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         float s = LivingEntityIn.getSize() * VanillaScale.undo(LivingEntityIn);
         stack.scale(s, s, s);
     }

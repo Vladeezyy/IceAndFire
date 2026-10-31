@@ -15,7 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderLectern<T extends TileEntityLectern> implements BlockEntityRenderer<T> {
+public class RenderLectern<T extends TileEntityLectern> extends IafBlockEntityRenderer<T> {
 
     private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/lectern_book.png"));
     private final BookModel bookModel;
@@ -25,7 +25,7 @@ public class RenderLectern<T extends TileEntityLectern> implements BlockEntityRe
     }
 
     @Override
-    public void render(@NotNull T entity, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderLegacy(@NotNull T entity, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         TileEntityLectern lectern = entity;
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5F, 1.1F, 0.5F);

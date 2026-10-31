@@ -8,7 +8,6 @@ import com.github.alexthe666.iceandfire.entity.tile.TileEntityGhostChest;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class IceAndFireTEISR extends BlockEntityWithoutLevelRenderer {
+public class IceAndFireTEISR implements com.github.alexthe666.iceandfire.client.render.IafLegacyItemRenderer {
 
     private final RenderPixieHouse PIXIE_HOUSE_RENDERER;
     private final BlockEntityRenderDispatcher blockEntityRenderDispatcher;
@@ -29,8 +28,8 @@ public class IceAndFireTEISR extends BlockEntityWithoutLevelRenderer {
         this(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
     }
 
-    public IceAndFireTEISR(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
-        super(dispatcher, modelSet);
+    public IceAndFireTEISR() {
+        EntityModelSet modelSet = net.minecraft.client.Minecraft.getInstance().getEntityModels();
         this.blockEntityRenderDispatcher = dispatcher;
         this.entityModelSet = modelSet;
         PIXIE_HOUSE_RENDERER = new RenderPixieHouse(null);

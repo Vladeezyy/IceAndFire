@@ -6,7 +6,6 @@ import com.github.alexthe666.iceandfire.enums.EnumTroll;
 import com.github.alexthe666.iceandfire.item.ItemTrollWeapon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -14,11 +13,11 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderTrollWeapon extends BlockEntityWithoutLevelRenderer {
+public class RenderTrollWeapon implements com.github.alexthe666.iceandfire.client.render.IafLegacyItemRenderer {
     private static final ModelTrollWeapon MODEL = new ModelTrollWeapon();
 
-    public RenderTrollWeapon(BlockEntityRenderDispatcher dispatcher, EntityModelSet set) {
-        super(dispatcher, set);
+    public RenderTrollWeapon() {
+        EntityModelSet set = net.minecraft.client.Minecraft.getInstance().getEntityModels();
     }
 
     @Override

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RenderDreadThrall extends IafMobRenderer<EntityDreadThrall, ModelDreadThrall> implements IHasArmorVariantResource  {
+public class RenderDreadThrall extends IafMobRenderer<EntityDreadThrall, ModelDreadThrall> implements IHasArmorVariantResource   {
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_thrall.png");
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_thrall_eyes.png");
     public static final Identifier TEXTURE_LEG_ARMOR = Identifier.parse("iceandfire:textures/models/dread/thrall_legs.png");
@@ -68,7 +68,9 @@ public class RenderDreadThrall extends IafMobRenderer<EntityDreadThrall, ModelDr
     }
 
     @Override
-    public void scale(EntityDreadThrall livingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityDreadThrall livingEntityIn = (EntityDreadThrall) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         stack.scale(0.95F, 0.95F, 0.95F);
         if (livingEntityIn.getAnimation() == this.getModel().getSpawnAnimation()) {
             itemLayer.hidden = livingEntityIn.getAnimationTick() <= this.getModel().getSpawnAnimation().getDuration() - 10;

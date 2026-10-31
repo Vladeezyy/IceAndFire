@@ -27,7 +27,9 @@ public class RenderPixie extends IafMobRenderer<EntityPixie, ModelPixie> {
     }
 
     @Override
-    public void scale(EntityPixie LivingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityPixie LivingEntityIn = (EntityPixie) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         stack.scale(0.55F, 0.55F, 0.55F);
         if (LivingEntityIn.isOrderedToSit()) {
             stack.translate(0F, 0.5F, 0F);

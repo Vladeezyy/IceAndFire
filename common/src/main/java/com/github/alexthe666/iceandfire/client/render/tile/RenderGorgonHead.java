@@ -9,7 +9,6 @@ import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -18,15 +17,15 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderGorgonHead extends BlockEntityWithoutLevelRenderer {
+public class RenderGorgonHead implements com.github.alexthe666.iceandfire.client.render.IafLegacyItemRenderer {
 
     private static final RenderType ACTIVE_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/gorgon/head_active.png"), false);
     private static final RenderType INACTIVE_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/gorgon/head_inactive.png"), false);
     private static final AdvancedEntityModel ACTIVE_MODEL = new ModelGorgonHeadActive();
     private static final AdvancedEntityModel INACTIVE_MODEL = new ModelGorgonHead();
 
-    public RenderGorgonHead(BlockEntityRenderDispatcher dispatcher, EntityModelSet set) {
-        super(dispatcher, set);
+    public RenderGorgonHead() {
+        EntityModelSet set = net.minecraft.client.Minecraft.getInstance().getEntityModels();
     }
 
     @Override

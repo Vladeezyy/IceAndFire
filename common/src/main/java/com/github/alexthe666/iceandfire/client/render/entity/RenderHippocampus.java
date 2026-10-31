@@ -112,7 +112,7 @@ public class RenderHippocampus extends IafMobRenderer<EntityHippocampus, ModelHi
         }
     }
 
-    private class LayerHippocampusRainbow extends RenderLayer<EntityHippocampus, ModelHippocampus> {
+    private class LayerHippocampusRainbow extends IafEntityLayer<EntityHippocampus, IafMobRenderState, ModelHippocampus> {
         private final RenderHippocampus renderer;
         private final RenderType TEXTURE = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippocampus/rainbow.png"), false);
         private final RenderType TEXTURE_BLINK = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippocampus/rainbow_blink.png"), false);

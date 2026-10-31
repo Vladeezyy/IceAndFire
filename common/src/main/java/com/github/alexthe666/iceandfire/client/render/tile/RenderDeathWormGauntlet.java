@@ -7,7 +7,6 @@ import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -15,11 +14,11 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderDeathWormGauntlet extends BlockEntityWithoutLevelRenderer {
+public class RenderDeathWormGauntlet implements com.github.alexthe666.iceandfire.client.render.IafLegacyItemRenderer {
     private static final ModelDeathWormGauntlet MODEL = new ModelDeathWormGauntlet();
 
-    public RenderDeathWormGauntlet(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
-        super(p_172550_, p_172551_);
+    public RenderDeathWormGauntlet() {
+        EntityModelSet p_172551_ = net.minecraft.client.Minecraft.getInstance().getEntityModels();
     }
 
     @Override

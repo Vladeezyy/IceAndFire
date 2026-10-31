@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderPixieHouse<T extends TileEntityPixieHouse> implements BlockEntityRenderer<T> {
+public class RenderPixieHouse<T extends TileEntityPixieHouse> extends IafBlockEntityRenderer<T> {
 
     private static final ModelPixieHouse MODEL = new ModelPixieHouse();
     private static ModelPixie MODEL_PIXIE;
@@ -33,7 +33,7 @@ public class RenderPixieHouse<T extends TileEntityPixieHouse> implements BlockEn
     }
 
     @Override
-    public void render(@NotNull T entity, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderLegacy(@NotNull T entity, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         int rotation = 0;
         int meta = 0;
         if (MODEL_PIXIE == null) {

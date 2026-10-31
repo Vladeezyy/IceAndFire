@@ -187,7 +187,9 @@ public class RenderGhost extends IafMobRenderer<EntityGhost, ModelGhost> {
     }
 
     @Override
-    public void scale(@NotNull EntityGhost LivingEntityIn, @NotNull PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityGhost LivingEntityIn = (EntityGhost) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
     }
 
     @Override

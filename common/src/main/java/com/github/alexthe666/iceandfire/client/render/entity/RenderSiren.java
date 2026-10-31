@@ -22,7 +22,9 @@ public class RenderSiren extends IafMobRenderer<EntitySiren, ModelSiren> {
     }
 
     @Override
-    public void scale(@NotNull EntitySiren LivingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntitySiren LivingEntityIn = (EntitySiren) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         stack.translate(0, 0, -0.5F);
 
     }

@@ -17,7 +17,9 @@ public class RenderStymphalianBird extends IafMobRenderer<EntityStymphalianBird,
     }
 
     @Override
-    public void scale(@NotNull EntityStymphalianBird LivingEntityIn, PoseStack stack, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack stack) {
+        EntityStymphalianBird LivingEntityIn = (EntityStymphalianBird) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         stack.scale(0.75F, 0.75F, 0.75F);
     }
 

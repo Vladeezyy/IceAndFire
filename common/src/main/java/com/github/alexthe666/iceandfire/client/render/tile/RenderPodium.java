@@ -21,7 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRenderer<T> {
+public class RenderPodium<T extends TileEntityPodium> extends IafBlockEntityRenderer<T> {
 
     // The item floats above the podium; formerly BlockEntity#getRenderBoundingBox
     // NeoForge extension method (no vanilla override)
@@ -51,7 +51,7 @@ public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRend
     }
 
     @Override
-    public void render(@NotNull T entity, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderLegacy(@NotNull T entity, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         ModelDragonEgg model = new ModelDragonEgg();
         TileEntityPodium podium = entity;
 

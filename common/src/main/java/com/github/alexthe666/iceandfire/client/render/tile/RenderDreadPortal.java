@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-public class RenderDreadPortal<T extends TileEntityDreadPortal> implements BlockEntityRenderer<T> {
+public class RenderDreadPortal<T extends TileEntityDreadPortal> extends IafBlockEntityRenderer<T> {
     public static final Identifier DREAD_PORTAL_BACKGROUND = Identifier.parse("iceandfire:textures/environment/dread_portal_background.png");
     public static final Identifier DREAD_PORTAL = Identifier.parse("iceandfire:textures/environment/dread_portal.png");
 
@@ -23,7 +23,7 @@ public class RenderDreadPortal<T extends TileEntityDreadPortal> implements Block
     }
 
     @Override
-    public void render(@NotNull T tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderLegacy(@NotNull T tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Matrix4f matrix4f = matrixStackIn.last().pose();
         this.renderCube(tileEntityIn, matrix4f, bufferIn.getBuffer(this.renderType()));
     }
