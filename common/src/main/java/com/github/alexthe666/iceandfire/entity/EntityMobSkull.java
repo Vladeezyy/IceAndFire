@@ -38,7 +38,7 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
             //HEALTH
             .add(Attributes.MAX_HEALTH, 10.0D)
             //SPEED

@@ -28,7 +28,7 @@ public class ItemModSword extends Item implements DragonSteelOverrides<ItemModSw
     private double dragonsteelDamage;
 
     public ItemModSword(CustomToolMaterial toolmaterial) {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(toolmaterial.toolMaterial(), 3, -2.4F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(toolmaterial), 3, -2.4F), toolmaterial));
         this.tier = toolmaterial;
     }
 

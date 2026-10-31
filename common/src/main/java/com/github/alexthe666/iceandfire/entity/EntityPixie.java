@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EquipmentSlot;
 import com.github.alexthe666.iceandfire.entity.util.Owners;
@@ -143,7 +144,7 @@ public class EntityPixie extends TamableAnimal {
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
             //HEALTH
             .add(Attributes.MAX_HEALTH, 10D)
             //SPEED

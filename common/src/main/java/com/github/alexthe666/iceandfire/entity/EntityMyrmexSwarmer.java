@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.animal.Animal;
 import com.github.alexthe666.iceandfire.entity.util.Owners;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,7 +52,7 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
             //HEALTH
             .add(Attributes.MAX_HEALTH, 5)
             //SPEED

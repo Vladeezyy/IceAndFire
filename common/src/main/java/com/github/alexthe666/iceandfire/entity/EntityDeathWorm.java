@@ -160,7 +160,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
                 //HEALTH
                 .add(Attributes.MAX_HEALTH, IafConfig.deathWormMaxHealth)
                 //SPEED

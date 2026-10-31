@@ -23,7 +23,7 @@ public class ItemHippocampusSlapper extends Item implements IafTieredItem {
     private final CustomToolMaterial tier;
 
     public ItemHippocampusSlapper() {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL.toolMaterial(), 3, -2.4F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL), 3, -2.4F), IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL));
         this.tier = IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL;
     }
 

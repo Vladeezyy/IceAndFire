@@ -39,6 +39,8 @@ mkdir -p "$RUN"
 [ -f $RUN/server.properties ] || printf 'online-mode=false\nspawn-protection=0\n' > $RUN/server.properties
 # Its own port: another test server on this machine may hold 25565 (IAF_PORT=<port> to change)
 set_prop server-port "${IAF_PORT:-25581}"
+# 26.x pauses a server that has been empty for 60 s (pause-when-empty-seconds): the tests run without players
+set_prop pause-when-empty-seconds 0
 # A fresh client shows the accessibility (narrator) screen on its first start and waits there: quick play, scenes and
 # the net test never get past it. Turned off before the first start.
 if [ ! -f $RUN/options.txt ]; then

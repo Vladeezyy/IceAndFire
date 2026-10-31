@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -279,7 +280,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
             //HEALTH
             .add(Attributes.MAX_HEALTH, 120D)
             //SPEED

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.alexthe666.iceandfire.entity.util.Owners;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -577,7 +578,7 @@ public class EntityAmphithere extends TamableAnimal implements ISyncMount, IAnim
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
                 //HEALTH
                 .add(Attributes.MAX_HEALTH, IafConfig.amphithereMaxHealth)
                 //SPEED

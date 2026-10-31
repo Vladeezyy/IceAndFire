@@ -273,7 +273,7 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public static AttributeSupplier.Builder bakeAttributes() {
-        return Mob.createMobAttributes()
+        return Animal.createAnimalAttributes()
                 //HEALTH
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 //SPEED

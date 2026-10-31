@@ -28,7 +28,7 @@ public class ItemModHoe extends HoeItem implements DragonSteelOverrides<ItemModH
     private double dragonsteelDamage;
 
     public ItemModHoe(CustomToolMaterial toolmaterial) {
-        super(toolmaterial.toolMaterial(), 5, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
+        super(IafToolMaterials.vanilla(toolmaterial), 5, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
         this.tier = toolmaterial;
     }
 

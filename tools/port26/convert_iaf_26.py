@@ -10,7 +10,9 @@
   ghost chest as vanilla's chest special model on the ghost chest textures;
 - spawn eggs: textures made from the 1.21.1 egg template and the original's two colors (26.1 eggs have no colors);
 - equipment assets of the armor materials (assets/iceandfire/equipment/<material>.json): 26.1 draws armor only with an
-  asset; the textures are the items' own (NeoForge: the item client extensions, Fabric: the armor renderer).
+  asset; the textures are the items' own (NeoForge: the item client extensions, Fabric: the armor renderer);
+- renamed vanilla ids in the data (26.1: minecraft:chain is minecraft:iron_chain);
+- worldgen: the flower patches (Feature.FLOWER is gone in 26.1) as their placed feature's count and triangular offset.
 """
 import io
 import json
@@ -239,4 +241,36 @@ for name in materials:
 for material in sorted(ids):
     dump(ASSETS / 'equipment' / (material + '.json'),
          {'layers': {'humanoid': [{'texture': 'iceandfire:' + material}], 'humanoid_leggings': [{'texture': 'iceandfire:' + material}]}})
+# --- renamed vanilla ids (recipes, loot tables, advancements) ---
+RENAMED = {'"minecraft:chain"': '"minecraft:iron_chain"'}
+for data_root in (GEN / 'data', MAIN / 'data'):
+    for file in sorted(data_root.rglob('*.json')):
+        text = file.read_text(encoding='utf-8')
+        new = text
+        for old, renamed in RENAMED.items():
+            new = new.replace(old, renamed)
+        if new != text:
+            file.write_text(new, encoding='utf-8')
+
+# --- worldgen: Feature.FLOWER (RandomPatchConfiguration) is gone; the tries are a count with a triangular offset ---
+for data_root in (GEN / 'data', MAIN / 'data'):
+    for configured in sorted(data_root.glob('*/worldgen/configured_feature/*.json')):
+        feature = load(configured)
+        if feature.get('type') != 'minecraft:flower':
+            continue
+        patch = feature['config']
+        ref = configured.parts[configured.parts.index('data') + 1] + ':' + configured.stem
+        for placed_file in sorted(data_root.glob('*/worldgen/placed_feature/*.json')):
+            placed = load(placed_file)
+            if placed.get('feature') != ref:
+                continue
+            placed['placement'] += [
+                {'type': 'minecraft:count', 'count': patch['tries']},
+                {'type': 'minecraft:random_offset',
+                 'xz_spread': {'type': 'minecraft:trapezoid', 'max': patch['xz_spread'], 'min': -patch['xz_spread'], 'plateau': 0},
+                 'y_spread': {'type': 'minecraft:trapezoid', 'max': patch['y_spread'], 'min': -patch['y_spread'], 'plateau': 0}},
+            ] + patch['feature']['placement']
+            dump(placed_file, placed)
+        dump(configured, patch['feature']['feature'])
+
 print(len(eggs), 'eggs,', len(list((ASSETS / 'items').glob('*.json'))), 'item definitions,', len(ids), 'equipment assets')

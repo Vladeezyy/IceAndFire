@@ -28,7 +28,7 @@ public class ItemModShovel extends ShovelItem implements DragonSteelOverrides<It
     private double dragonsteelDamage;
 
     public ItemModShovel(CustomToolMaterial toolmaterial) {
-        super(toolmaterial.toolMaterial(), 1.5F, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
+        super(IafToolMaterials.vanilla(toolmaterial), 1.5F, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
         this.tier = toolmaterial;
     }
 

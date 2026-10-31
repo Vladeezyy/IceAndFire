@@ -20,7 +20,7 @@ public class ItemStymphalianDagger extends Item implements IafTieredItem {
     private final CustomToolMaterial tier;
 
     public ItemStymphalianDagger() {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL.toolMaterial(), 3, -1.0F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL), 3, -1.0F), IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL));
         this.tier = IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL;
     }
 

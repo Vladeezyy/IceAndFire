@@ -28,7 +28,7 @@ public class ItemModPickaxe extends Item implements DragonSteelOverrides<ItemMod
     private double dragonsteelDamage;
 
     public ItemModPickaxe(CustomToolMaterial toolmaterial) {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().pickaxe(toolmaterial.toolMaterial(), 1, -2.8F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().pickaxe(IafToolMaterials.vanilla(toolmaterial), 1, -2.8F), toolmaterial));
         this.tier = toolmaterial;
     }
 

@@ -240,7 +240,9 @@ public class SelfTest {
             } else if (item instanceof com.github.alexthe666.iceandfire.item.IafArmorItem armor) {
                 repair = armor.getMaterial().vanilla().repairIngredient();
             }
-            if (repair != null && !BuiltInRegistries.ITEM.getTagOrEmpty(repair).iterator().hasNext()) {
+            // copper, the ghost sword and the dread queen's sword have no repair item in the original (empty tags)
+            if (repair != null && !java.util.Set.of("repairs/copper", "repairs/ghostsword", "repairs/dread_queen").contains(repair.location().getPath())
+                && !BuiltInRegistries.ITEM.getTagOrEmpty(repair).iterator().hasNext()) {
                 noRepair.add(BuiltInRegistries.ITEM.getKey(item).getPath());
             }
         }

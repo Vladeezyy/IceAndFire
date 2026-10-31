@@ -30,7 +30,7 @@ public class ItemGhostSword extends Item implements IafTieredItem {
     private final CustomToolMaterial tier;
 
     public ItemGhostSword() {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL.toolMaterial(), 5, -1.0F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL), 5, -1.0F), IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL));
         this.tier = IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL;
     }
 

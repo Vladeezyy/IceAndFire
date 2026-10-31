@@ -25,7 +25,7 @@ public class ItemHippogryphSword extends Item implements IafTieredItem {
     private final CustomToolMaterial tier;
 
     public ItemHippogryphSword() {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.HIPPOGRYPH_SWORD_TOOL_MATERIAL.toolMaterial(), 3, -2.4F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.HIPPOGRYPH_SWORD_TOOL_MATERIAL), 3, -2.4F), IafItemRegistry.HIPPOGRYPH_SWORD_TOOL_MATERIAL));
         this.tier = IafItemRegistry.HIPPOGRYPH_SWORD_TOOL_MATERIAL;
     }
 

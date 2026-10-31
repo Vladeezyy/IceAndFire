@@ -25,7 +25,7 @@ public class ItemAmphithereMacuahuitl extends Item implements IafTieredItem {
     private final CustomToolMaterial tier;
 
     public ItemAmphithereMacuahuitl() {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL.toolMaterial(), 3, -2.4F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL), 3, -2.4F), IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL));
         this.tier = IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL;
     }
 

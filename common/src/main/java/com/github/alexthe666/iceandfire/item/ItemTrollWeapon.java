@@ -25,7 +25,7 @@ public class ItemTrollWeapon extends Item implements IafTieredItem {
     public EnumTroll.Weapon weapon = EnumTroll.Weapon.AXE;
 
     public ItemTrollWeapon(EnumTroll.Weapon weapon) {
-        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL.toolMaterial(), 15, -3.5F));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL), 15, -3.5F), IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL));
         this.weapon = weapon;
     }
 

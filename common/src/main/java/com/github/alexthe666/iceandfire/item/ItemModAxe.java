@@ -28,7 +28,7 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
     private double dragonsteelDamage;
 
     public ItemModAxe(CustomToolMaterial toolmaterial) {
-        super(toolmaterial.toolMaterial(), 5.0F, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
+        super(IafToolMaterials.vanilla(toolmaterial), 5.0F, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
         this.tier = toolmaterial;
     }
 
