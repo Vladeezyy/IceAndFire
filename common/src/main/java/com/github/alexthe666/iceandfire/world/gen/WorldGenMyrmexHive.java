@@ -16,7 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -106,7 +106,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
         if (!small) {
             EntityMyrmexQueen queen = new EntityMyrmexQueen(IafEntityRegistry.MYRMEX_QUEEN.get(), world.getLevel());
             BlockPos ground = MyrmexHive.getGroundedPos(world, position);
-            queen.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+            queen.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
             queen.setHive(hive);
             queen.setJungleVariant(jungle);
             queen.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
@@ -115,7 +115,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
             for (int i = 0; i < 4 + rand.nextInt(3); i++) {
                 EntityMyrmexBase myrmex = new EntityMyrmexWorker(IafEntityRegistry.MYRMEX_WORKER.get(),
                     world.getLevel());
-                myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+                myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
                 myrmex.setHive(hive);
                 myrmex.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
                 myrmex.setJungleVariant(jungle);
@@ -124,7 +124,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
             for (int i = 0; i < 2 + rand.nextInt(2); i++) {
                 EntityMyrmexBase myrmex = new EntityMyrmexSoldier(IafEntityRegistry.MYRMEX_SOLDIER.get(),
                     world.getLevel());
-                myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+                myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
                 myrmex.setHive(hive);
                 myrmex.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
                 myrmex.setJungleVariant(jungle);
@@ -133,7 +133,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
             for (int i = 0; i < rand.nextInt(2); i++) {
                 EntityMyrmexBase myrmex = new EntityMyrmexSentinel(IafEntityRegistry.MYRMEX_SENTINEL.get(),
                     world.getLevel());
-                myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+                myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
                 myrmex.setHive(hive);
                 myrmex.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
                 myrmex.setJungleVariant(jungle);

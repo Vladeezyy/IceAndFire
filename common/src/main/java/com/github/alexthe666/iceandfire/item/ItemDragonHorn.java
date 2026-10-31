@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import net.minecraft.core.component.DataComponents;
@@ -33,12 +35,12 @@ import java.util.List;
 public class ItemDragonHorn extends Item {
 
     public ItemDragonHorn() {
-        super((new Item.Properties())/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super((dev.vladeezyy.iceandfire.platform.Registrar.itemProps())/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
     }
 
     public static int getDragonType(ItemStack stack) {
         if (ItemNbt.hasTag(stack)) {
-            String id = ItemNbt.view(stack).getString("DragonHornEntityID");
+            String id = ItemNbt.view(stack).getStringOr("DragonHornEntityID", "");
             if (EntityType.byString(id).isPresent()) {
                 EntityType entityType = EntityType.byString(id).get();
                 if (entityType == IafEntityRegistry.FIRE_DRAGON.get())
@@ -57,7 +59,7 @@ public class ItemDragonHorn extends Item {
 
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, null);
     }
 
@@ -65,7 +67,7 @@ public class ItemDragonHorn extends Item {
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
         ItemStack trueStack = playerIn.getItemInHand(hand);
-        if (!playerIn.level().isClientSide && hand == InteractionHand.MAIN_HAND && target instanceof EntityDragonBase && ((EntityDragonBase) target).isOwnedBy(playerIn) && getEntityTag(trueStack).isEmpty()) {
+        if (!playerIn.level().isClientSide() && hand == InteractionHand.MAIN_HAND && target instanceof EntityDragonBase && ((EntityDragonBase) target).isOwnedBy(playerIn) && getEntityTag(trueStack).isEmpty()) {
             CompoundTag newTag = new CompoundTag();
 
             CompoundTag entityTag = new CompoundTag();
@@ -93,10 +95,10 @@ public class ItemDragonHorn extends Item {
         CompoundTag stackTag = ItemNbt.getOrEmpty(stack);
         if (!stackTag.getString("DragonHornEntityID").isEmpty()) {
             Level world = context.getLevel();
-            String id = stackTag.getString("DragonHornEntityID");
+            String id = stackTag.getStringOr("DragonHornEntityID", "");
             EntityType type = EntityType.byString(id).orElse(null);
             if (type != null) {
-                Entity entity = type.create(world);
+                Entity entity = type.create(world, EntitySpawnReason.MOB_SUMMONED);
                 if (entity instanceof EntityDragonBase) {
                     EntityDragonBase dragon = (EntityDragonBase) entity;
                     dragon.load(getEntityTag(stack));
@@ -119,14 +121,14 @@ public class ItemDragonHorn extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (ItemNbt.hasTag(stack)) {
             CompoundTag entityTag = getEntityTag(stack);
             if (!entityTag.isEmpty()) {
-                String id = ItemNbt.view(stack).getString("DragonHornEntityID");
+                String id = ItemNbt.view(stack).getStringOr("DragonHornEntityID", "");
                 if (EntityType.byString(id).isPresent()) {
                     EntityType type = EntityType.byString(id).get();
-                    tooltip.add((Component.translatable(type.getDescriptionId())).withStyle(getTextColorForEntityType(type)));
+                    tooltip.accept((Component.translatable(type.getDescriptionId())).withStyle(getTextColorForEntityType(type)));
                     String name = (Component.translatable("dragon.unnamed")).getString();
                     if (!entityTag.getString("CustomName").isEmpty() && worldIn.registries() != null) {
                         MutableComponent component = Component.Serializer.fromJson(entityTag.getString("CustomName"), worldIn.registries());
@@ -134,9 +136,9 @@ public class ItemDragonHorn extends Item {
                             name = component.getString();
                     }
 
-                    tooltip.add((Component.literal(name)).withStyle(ChatFormatting.GRAY));
-                    String gender = (Component.translatable("dragon.gender")).getString() + " " + (Component.translatable(entityTag.getBoolean("Gender") ? "dragon.gender.male" : "dragon.gender.female")).getString();
-                    tooltip.add((Component.literal(gender)).withStyle(ChatFormatting.GRAY));
+                    tooltip.accept((Component.literal(name)).withStyle(ChatFormatting.GRAY));
+                    String gender = (Component.translatable("dragon.gender")).getString() + " " + (Component.translatable(entityTag.getBooleanOr("Gender", false) ? "dragon.gender.male" : "dragon.gender.female")).getString();
+                    tooltip.accept((Component.literal(gender)).withStyle(ChatFormatting.GRAY));
                     int stagenumber = entityTag.getInt("AgeTicks") / 24000;
                     int stage1 = 0;
                     if (stagenumber >= 100) {
@@ -151,7 +153,7 @@ public class ItemDragonHorn extends Item {
                         stage1 = 1;
                     }
                     String stage = (Component.translatable("dragon.stage")).getString() + " " + stage1 + " " + (Component.translatable("dragon.days.front")).getString() + stagenumber + " " + (Component.translatable("dragon.days.back")).getString();
-                    tooltip.add((Component.literal(stage)).withStyle(ChatFormatting.GRAY));
+                    tooltip.accept((Component.literal(stage)).withStyle(ChatFormatting.GRAY));
                 }
             }
 
@@ -162,7 +164,7 @@ public class ItemDragonHorn extends Item {
      * The stored dragon. Horns of 1.20.1 worlds have it in minecraft:entity_data after the world upgrade.
      */
     private static CompoundTag getEntityTag(ItemStack stack) {
-        CompoundTag tag = ItemNbt.view(stack).getCompound("EntityTag");
+        CompoundTag tag = ItemNbt.view(stack).getCompoundOrEmpty("EntityTag");
         if (tag.isEmpty()) {
             CustomData entityData = stack.get(DataComponents.ENTITY_DATA);
             if (entityData != null) {

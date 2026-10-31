@@ -8,7 +8,7 @@ import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 
 public class WorldGenMyrmexDecoration {
 
-    public static final ResourceKey<LootTable> MYRMEX_GOLD_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/myrmex_loot_chest"));
-    public static final ResourceKey<LootTable> DESERT_MYRMEX_FOOD_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/myrmex_desert_food_chest"));
-    public static final ResourceKey<LootTable> JUNGLE_MYRMEX_FOOD_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/myrmex_jungle_food_chest"));
-    public static final ResourceKey<LootTable> MYRMEX_TRASH_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/myrmex_trash_chest"));
+    public static final ResourceKey<LootTable> MYRMEX_GOLD_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/myrmex_loot_chest"));
+    public static final ResourceKey<LootTable> DESERT_MYRMEX_FOOD_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/myrmex_desert_food_chest"));
+    public static final ResourceKey<LootTable> JUNGLE_MYRMEX_FOOD_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/myrmex_jungle_food_chest"));
+    public static final ResourceKey<LootTable> MYRMEX_TRASH_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/myrmex_trash_chest"));
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public static void generateSkeleton(LevelAccessor worldIn, BlockPos blockpos, BlockPos origin, int radius, RandomSource rand) {

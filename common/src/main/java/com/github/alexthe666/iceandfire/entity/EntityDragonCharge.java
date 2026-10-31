@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
 
 import com.github.alexthe666.iceandfire.entity.util.DragonUtils;
 import com.github.alexthe666.iceandfire.entity.util.IDragonProjectile;
@@ -11,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.Fireball;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -58,7 +59,7 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
     @Override
     public void tick() {
         Entity shootingEntity = this.getOwner();
-        if (this.level().isClientSide || (shootingEntity == null || shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
+        if (this.level().isClientSide() || (shootingEntity == null || shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
             super.baseTick();
 
             HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitMob);
@@ -91,7 +92,7 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
     @Override
     protected void onHit(@NotNull HitResult movingObject) {
         Entity shootingEntity = this.getOwner();
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (movingObject.getType() == HitResult.Type.ENTITY) {
                 Entity entity = ((EntityHitResult) movingObject).getEntity();
 
@@ -160,7 +161,7 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         return false;
     }
 

@@ -1,4 +1,5 @@
 package dev.vladeezyy.iceandfire.fabric;
+import com.github.alexthe666.iceandfire.item.IafArmorItem;
 
 import com.github.alexthe666.iceandfire.CommonProxy;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -33,7 +34,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 
 import java.util.function.BiConsumer;
@@ -98,7 +98,7 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
             Supplier<BlockEntityWithoutLevelRenderer> renderer = IafItemRenderers.itemRenderer(item);
             if (renderer != null) {
                 BuiltinItemRendererRegistry.INSTANCE.register(item, (stack, mode, poseStack, buffers, light, overlay) -> renderer.get().renderByItem(stack, mode, poseStack, buffers, light, overlay));
-            } else if (item instanceof ArmorItem && (IafItemRenderers.hasArmorModel(item) || item instanceof IafArmorTextureItem)) {
+            } else if (item instanceof IafArmorItem && (IafItemRenderers.hasArmorModel(item) || item instanceof IafArmorTextureItem)) {
                 ArmorRenderer.register((poseStack, buffers, stack, entity, slot, light, contextModel) -> {
                     Model model = ClientPlatform.INSTANCE.armorModel(entity, stack, slot, contextModel);
                     if (!(model instanceof HumanoidModel<?> humanoid)) {
@@ -132,7 +132,7 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
                         default -> {
                         }
                     }
-                    var layer = ((ArmorItem) stack.getItem()).getMaterial().value().layers().getFirst();
+                    var layer = ((IafArmorItem) stack.getItem()).getMaterial().value().layers().getFirst();
                     ArmorRenderer.renderPart(poseStack, buffers, light, stack, target, ClientPlatform.INSTANCE.armorTexture(entity, stack, layer, slot == EquipmentSlot.LEGS, slot));
                 }, item);
             }

@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.levelgen.Heightmap;
 
@@ -54,7 +54,7 @@ public class NetTest {
             int y = rider.serverLevel().getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
             dragon = IafEntityRegistry.FIRE_DRAGON.get().create(rider.serverLevel());
             dragon.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
-            dragon.finalizeSpawn(rider.serverLevel(), rider.serverLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null);
+            dragon.finalizeSpawn(rider.serverLevel(), rider.serverLevel().getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
             dragon.setAgeInDays(75);
             dragon.tame(rider);
             dragon.setPersistenceRequired();

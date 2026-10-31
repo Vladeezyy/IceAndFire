@@ -70,8 +70,8 @@ public class BlockLaunchExplosion extends Explosion {
      */
     @Override
     public void finalizeExplosion(boolean spawnParticles) {
-        if (world.isClientSide) {
-            this.world.playLocalSound(this.x, this.y, this.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+        if (world.isClientSide()) {
+            this.world.playLocalSound(this.x, this.y, this.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0F, (1.0F + (this.world.getRandom().nextFloat() - this.world.getRandom().nextFloat()) * 0.2F) * 0.7F, false);
         }
 
         boolean flag = this.mode != BlockInteraction.KEEP;
@@ -91,7 +91,7 @@ public class BlockLaunchExplosion extends Explosion {
                 BlockState blockstate = this.world.getBlockState(blockpos);
                 if (!blockstate.isAir()) {
                     BlockPos blockpos1 = blockpos.immutable();
-                    this.world.getProfiler().push("explosion_blocks");
+                    net.minecraft.util.profiling.Profiler.get().push("explosion_blocks");
 
                     Vec3 Vector3d = new Vec3(this.x, this.y, this.z);
                     dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onBlockExploded(blockstate, this.world, blockpos, this);
@@ -106,7 +106,7 @@ public class BlockLaunchExplosion extends Explosion {
                     double d14 = getSeenPercent(Vector3d, fallingBlockEntity);
                     double d11 = (1.0D - d12) * d14;
                     fallingBlockEntity.setDeltaMovement(fallingBlockEntity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));
-                    this.world.getProfiler().pop();
+                    net.minecraft.util.profiling.Profiler.get().pop();
                 }
             }
 

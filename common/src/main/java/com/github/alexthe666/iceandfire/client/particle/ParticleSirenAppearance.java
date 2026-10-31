@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.particle;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelSiren;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderSiren;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +13,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ public class ParticleSirenAppearance extends Particle {
         matrixstack.translate(0.0D, -1.101F, 1.5D);
         MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderType.entityTranslucent(RenderSiren.getSirenOverlayTexture(sirenType)));
-        this.model.renderToBuffer(matrixstack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
+        this.model.renderToBuffer(matrixstack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
         irendertypebuffer$impl.endBatch();
     }
 }

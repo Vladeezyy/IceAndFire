@@ -5,6 +5,6 @@ import net.minecraft.world.item.Item;
 public class ItemDragonBone extends Item {
 
     public ItemDragonBone() {
-        super(new Item.Properties());
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
     }
 }

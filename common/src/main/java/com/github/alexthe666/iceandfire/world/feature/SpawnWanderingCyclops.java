@@ -8,8 +8,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -34,7 +34,7 @@ public class SpawnWanderingCyclops extends Feature<NoneFeatureConfiguration> {
             if (rand.nextInt(IafConfig.spawnWanderingCyclopsChance + 1) == 0 && rand.nextInt(12) == 0) {
                 EntityCyclops cyclops = IafEntityRegistry.CYCLOPS.get().create(worldIn.getLevel());
                 cyclops.setPos(position.getX() + 0.5F, position.getY() + 1, position.getZ() + 0.5F);
-                cyclops.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(position), MobSpawnType.SPAWNER, null);
+                cyclops.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(position), EntitySpawnReason.SPAWNER, null);
                 worldIn.addFreshEntity(cyclops);
                 for (int i = 0; i < 3 + rand.nextInt(3); i++) {
                     Sheep sheep = EntityType.SHEEP.create(worldIn.getLevel());

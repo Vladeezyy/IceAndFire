@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public interface DragonSteelOverrides<T extends TieredItem> {
+public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
 
     /**
      * Kept for compatibility
@@ -45,31 +46,31 @@ public interface DragonSteelOverrides<T extends TieredItem> {
         return (float) damage;
     }
 
-    default boolean isDragonsteel(Tier tier) {
+    default boolean isDragonsteel(CustomToolMaterial tier) {
         return DragonSteelTier.isDragonsteel(tier);
     }
 
-    default boolean isDragonsteelFire(Tier tier) {
+    default boolean isDragonsteelFire(CustomToolMaterial tier) {
         return tier == DragonSteelTier.DRAGONSTEEL_TIER_FIRE;
     }
 
-    default boolean isDragonsteelIce(Tier tier) {
+    default boolean isDragonsteelIce(CustomToolMaterial tier) {
         return tier == DragonSteelTier.DRAGONSTEEL_TIER_ICE;
     }
 
-    default boolean isDragonsteelLightning(Tier tier) {
+    default boolean isDragonsteelLightning(CustomToolMaterial tier) {
         return tier == DragonSteelTier.DRAGONSTEEL_TIER_LIGHTNING;
     }
 
     default void hurtEnemy(T item, ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (item.getTier() == IafItemRegistry.SILVER_TOOL_MATERIAL) {
-            if (target.getType().is(EntityTypeTags.UNDEAD)) {
+            if (target.is(EntityTypeTags.UNDEAD)) {
                 target.hurt(attacker.level().damageSources().magic(), getAttackDamage(item) + 3.0F);
             }
         }
 
         if (item.getTier() == IafItemRegistry.MYRMEX_CHITIN_TOOL_MATERIAL) {
-            if (!target.getType().is(EntityTypeTags.ARTHROPOD)) {
+            if (!target.is(EntityTypeTags.ARTHROPOD)) {
                 target.hurt(attacker.level().damageSources().generic(), getAttackDamage(item) + 5.0F);
             }
             if (target instanceof EntityDeathWorm) {
@@ -82,7 +83,7 @@ public interface DragonSteelOverrides<T extends TieredItem> {
         }
         if (isDragonsteelIce(item.getTier()) && IafConfig.dragonWeaponIceAbility) {
             EntityDataProvider.getCapability(target).ifPresent(data -> data.frozenData.setFrozen(target, 300));
-            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 2));
+            target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 300, 2));
             target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
         }
         if (isDragonsteelLightning(item.getTier()) && IafConfig.dragonWeaponLightningAbility) {
@@ -92,12 +93,12 @@ public interface DragonSteelOverrides<T extends TieredItem> {
                     flag = false;
                 }
             }
-            if (!attacker.level().isClientSide && flag) {
-                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level());
-                lightningboltentity.getTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
-                lightningboltentity.getTags().add(attacker.getStringUUID());
-                lightningboltentity.moveTo(target.position());
-                if (!target.level().isClientSide) {
+            if (!attacker.level().isClientSide() && flag) {
+                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
+                lightningboltentity.entityTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
+                lightningboltentity.entityTags().add(attacker.getStringUUID());
+                lightningboltentity.snapTo(target.position());
+                if (!target.level().isClientSide()) {
                     target.level().addFreshEntity(lightningboltentity);
                 }
             }
@@ -106,7 +107,7 @@ public interface DragonSteelOverrides<T extends TieredItem> {
 
     }
 
-    default void appendHoverText(Tier tier, ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    default void appendHoverText(CustomToolMaterial tier, ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (tier == IafItemRegistry.SILVER_TOOL_MATERIAL) {
             tooltip.add(Component.translatable("silvertools.hurt").withStyle(ChatFormatting.GREEN));
         }

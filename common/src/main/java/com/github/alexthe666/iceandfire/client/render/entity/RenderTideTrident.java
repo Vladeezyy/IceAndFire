@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelTideTrident;
 import com.github.alexthe666.iceandfire.entity.EntityTideTrident;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,12 +10,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderTideTrident extends EntityRenderer<EntityTideTrident> {
-    public static final ResourceLocation TRIDENT = ResourceLocation.parse("iceandfire:textures/models/misc/tide_trident.png");
+    public static final Identifier TRIDENT = Identifier.parse("iceandfire:textures/models/misc/tide_trident.png");
     private final ModelTideTrident tridentModel = new ModelTideTrident();
 
     public RenderTideTrident(EntityRendererProvider.Context context) {
@@ -37,7 +37,7 @@ public class RenderTideTrident extends EntityRenderer<EntityTideTrident> {
      * Returns the location of an entity's texture.
      */
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityTideTrident entity) {
+    public @NotNull Identifier getTextureLocation(@NotNull EntityTideTrident entity) {
         return TRIDENT;
     }
 

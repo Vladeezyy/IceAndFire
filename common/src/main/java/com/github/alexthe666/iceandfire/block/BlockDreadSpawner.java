@@ -40,7 +40,7 @@ public class BlockDreadSpawner extends SpawnerBlock implements IDreadBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_154683_, @NotNull BlockState p_154684_, @NotNull BlockEntityType<T> p_154685_) {
-        return createTickerHelper(p_154685_, IafTileEntityRegistry.DREAD_SPAWNER.get(), p_154683_.isClientSide ? TileEntityDreadSpawner::clientTick : TileEntityDreadSpawner::serverTick);
+        return createTickerHelper(p_154685_, IafTileEntityRegistry.DREAD_SPAWNER.get(), p_154683_.isClientSide() ? TileEntityDreadSpawner::clientTick : TileEntityDreadSpawner::serverTick);
     }
 
 }

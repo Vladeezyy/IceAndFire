@@ -5,17 +5,17 @@ import com.github.alexthe666.iceandfire.entity.EntitySeaSerpent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class LayerSeaSerpentAncient extends RenderLayer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/seaserpent/ancient_overlay.png");
-    private static final ResourceLocation TEXTURE_BLINK = ResourceLocation.parse("iceandfire:textures/models/seaserpent/ancient_overlay_blink.png");
+    private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/seaserpent/ancient_overlay.png");
+    private static final Identifier TEXTURE_BLINK = Identifier.parse("iceandfire:textures/models/seaserpent/ancient_overlay_blink.png");
 
     public LayerSeaSerpentAncient(MobRenderer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> renderer) {
         super(renderer);

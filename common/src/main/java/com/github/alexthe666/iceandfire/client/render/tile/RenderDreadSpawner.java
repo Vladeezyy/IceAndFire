@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDreadSpawner;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -16,14 +19,15 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModAxe>, IafStackStatsItem {
+public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModAxe>, IafStackStatsItem, IafTieredItem {
 
-    private final Tier tier;
+    private final CustomToolMaterial tier;
+
     private ItemAttributeModifiers dragonsteelModifiers;
     private double dragonsteelDamage;
 
-    public ItemModAxe(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(DiggerItem.createAttributes(toolmaterial, 5.0F, -3.0F)));
+    public ItemModAxe(CustomToolMaterial toolmaterial) {
+        super(toolmaterial.toolMaterial(), 5.0F, -3.0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
         this.tier = toolmaterial;
     }
 
@@ -52,19 +56,24 @@ public class ItemModAxe extends AxeItem implements DragonSteelOverrides<ItemModA
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public void hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         hurtEnemy(this, stack, target, attacker);
-        return super.hurtEnemy(stack, target, attacker);
+        super.hurtEnemy(stack, target, attacker);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, display, tooltip, flagIn);
         appendHoverText(tier, stack, worldIn, tooltip, flagIn);
     }
 
     // NeoForge extension method (no vanilla override)
     public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
         return true;
+    }
+
+    @Override
+    public CustomToolMaterial getTier() {
+        return tier;
     }
 }

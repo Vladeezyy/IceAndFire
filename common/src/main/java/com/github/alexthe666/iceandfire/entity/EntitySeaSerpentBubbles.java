@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.IDragonProjectile;
@@ -10,9 +11,9 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.Fireball;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -71,7 +72,7 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
         this.zPower *= 0.95F;
         this.push(this.xPower, this.yPower, this.zPower);
 
-        if (this.level().isClientSide || (shootingEntity == null || !shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
+        if (this.level().isClientSide() || (shootingEntity == null || !shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
             this.baseTick();
             HitResult raytraceresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
             if (raytraceresult.getType() != HitResult.Type.MISS && !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.onProjectileImpact(this, raytraceresult)) {
@@ -84,7 +85,7 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
             double d2 = this.getZ() + Vector3d.z;
             ProjectileUtil.rotateTowardsMovement(this, 0.2F);
             float f = this.getInertia();
-            if (this.level().isClientSide) {
+            if (this.level().isClientSide()) {
                 for (int i = 0; i < 3; ++i) {
                     IceAndFire.PROXY.spawnParticle(EnumParticles.Serpent_Bubble, this.getX() + (double) (this.random.nextFloat() * this.getBbWidth()) - (double) this.getBbWidth() * 0.5F, this.getY() - 0.5D, this.getZ() + (double) (this.random.nextFloat() * this.getBbWidth()) - (double) this.getBbWidth() * 0.5F, 0, 0, 0);
                 }
@@ -107,7 +108,7 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
 
 
     public void autoTarget() {
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             Entity shootingEntity = this.getOwner();
             if (shootingEntity instanceof EntitySeaSerpent && ((EntitySeaSerpent) shootingEntity).getTarget() != null) {
                 Entity target = ((EntitySeaSerpent) shootingEntity).getTarget();
@@ -134,7 +135,7 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         return false;
     }
 
@@ -145,8 +146,8 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
 
     @Override
     protected void onHit(@NotNull HitResult movingObject) {
-        boolean flag = this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
-        if (!this.level().isClientSide) {
+        boolean flag = ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+        if (!this.level().isClientSide()) {
             if (movingObject.getType() == HitResult.Type.ENTITY) {
                 Entity entity = ((EntityHitResult) movingObject).getEntity();
 

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -52,7 +52,7 @@ public class EntityCockatriceEgg extends ThrowableItemProjectile {
             ((EntityHitResult) result).getEntity().hurt(level().damageSources().thrown(this, thrower), 0.0F);
         }
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (this.random.nextInt(4) == 0) {
                 int i = 1;
 
@@ -64,7 +64,7 @@ public class EntityCockatriceEgg extends ThrowableItemProjectile {
                     EntityCockatrice cockatrice = new EntityCockatrice(IafEntityRegistry.COCKATRICE.get(), this.level());
                     cockatrice.setAge(-24000);
                     cockatrice.setHen(this.random.nextBoolean());
-                    cockatrice.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+                    cockatrice.snapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
                     if (thrower instanceof Player) {
                         cockatrice.tame((Player) thrower);
                     }

@@ -11,7 +11,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,7 +63,7 @@ public class WorldGenPixieVillage extends Feature<NoneFeatureConfiguration> impl
                         default -> houseState;
                     };
                     EntityPixie pixie = IafEntityRegistry.PIXIE.get().create(worldIn.getLevel());
-                    pixie.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(buildPosition2.above()), MobSpawnType.SPAWNER, null);
+                    pixie.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(buildPosition2.above()), EntitySpawnReason.SPAWNER, null);
                     pixie.setPos(buildPosition2.getX(), buildPosition2.getY() + 2, buildPosition2.getZ());
                     pixie.setPersistenceRequired();
                     worldIn.addFreshEntity(pixie);

@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -109,20 +111,20 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
             stack.setCount(this.getMaxStackSize());
         }
         this.setChanged();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             IceAndFire.sendMSGToTracking(level, this.getBlockPos(), new MessageUpdatePodium(this.getBlockPos().asLong(), stacks.get(0)));
         }
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
         this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.stacks, registries);
+        ContainerHelper.loadAllItems(compound, this.stacks, compound.lookup());
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+    public void saveAdditional(ValueOutput compound) {
         ContainerHelper.saveAllItems(compound, this.stacks, registries);
     }
 

@@ -139,8 +139,8 @@ public class ItemStackHandler implements ModifiableItemHandler {
         this.setSize(tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : this.stacks.size());
         ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
         for (int i = 0; i < items.size(); i++) {
-            CompoundTag item = items.getCompound(i);
-            int slot = item.getInt("Slot");
+            CompoundTag item = items.getCompoundOrEmpty(i);
+            int slot = item.getIntOr("Slot", 0);
             if (slot >= 0 && slot < this.stacks.size()) {
                 ItemStack.parse(provider, item).ifPresent(stack -> this.stacks.set(slot, stack));
             }

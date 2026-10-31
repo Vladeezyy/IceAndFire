@@ -8,17 +8,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 
 public class RenderDreadLich extends MobRenderer<EntityDreadLich, ModelDreadLich> {
-    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_eyes.png");
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_0.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_1.png");
-    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_2.png");
-    public static final ResourceLocation TEXTURE_3 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_3.png");
-    public static final ResourceLocation TEXTURE_4 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_4.png");
+    public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_lich_eyes.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_0.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_1.png");
+    public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_2.png");
+    public static final Identifier TEXTURE_3 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_3.png");
+    public static final Identifier TEXTURE_4 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_4.png");
     public final HideableLayer<EntityDreadLich, ModelDreadLich, ItemInHandLayer<EntityDreadLich, ModelDreadLich>> itemLayer;
 
     public RenderDreadLich(EntityRendererProvider.Context context) {
@@ -40,7 +40,7 @@ public class RenderDreadLich extends MobRenderer<EntityDreadLich, ModelDreadLich
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(EntityDreadLich entity) {
+    public Identifier getTextureLocation(EntityDreadLich entity) {
         switch (entity.getVariant()) {
             case 1:
                 return TEXTURE_1;

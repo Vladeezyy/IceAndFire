@@ -1,8 +1,10 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.resources.Identifier;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelTrollArmor;
 import com.github.alexthe666.iceandfire.enums.EnumTroll;
 import net.minecraft.ChatFormatting;
@@ -20,12 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class ItemTrollArmor extends ArmorItem implements IafArmorTextureItem {
+public class ItemTrollArmor extends IafArmorItem implements IafArmorTextureItem {
 
     public EnumTroll troll;
 
-    public ItemTrollArmor(EnumTroll troll, IafArmorMaterial material, ArmorItem.Type slot) {
-        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemTrollArmor(EnumTroll troll, IafArmorMaterial material, ArmorType slot) {
+        super(material, slot);
         this.troll = troll;
     }
 
@@ -46,12 +48,12 @@ public class ItemTrollArmor extends ArmorItem implements IafArmorTextureItem {
 
 
     @Override
-    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
-        return ResourceLocation.parse("iceandfire:textures/models/armor/armor_troll_" + troll.name().toLowerCase(Locale.ROOT) + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
+    public Identifier getArmorTexture(ItemStack stack, EquipmentSlot slot) {
+        return Identifier.parse("iceandfire:textures/models/armor/armor_troll_" + troll.name().toLowerCase(Locale.ROOT) + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.troll_leather_armor_" + getArmorPart(type.getSlot()) + ".desc").withStyle(ChatFormatting.GREEN));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.troll_leather_armor_" + getArmorPart(type.getSlot()) + ".desc").withStyle(ChatFormatting.GREEN));
     }
 }

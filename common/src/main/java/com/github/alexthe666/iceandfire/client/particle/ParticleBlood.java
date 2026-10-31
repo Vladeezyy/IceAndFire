@@ -7,7 +7,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticleBlood extends TextureSheetParticle {
-    private static final ResourceLocation BLOOD = ResourceLocation.parse("iceandfire:textures/particles/blood.png");
+    private static final Identifier BLOOD = Identifier.parse("iceandfire:textures/particles/blood.png");
 
     public ParticleBlood(ClientLevel world, double x, double y, double z) {
         super(world, x, y, z, 0, Math.random() * (double) 0.2F + 0.1, 0);

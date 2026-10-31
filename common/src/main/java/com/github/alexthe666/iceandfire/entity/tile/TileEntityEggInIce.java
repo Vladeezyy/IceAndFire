@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IafConfig;
@@ -37,7 +40,7 @@ public class TileEntityEggInIce extends BlockEntity {
     public static void tickEgg(Level level, BlockPos pos, BlockState state, TileEntityEggInIce entityEggInIce) {
         entityEggInIce.age++;
         if (entityEggInIce.age >= IafConfig.dragonEggTime && entityEggInIce.type != null && !entityEggInIce.spawned) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 EntityIceDragon dragon = new EntityIceDragon(level);
                 dragon.setPos(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
                 dragon.setVariant(entityEggInIce.type.ordinal() - 4);
@@ -56,7 +59,7 @@ public class TileEntityEggInIce extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+    public void saveAdditional(ValueOutput tag) {
         if (type != null) {
             tag.putByte("Color", (byte) type.ordinal());
         } else {
@@ -66,22 +69,22 @@ public class TileEntityEggInIce extends BlockEntity {
         if (ownerUUID == null) {
             tag.putString("OwnerUUID", "");
         } else {
-            tag.putUUID("OwnerUUID", ownerUUID);
+            tag.store("OwnerUUID", UUIDUtil.CODEC, ownerUUID);
         }
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(tag, registries);
-        type = EnumDragonEgg.values()[tag.getByte("Color")];
-        age = tag.getInt("Age");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        type = EnumDragonEgg.values()[tag.getByteOr("Color", (byte) 0)];
+        age = tag.getIntOr("Age", 0);
         UUID s = null;
 
-        if (tag.hasUUID("OwnerUUID")) {
-            s = tag.getUUID("OwnerUUID");
+        if (tag.read("OwnerUUID", UUIDUtil.CODEC).isPresent()) {
+            s = tag.read("OwnerUUID", UUIDUtil.CODEC).orElseThrow();
         } else {
             try {
-                String s1 = tag.getString("OwnerUUID");
+                String s1 = tag.getStringOr("OwnerUUID", "");
                 s = OldUsersConverter.convertMobOwnerIfNecessary(this.level.getServer(), s1);
             } catch (Exception ignored) {
             }
@@ -120,7 +123,7 @@ public class TileEntityEggInIce extends BlockEntity {
             egg.setEggType(type);
             egg.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5);
             egg.setOwnerId(this.ownerUUID);
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 level.addFreshEntity(egg);
             }
         }

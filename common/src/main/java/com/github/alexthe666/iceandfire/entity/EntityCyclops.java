@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -36,9 +39,9 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.PolarBear;
-import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.polarbear.PolarBear;
+import net.minecraft.world.entity.animal.fish.WaterAnimal;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -104,7 +107,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 40;
     }
 
@@ -160,7 +163,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         int attackDescision = this.getRandom().nextInt(3);
         if (attackDescision == 0) {
             this.setAnimation(ANIMATION_STOMP);
@@ -172,7 +175,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
                 && !entityIn.getType().is((TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.CYCLOPS_UNLIFTABLES)))) {
                 this.setAnimation(ANIMATION_EATPLAYER);
                 entityIn.stopRiding();
-                entityIn.startRiding(this, true);
+                entityIn.startRiding(this, true, true);
             } else {
                 this.setAnimation(ANIMATION_STOMP);
             }
@@ -191,17 +194,17 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("Blind", this.isBlinded());
         compound.putInt("Variant", this.getVariant());
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.setBlinded(compound.getBoolean("Blind"));
-        this.setVariant(compound.getInt("Variant"));
+        this.setBlinded(compound.getBooleanOr("Blind", false));
+        this.setVariant(compound.getIntOr("Variant", 0));
         this.setConfigurableAttributes();
     }
 
@@ -310,7 +313,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
 
                 BlockState BlockState = this.level().getBlockState(BlockPos.containing(this.getX() + extraX, this.getY() + extraY - 1, this.getZ() + extraZ));
                 if (BlockState.isAir()) {
-                    if (level().isClientSide) {
+                    if (level().isClientSide()) {
                         level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, BlockState), this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ, motionX, motionY, motionZ);
                     }
                 }
@@ -333,7 +336,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setVariant(this.getRandom().nextInt(4));
         return spawnDataIn;
@@ -351,7 +354,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
                             this.getDeltaMovement().scale(0.6D);
                             if (dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, a, b, c))) continue;
                             if (block != Blocks.AIR) {
-                                if (!level().isClientSide) {
+                                if (!level().isClientSide()) {
                                     level().destroyBlock(pos, true);
                                 }
                             }

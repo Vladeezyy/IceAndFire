@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -109,7 +112,7 @@ public class EntityDreadGhoul extends EntityDreadMob implements IAnimatedEntity,
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         if (this.getAnimation() == NO_ANIMATION) {
             this.setAnimation(ANIMATION_SLASH);
         }
@@ -143,7 +146,7 @@ public class EntityDreadGhoul extends EntityDreadMob implements IAnimatedEntity,
                 attackTarget.knockback(0.25F, this.getX() - attackTarget.getX(), this.getZ() - attackTarget.getZ());
             }
         }
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (this.getTarget() != null) {
                 hostileTicks++;
                 if (this.getScreamStage() == 0) {
@@ -172,7 +175,7 @@ public class EntityDreadGhoul extends EntityDreadMob implements IAnimatedEntity,
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("Variant", this.getVariant());
         compound.putInt("ScreamStage", this.getScreamStage());
@@ -180,11 +183,11 @@ public class EntityDreadGhoul extends EntityDreadMob implements IAnimatedEntity,
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.setVariant(compound.getInt("Variant"));
-        this.setScreamStage(compound.getInt("ScreamStage"));
-        this.setSize(compound.getFloat("DreadScale"));
+        this.setVariant(compound.getIntOr("Variant", 0));
+        this.setScreamStage(compound.getIntOr("ScreamStage", 0));
+        this.setSize(compound.getFloatOr("DreadScale", 0.0F));
     }
 
     public int getVariant() {
@@ -210,7 +213,7 @@ public class EntityDreadGhoul extends EntityDreadMob implements IAnimatedEntity,
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAnimation(ANIMATION_SPAWN);
         this.setVariant(random.nextInt(3));

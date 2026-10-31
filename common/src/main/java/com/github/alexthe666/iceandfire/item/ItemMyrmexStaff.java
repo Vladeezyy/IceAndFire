@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.server.level.ServerLevel;
+import javax.annotation.Nullable;
+import net.minecraft.world.entity.EquipmentSlot;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -10,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -24,16 +26,16 @@ import java.util.UUID;
 public class ItemMyrmexStaff extends Item {
 
     public ItemMyrmexStaff(boolean jungle) {
-        super(new Item.Properties().stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().stacksTo(1));
     }
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
         if (!ItemNbt.hasTag(stack)) {
             ItemNbt.setTag(stack, new CompoundTag());
             ItemNbt.update(stack, tag -> tag.putUUID("HiveUUID", new UUID(0, 0)));
@@ -41,14 +43,14 @@ public class ItemMyrmexStaff extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         if (playerIn.isShiftKeyDown()) {
             return super.use(worldIn, playerIn, hand);
         }
         if (ItemNbt.hasTag(itemStackIn) && ItemNbt.view(itemStackIn).hasUUID("HiveUUID")) {
             UUID id = ItemNbt.view(itemStackIn).getUUID("HiveUUID");
-            if (!worldIn.isClientSide) {
+            if (!worldIn.isClientSide()) {
                 MyrmexHive hive = MyrmexWorldData.get(worldIn).getHiveFromUUID(id);
                 if (hive != null) {
                     IceAndFire.sendMSGToPlayer(new MessageGetMyrmexHive(hive.toNBT()), (ServerPlayer) playerIn);
@@ -60,7 +62,7 @@ public class ItemMyrmexStaff extends Item {
             }
         }
         playerIn.swing(hand);
-        return new InteractionResultHolder<ItemStack>(InteractionResult.PASS, itemStackIn);
+        return new InteractionResult(InteractionResult.PASS, itemStackIn);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class ItemMyrmexStaff extends Item {
             CompoundTag tag = ItemNbt.getTag(context.getPlayer().getItemInHand(context.getHand()));
             if (tag != null && tag.hasUUID("HiveUUID")) {
                 UUID id = tag.getUUID("HiveUUID");
-                if (!context.getLevel().isClientSide) {
+                if (!context.getLevel().isClientSide()) {
                     MyrmexHive hive = MyrmexWorldData.get(context.getLevel()).getHiveFromUUID(id);
                     if (hive != null) {
                         IceAndFire.sendMSGToPlayer(new MessageGetMyrmexHive(hive.toNBT()), (ServerPlayer) context.getPlayer());

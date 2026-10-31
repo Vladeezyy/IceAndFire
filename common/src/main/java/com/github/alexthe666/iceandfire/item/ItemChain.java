@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.entity.EntityChainTie;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
@@ -28,7 +30,7 @@ public class ItemChain extends Item {
     private final boolean sticky;
 
     public ItemChain(boolean sticky) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/);
         this.sticky = sticky;
     }
 
@@ -55,12 +57,12 @@ public class ItemChain extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.chain.desc_0").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.chain.desc_1").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.chain.desc_0").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.chain.desc_1").withStyle(ChatFormatting.GRAY));
         if (sticky) {
-            tooltip.add(Component.translatable("item.iceandfire.chain_sticky.desc_2").withStyle(ChatFormatting.GREEN));
-            tooltip.add(Component.translatable("item.iceandfire.chain_sticky.desc_3").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("item.iceandfire.chain_sticky.desc_2").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("item.iceandfire.chain_sticky.desc_3").withStyle(ChatFormatting.GREEN));
         }
     }
 
@@ -124,7 +126,7 @@ public class ItemChain extends Item {
         if (!(block instanceof WallBlock)) {
             return InteractionResult.PASS;
         } else {
-            if (!context.getLevel().isClientSide) {
+            if (!context.getLevel().isClientSide()) {
                 attachToFence(context.getPlayer(), context.getLevel(), context.getClickedPos());
             }
             return InteractionResult.SUCCESS;

@@ -5,9 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -16,7 +16,7 @@ import org.joml.Matrix4f;
 
 public class CockatriceBeamRender {
 
-    public static final RenderType TEXTURE_BEAM = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/cockatrice/beam.png"));
+    public static final RenderType TEXTURE_BEAM = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/cockatrice/beam.png"));
 
     private static void vertex(VertexConsumer p_229108_0_, Matrix4f p_229108_1_, PoseStack.Pose p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
         p_229108_0_.addVertex(p_229108_1_, p_229108_3_, p_229108_4_, p_229108_5_).setColor(p_229108_6_, p_229108_7_, p_229108_8_, 255).setUv(p_229108_9_, p_229108_10_).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(p_229108_2_, 0.0F, 1.0F, 0.0F);

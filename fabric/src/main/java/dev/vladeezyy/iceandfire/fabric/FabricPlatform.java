@@ -22,7 +22,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,16 +36,16 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.WitherSkull;
+import net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
@@ -69,7 +69,7 @@ import java.util.function.Supplier;
  * hooks. Entries are queued and registered by {@link #registerAll()} in vanilla's registry order.
  */
 public final class FabricPlatform implements Platform {
-    private record Pending(ResourceLocation id, Supplier<?> factory) {}
+    private record Pending(Identifier id, Supplier<?> factory) {}
 
     private static final Map<ResourceKey<?>, List<Pending>> PENDING = new LinkedHashMap<>();
     /** Sends a packet to the server; set by the client entry point (the client networking class is client-only) */
@@ -80,7 +80,7 @@ public final class FabricPlatform implements Platform {
     static MinecraftServer server;
 
     /** The original's capability "iceandfire:entity_data", saved with the entity */
-    static final AttachmentType<EntityData> ENTITY_DATA = AttachmentRegistry.create(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "entity_data"),
+    static final AttachmentType<EntityData> ENTITY_DATA = AttachmentRegistry.create(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "entity_data"),
         builder -> builder.initializer(EntityData::new).persistent(CompoundTag.CODEC.xmap(tag -> {
             EntityData data = new EntityData();
             data.deserialize(tag);
@@ -90,22 +90,22 @@ public final class FabricPlatform implements Platform {
     /** Registers the queued entries: attributes, data components, armor materials, then vanilla order, then modded registries */
     @SuppressWarnings({"unchecked", "rawtypes"})
     static void registerAll() {
-        Set<ResourceLocation> order = new LinkedHashSet<>();
+        Set<Identifier> order = new LinkedHashSet<>();
         order.add(Registries.ATTRIBUTE.location());
         order.add(Registries.DATA_COMPONENT_TYPE.location());
         order.add(Registries.ARMOR_MATERIAL.location());
-        List<ResourceLocation> modded = new ArrayList<>();
+        List<Identifier> modded = new ArrayList<>();
         for (Registry<?> each : BuiltInRegistries.REGISTRY) {
-            ResourceLocation id = each.key().location();
+            Identifier id = each.key().location();
             if (id.getNamespace().equals("minecraft")) {
                 order.add(id);
             } else {
                 modded.add(id);
             }
         }
-        modded.sort(java.util.Comparator.comparing(ResourceLocation::getNamespace).thenComparing(ResourceLocation::getPath));
+        modded.sort(java.util.Comparator.comparing(Identifier::getNamespace).thenComparing(Identifier::getPath));
         order.addAll(modded);
-        for (ResourceLocation registryId : order) {
+        for (Identifier registryId : order) {
             List<Pending> entries = PENDING.remove(ResourceKey.createRegistryKey(registryId));
             if (entries == null) {
                 continue;
@@ -154,7 +154,7 @@ public final class FabricPlatform implements Platform {
     // --- registration ---
 
     @Override
-    public <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, ResourceLocation id, Supplier<? extends T> factory) {
+    public <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, Identifier id, Supplier<? extends T> factory) {
         PENDING.computeIfAbsent(registry, key -> new ArrayList<>()).add(new Pending(id, factory));
     }
 
@@ -230,7 +230,7 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public boolean canShieldBlock(ItemStack stack) {
-        return stack.getUseAnimation() == UseAnim.BLOCK;
+        return stack.getUseAnimation() == ItemUseAnimation.BLOCK;
     }
 
     @Override

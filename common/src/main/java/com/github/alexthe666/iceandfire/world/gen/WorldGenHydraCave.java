@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.TreeFeatures;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
 
-    public static final ResourceKey<LootTable> HYDRA_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/hydra_cave"));
+    public static final ResourceKey<LootTable> HYDRA_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/hydra_cave"));
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public WorldGenHydraCave(Codec<NoneFeatureConfiguration> configFactoryIn) {
@@ -151,7 +151,7 @@ public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> impleme
         }
         EntityHydra hydra = new EntityHydra(IafEntityRegistry.HYDRA.get(), worldIn.getLevel());
         hydra.setVariant(rand.nextInt(3));
-        hydra.restrictTo(position, 15);
+        hydra.setHomeTo(position, 15);
         hydra.absMoveTo(position.getX() + 0.5, position.getY() + 1.5, position.getZ() + 0.5, rand.nextFloat() * 360, 0);
         worldIn.addFreshEntity(hydra);
         return true;

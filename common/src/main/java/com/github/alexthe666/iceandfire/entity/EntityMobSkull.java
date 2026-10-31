@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import com.github.alexthe666.iceandfire.entity.util.IBlacklistedFromStatues;
 import com.github.alexthe666.iceandfire.entity.util.IDeadMob;
@@ -45,7 +47,7 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource i) {
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource i) {
         return i.getEntity() != null;
     }
 
@@ -97,9 +99,9 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource var1, float var2) {
+    public boolean hurtServer(ServerLevel level, DamageSource var1, float var2) {
         this.turnIntoItem();
-        return super.hurt(var1, var2);
+        return super.hurtServer(level, var1, var2);
     }
 
     public void turnIntoItem() {
@@ -107,8 +109,8 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
             return;
         this.remove(RemovalReason.DISCARDED);
         ItemStack stack = new ItemStack(getSkullType().skull_item.get(), 1);
-        if (!this.level().isClientSide)
-            this.spawnAtLocation(stack, 0.0F);
+        if (!this.level().isClientSide())
+            this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), stack, 0.0F);
     }
 
     @Override
@@ -125,14 +127,14 @@ public class EntityMobSkull extends Animal implements IBlacklistedFromStatues, I
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        this.setYaw(compound.getFloat("SkullYaw"));
-        this.setEnumOrdinal(compound.getInt("SkullType"));
+    public void readAdditionalSaveData(ValueInput compound) {
+        this.setYaw(compound.getFloatOr("SkullYaw", 0.0F));
+        this.setEnumOrdinal(compound.getIntOr("SkullType", 0));
         super.readAdditionalSaveData(compound);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         compound.putFloat("SkullYaw", this.getYaw());
         compound.putInt("SkullType", this.getEnumOrdinal());
         super.addAdditionalSaveData(compound);

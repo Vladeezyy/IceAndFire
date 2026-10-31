@@ -19,7 +19,7 @@ public class EntityCyclopsEye extends EntityMutlipartPart {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float damage) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         Entity parent = this.getParent();
         if (parent instanceof EntityCyclops && source.is(DamageTypes.ARROW)) {
             ((EntityCyclops) parent).onHitEye(source, damage);

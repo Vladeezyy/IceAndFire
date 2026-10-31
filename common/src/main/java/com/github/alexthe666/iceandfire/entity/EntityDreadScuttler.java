@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -109,19 +112,19 @@ public class EntityDreadScuttler extends EntityDreadMob implements IAnimatedEnti
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("Scale", this.getSize());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.setSize(compound.getFloat("Scale"));
+        this.setSize(compound.getFloatOr("Scale", 0.0F));
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         if (this.getAnimation() == NO_ANIMATION) {
             this.setAnimation(ANIMATION_BITE);
         }
@@ -136,7 +139,7 @@ public class EntityDreadScuttler extends EntityDreadMob implements IAnimatedEnti
             firstWidth = INITIAL_WIDTH * getSize();
             firstHeight = INITIAL_HEIGHT * getSize();
         }
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.setBesideClimbableBlock(this.horizontalCollision);
         }
         if (this.getAnimation() == ANIMATION_SPAWN && this.getAnimationTick() < 30) {
@@ -193,7 +196,7 @@ public class EntityDreadScuttler extends EntityDreadMob implements IAnimatedEnti
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAnimation(ANIMATION_SPAWN);
         this.setSize(0.5F + random.nextFloat() * 1.15F);

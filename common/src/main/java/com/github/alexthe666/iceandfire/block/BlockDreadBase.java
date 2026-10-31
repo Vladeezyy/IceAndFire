@@ -27,7 +27,7 @@ public class BlockDreadBase extends BlockGeneric implements IDragonProof, IDread
     }*/
 
     public static BlockDreadBase builder(float hardness, float resistance, SoundType sound, MapColor color, NoteBlockInstrument instrument, boolean ignited) {
-        Properties props = Properties.of()
+        Properties props = dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(color)
                 .sound(sound)
                 .strength(hardness, resistance);

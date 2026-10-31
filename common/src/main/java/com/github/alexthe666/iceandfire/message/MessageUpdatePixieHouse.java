@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.message;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityJar;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 
 public class MessageUpdatePixieHouse implements CustomPacketPayload {
-    public static final Type<MessageUpdatePixieHouse> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "update_pixie_house"));
+    public static final Type<MessageUpdatePixieHouse> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "update_pixie_house"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageUpdatePixieHouse> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageUpdatePixieHouse::read);
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
@@ -18,7 +18,7 @@ public class IafStructurePieces {
     public static final ResourceKey<StructureTemplatePool> MAUSOLEUM_START = createKey("mausoleum/start_pool");
     public static final ResourceKey<StructureTemplatePool> GORGON_TEMPLE_START = createKey("gorgon_temple/start_pool");
     private static ResourceKey<StructureTemplatePool> createKey(String name) {
-        return ResourceKey.create(Registries.TEMPLATE_POOL, ResourceLocation.fromNamespaceAndPath("iceandfire", name));
+        return ResourceKey.create(Registries.TEMPLATE_POOL, Identifier.fromNamespaceAndPath("iceandfire", name));
     }
     public static void registerGraveyard(BootstrapContext<StructureTemplatePool> pContext) {
         HolderGetter<StructureProcessorList> processorListHolderGetter = pContext.lookup(Registries.PROCESSOR_LIST);

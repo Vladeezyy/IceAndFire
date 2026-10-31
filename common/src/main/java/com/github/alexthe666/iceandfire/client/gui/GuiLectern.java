@@ -14,16 +14,16 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Random;
 
 public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
-    private static final ResourceLocation ENCHANTMENT_TABLE_GUI_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/lectern.png");
-    private static final ResourceLocation ENCHANTMENT_TABLE_BOOK_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/lectern_book.png");
+    private static final Identifier ENCHANTMENT_TABLE_GUI_TEXTURE = Identifier.parse("iceandfire:textures/gui/lectern.png");
+    private static final Identifier ENCHANTMENT_TABLE_BOOK_TEXTURE = Identifier.parse("iceandfire:textures/models/lectern_book.png");
     private static BookModel bookModel;
     private final Random random = new Random();
     private final Component nameable;
@@ -62,7 +62,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics ms, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY) {
         Font font = this.minecraft.font;
         font.drawInBatch(this.nameable.getString(), 12, 4, 4210752, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
         font.drawInBatch(this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, 4210752, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
@@ -94,7 +94,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics ms, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor ms, float partialTicks, int mouseX, int mouseY) {
         Lighting.setupForFlatItems();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -204,7 +204,7 @@ public class GuiLectern extends AbstractContainerScreen<ContainerLectern> {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
         this.renderTooltip(ms, mouseX, mouseY);
         boolean flag = this.minecraft.player.isCreative();

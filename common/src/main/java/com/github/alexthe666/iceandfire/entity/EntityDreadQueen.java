@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.IAnimatedEntity;
@@ -78,7 +80,7 @@ public class EntityDreadQueen extends EntityDreadMob implements IAnimatedEntity,
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
 
         if (this.hasCustomName()) {
@@ -87,8 +89,8 @@ public class EntityDreadQueen extends EntityDreadMob implements IAnimatedEntity,
     }
 
     @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
+    protected void customServerAiStep(ServerLevel level) {
+        super.customServerAiStep(level);
         this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
@@ -114,7 +116,7 @@ public class EntityDreadQueen extends EntityDreadMob implements IAnimatedEntity,
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAnimation(ANIMATION_SPAWN);
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);

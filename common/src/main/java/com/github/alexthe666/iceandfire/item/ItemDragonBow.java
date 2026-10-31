@@ -12,7 +12,7 @@ public class ItemDragonBow extends BowItem {
     private static final Predicate<ItemStack> DRAGON_ARROWS = stack -> stack.is(IafItemTags.DRAGON_ARROWS);
 
     public ItemDragonBow() {
-        super(new Item.Properties().durability(584));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().durability(584));
     }
 
     @Override

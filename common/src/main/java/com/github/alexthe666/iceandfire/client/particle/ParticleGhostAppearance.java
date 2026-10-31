@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.particle;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelGhost;
 import com.github.alexthe666.iceandfire.client.render.IafRenderType;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderGhost;
@@ -30,7 +30,7 @@ public class ParticleGhostAppearance extends Particle {
         this.gravity = 0.0F;
         this.lifetime = 15;
         this.ghost = ghost;
-        fromLeft = worldIn.random.nextBoolean();
+        fromLeft = worldIn.getRandom().nextBoolean();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ParticleGhostAppearance extends Particle {
 
             VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(IafRenderType.getGhost(RenderGhost.getGhostOverlayForType(ghostEntity.getColor())));
             this.model.setupAnim(ghostEntity, 0, 0, entity.tickCount + partialTicks, 0, 0);
-            this.model.renderToBuffer(matrixstack, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
+            this.model.renderToBuffer(matrixstack, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
             irendertypebuffer$impl.endBatch();
         }
 

@@ -1,7 +1,8 @@
 package com.github.alexthe666.iceandfire.block;
+import net.minecraft.core.Direction;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.DragonType;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDragonforge;
@@ -100,9 +101,9 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
 
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    protected @NotNull InteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!player.isShiftKeyDown()) {
-            if (worldIn.isClientSide) {
+            if (worldIn.isClientSide()) {
                 IceAndFire.PROXY.setRefrencedTE(worldIn.getBlockEntity(pos));
             } else {
                 MenuProvider inamedcontainerprovider = this.getMenuProvider(state, worldIn, pos);
@@ -110,9 +111,9 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
                     player.openMenu(inamedcontainerprovider);
                 }
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     public ItemStack getItem(Level worldIn, BlockPos pos, BlockState state) {
@@ -144,7 +145,7 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
     }
 
     @Override
-    public int getAnalogOutputSignal(@NotNull BlockState blockState, Level worldIn, @NotNull BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos, Direction direction) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
     }
 

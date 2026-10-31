@@ -1,11 +1,13 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.entity.EntitySeaSerpentArrow;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +21,7 @@ import java.util.List;
 public class ItemSeaSerpentArrow extends ArrowItem {
 
     public ItemSeaSerpentArrow() {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override
@@ -28,7 +30,7 @@ public class ItemSeaSerpentArrow extends ArrowItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.sea_serpent_arrow.desc").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.sea_serpent_arrow.desc").withStyle(ChatFormatting.GRAY));
     }
 }

@@ -89,7 +89,7 @@ public class SeaSerpentAIAttackMelee extends Goal {
             return false;
         } else if (!this.longMemory) {
             return !this.attacker.getNavigation().isDone();
-        } else if (!this.attacker.isWithinRestriction(LivingEntity.blockPosition())) {
+        } else if (!this.attacker.isWithinHome(LivingEntity.blockPosition())) {
             return false;
         } else {
             return !(LivingEntity instanceof Player) || !LivingEntity.isSpectator() && !((Player) LivingEntity).isCreative();
@@ -169,7 +169,7 @@ public class SeaSerpentAIAttackMelee extends Goal {
         if (this.attacker.isTouchingMob(enemy)) {
             this.attackTick = 20;
             this.attacker.swing(InteractionHand.MAIN_HAND);
-            this.attacker.doHurtTarget(enemy);
+            this.attacker.doHurtTarget((net.minecraft.server.level.ServerLevel) this.attacker.level(), enemy);
         }
     }
 

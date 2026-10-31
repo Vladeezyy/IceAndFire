@@ -7,7 +7,7 @@ import com.github.alexthe666.iceandfire.world.MyrmexWorldData;
 import com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -45,7 +45,7 @@ public class TestHive {
         gen.placeSmallGen(level, level.random, center);
         EntityMyrmexQueen queen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level);
         BlockPos ground = MyrmexHive.getGroundedPos(level, center);
-        queen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+        queen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
         queen.setHive(gen.hive);
         queen.setPersistenceRequired();
         queen.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
@@ -60,7 +60,7 @@ public class TestHive {
         for (int i = 0; i < 9; i++) {
             var type = i < 5 ? IafEntityRegistry.MYRMEX_WORKER.get() : i < 8 ? IafEntityRegistry.MYRMEX_SOLDIER.get() : IafEntityRegistry.MYRMEX_SENTINEL.get();
             com.github.alexthe666.iceandfire.entity.EntityMyrmexBase myrmex = type.create(level);
-            myrmex.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+            myrmex.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
             myrmex.setHive(hive);
             myrmex.setJungleVariant(queen.isJungle());
             myrmex.setPersistenceRequired();

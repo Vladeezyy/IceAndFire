@@ -6,14 +6,14 @@ import com.github.alexthe666.iceandfire.entity.EntityDreadBeast;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadBeast extends MobRenderer<EntityDreadBeast, ModelDreadBeast> {
 
-    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_beast_eyes.png");
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_beast_1.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_beast_2.png");
+    public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_beast_eyes.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/dread/dread_beast_1.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/dread/dread_beast_2.png");
 
     public RenderDreadBeast(EntityRendererProvider.Context context) {
         super(context, new ModelDreadBeast(), 0.5F);
@@ -27,7 +27,7 @@ public class RenderDreadBeast extends MobRenderer<EntityDreadBeast, ModelDreadBe
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityDreadBeast beast) {
+    public @NotNull Identifier getTextureLocation(EntityDreadBeast beast) {
         return beast.getVariant() == 1 ? TEXTURE_1 : TEXTURE_0;
 
     }

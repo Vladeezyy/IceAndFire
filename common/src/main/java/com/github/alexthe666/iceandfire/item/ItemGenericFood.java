@@ -13,13 +13,13 @@ public class ItemGenericFood extends Item {
     private final float saturation;
 
     public ItemGenericFood(int amount, float saturation, boolean isWolfFood, boolean eatFast, boolean alwaysEdible) {
-        super(new Item.Properties().food(createFood(amount, saturation, isWolfFood, eatFast, alwaysEdible, null)));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().food(createFood(amount, saturation, isWolfFood, eatFast, alwaysEdible, null)));
         this.healAmount = amount;
         this.saturation = saturation;
     }
 
     public ItemGenericFood(int amount, float saturation, boolean isWolfFood, boolean eatFast, boolean alwaysEdible, int stackSize) {
-        super(new Item.Properties().food(createFood(amount, saturation, isWolfFood, eatFast, alwaysEdible, null)).stacksTo(stackSize));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().food(createFood(amount, saturation, isWolfFood, eatFast, alwaysEdible, null)).stacksTo(stackSize));
         this.healAmount = amount;
         this.saturation = saturation;
     }

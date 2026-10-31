@@ -1,4 +1,9 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IafConfig;
@@ -49,21 +54,21 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Jungle", this.isJungle());
         tag.putInt("MyrmexAge", this.getMyrmexAge());
         tag.putInt("MyrmexCaste", this.getMyrmexCaste());
-        tag.putUUID("HiveUUID", hiveUUID == null ? hiveUUID = UUID.randomUUID() : hiveUUID);
+        tag.store("HiveUUID", UUIDUtil.CODEC, hiveUUID == null ? hiveUUID = UUID.randomUUID() : hiveUUID);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.setJungle(tag.getBoolean("Jungle"));
-        this.setMyrmexAge(tag.getInt("MyrmexAge"));
-        this.setMyrmexCaste(tag.getInt("MyrmexCaste"));
-        hiveUUID = tag.getUUID("HiveUUID");
+        this.setJungle(tag.getBooleanOr("Jungle", false));
+        this.setMyrmexAge(tag.getIntOr("MyrmexAge", 0));
+        this.setMyrmexCaste(tag.getIntOr("MyrmexCaste", 0));
+        hiveUUID = tag.read("HiveUUID", UUIDUtil.CODEC).orElseThrow();
     }
 
     @Override
@@ -138,7 +143,7 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
                 if (player != null) {
                     hive.hasOwner = true;
                     hive.ownerUUID = player.getUUID();
-                    if (!level().isClientSide) {
+                    if (!level().isClientSide()) {
                         hive.modifyPlayerReputation(player.getUUID(), 100);
                     }
                 }
@@ -154,13 +159,13 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
                     } else {
                         hive = MyrmexWorldData.get(level()).getHiveFromUUID(hiveUUID);
                     }
-                    if (!level().isClientSide && hive != null && Math.sqrt(this.distanceToSqr(hive.getCenter().getX(), hive.getCenter().getY(), hive.getCenter().getZ())) < 2000) {
+                    if (!level().isClientSide() && hive != null && Math.sqrt(this.distanceToSqr(hive.getCenter().getX(), hive.getCenter().getY(), hive.getCenter().getZ())) < 2000) {
                         myrmex.setHive(hive);
                     }
                 }
             }
 
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 level().addFreshEntity(myrmex);
             }
             this.level().playLocalSound(this.getX(), this.getY() + this.getEyeHeight(), this.getZ(), IafSoundRegistry.EGG_HATCH, this.getSoundSource(), 2.5F, 1.0F, false);
@@ -188,15 +193,15 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource dmg, float var2) {
+    public boolean hurtServer(ServerLevel level, DamageSource dmg, float var2) {
         if (dmg.is(DamageTypes.IN_WALL) || dmg.is(DamageTypes.FALL)) {
             return false;
         }
-        if (!level().isClientSide && !dmg.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            this.spawnAtLocation(this.getItem(), 0);
+        if (!level().isClientSide() && !dmg.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), this.getItem(), 0);
         }
         this.remove(RemovalReason.KILLED);
-        return super.hurt(dmg, var2);
+        return super.hurtServer(level, dmg, var2);
     }
 
     private ItemStack getItem() {

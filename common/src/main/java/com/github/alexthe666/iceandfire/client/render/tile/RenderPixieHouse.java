@@ -7,11 +7,11 @@ import com.github.alexthe666.iceandfire.entity.tile.TileEntityPixieHouse;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,12 +19,12 @@ public class RenderPixieHouse<T extends TileEntityPixieHouse> implements BlockEn
 
     private static final ModelPixieHouse MODEL = new ModelPixieHouse();
     private static ModelPixie MODEL_PIXIE;
-    private static final RenderType TEXTURE_0 = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/pixie/house/pixie_house_0.png"), false);
-    private static final RenderType TEXTURE_1 = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/pixie/house/pixie_house_1.png"), false);
-    private static final RenderType TEXTURE_2 = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/pixie/house/pixie_house_2.png"), false);
-    private static final RenderType TEXTURE_3 = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/pixie/house/pixie_house_3.png"), false);
-    private static final RenderType TEXTURE_4 = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/pixie/house/pixie_house_4.png"), false);
-    private static final RenderType TEXTURE_5 = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/pixie/house/pixie_house_5.png"), false);
+    private static final RenderType TEXTURE_0 = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_0.png"), false);
+    private static final RenderType TEXTURE_1 = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_1.png"), false);
+    private static final RenderType TEXTURE_2 = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_2.png"), false);
+    private static final RenderType TEXTURE_3 = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_3.png"), false);
+    private static final RenderType TEXTURE_4 = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_4.png"), false);
+    private static final RenderType TEXTURE_5 = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/pixie/house/pixie_house_5.png"), false);
     public BlockItem metaOverride;
 
     public RenderPixieHouse(BlockEntityRendererProvider.Context context) {

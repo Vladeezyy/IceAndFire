@@ -4,7 +4,7 @@ import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -14,12 +14,12 @@ import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import java.util.UUID;
 
 public class PlayerRenderEvents {
-    public ResourceLocation redTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_fire.png");
-    public ResourceLocation redElytraTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_fire.png");
-    public ResourceLocation blueTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_ice.png");
-    public ResourceLocation blueElytraTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_ice.png");
-    public ResourceLocation betaTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_beta.png");
-    public ResourceLocation betaElytraTex = ResourceLocation.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_beta.png");
+    public Identifier redTex = Identifier.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_fire.png");
+    public Identifier redElytraTex = Identifier.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_fire.png");
+    public Identifier blueTex = Identifier.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_ice.png");
+    public Identifier blueElytraTex = Identifier.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_ice.png");
+    public Identifier betaTex = Identifier.fromNamespaceAndPath("iceandfire", "textures/models/misc/cape_beta.png");
+    public Identifier betaElytraTex = Identifier.fromNamespaceAndPath("iceandfire", "textures/models/misc/elytra_beta.png");
 
     public UUID[] redcapes = new UUID[]{
             /* zeklo */UUID.fromString("59efccaf-902d-45da-928a-5a549b9fd5e0"),
@@ -38,7 +38,7 @@ public class PlayerRenderEvents {
         if (event.getEntityLiving() instanceof AbstractClientPlayerEntity) {
                 NetworkPlayerInfo info = ((AbstractClientPlayerEntity)event.getEntityLiving()).getPlayerInfo();
             if (info != null) {
-                Map<Type, ResourceLocation> textureMap = info.playerTextures;
+                Map<Type, Identifier> textureMap = info.playerTextures;
                 if (textureMap != null) {
                     if (hasBetaCape(event.getEntityLiving().getUniqueID())) {
                         textureMap.put(Type.CAPE, betaTex);

@@ -6,10 +6,10 @@ import com.github.alexthe666.iceandfire.entity.EntityPixie;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class LayerPixieGlow extends RenderLayer<EntityPixie, ModelPixie> {
@@ -23,7 +23,7 @@ public class LayerPixieGlow extends RenderLayer<EntityPixie, ModelPixie> {
 
     @Override
     public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityPixie pixie, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ResourceLocation texture = RenderPixie.TEXTURE_0;
+        Identifier texture = RenderPixie.TEXTURE_0;
         switch (pixie.getColor()) {
             default:
                 texture = RenderPixie.TEXTURE_0;

@@ -27,7 +27,7 @@ public class TrollAIFleeSun extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!this.world.isDay()) {
+        if (!this.world.isBrightOutside()) {
             return false;
         } else if (!this.world.canSeeSky(BlockPos.containing(this.troll.getBlockX(), this.troll.getBoundingBox().minY, this.troll.getBlockZ()))) {
             return false;

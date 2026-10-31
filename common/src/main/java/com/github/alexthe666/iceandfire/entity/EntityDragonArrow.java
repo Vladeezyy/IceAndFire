@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -6,7 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -30,15 +32,15 @@ public class EntityDragonArrow extends AbstractArrow {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tagCompound) {
+    public void addAdditionalSaveData(ValueOutput tagCompound) {
         super.addAdditionalSaveData(tagCompound);
         tagCompound.putDouble("damage", 10);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tagCompund) {
+    public void readAdditionalSaveData(ValueInput tagCompund) {
         super.readAdditionalSaveData(tagCompund);
-        this.setBaseDamage(tagCompund.getDouble("damage"));
+        this.setBaseDamage(tagCompund.getDoubleOr("damage", 0.0D));
     }
 
     @Override

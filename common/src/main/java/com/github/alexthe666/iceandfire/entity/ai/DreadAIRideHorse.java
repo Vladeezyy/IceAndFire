@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.entity.ai;
 import com.github.alexthe666.iceandfire.entity.EntityDreadKnight;
 import com.github.alexthe666.iceandfire.util.IAFMath;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;

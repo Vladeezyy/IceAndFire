@@ -8,7 +8,7 @@ import com.github.alexthe666.iceandfire.world.IafProcessors;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 public class VillageHouseProcessor extends StructureProcessor {
 
-    public static final ResourceKey<LootTable> LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/village_scribe"));
+    public static final ResourceKey<LootTable> LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/village_scribe"));
     public static final VillageHouseProcessor INSTANCE = new VillageHouseProcessor();
     public static final MapCodec<VillageHouseProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
@@ -34,7 +34,7 @@ public class VillageHouseProcessor extends StructureProcessor {
         RandomSource random = settings.getRandom(infoIn2.pos());
         if (infoIn2.state().getBlock() == Blocks.CHEST) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("LootTable", LOOT.location().toString());
+            tag.putString("LootTable", LOOT.identifier().toString());
             tag.putLong("LootTableSeed", random.nextLong());
             return new StructureTemplate.StructureBlockInfo(infoIn2.pos(), infoIn2.state(), tag);
         }

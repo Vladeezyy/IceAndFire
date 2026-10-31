@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import java.util.Optional;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
@@ -13,7 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,7 +34,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.trading.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -43,12 +47,12 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     public static final Animation ANIMATION_NIBBLE = Animation.create(10);
     public static final Animation ANIMATION_STING = Animation.create(25);
     public static final Animation ANIMATION_SLASH = Animation.create(25);
-    public static final ResourceKey<LootTable> DESERT_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_desert"));
-    public static final ResourceKey<LootTable> JUNGLE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_jungle"));
-    private static final ResourceLocation TEXTURE_DESERT = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel.png");
-    private static final ResourceLocation TEXTURE_JUNGLE = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel.png");
-    private static final ResourceLocation TEXTURE_DESERT_HIDDEN = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel_hidden.png");
-    private static final ResourceLocation TEXTURE_JUNGLE_HIDDEN = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel_hidden.png");
+    public static final ResourceKey<LootTable> DESERT_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_desert"));
+    public static final ResourceKey<LootTable> JUNGLE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/myrmex_sentinel_jungle"));
+    private static final Identifier TEXTURE_DESERT = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel.png");
+    private static final Identifier TEXTURE_JUNGLE = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel.png");
+    private static final Identifier TEXTURE_DESERT_HIDDEN = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_sentinel_hidden.png");
+    private static final Identifier TEXTURE_JUNGLE_HIDDEN = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_sentinel_hidden.png");
     private static final EntityDataAccessor<Boolean> HIDING = SynchedEntityData.defineId(EntityMyrmexSentinel.class, EntityDataSerializers.BOOLEAN);
     public float holdingProgress;
     public float hidingProgress;
@@ -60,23 +64,23 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     }
 
     @Override
-    protected VillagerTrades.ItemListing[] getLevel1Trades() {
+    protected MyrmexTrades.Listing[] getLevel1Trades() {
         return isJungle() ? MyrmexTrades.JUNGLE_SENTINEL.get(1) : MyrmexTrades.DESERT_SENTINEL.get(1);
     }
 
     @Override
-    protected VillagerTrades.ItemListing[] getLevel2Trades() {
+    protected MyrmexTrades.Listing[] getLevel2Trades() {
         return isJungle() ? MyrmexTrades.JUNGLE_SENTINEL.get(2) : MyrmexTrades.DESERT_SENTINEL.get(2);
     }
 
     @Override
     @Nullable
-    protected ResourceKey<LootTable> getDefaultLootTable() {
-        return isJungle() ? JUNGLE_LOOT : DESERT_LOOT;
+    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+        return Optional.of(isJungle() ? JUNGLE_LOOT : DESERT_LOOT);
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 8;
     }
 
@@ -206,7 +210,7 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(IafConfig.myrmexBaseAttackStrength * 3D);
     }
     @Override
-    public ResourceLocation getAdultTexture() {
+    public Identifier getAdultTexture() {
         if (isHiding()) {
             return isJungle() ? TEXTURE_JUNGLE_HIDDEN : TEXTURE_DESERT_HIDDEN;
 
@@ -226,17 +230,17 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Hiding", this.isHiding());
         tag.putInt("DaylightTicks", daylightTicks);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.setHiding(tag.getBoolean("Hiding"));
-        this.daylightTicks = tag.getInt("DaylightTicks");
+        this.setHiding(tag.getBooleanOr("Hiding", false));
+        this.daylightTicks = tag.getIntOr("DaylightTicks", 0);
     }
 
     @Override
@@ -272,7 +276,7 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if (amount >= 1.0D && !this.getPassengers().isEmpty() && random.nextInt(2) == 0) {
             for (Entity entity : this.getPassengers()) {
                 entity.stopRiding();
@@ -280,11 +284,11 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
         }
         visibleTicks = 300;
         this.setHiding(false);
-        return super.hurt(source, amount);
+        return super.hurtServer(level, source, amount);
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         if (this.getGrowthStage() < 2) {
             return false;
         }
@@ -341,6 +345,6 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
 
     @Override
     public boolean isClientSide() {
-        return this.level().isClientSide;
+        return this.level().isClientSide();
     }
 }

@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -16,18 +18,18 @@ import java.util.List;
 public class ItemStymphalianDagger extends SwordItem {
 
     public ItemStymphalianDagger() {
-        super(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, 3, -1.0F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, 3, -1.0F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity targetEntity, @NotNull LivingEntity attacker) {
-        return super.hurtEnemy(stack, targetEntity, attacker);
+    public void hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity targetEntity, @NotNull LivingEntity attacker) {
+        super.hurtEnemy(stack, targetEntity, attacker);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.stymphalian_bird_dagger.desc_0").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.stymphalian_bird_dagger.desc_0").withStyle(ChatFormatting.GRAY));
     }
 }

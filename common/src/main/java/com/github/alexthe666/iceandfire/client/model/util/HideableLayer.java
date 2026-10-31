@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model.util;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;

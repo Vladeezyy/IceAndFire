@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -28,7 +30,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -140,7 +142,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         boolean blindness = this.hasEffect(MobEffects.BLINDNESS) || this.getTarget() != null && this.getTarget().hasEffect(MobEffects.BLINDNESS) || this.getTarget() != null && this.getTarget() instanceof IBlacklistedFromStatues && !((IBlacklistedFromStatues) this.getTarget()).canBeTurnedToStone();
         if (blindness && this.deathTime == 0) {
             if (this.getAnimation() != ANIMATION_HIT) {
@@ -150,13 +152,13 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
                 ((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.POISON, 100, 2, false, true));
             }
         }
-        return super.doHurtTarget(entityIn);
+        return super.doHurtTarget(level, entityIn);
     }
 
     @Override
     public void setTarget(@Nullable LivingEntity LivingEntityIn) {
         super.setTarget(LivingEntityIn);
-        if (LivingEntityIn != null && !level().isClientSide) {
+        if (LivingEntityIn != null && !level().isClientSide()) {
 
 
             boolean blindness = this.hasEffect(MobEffects.BLINDNESS) || LivingEntityIn.hasEffect(MobEffects.BLINDNESS) || LivingEntityIn instanceof IBlacklistedFromStatues && !((IBlacklistedFromStatues) LivingEntityIn).canBeTurnedToStone() || isBlindfolded(LivingEntityIn);
@@ -171,7 +173,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 30;
     }
 
@@ -179,7 +181,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
     protected void tickDeath() {
         ++this.deathTime;
         this.ambientSoundTime = 20;
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             for (int k = 0; k < 5; ++k) {
                 double d2 = 0.4;
                 double d0 = 0.1;
@@ -188,7 +190,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
             }
         }
         if (this.deathTime >= 200) {
-            if (!this.level().isClientSide && (this.isAlwaysExperienceDropper() || this.lastHurtByPlayerTime > 0 && this.shouldDropExperience() && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))) {
+            if (!this.level().isClientSide() && (this.isAlwaysExperienceDropper() || this.lastHurtByPlayerTime > 0 && this.shouldDropExperience() && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))) {
                 int i = this.getBaseExperienceReward();
                 i = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.experienceDrop(this, this.lastHurtByPlayer, i);
                 while (i > 0) {
@@ -235,11 +237,11 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
                 }
                 if (this.getAnimation() == ANIMATION_SCARE) {
                     if (this.getAnimationTick() > 10) {
-                        if (!level().isClientSide) {
+                        if (!level().isClientSide()) {
                             if (playerStatueCooldown == 0) {
                                 EntityStoneStatue statue = EntityStoneStatue.buildStatueEntity(attackTarget);
                                 statue.absMoveTo(attackTarget.getX(), attackTarget.getY(), attackTarget.getZ(), attackTarget.getYRot(), attackTarget.getXRot());
-                                if (!level().isClientSide) {
+                                if (!level().isClientSide()) {
                                     level().addFreshEntity(statue);
                                 }
                                 statue.setYRot(attackTarget.getYRot());
@@ -284,7 +286,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(ValueInput pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setConfigurableAttributes();
     }

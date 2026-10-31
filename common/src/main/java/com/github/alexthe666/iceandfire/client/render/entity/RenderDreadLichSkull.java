@@ -1,25 +1,25 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelDreadLichSkull;
 import com.github.alexthe666.iceandfire.entity.EntityDreadLichSkull;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
 
-    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_lich_skull.png");
+    public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_lich_skull.png");
     private static final ModelDreadLichSkull MODEL_SPIRIT = new ModelDreadLichSkull();
 
     public RenderDreadLichSkull(EntityRendererProvider.Context context) {
@@ -49,7 +49,7 @@ public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(@NotNull EntityDreadLichSkull entity) {
+    public Identifier getTextureLocation(@NotNull EntityDreadLichSkull entity) {
         return TEXTURE;
     }
 }

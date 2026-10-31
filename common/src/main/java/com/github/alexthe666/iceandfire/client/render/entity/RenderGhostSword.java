@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +24,7 @@ public class RenderGhostSword extends EntityRenderer<EntityGhostSword> {
 
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityGhostSword entity) {
+    public @NotNull Identifier getTextureLocation(@NotNull EntityGhostSword entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 

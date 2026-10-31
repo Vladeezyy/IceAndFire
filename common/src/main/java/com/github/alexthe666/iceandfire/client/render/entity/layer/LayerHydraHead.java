@@ -8,14 +8,14 @@ import com.github.alexthe666.iceandfire.entity.EntityHydra;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class LayerHydraHead extends RenderLayer<EntityHydra, ModelHydraBody> {
-    public static final ResourceLocation TEXTURE_STONE = ResourceLocation.parse("iceandfire:textures/models/hydra/stone.png");
+    public static final Identifier TEXTURE_STONE = Identifier.parse("iceandfire:textures/models/hydra/stone.png");
     private static final float[][] TRANSLATE = new float[][]{
         {0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},// 1 total heads
         {-0.15F, 0.15F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},// 2 total heads
@@ -79,7 +79,7 @@ public class LayerHydraHead extends RenderLayer<EntityHydra, ModelHydraBody> {
     }
 
 
-    public static ResourceLocation getHeadTexture(EntityHydra gorgon) {
+    public static Identifier getHeadTexture(EntityHydra gorgon) {
         switch (gorgon.getVariant()) {
             default:
                 return RenderHydra.TEXUTURE_0;
@@ -91,7 +91,7 @@ public class LayerHydraHead extends RenderLayer<EntityHydra, ModelHydraBody> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityHydra gorgon) {
+    public @NotNull Identifier getTextureLocation(EntityHydra gorgon) {
         switch (gorgon.getVariant()) {
             default:
                 return RenderHydra.TEXUTURE_0;

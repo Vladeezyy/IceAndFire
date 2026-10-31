@@ -1,0 +1,13 @@
+{
+  "wants": {
+    "id": "iceandfire:dragonbone",
+    "count": 6
+  },
+  "gives": {
+    "id": "minecraft:emerald",
+    "count": 1
+  },
+  "max_uses": 7,
+  "xp": 4,
+  "reputation_discount": 0.05
+}

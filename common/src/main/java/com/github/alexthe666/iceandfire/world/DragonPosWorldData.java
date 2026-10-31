@@ -8,7 +8,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class DragonPosWorldData extends SavedData {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
-            DimensionDataStorage storage = overworld.getDataStorage();
+            SavedDataStorage storage = overworld.getDataStorage();
             DragonPosWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(DragonPosWorldData::new, (tag, registries) -> new DragonPosWorldData(tag), null), IDENTIFIER);
             if (data != null) {
                 data.world = world;
@@ -73,13 +73,13 @@ public class DragonPosWorldData extends SavedData {
     }
 
     public DragonPosWorldData load(CompoundTag nbt) {
-        this.tickCounter = nbt.getInt("Tick");
+        this.tickCounter = nbt.getIntOr("Tick", 0);
         ListTag nbttaglist = nbt.getList("DragonMap", 10);
         this.lastDragonPositions.clear();
         for (int i = 0; i < nbttaglist.size(); ++i) {
-            CompoundTag CompoundNBT = nbttaglist.getCompound(i);
+            CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
             UUID uuid = CompoundNBT.getUUID("DragonUUID");
-            BlockPos pos = new BlockPos(CompoundNBT.getInt("DragonPosX"), CompoundNBT.getInt("DragonPosY"), CompoundNBT.getInt("DragonPosZ"));
+            BlockPos pos = new BlockPos(CompoundNBT.getIntOr("DragonPosX", 0), CompoundNBT.getIntOr("DragonPosY", 0), CompoundNBT.getIntOr("DragonPosZ", 0));
             this.lastDragonPositions.put(uuid, pos);
         }
         return this;

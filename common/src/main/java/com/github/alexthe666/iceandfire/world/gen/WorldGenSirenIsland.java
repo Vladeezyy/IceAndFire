@@ -35,7 +35,7 @@ public class WorldGenSirenIsland extends Feature<NoneFeatureConfiguration> imple
         int layer = 0;
         int sirens = 1 + context.random().nextInt(3);
 
-        while (!context.level().getBlockState(center).canOcclude() && center.getY() >= context.level().getMinBuildHeight()) {
+        while (!context.level().getBlockState(center).canOcclude() && center.getY() >= context.level().getMinY()) {
             layer++;
 
             for (float i = 0; i < getRadius(layer, up); i += 0.5f) {
@@ -60,7 +60,7 @@ public class WorldGenSirenIsland extends Feature<NoneFeatureConfiguration> imple
             for (float j = 0; j < 2 * Math.PI * i + context.random().nextInt(2); j += 0.5f) {
                 BlockPos stonePos = BlockPos.containing(Math.floor(center.getX() + Mth.sin(j) * i + context.random().nextInt(2)), center.getY(), Math.floor(center.getZ() + Mth.cos(j) * i + context.random().nextInt(2)));
 
-                while (!context.level().getBlockState(stonePos).canOcclude() && stonePos.getY() >= context.level().getMinBuildHeight()) {
+                while (!context.level().getBlockState(stonePos).canOcclude() && stonePos.getY() >= context.level().getMinY()) {
                     context.level().setBlock(stonePos, getStone(context.random()), Block.UPDATE_ALL);
                     stonePos = stonePos.below();
                 }

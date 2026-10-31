@@ -58,14 +58,14 @@ public class HomePosition {
 
     public HomePosition read(CompoundTag compound) {
         if (compound.contains("HomeAreaX"))
-            this.x = compound.getInt("HomeAreaX");
+            this.x = compound.getIntOr("HomeAreaX", 0);
         if (compound.contains("HomeAreaY"))
-            this.y = compound.getInt("HomeAreaY");
+            this.y = compound.getIntOr("HomeAreaY", 0);
         if (compound.contains("HomeAreaZ"))
-            this.z = compound.getInt("HomeAreaZ");
+            this.z = compound.getIntOr("HomeAreaZ", 0);
         pos = new BlockPos(x, y, z);
         if (compound.contains("HomeDimension"))
-            this.dimension = compound.getString("HomeDimension");
+            this.dimension = compound.getStringOr("HomeDimension", "");
         return this;
     }
 }

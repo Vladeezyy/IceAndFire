@@ -14,7 +14,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
 
-    private final Map<String, ResourceLocation> LAYERED_TEXTURE_CACHE = Maps.newHashMap();
+    private final Map<String, Identifier> LAYERED_TEXTURE_CACHE = Maps.newHashMap();
     private final int dragonType;
 
     public RenderDragonBase(EntityRendererProvider.Context context, AdvancedEntityModel<EntityDragonBase> model, int dragonType) {
@@ -56,11 +56,11 @@ public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEnti
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityDragonBase entity) {
+    public @NotNull Identifier getTextureLocation(EntityDragonBase entity) {
         String baseTexture = entity.getVariantName(entity.getVariant()) + entity.getDragonStage() + entity.isModelDead() + entity.isMale() + entity.isSkeletal() + entity.isSleeping() + entity.isBlinking();
-        ResourceLocation resourcelocation = LAYERED_TEXTURE_CACHE.get(baseTexture);
+        Identifier resourcelocation = LAYERED_TEXTURE_CACHE.get(baseTexture);
         if (resourcelocation == null) {
-            resourcelocation = ResourceLocation.parse("iceandfire:" + "dragon_texture_" + baseTexture);
+            resourcelocation = Identifier.parse("iceandfire:" + "dragon_texture_" + baseTexture);
             List<String> tex = new ArrayList<String>();
             tex.add(EnumDragonTextures.getTextureFromDragon(entity).toString());
             if (entity.isMale() && !entity.isSkeletal()) {

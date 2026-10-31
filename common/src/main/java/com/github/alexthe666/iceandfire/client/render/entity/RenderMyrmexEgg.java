@@ -5,13 +5,13 @@ import com.github.alexthe666.iceandfire.client.model.ModelDragonEgg;
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexEgg;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderMyrmexEgg extends LivingEntityRenderer<EntityMyrmexEgg, AdvancedEntityModel<EntityMyrmexEgg>> {
 
-    public static final ResourceLocation EGG_JUNGLE = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_egg.png");
-    public static final ResourceLocation EGG_DESERT = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_egg.png");
+    public static final Identifier EGG_JUNGLE = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_egg.png");
+    public static final Identifier EGG_DESERT = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_egg.png");
 
     public RenderMyrmexEgg(EntityRendererProvider.Context context) {
         super(context, new ModelDragonEgg(), 0.3F);
@@ -23,7 +23,7 @@ public class RenderMyrmexEgg extends LivingEntityRenderer<EntityMyrmexEgg, Advan
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityMyrmexEgg entity) {
+    public @NotNull Identifier getTextureLocation(EntityMyrmexEgg entity) {
         return entity.isJungle() ? EGG_JUNGLE : EGG_DESERT;
     }
 

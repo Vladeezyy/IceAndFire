@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.item.equipment.ArmorType;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -22,7 +25,7 @@ public class ItemDragonArmor extends Item {
     private Pattern baseName = Pattern.compile("[a-z]+_[a-z]+");
 
     public ItemDragonArmor(DragonArmorType type, int dragonSlot) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
         this.type = type;
         this.dragonSlot = dragonSlot;
         if (type == DragonArmorType.FIRE || type == DragonArmorType.ICE || type == DragonArmorType.LIGHTNING)
@@ -48,14 +51,14 @@ public class ItemDragonArmor extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         String words = switch (dragonSlot) {
             case 1 -> "dragon.armor_neck";
             case 2 -> "dragon.armor_body";
             case 3 -> "dragon.armor_tail";
             default -> "dragon.armor_head";
         };
-        tooltip.add(Component.translatable(words).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable(words).withStyle(ChatFormatting.GRAY));
     }
 
     public enum DragonArmorType {

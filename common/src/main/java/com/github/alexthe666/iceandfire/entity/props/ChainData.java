@@ -110,7 +110,7 @@ public class ChainData {
     }
 
     public void deserialize(final CompoundTag tag) {
-        CompoundTag chainedData = tag.getCompound("chainedData");
+        CompoundTag chainedData = tag.getCompoundOrEmpty("chainedData");
         int[] loadedChainedToIds = chainedData.getIntArray("chainedToIds");
         ListTag uuids = chainedData.getList("chainedToUUIDs", ListTag.TAG_INT_ARRAY);
 

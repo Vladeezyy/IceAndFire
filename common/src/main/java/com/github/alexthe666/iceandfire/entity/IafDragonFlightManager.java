@@ -98,11 +98,11 @@ public class IafDragonFlightManager {
                 }
             } else if (dragon.lookingForRoostAIFlag) {
                 // FIXME :: Unused
-//                double xDist = Math.abs(dragon.getX() - dragon.getRestrictCenter().getX() - 0.5F);
-//                double zDist = Math.abs(dragon.getZ() - dragon.getRestrictCenter().getZ() - 0.5F);
+//                double xDist = Math.abs(dragon.getX() - dragon.getHomePosition().getX() - 0.5F);
+//                double zDist = Math.abs(dragon.getZ() - dragon.getHomePosition().getZ() - 0.5F);
 //                double xzDist = Math.sqrt(xDist * xDist + zDist * zDist);
-                BlockPos upPos = dragon.getRestrictCenter();
-                if (dragon.getDistanceSquared(Vec3.atCenterOf(dragon.getRestrictCenter())) > 200) {
+                BlockPos upPos = dragon.getHomePosition();
+                if (dragon.getDistanceSquared(Vec3.atCenterOf(dragon.getHomePosition())) > 200) {
                     upPos = upPos.above(30);
                 }
                 viewBlock = upPos;

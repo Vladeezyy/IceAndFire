@@ -16,14 +16,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ChunkPos;
@@ -123,7 +123,7 @@ public class SelfTest {
 
         int loot = 0;
         int empty = 0;
-        for (ResourceLocation id : server.reloadableRegistries().getKeys(Registries.LOOT_TABLE)) {
+        for (Identifier id : server.reloadableRegistries().getKeys(Registries.LOOT_TABLE)) {
             if (id.getNamespace().equals(IceAndFire.MODID)) {
                 loot++;
                 if (server.reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, id)) == LootTable.EMPTY) {
@@ -145,7 +145,7 @@ public class SelfTest {
         int spawned = 0;
         List<String> failed = new ArrayList<>();
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+            Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
             if (!id.getNamespace().equals(IceAndFire.MODID) || id.getPath().contains("multipart") || id.getPath().equals("chain_tie")) {
                 continue;
             }
@@ -160,7 +160,7 @@ public class SelfTest {
             }
             entity.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, 0, 0);
             if (entity instanceof Mob mob) {
-                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null);
+                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
                 mob.setPersistenceRequired();
             }
             if (level.addFreshEntity(entity)) {
@@ -285,7 +285,7 @@ public class SelfTest {
         var registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
         CommandSourceStack source = server.createCommandSourceStack().withSuppressedOutput().withPermission(4);
         for (String name : List.of("gorgon_temple", "graveyard", "mausoleum")) {
-            var holder = registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name)));
+            var holder = registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name)));
             var found = level.getChunkSource().getGenerator().findNearestMapStructure(level, net.minecraft.core.HolderSet.direct(holder), new BlockPos(0, 64, 0), 150, false);
             if (found == null) {
                 check("structure " + name + " located", false, "none within 150 chunks");
@@ -388,7 +388,7 @@ public class SelfTest {
         hive = gen.hive;
         var newQueen = IafEntityRegistry.MYRMEX_QUEEN.get().create(level);
         BlockPos ground = com.github.alexthe666.iceandfire.entity.util.MyrmexHive.getGroundedPos(level, center);
-        newQueen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), MobSpawnType.CHUNK_GENERATION, null);
+        newQueen.finalizeSpawn(level, level.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
         newQueen.setHive(hive);
         newQueen.moveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
         level.addFreshEntity(newQueen);
@@ -421,7 +421,7 @@ public class SelfTest {
             return;
         }
         BlockPos base = queen.blockPosition();
-        for (int y = base.getY() + 1; y < level.getMaxBuildHeight(); y++) {
+        for (int y = base.getY() + 1; y < level.getMaxY(); y++) {
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
                     BlockPos pos = new BlockPos(base.getX() + x, y, base.getZ() + z);

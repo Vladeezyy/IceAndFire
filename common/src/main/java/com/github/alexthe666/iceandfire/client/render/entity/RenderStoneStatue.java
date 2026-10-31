@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.model.ICustomStatueModel;
@@ -16,16 +16,16 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.PigModel;
+import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
 
-    protected static final ResourceLocation[] DESTROY_STAGES = new ResourceLocation[]{ResourceLocation.parse("textures/block/destroy_stage_0.png"), ResourceLocation.parse("textures/block/destroy_stage_1.png"), ResourceLocation.parse("textures/block/destroy_stage_2.png"), ResourceLocation.parse("textures/block/destroy_stage_3.png"), ResourceLocation.parse("textures/block/destroy_stage_4.png"), ResourceLocation.parse("textures/block/destroy_stage_5.png"), ResourceLocation.parse("textures/block/destroy_stage_6.png"), ResourceLocation.parse("textures/block/destroy_stage_7.png"), ResourceLocation.parse("textures/block/destroy_stage_8.png"), ResourceLocation.parse("textures/block/destroy_stage_9.png")};
+    protected static final Identifier[] DESTROY_STAGES = new Identifier[]{Identifier.parse("textures/block/destroy_stage_0.png"), Identifier.parse("textures/block/destroy_stage_1.png"), Identifier.parse("textures/block/destroy_stage_2.png"), Identifier.parse("textures/block/destroy_stage_3.png"), Identifier.parse("textures/block/destroy_stage_4.png"), Identifier.parse("textures/block/destroy_stage_5.png"), Identifier.parse("textures/block/destroy_stage_6.png"), Identifier.parse("textures/block/destroy_stage_7.png"), Identifier.parse("textures/block/destroy_stage_8.png"), Identifier.parse("textures/block/destroy_stage_9.png")};
     private final Map<String, EntityModel> modelMap = new HashMap();
     private final Map<String, Entity> hollowEntityMap = new HashMap();
     private final EntityRendererProvider.Context context;
@@ -47,7 +47,7 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityStoneStatue entity) {
+    public @NotNull Identifier getTextureLocation(@NotNull EntityStoneStatue entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 
@@ -142,6 +142,6 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }
-        //super.render(entityIn, entityYaw, FastColor.ARGB32.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
+        //super.render(entityIn, entityYaw, ARGB.colorFromFloat(packedLightIn, partialTicks, matrixStackIn, bufferIn));
     }
 }

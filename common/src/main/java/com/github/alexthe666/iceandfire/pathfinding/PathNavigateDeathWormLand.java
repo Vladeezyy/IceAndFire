@@ -61,7 +61,7 @@ public class PathNavigateDeathWormLand extends PathNavigation {
                 return super.createPath(blockpos.above(), i);
             }
 
-            while (blockpos.getY() < this.level.getMaxBuildHeight() && this.level.getBlockState(blockpos).isAir()) {
+            while (blockpos.getY() < this.level.getMaxY() && this.level.getBlockState(blockpos).isAir()) {
                 blockpos = blockpos.above();
             }
 
@@ -73,7 +73,7 @@ public class PathNavigateDeathWormLand extends PathNavigation {
         } else {
             BlockPos blockpos1;
 
-            for (blockpos1 = pos.above(); blockpos1.getY() < this.level.getMaxBuildHeight() && this.level.getBlockState(blockpos1).isSolid(); blockpos1 = blockpos1.above()) {
+            for (blockpos1 = pos.above(); blockpos1.getY() < this.level.getMaxY() && this.level.getBlockState(blockpos1).isSolid(); blockpos1 = blockpos1.above()) {
             }
 
             return super.createPath(blockpos1, i);

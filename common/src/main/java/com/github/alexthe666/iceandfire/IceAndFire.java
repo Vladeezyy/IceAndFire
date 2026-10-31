@@ -9,7 +9,6 @@ import com.github.alexthe666.iceandfire.entity.IafVillagerRegistry;
 import com.github.alexthe666.iceandfire.entity.props.SyncEntityData;
 import com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry;
 import com.github.alexthe666.iceandfire.inventory.IafContainerRegistry;
-import com.github.alexthe666.iceandfire.item.IafArmorMaterials;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.IafTabRegistry;
 import com.github.alexthe666.iceandfire.loot.IafLootRegistry;
@@ -46,7 +45,6 @@ public class IceAndFire {
         PROXY = makeProxy();
         PROXY.init();
         // the registry classes queue their entries (Registrar) when loaded, in the original's order
-        IafArmorMaterials.MATERIALS.getRegistryKey();
         IafItemRegistry.ITEMS.getRegistryKey();
         IafBlockRegistry.BLOCKS.getRegistryKey();
         IafItemRegistry.registerSpawnEggs();
@@ -89,7 +87,7 @@ public class IceAndFire {
 
     /** Sends the message to the players that see the entity; most entity updates do not need to go further. */
     public static void sendMSGToTracking(Entity entity, CustomPacketPayload message) {
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             Platform.INSTANCE.sendToTrackingAndSelf(entity, message);
         }
     }

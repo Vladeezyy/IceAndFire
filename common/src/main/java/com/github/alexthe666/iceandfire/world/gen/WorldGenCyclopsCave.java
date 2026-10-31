@@ -13,10 +13,10 @@ import com.github.alexthe666.iceandfire.world.IafWorldData;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -32,7 +32,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class WorldGenCyclopsCave extends Feature<NoneFeatureConfiguration> implements TypedFeature {
-    public static final ResourceKey<LootTable> CYCLOPS_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/cyclops_cave"));
+    public static final ResourceKey<LootTable> CYCLOPS_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/cyclops_cave"));
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public WorldGenCyclopsCave(final Codec<NoneFeatureConfiguration> configuration) {

@@ -106,7 +106,7 @@ public class DeathWormAIAttack extends Goal {
         LivingEntity target = this.worm.getTarget();
         if (target != null && this.worm.hasLineOfSight(target)) {
             if (this.worm.distanceTo(target) < 3F) {
-                this.worm.doHurtTarget(target);
+                this.worm.doHurtTarget((net.minecraft.server.level.ServerLevel) this.worm.level(), target);
             }
         }
 

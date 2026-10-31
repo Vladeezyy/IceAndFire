@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.client.render.tile;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityGhostChest;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.ChestRenderer;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import org.jetbrains.annotations.NotNull;
 

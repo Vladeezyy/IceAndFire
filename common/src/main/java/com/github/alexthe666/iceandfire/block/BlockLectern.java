@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityLectern;
 import net.minecraft.core.BlockPos;
@@ -95,7 +95,7 @@ public class BlockLectern extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153182_, @NotNull BlockState p_153183_, @NotNull BlockEntityType<T> entityType) {
-        return p_153182_.isClientSide ? createTickerHelper(entityType, IAF_LECTERN.get(), TileEntityLectern::bookAnimationTick) : null;
+        return p_153182_.isClientSide() ? createTickerHelper(entityType, IAF_LECTERN.get(), TileEntityLectern::bookAnimationTick) : null;
     }
 
 
@@ -115,9 +115,9 @@ public class BlockLectern extends BaseEntityBlock {
     }
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    protected @NotNull InteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!player.isShiftKeyDown()) {
-            if (worldIn.isClientSide) {
+            if (worldIn.isClientSide()) {
                 IceAndFire.PROXY.setRefrencedTE(worldIn.getBlockEntity(pos));
             } else {
                 MenuProvider inamedcontainerprovider = this.getMenuProvider(state, worldIn, pos);
@@ -125,9 +125,9 @@ public class BlockLectern extends BaseEntityBlock {
                     player.openMenu(inamedcontainerprovider);
                 }
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Nullable

@@ -7,15 +7,15 @@ import com.github.alexthe666.iceandfire.entity.EntityHydra;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderHydra extends MobRenderer<EntityHydra, ModelHydraBody> {
 
-    public static final ResourceLocation TEXUTURE_0 = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_0.png");
-    public static final ResourceLocation TEXUTURE_1 = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_1.png");
-    public static final ResourceLocation TEXUTURE_2 = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_2.png");
-    public static final ResourceLocation TEXUTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/hydra/hydra_eyes.png");
+    public static final Identifier TEXUTURE_0 = Identifier.parse("iceandfire:textures/models/hydra/hydra_0.png");
+    public static final Identifier TEXUTURE_1 = Identifier.parse("iceandfire:textures/models/hydra/hydra_1.png");
+    public static final Identifier TEXUTURE_2 = Identifier.parse("iceandfire:textures/models/hydra/hydra_2.png");
+    public static final Identifier TEXUTURE_EYES = Identifier.parse("iceandfire:textures/models/hydra/hydra_eyes.png");
 
     public RenderHydra(EntityRendererProvider.Context context) {
         super(context, new ModelHydraBody(), 1.2F);
@@ -29,7 +29,7 @@ public class RenderHydra extends MobRenderer<EntityHydra, ModelHydraBody> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityHydra gorgon) {
+    public @NotNull Identifier getTextureLocation(EntityHydra gorgon) {
         switch (gorgon.getVariant()) {
             default:
                 return TEXUTURE_0;

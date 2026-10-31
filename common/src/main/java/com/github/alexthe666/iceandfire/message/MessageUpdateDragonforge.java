@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.message;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDragonforge;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 
 
 public class MessageUpdateDragonforge implements CustomPacketPayload {
-    public static final Type<MessageUpdateDragonforge> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "update_dragonforge"));
+    public static final Type<MessageUpdateDragonforge> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "update_dragonforge"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageUpdateDragonforge> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageUpdateDragonforge::read);
 
     @Override

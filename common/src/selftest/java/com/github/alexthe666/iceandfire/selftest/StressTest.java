@@ -6,13 +6,13 @@ import com.github.alexthe666.iceandfire.entity.EntityDragonPart;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -185,7 +185,7 @@ public class StressTest {
         List<EntityType<?>> dragons = List.of(IafEntityRegistry.FIRE_DRAGON.get(), IafEntityRegistry.ICE_DRAGON.get(), IafEntityRegistry.LIGHTNING_DRAGON.get());
         List<EntityType<?>> others = new ArrayList<>();
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+            Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
             String path = id.getPath();
             if (id.getNamespace().equals(IceAndFire.MODID) && !path.contains("dragon") && !path.contains("multipart") && type.getCategory() != net.minecraft.world.entity.MobCategory.MISC) {
                 others.add(type);
@@ -215,7 +215,7 @@ public class StressTest {
         }
         entity.moveTo(pos.getX() + 0.5, y, pos.getZ() + 0.5, level.random.nextFloat() * 360, 0);
         if (entity instanceof Mob mob) {
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null);
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
             mob.setPersistenceRequired();
         }
         return level.addFreshEntity(entity) ? entity : null;

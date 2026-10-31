@@ -1,21 +1,21 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelChainTie;
 import com.github.alexthe666.iceandfire.entity.EntityChainTie;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
 public class RenderChainTie extends EntityRenderer<EntityChainTie> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/misc/chain_tie.png");
+    private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/misc/chain_tie.png");
     private final ModelChainTie leashKnotModel = new ModelChainTie();
 
     public RenderChainTie(EntityRendererProvider.Context context) {
@@ -38,7 +38,7 @@ public class RenderChainTie extends EntityRenderer<EntityChainTie> {
      * Returns the location of an entity's texture.
      */
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityChainTie entity) {
+    public @NotNull Identifier getTextureLocation(@NotNull EntityChainTie entity) {
         return TEXTURE;
     }
 }

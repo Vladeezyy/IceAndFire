@@ -9,7 +9,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -24,10 +24,10 @@ import java.util.concurrent.CompletableFuture;
 import static com.github.alexthe666.iceandfire.IceAndFire.MODID;
 
 public class IafDamageRegistry {
-    public static final ResourceKey<DamageType> GORGON_DMG_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("iceandfire:gorgon"));
-    public static final ResourceKey<DamageType> DRAGON_FIRE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("iceandfire:dragon_fire"));
-    public static final ResourceKey<DamageType> DRAGON_ICE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("iceandfire:dragon_ice"));
-    public static final ResourceKey<DamageType> DRAGON_LIGHTNING_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("iceandfire:dragon_lightning"));
+    public static final ResourceKey<DamageType> GORGON_DMG_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.parse("iceandfire:gorgon"));
+    public static final ResourceKey<DamageType> DRAGON_FIRE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.parse("iceandfire:dragon_fire"));
+    public static final ResourceKey<DamageType> DRAGON_ICE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.parse("iceandfire:dragon_ice"));
+    public static final ResourceKey<DamageType> DRAGON_LIGHTNING_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.parse("iceandfire:dragon_lightning"));
 
     static class CustomEntityDamageSource extends DamageSource {
         public CustomEntityDamageSource(Holder<DamageType> damageTypeIn, @Nullable Entity damageSourceEntityIn) {

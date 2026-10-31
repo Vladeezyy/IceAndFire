@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.IBlacklistedFromStatues;
@@ -41,7 +45,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
     }
 
     public static EntityStoneStatue buildStatueEntity(LivingEntity parent) {
-        EntityStoneStatue statue = IafEntityRegistry.STONE_STATUE.get().create(parent.level());
+        EntityStoneStatue statue = IafEntityRegistry.STONE_STATUE.get().create(parent.level(), EntitySpawnReason.MOB_SUMMONED);
         CompoundTag entityTag = new CompoundTag();
         try {
             if (!(parent instanceof Player)) {
@@ -125,14 +129,14 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("CrackAmount", this.getCrackAmount());
         tag.putFloat("StatueWidth", this.getTrappedWidth());
         tag.putFloat("StatueHeight", this.getTrappedHeight());
         tag.putFloat("StatueScale", this.getTrappedScale());
         tag.putString("StatueEntityType", this.getTrappedEntityTypeString());
-        tag.put("StatueEntityTag", this.getTrappedTag());
+        Values.put(tag, "StatueEntityTag", this.getTrappedTag());
     }
 
     @Override
@@ -141,15 +145,15 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.setCrackAmount(tag.getByte("CrackAmount"));
-        this.setTrappedEntityWidth(tag.getFloat("StatueWidth"));
-        this.setTrappedHeight(tag.getFloat("StatueHeight"));
-        this.setTrappedScale(tag.getFloat("StatueScale"));
-        this.setTrappedEntityTypeString(tag.getString("StatueEntityType"));
-        if (tag.contains("StatueEntityTag")) {
-            this.setTrappedTag(tag.getCompound("StatueEntityTag"));
+        this.setCrackAmount(tag.getByteOr("CrackAmount", (byte) 0));
+        this.setTrappedEntityWidth(tag.getFloatOr("StatueWidth", 0.0F));
+        this.setTrappedHeight(tag.getFloatOr("StatueHeight", 0.0F));
+        this.setTrappedScale(tag.getFloatOr("StatueScale", 0.0F));
+        this.setTrappedEntityTypeString(tag.getStringOr("StatueEntityType", ""));
+        if (Values.contains(tag, "StatueEntityTag")) {
+            this.setTrappedTag(Values.compound(tag, "StatueEntityTag"));
 
         }
     }
@@ -179,7 +183,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
     }
 
     @Override
-    public void kill() {
+    public void kill(ServerLevel level) {
         this.remove(RemovalReason.KILLED);
     }
 

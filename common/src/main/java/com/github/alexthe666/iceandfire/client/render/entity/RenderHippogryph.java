@@ -5,12 +5,12 @@ import com.github.alexthe666.iceandfire.entity.EntityHippogryph;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -30,19 +30,19 @@ public class RenderHippogryph extends MobRenderer<EntityHippogryph, ModelHippogr
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(EntityHippogryph entity) {
+    public Identifier getTextureLocation(EntityHippogryph entity) {
         return entity.isBlinking() ? entity.getEnumVariant().TEXTURE_BLINK : entity.getEnumVariant().TEXTURE;
     }
 
 
     private class LayerHippogriffSaddle extends RenderLayer<EntityHippogryph, ModelHippogryph> {
         private final RenderHippogryph renderer;
-        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/saddle.png"));
-        private final RenderType BRIDLE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/bridle.png"));
-        private final RenderType CHEST = RenderType.entityTranslucent(ResourceLocation.parse("iceandfire:textures/models/hippogryph/chest.png"));
-        private final RenderType TEXTURE_DIAMOND = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/armor_diamond.png"));
-        private final RenderType TEXTURE_GOLD = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/armor_gold.png"));
-        private final RenderType TEXTURE_IRON = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippogryph/armor_iron.png"));
+        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/saddle.png"));
+        private final RenderType BRIDLE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/bridle.png"));
+        private final RenderType CHEST = RenderType.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/chest.png"));
+        private final RenderType TEXTURE_DIAMOND = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/armor_diamond.png"));
+        private final RenderType TEXTURE_GOLD = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/armor_gold.png"));
+        private final RenderType TEXTURE_IRON = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/armor_iron.png"));
 
 
         public LayerHippogriffSaddle(RenderHippogryph renderer) {

@@ -164,7 +164,7 @@ public class ContainerLectern extends AbstractContainerMenu {
         if (page == null) {
             return false;
         }
-        if (!playerIn.level().isClientSide) {
+        if (!playerIn.level().isClientSide()) {
             if (!playerIn.isCreative()) {
                 manuscriptStack.shrink(cost);
                 if (manuscriptStack.isEmpty()) {
@@ -178,7 +178,7 @@ public class ContainerLectern extends AbstractContainerMenu {
             }
             this.tileFurnace.setChanged();
             this.slotsChanged(this.tileFurnace);
-            playerIn.level().playSound(null, playerIn.blockPosition(), IafSoundRegistry.BESTIARY_PAGE, SoundSource.BLOCKS, 1.0F, playerIn.level().random.nextFloat() * 0.1F + 0.9F);
+            playerIn.level().playSound(null, playerIn.blockPosition(), IafSoundRegistry.BESTIARY_PAGE, SoundSource.BLOCKS, 1.0F, playerIn.level().getRandom().nextFloat() * 0.1F + 0.9F);
         }
         onUpdate();
         return true;

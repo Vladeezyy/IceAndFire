@@ -49,10 +49,10 @@ public class IafBlockRegistry {
     public static final BlockEntry<Block> GOLD_PILE = register("gold_pile", BlockGoldPile::new);
     public static final BlockEntry<Block> SILVER_PILE = register("silver_pile", BlockGoldPile::new);
     public static final BlockEntry<Block> COPPER_PILE = register("copper_pile", BlockGoldPile::new);
-    public static final BlockEntry<Block> SILVER_ORE = register("silver_ore", () -> new DropExperienceBlock(ConstantInt.of(0), BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3, 3).requiresCorrectToolForDrops()));
-    public static final BlockEntry<Block> DEEPSLATE_SILVER_ORE = register("deepslate_silver_ore", () -> new DropExperienceBlock(ConstantInt.of(0), BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(3,3).requiresCorrectToolForDrops()));
+    public static final BlockEntry<Block> SILVER_ORE = register("silver_ore", () -> new DropExperienceBlock(ConstantInt.of(0), dev.vladeezyy.iceandfire.platform.Registrar.blockProps().mapColor(MapColor.STONE).strength(3, 3).requiresCorrectToolForDrops()));
+    public static final BlockEntry<Block> DEEPSLATE_SILVER_ORE = register("deepslate_silver_ore", () -> new DropExperienceBlock(ConstantInt.of(0), dev.vladeezyy.iceandfire.platform.Registrar.blockProps().mapColor(MapColor.DEEPSLATE).strength(3,3).requiresCorrectToolForDrops()));
     public static final BlockEntry<Block> SILVER_BLOCK = register("silver_block", () -> BlockGeneric.builder(3.0F, 5.0F, SoundType.METAL, MapColor.METAL, null, null, false));
-    public static final BlockEntry<Block> SAPPHIRE_ORE = register("sapphire_ore", () -> new DropExperienceBlock(UniformInt.of(3,7), BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(4,3).requiresCorrectToolForDrops()));
+    public static final BlockEntry<Block> SAPPHIRE_ORE = register("sapphire_ore", () -> new DropExperienceBlock(UniformInt.of(3,7), dev.vladeezyy.iceandfire.platform.Registrar.blockProps().mapColor(MapColor.STONE).strength(4,3).requiresCorrectToolForDrops()));
     public static final BlockEntry<Block> SAPPHIRE_BLOCK = register("sapphire_block", () -> BlockGeneric.builder(3.0F, 6.0F, SoundType.METAL, MapColor.METAL, null, null, false));
     public static final BlockEntry<Block> RAW_SILVER_BLOCK = register("raw_silver_block", () -> BlockGeneric.builder(3.0F, 5.0F, SoundType.STONE, MapColor.METAL, NoteBlockInstrument.BASEDRUM, null, false));
     public static final BlockEntry<Block> CHARRED_DIRT = register("chared_dirt", () -> BlockReturningState.builder(0.5F, 0.0F, SoundType.GRAVEL, MapColor.DIRT, null, null, false, Blocks.DIRT.defaultBlockState()));
@@ -94,7 +94,7 @@ public class IafBlockRegistry {
     public static final BlockEntry<Block> DRAGON_SCALE_BLACK = register("dragonscale_black", () -> new BlockDragonScales(EnumDragonEgg.BLACK));
 
     public static final BlockEntry<Block> DRAGON_BONE_BLOCK = register("dragon_bone_block", BlockDragonBone::new);
-    public static final BlockEntry<Block> DRAGON_BONE_BLOCK_WALL = register("dragon_bone_wall", () -> new BlockDragonBoneWall(BlockBehaviour.Properties.ofFullCopy(IafBlockRegistry.DRAGON_BONE_BLOCK.get())));
+    public static final BlockEntry<Block> DRAGON_BONE_BLOCK_WALL = register("dragon_bone_wall", () -> new BlockDragonBoneWall(dev.vladeezyy.iceandfire.platform.Registrar.blockCopy(IafBlockRegistry.DRAGON_BONE_BLOCK.get())));
     public static final BlockEntry<Block> DRAGONFORGE_FIRE_BRICK = register(BlockDragonforgeBricks.name(0), () -> new BlockDragonforgeBricks(0));
     public static final BlockEntry<Block> DRAGONFORGE_ICE_BRICK = register(BlockDragonforgeBricks.name(1), () -> new BlockDragonforgeBricks(1));
     public static final BlockEntry<Block> DRAGONFORGE_LIGHTNING_BRICK = register(BlockDragonforgeBricks.name(2), () -> new BlockDragonforgeBricks(2));
@@ -145,7 +145,7 @@ public class IafBlockRegistry {
     public static final BlockEntry<TorchBlock> DREAD_TORCH = registerWallBlock("dread_torch", BlockDreadTorch::new);
     public static final BlockEntry<BlockDreadTorchWall> DREAD_TORCH_WALL = registerWallTorch("dread_torch_wall", BlockDreadTorchWall::new);
     public static final BlockEntry<Block> DREAD_STONE_BRICKS_STAIRS = register("dread_stone_stairs", () -> new BlockGenericStairs(DREAD_STONE_BRICKS.get().defaultBlockState()));
-    public static final BlockEntry<Block> DREAD_STONE_BRICKS_SLAB = register("dread_stone_slab", () -> new SlabBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(10F, 10000F)));
+    public static final BlockEntry<Block> DREAD_STONE_BRICKS_SLAB = register("dread_stone_slab", () -> new SlabBlock(dev.vladeezyy.iceandfire.platform.Registrar.blockProps().mapColor(MapColor.STONE).strength(10F, 10000F)));
     public static final BlockEntry<Block> DREADWOOD_LOG = register("dreadwood_log", BlockDreadWoodLog::new);
     public static final BlockEntry<BlockDreadBase> DREADWOOD_PLANKS = register("dreadwood_planks", () -> BlockDreadBase.builder(-1.0F, 100000.0F, SoundType.WOOD, MapColor.WOOD, NoteBlockInstrument.BASS, true));
     public static final BlockEntry<Block> DREADWOOD_PLANKS_LOCK = register("dreadwood_planks_lock", BlockDreadWoodLock::new);
@@ -159,21 +159,21 @@ public class IafBlockRegistry {
 
     public static <T extends Block> BlockEntry<T> register(String name, Supplier<T> block) {
         BlockEntry<T> ret = BLOCKS.register(name, block);
-        IafItemRegistry.registerItem(name, () -> new BlockItem(ret.get(), new Item.Properties()), false);
+        IafItemRegistry.registerItem(name, () -> new BlockItem(ret.get(), dev.vladeezyy.iceandfire.platform.Registrar.itemProps().useBlockDescriptionPrefix()), false);
         IafTabRegistry.TAB_BLOCKS_LIST.add(ret);
         return ret;
     }
 
     public static <T extends TorchBlock> BlockEntry<T> registerWallBlock(String name, Supplier<T> block) {
         BlockEntry<T> ret = BLOCKS.register(name, block);
-        IafItemRegistry.registerItem(name, () -> new StandingAndWallBlockItem(ret.get(), ((IWallBlock) ret.get()).wallBlock(), new Item.Properties(), Direction.DOWN), false);
+        IafItemRegistry.registerItem(name, () -> new StandingAndWallBlockItem(ret.get(), ((IWallBlock) ret.get()).wallBlock(), dev.vladeezyy.iceandfire.platform.Registrar.itemProps(), Direction.DOWN), false);
         IafTabRegistry.TAB_BLOCKS_LIST.add(ret);
         return ret;
     }
 
     public static <T extends Block> BlockEntry<T> registerWithRender(String name, Supplier<T> block) {
         BlockEntry<T> ret = BLOCKS.register(name, block);
-        IafItemRegistry.registerItem(name, () -> new BlockItemWithRender(ret.get(), new Item.Properties()), false);
+        IafItemRegistry.registerItem(name, () -> new BlockItemWithRender(ret.get(), dev.vladeezyy.iceandfire.platform.Registrar.itemProps()), false);
         IafTabRegistry.TAB_BLOCKS_LIST.add(ret);
         return ret;
     }

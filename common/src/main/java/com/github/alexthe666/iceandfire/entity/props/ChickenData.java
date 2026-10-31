@@ -25,7 +25,7 @@ public class ChickenData {
             if (entity.tickCount > 30 && entity.getRandom().nextInt(IafConfig.cockatriceEggChance + 1) == 0) {
                 entity.playSound(SoundEvents.CHICKEN_HURT, 2.0F, (entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.2F + 1.0F);
                 entity.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.2F + 1.0F);
-                entity.spawnAtLocation(IafItemRegistry.ROTTEN_EGG.get(), 1);
+                entity.spawnAtLocation((net.minecraft.server.level.ServerLevel) entity.level(), IafItemRegistry.ROTTEN_EGG.get(), 1);
             }
 
             timeUntilNextEgg = -1;
@@ -45,8 +45,8 @@ public class ChickenData {
     }
 
     public void deserialize(final CompoundTag tag) {
-        CompoundTag chickenData = tag.getCompound("chickenData");
-        timeUntilNextEgg = chickenData.getInt("timeUntilNextEgg");
+        CompoundTag chickenData = tag.getCompoundOrEmpty("chickenData");
+        timeUntilNextEgg = chickenData.getIntOr("timeUntilNextEgg", 0);
     }
 
     private int createDefaultTime(@NotNull final RandomSource random) {

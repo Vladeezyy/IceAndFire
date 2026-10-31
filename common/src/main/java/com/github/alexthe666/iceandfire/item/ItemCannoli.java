@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.ChatFormatting;
@@ -22,11 +24,11 @@ public class ItemCannoli extends ItemGenericFood {
 
     @Override
     public void onFoodEaten(ItemStack stack, Level worldIn, LivingEntity livingEntity) {
-        livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 3600, 2));
+        livingEntity.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 3600, 2));
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.cannoli.desc").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.cannoli.desc").withStyle(ChatFormatting.GRAY));
     }
 }

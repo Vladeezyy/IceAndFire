@@ -61,7 +61,7 @@ public class BlockMyrmexBiolight extends BushBlock {
 
     @Override
     public void tick(@NotNull BlockState state, ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             this.updateState(state, worldIn, pos, state.getBlock());
         }
         if (!worldIn.getBlockState(pos.above()).canOcclude() && worldIn.getBlockState(pos.above()).getBlock() != this) {

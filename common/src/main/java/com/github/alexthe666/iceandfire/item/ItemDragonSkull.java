@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
@@ -26,7 +30,7 @@ public class ItemDragonSkull extends Item {
     private final int dragonType;
 
     public ItemDragonSkull(int dragonType) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
         this.dragonType = dragonType;
     }
 
@@ -45,12 +49,12 @@ public class ItemDragonSkull extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, ServerLevel worldIn, Entity entityIn, @Nullable EquipmentSlot slot) {
         if (!ItemNbt.hasTag(stack)) {
             ItemNbt.setTag(stack, new CompoundTag());
             ItemNbt.update(stack, tag -> tag.putInt("Stage", 4));
@@ -59,11 +63,11 @@ public class ItemDragonSkull extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         String iceorfire = "dragon." + getType(dragonType);
-        tooltip.add(Component.translatable(iceorfire).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable(iceorfire).withStyle(ChatFormatting.GRAY));
         if (ItemNbt.hasTag(stack)) {
-            tooltip.add(Component.translatable("dragon.stage").withStyle(ChatFormatting.GRAY).append(Component.literal(" " + ItemNbt.view(stack).getInt("Stage"))));
+            tooltip.accept(Component.translatable("dragon.stage").withStyle(ChatFormatting.GRAY).append(Component.literal(" " + ItemNbt.view(stack).getInt("Stage"))));
         }
     }
 
@@ -78,8 +82,8 @@ public class ItemDragonSkull extends Item {
         if (ItemNbt.hasTag(stack)) {
             EntityDragonSkull skull = new EntityDragonSkull(IafEntityRegistry.DRAGON_SKULL.get(), context.getLevel());
             skull.setDragonType(dragonType);
-            skull.setStage(ItemNbt.view(stack).getInt("Stage"));
-            skull.setDragonAge(ItemNbt.view(stack).getInt("DragonAge"));
+            skull.setStage(ItemNbt.view(stack).getIntOr("Stage", 0));
+            skull.setDragonAge(ItemNbt.view(stack).getIntOr("DragonAge", 0));
             BlockPos offset = context.getClickedPos().relative(context.getClickedFace(), 1);
             skull.moveTo(offset.getX() + 0.5, offset.getY(), offset.getZ() + 0.5, 0, 0);
             float yaw = context.getPlayer().getYRot();
@@ -90,7 +94,7 @@ public class ItemDragonSkull extends Item {
             if (stack.has(DataComponents.CUSTOM_NAME)) {
                 skull.setCustomName(stack.getHoverName());
             }
-            if (!context.getLevel().isClientSide) {
+            if (!context.getLevel().isClientSide()) {
                 context.getLevel().addFreshEntity(skull);
             }
             if (!context.getPlayer().isCreative()) {

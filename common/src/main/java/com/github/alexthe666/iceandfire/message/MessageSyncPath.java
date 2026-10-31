@@ -4,7 +4,7 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDebugRenderer;
@@ -18,7 +18,7 @@ import java.util.Set;
  * Message to sync some path over to the client.
  */
 public class MessageSyncPath implements CustomPacketPayload {
-    public static final Type<MessageSyncPath> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "sync_path"));
+    public static final Type<MessageSyncPath> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "sync_path"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageSyncPath> CODEC = StreamCodec.of((buf, message) -> message.write(buf), MessageSyncPath::read);
 
     @Override

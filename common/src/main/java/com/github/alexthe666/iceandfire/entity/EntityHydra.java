@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.IAnimatedEntity;
@@ -113,7 +116,7 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         return false;
     }
 
@@ -168,11 +171,11 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
                     EntityHydraBreath entitylargefireball = new EntityHydraBreath(IafEntityRegistry.HYDRA_BREATH.get(),
                         level(), this, d2, d3, d4);
                     entitylargefireball.setPos(headPosX, headPosY, headPosZ);
-                    if (!level().isClientSide) {
+                    if (!level().isClientSide()) {
                         level().addFreshEntity(entitylargefireball);
                     }
                 }
-                if (isBreathing[i] && (attackTarget == null || !attackTarget.isAlive() || breathTicks[i] > 60) && !level().isClientSide) {
+                if (isBreathing[i] && (attackTarget == null || !attackTarget.isAlive() || breathTicks[i] > 60) && !level().isClientSide()) {
                     isBreathing[i] = false;
                     breathTicks[i] = 0;
                     breathCooldown = 15;
@@ -323,7 +326,7 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("Variant", this.getVariant());
         compound.putInt("HeadCount", this.getHeadCount());
@@ -334,11 +337,11 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.setVariant(compound.getInt("Variant"));
-        this.setHeadCount(compound.getInt("HeadCount"));
-        this.setSeveredHead(compound.getInt("SeveredHead"));
+        this.setVariant(compound.getIntOr("Variant", 0));
+        this.setHeadCount(compound.getIntOr("HeadCount", 0));
+        this.setSeveredHead(compound.getIntOr("SeveredHead", 0));
         for (int i = 0; i < HEADS; i++) {
             headDamageTracker[i] = compound.getFloat("HeadDamage" + i);
         }
@@ -354,7 +357,7 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if (lastHitHead > this.getHeadCount()) {
             lastHitHead = this.getHeadCount() - 1;
         }
@@ -370,12 +373,12 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
         if (this.getHealth() <= amount + 5 && this.getHeadCount() > 1 && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             amount = 0;
         }
-        return super.hurt(source, amount);
+        return super.hurtServer(level, source, amount);
     }
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setVariant(random.nextInt(3));
         return data;

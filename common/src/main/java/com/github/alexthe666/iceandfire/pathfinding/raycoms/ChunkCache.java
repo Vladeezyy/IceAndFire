@@ -80,8 +80,8 @@ public class ChunkCache implements LevelReader {
         }
         this.dimType = type;
 
-        minBuildHeight = worldIn.getMinBuildHeight();
-        maxBuildHeight = worldIn.getMaxBuildHeight();
+        minBuildHeight = worldIn.getMinY();
+        maxBuildHeight = worldIn.getMaxY();
     }
 
     /**
@@ -111,19 +111,19 @@ public class ChunkCache implements LevelReader {
     }
 
     @Override
-    public int getMinBuildHeight() {
+    public int getMinY() {
         return minBuildHeight;
     }
 
     @Override
-    public int getMaxBuildHeight() {
+    public int getMaxY() {
         return maxBuildHeight;
     }
 
     @NotNull
     @Override
     public BlockState getBlockState(BlockPos pos) {
-        if (pos.getY() >= getMinBuildHeight() && pos.getY() < getMaxBuildHeight()) {
+        if (pos.getY() >= getMinY() && pos.getY() < getMaxY()) {
             int i = (pos.getX() >> 4) - this.chunkX;
             int j = (pos.getZ() >> 4) - this.chunkZ;
 
@@ -141,7 +141,7 @@ public class ChunkCache implements LevelReader {
 
     @Override
     public FluidState getFluidState(final BlockPos pos) {
-        if (pos.getY() >= getMinBuildHeight() && pos.getY() < getMaxBuildHeight()) {
+        if (pos.getY() >= getMinY() && pos.getY() < getMaxY()) {
             int i = (pos.getX() >> 4) - this.chunkX;
             int j = (pos.getZ() >> 4) - this.chunkZ;
 

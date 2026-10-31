@@ -8,13 +8,13 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public class FireDragonForgeDrawable implements IDrawable {
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/dragonforge_fire.png");
+    private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/gui/dragonforge_fire.png");
 
     @Override
     public int getWidth() {
@@ -27,7 +27,7 @@ public class FireDragonForgeDrawable implements IDrawable {
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics ms, int xOffset, int yOffset) {
+    public void draw(@NotNull GuiGraphicsExtractor ms, int xOffset, int yOffset) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
         this.drawTexturedModalRect(ms, xOffset, yOffset, 3, 4, 170, 79);
@@ -35,7 +35,7 @@ public class FireDragonForgeDrawable implements IDrawable {
         this.drawTexturedModalRect(ms, xOffset + 9, yOffset + 19, 0, 166, scaledProgress, 38);
     }
 
-    public void drawTexturedModalRect(GuiGraphics ms, int x, int y, int textureX, int textureY, int width, int height) {
+    public void drawTexturedModalRect(GuiGraphicsExtractor ms, int x, int y, int textureX, int textureY, int width, int height) {
         Matrix4f matrix4f = ms.pose().last().pose();
         BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.addVertex(matrix4f, x, y + height, 0).setUv((float) (textureX) * 0.00390625F, (float) (textureY + height) * 0.00390625F);

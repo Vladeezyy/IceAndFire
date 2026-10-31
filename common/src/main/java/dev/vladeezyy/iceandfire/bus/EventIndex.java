@@ -32,6 +32,5 @@ public final class EventIndex {
         IafBus.add(PlayerInteractEvent.RightClickItem.class, EventPriority.NORMAL, serverEvents::onEntityUseItem);
         IafBus.add(ProjectileImpactEvent.class, EventPriority.NORMAL, serverEvents::onArrowCollide);
         IafBus.add(ServerAboutToStartEvent.class, EventPriority.NORMAL, serverEvents::addNewVillageBuilding);
-        IafBus.add(VillagerTradesEvent.class, EventPriority.NORMAL, serverEvents::onVillagerTrades);
     }
 }

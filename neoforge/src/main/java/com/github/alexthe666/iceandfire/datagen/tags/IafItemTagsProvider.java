@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.datagen.tags;
+import com.github.alexthe666.iceandfire.item.IafArmorItem;
 
 import static com.github.alexthe666.iceandfire.datagen.tags.IafItemTags.*;
 
@@ -12,7 +13,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
@@ -252,7 +253,7 @@ public class IafItemTagsProvider extends ItemTagsProvider {
                 tag(Tags.Items.TOOLS_BOW).add(item);
             } else if (item instanceof TridentItem) {
                 tag(Tags.Items.TOOLS_SPEAR).add(item);
-            } else if (item instanceof ArmorItem armorItem) {
+            } else if (item instanceof IafArmorItem armorItem) {
                 tag(Tags.Items.ARMORS).add(item);
 
                 switch (armorItem.getType()) {

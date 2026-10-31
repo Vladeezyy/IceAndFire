@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.message;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 
 
 public class MessageSpawnParticleAt implements CustomPacketPayload {
-    public static final Type<MessageSpawnParticleAt> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "spawn_particle_at"));
+    public static final Type<MessageSpawnParticleAt> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "spawn_particle_at"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageSpawnParticleAt> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageSpawnParticleAt::read);
 
     @Override

@@ -18,7 +18,7 @@ public class ItemMobSkull extends Item {
     private final EnumSkullType skull;
 
     public ItemMobSkull(EnumSkullType skull) {
-        super(new Item.Properties().stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().stacksTo(1));
         this.skull = skull;
     }
 
@@ -35,7 +35,7 @@ public class ItemMobSkull extends Item {
         }
         skull.setYaw(yaw);
         skull.setSkullType(this.skull);
-        if (!context.getLevel().isClientSide) {
+        if (!context.getLevel().isClientSide()) {
             context.getLevel().addFreshEntity(skull);
         }
         if (stack.has(DataComponents.CUSTOM_NAME)) {

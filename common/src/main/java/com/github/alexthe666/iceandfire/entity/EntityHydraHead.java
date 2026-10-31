@@ -28,7 +28,7 @@ public class EntityHydraHead extends EntityMutlipartPart {
         super.tick();
         if (hydra != null && hydra.getSeveredHead() != -1 && this.neck && !EntityGorgon.isStoneMob(hydra)) {
             if (hydra.getSeveredHead() == headIndex) {
-                if (this.level().isClientSide) {
+                if (this.level().isClientSide()) {
                     for (int k = 0; k < 5; ++k) {
                         double d2 = 0.4;
                         double d0 = 0.1;
@@ -42,11 +42,11 @@ public class EntityHydraHead extends EntityMutlipartPart {
 
 
     @Override
-    public boolean hurt(DamageSource source, float damage) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         Entity parent = this.getParent();
         if (parent instanceof EntityHydra) {
             ((EntityHydra) parent).onHitHead(damage, headIndex);
-            return parent.hurt(source, damage);
+            return parent.hurtOrSimulate(source, damage);
         } else {
             return parent != null && parent.hurt(source, damage);
         }

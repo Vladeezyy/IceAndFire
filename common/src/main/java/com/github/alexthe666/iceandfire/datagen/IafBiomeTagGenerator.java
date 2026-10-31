@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.datagen;
 import net.minecraft.core.registries.Registries;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -16,7 +16,7 @@ public final class IafBiomeTagGenerator {
     private IafBiomeTagGenerator() {
     }
 
-    public static final TagKey<Biome> HAS_GORGON_TEMPLE = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/gorgon_temple"));
-    public static final TagKey<Biome> HAS_MAUSOLEUM = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/mausoleum"));
-    public static final TagKey<Biome> HAS_GRAVEYARD = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/graveyard"));
+    public static final TagKey<Biome> HAS_GORGON_TEMPLE = TagKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/gorgon_temple"));
+    public static final TagKey<Biome> HAS_MAUSOLEUM = TagKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/mausoleum"));
+    public static final TagKey<Biome> HAS_GRAVEYARD = TagKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "has_structure/graveyard"));
 }

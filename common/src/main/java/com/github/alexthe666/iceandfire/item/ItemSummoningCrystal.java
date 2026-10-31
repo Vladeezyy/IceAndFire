@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IafConfig;
@@ -22,7 +24,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -42,14 +44,14 @@ public class ItemSummoningCrystal extends Item {
     public static final Map<UUID, PendingSummon> DELAYED_SUMMONS = new HashMap<>();
 
     public ItemSummoningCrystal() {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
     }
 
     private static CompoundTag getDragonTag(ItemStack stack) {
         if (stack.getItem() instanceof ItemSummoningCrystal && ItemNbt.hasTag(stack)) {
             for (String tagInfo : ItemNbt.view(stack).getAllKeys()) {
                 if (tagInfo.contains("Dragon")) {
-                    return ItemNbt.view(stack).getCompound(tagInfo);
+                    return ItemNbt.view(stack).getCompoundOrEmpty(tagInfo);
                 }
             }
         }
@@ -61,7 +63,7 @@ public class ItemSummoningCrystal extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
@@ -70,7 +72,7 @@ public class ItemSummoningCrystal extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
 
         boolean flag = false;
         String desc = "entity.iceandfire.fire_dragon";
@@ -83,19 +85,19 @@ public class ItemSummoningCrystal extends Item {
         if (ItemNbt.hasTag(stack)) {
             for (String tagInfo : ItemNbt.view(stack).getAllKeys()) {
                 if (tagInfo.contains("Dragon")) {
-                    CompoundTag dragonTag = ItemNbt.view(stack).getCompound(tagInfo);
+                    CompoundTag dragonTag = ItemNbt.view(stack).getCompoundOrEmpty(tagInfo);
                     Component dragonName = Component.translatable(desc);
                     if (!dragonTag.getString("CustomName").isEmpty()) {
-                        dragonName = Component.literal(dragonTag.getString("CustomName"));
+                        dragonName = Component.literal(dragonTag.getStringOr("CustomName", ""));
                     }
-                    tooltip.add(Component.translatable("item.iceandfire.summoning_crystal.bound", dragonName).withStyle(ChatFormatting.GRAY));
+                    tooltip.accept(Component.translatable("item.iceandfire.summoning_crystal.bound", dragonName).withStyle(ChatFormatting.GRAY));
                     flag = true;
                 }
             }
         }
         if (!flag) {
-            tooltip.add(Component.translatable("item.iceandfire.summoning_crystal.desc_0").withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.translatable("item.iceandfire.summoning_crystal.desc_1").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Component.translatable("item.iceandfire.summoning_crystal.desc_0").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Component.translatable("item.iceandfire.summoning_crystal.desc_1").withStyle(ChatFormatting.GRAY));
 
         }
 
@@ -103,7 +105,7 @@ public class ItemSummoningCrystal extends Item {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().isClientSide || context.getPlayer() == null) {
+        if (context.getLevel().isClientSide() || context.getPlayer() == null) {
             return InteractionResult.PASS;
         }
 
@@ -182,7 +184,7 @@ public class ItemSummoningCrystal extends Item {
         summoningPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         summoningPlayer.playSound(SoundEvents.GLASS_BREAK, 1, 1);
         summoningPlayer.swing(summoningHand);
-        summoningPlayer.displayClientMessage(Component.translatable("message.iceandfire.dragonTeleport"), true);
+        summoningPlayer.sendOverlayMessage(Component.translatable("message.iceandfire.dragonTeleport"));
         ItemNbt.setTag(stack, new CompoundTag());
     }
 
@@ -216,6 +218,6 @@ public class ItemSummoningCrystal extends Item {
     }
 
     private static void displayClientError(Player summoningPlayer) {
-        summoningPlayer.displayClientMessage(Component.translatable("message.iceandfire.noDragonTeleport"), true);
+        summoningPlayer.sendOverlayMessage(Component.translatable("message.iceandfire.noDragonTeleport"));
     }
 }

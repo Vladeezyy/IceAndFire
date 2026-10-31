@@ -1,11 +1,12 @@
 package com.github.alexthe666.iceandfire.selftest;
+import com.github.alexthe666.iceandfire.item.IafArmorItem;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 
@@ -27,7 +28,7 @@ public class TagDump {
         }
         Map<String, Set<String>> tags = new TreeMap<>();
         for (Item item : BuiltInRegistries.ITEM) {
-            ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
+            Identifier id = BuiltInRegistries.ITEM.getKey(item);
             if (!id.getNamespace().equals(IceAndFire.MODID)) {
                 continue;
             }
@@ -42,7 +43,7 @@ public class TagDump {
                 add(tags, "shovels", name);
             } else if (item instanceof HoeItem) {
                 add(tags, "hoes", name);
-            } else if (item instanceof ArmorItem armor) {
+            } else if (item instanceof IafArmorItem armor) {
                 EquipmentSlot slot = armor.getEquipmentSlot();
                 add(tags, switch (slot) {
                     case HEAD -> "head_armor";

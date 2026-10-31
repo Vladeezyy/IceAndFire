@@ -7,7 +7,7 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
@@ -15,7 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 
 public class IafMobSpawnBiomeModifier implements BiomeModifier {
-    private static final net.neoforged.neoforge.registries.DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = net.neoforged.neoforge.registries.DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
+    private static final net.neoforged.neoforge.registries.DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = net.neoforged.neoforge.registries.DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns"));
 
     public IafMobSpawnBiomeModifier() {
     }

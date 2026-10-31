@@ -82,7 +82,7 @@ public class HippogryphAITargetItems<T extends ItemEntity> extends TargetGoal {
         } else if (this.getAttackReachSqr(targetEntity) >= this.mob.distanceToSqr(targetEntity)) {
             EntityHippogryph hippo = (EntityHippogryph) this.mob;
             this.targetEntity.getItem().shrink(1);
-            this.mob.playSound(SoundEvents.GENERIC_EAT, 1, 1);
+            this.mob.playSound(SoundEvents.GENERIC_EAT.value(), 1, 1);
             hippo.setAnimation(EntityHippogryph.ANIMATION_EAT);
             hippo.feedings++;
             hippo.heal(4);

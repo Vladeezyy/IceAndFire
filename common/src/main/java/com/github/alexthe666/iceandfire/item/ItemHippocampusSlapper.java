@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -19,22 +21,22 @@ import java.util.List;
 public class ItemHippocampusSlapper extends SwordItem {
 
     public ItemHippocampusSlapper() {
-        super(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, LivingEntity targetEntity, @NotNull LivingEntity attacker) {
-        targetEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
-        targetEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 2));
+    public void hurtEnemy(@NotNull ItemStack stack, LivingEntity targetEntity, @NotNull LivingEntity attacker) {
+        targetEntity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 2));
+        targetEntity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 100, 2));
         targetEntity.playSound(SoundEvents.GUARDIAN_FLOP, 3, 1);
 
-        return super.hurtEnemy(stack, targetEntity, attacker);
+        super.hurtEnemy(stack, targetEntity, attacker);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.hippocampus_slapper.desc_0").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.hippocampus_slapper.desc_1").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.hippocampus_slapper.desc_0").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.hippocampus_slapper.desc_1").withStyle(ChatFormatting.GRAY));
     }
 }

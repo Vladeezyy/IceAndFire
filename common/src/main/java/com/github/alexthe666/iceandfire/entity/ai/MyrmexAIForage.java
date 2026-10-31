@@ -127,7 +127,7 @@ public class MyrmexAIForage extends Goal {
                                 this.targetBlock.getY() + this.myrmex.getRandom().nextDouble(),
                                 this.targetBlock.getZ() + this.myrmex.getRandom().nextDouble(), stack);
                             itemEntity.setDefaultPickUpDelay();
-                            if (!this.myrmex.level().isClientSide) {
+                            if (!this.myrmex.level().isClientSide()) {
                                 this.myrmex.level().addFreshEntity(itemEntity);
                             }
                         }

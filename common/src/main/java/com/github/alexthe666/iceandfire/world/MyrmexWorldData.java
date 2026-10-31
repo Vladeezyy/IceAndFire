@@ -10,7 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -41,7 +41,7 @@ public class MyrmexWorldData extends SavedData {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
-            DimensionDataStorage storage = overworld.getDataStorage();
+            SavedDataStorage storage = overworld.getDataStorage();
             MyrmexWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag), null), IDENTIFIER);
             if (data != null) {
                 data.world = world;
@@ -127,11 +127,11 @@ public class MyrmexWorldData extends SavedData {
     }
 
     public void load(CompoundTag nbt) {
-        this.tickCounter = nbt.getInt("Tick");
+        this.tickCounter = nbt.getIntOr("Tick", 0);
         ListTag nbttaglist = nbt.getList("Hives", 10);
 
         for (int i = 0; i < nbttaglist.size(); ++i) {
-            CompoundTag CompoundNBT = nbttaglist.getCompound(i);
+            CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
             MyrmexHive village = new MyrmexHive();
             village.readVillageDataFromNBT(CompoundNBT);
             this.hiveList.add(village);

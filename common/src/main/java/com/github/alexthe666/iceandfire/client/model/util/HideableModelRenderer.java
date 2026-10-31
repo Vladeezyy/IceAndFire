@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.model.util;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
 import dev.vladeezyy.rampart.client.model.basic.BasicModelPart;

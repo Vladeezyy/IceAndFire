@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import dev.vladeezyy.rampart.client.model.TabulaModel;
 import dev.vladeezyy.rampart.client.model.basic.BasicModelPart;
@@ -12,11 +12,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class RenderMobSkull extends EntityRenderer<EntityMobSkull> {
 
-    private static final Map<String, ResourceLocation> SKULL_TEXTURE_CACHE = Maps.newHashMap();
+    private static final Map<String, Identifier> SKULL_TEXTURE_CACHE = Maps.newHashMap();
     private final ModelHippogryph hippogryphModel;
     private final ModelCyclops cyclopsModel;
     private final ModelCockatrice cockatriceModel;
@@ -140,15 +140,15 @@ public class RenderMobSkull extends EntityRenderer<EntityMobSkull> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityMobSkull entity) {
+    public @NotNull Identifier getTextureLocation(EntityMobSkull entity) {
         return getSkullTexture(entity.getSkullType());
     }
 
-    public ResourceLocation getSkullTexture(EnumSkullType skull) {
+    public Identifier getSkullTexture(EnumSkullType skull) {
         String s = "iceandfire:textures/models/skulls/skull_" + skull.name().toLowerCase(Locale.ROOT) + ".png";
-        ResourceLocation resourcelocation = SKULL_TEXTURE_CACHE.get(s);
+        Identifier resourcelocation = SKULL_TEXTURE_CACHE.get(s);
         if (resourcelocation == null) {
-            resourcelocation = ResourceLocation.parse(s);
+            resourcelocation = Identifier.parse(s);
             SKULL_TEXTURE_CACHE.put(s, resourcelocation);
         }
         return resourcelocation;

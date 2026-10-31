@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.particle.LightningBoltData;
 import com.github.alexthe666.iceandfire.client.particle.LightningRender;

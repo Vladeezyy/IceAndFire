@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
@@ -89,8 +89,8 @@ public class HippogryphAIMate extends Goal {
         this.targetMate.setAge(6000);
         this.hippo.resetLove();
         this.targetMate.resetLove();
-        egg.moveTo(this.hippo.getX(), this.hippo.getY(), this.hippo.getZ(), 0.0F, 0.0F);
-        if (!world.isClientSide) {
+        egg.snapTo(this.hippo.getX(), this.hippo.getY(), this.hippo.getZ(), 0.0F, 0.0F);
+        if (!world.isClientSide()) {
             this.world.addFreshEntity(egg);
         }
         RandomSource random = this.hippo.getRandom();
@@ -106,7 +106,7 @@ public class HippogryphAIMate extends Goal {
                 this.hippo.getZ() + d5, d0, d1, d2);
         }
 
-        if (this.world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if (((net.minecraft.server.level.ServerLevel) this.world).getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
             this.world.addFreshEntity(new ExperienceOrb(this.world, this.hippo.getX(), this.hippo.getY(),
                 this.hippo.getZ(), random.nextInt(7) + 1));
         }

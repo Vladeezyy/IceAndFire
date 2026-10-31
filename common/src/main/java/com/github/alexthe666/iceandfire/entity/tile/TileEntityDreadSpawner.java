@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
@@ -52,14 +54,14 @@ public class TileEntityDreadSpawner extends BlockEntity implements Spawner {
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag p_155760_, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(p_155760_, registries);
+    protected void loadAdditional(ValueInput p_155760_) {
+        super.loadAdditional(p_155760_);
         this.spawner.load(this.level, this.worldPosition, p_155760_);
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag p_59795_, HolderLookup.@NotNull Provider registries) {
-        super.saveAdditional(p_59795_, registries);
+    protected void saveAdditional(ValueOutput p_59795_) {
+        super.saveAdditional(p_59795_);
         this.spawner.save(p_59795_);
     }
 

@@ -1,20 +1,20 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import com.github.alexthe666.iceandfire.item.IafArmorItem;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.animation.IAnimatedEntity;
 import com.github.alexthe666.iceandfire.client.model.ModelBipedBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,10 +30,10 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
 
     private final A modelLeggings;
     private final A modelArmor;
-    private final ResourceLocation defaultLegArmor;
-    private final ResourceLocation defaultArmor;
+    private final Identifier defaultLegArmor;
+    private final Identifier defaultArmor;
 
-    public LayerBipedArmor(RenderLayerParent<T, M> mobRenderer, A modelLeggings, A modelArmor, ResourceLocation defaultArmor, ResourceLocation defaultLegArmor) {
+    public LayerBipedArmor(RenderLayerParent<T, M> mobRenderer, A modelLeggings, A modelArmor, Identifier defaultArmor, Identifier defaultLegArmor) {
         super(mobRenderer);
         this.modelLeggings = modelLeggings;
         this.modelArmor = modelArmor;
@@ -51,8 +51,8 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
 
     private void renderEquipment(PoseStack matrixStackIn, MultiBufferSource bufferIn, T entityIn, EquipmentSlot slotType, int packedLightIn, A modelIn) {
         ItemStack itemstack = entityIn.getItemBySlot(slotType);
-        if (itemstack.getItem() instanceof ArmorItem) {
-            ArmorItem armoritem = (ArmorItem) itemstack.getItem();
+        if (itemstack.getItem() instanceof IafArmorItem) {
+            ArmorItem armoritem = (IafArmorItem) itemstack.getItem();
             if (armoritem.getEquipmentSlot() == slotType) {
                 this.getParentModel().setModelAttributes(modelIn);
                 this.setModelSlotVisible(modelIn, slotType);
@@ -85,9 +85,9 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
         }
     }
 
-    private void renderArmorItem(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, boolean p_241738_5_, A modelIn, float red, float green, float blue, ResourceLocation armorResource) {
+    private void renderArmorItem(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, boolean p_241738_5_, A modelIn, float red, float green, float blue, Identifier armorResource) {
         VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(bufferIn, RenderType.armorCutoutNoCull(armorResource), p_241738_5_);
-        modelIn.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.colorFromFloat(1.0F, red, green, blue));
+        modelIn.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
     }
 
     private A getSlotModel(EquipmentSlot equipmentSlotType) {
@@ -98,7 +98,7 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
         return slotIn == EquipmentSlot.LEGS;
     }
 
-    public ResourceLocation getArmorResource(T entity, ItemStack stack, EquipmentSlot slot, @Nullable String type) {
+    public Identifier getArmorResource(T entity, ItemStack stack, EquipmentSlot slot, @Nullable String type) {
         if (isLegSlot(slot))
             return defaultLegArmor;
         return defaultArmor;

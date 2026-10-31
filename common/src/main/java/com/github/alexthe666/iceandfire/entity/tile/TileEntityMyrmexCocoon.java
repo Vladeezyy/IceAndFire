@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
@@ -47,17 +49,17 @@ public class TileEntityMyrmexCocoon extends RandomizableContainerBlockEntity {
 
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
         this.chestContents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
 
         if (!this.tryLoadLootTable(compound)) {
-            ContainerHelper.loadAllItems(compound, this.chestContents, registries);
+            ContainerHelper.loadAllItems(compound, this.chestContents, compound.lookup());
         }
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+    public void saveAdditional(ValueOutput compound) {
         if (!this.trySaveLootTable(compound)) {
             ContainerHelper.saveAllItems(compound, this.chestContents, registries);
         }

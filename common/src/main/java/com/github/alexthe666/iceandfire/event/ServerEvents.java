@@ -33,7 +33,7 @@ import com.github.alexthe666.iceandfire.world.gen.WorldGenLightningDragonCave;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
@@ -45,9 +45,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.WitherSkeleton;
+import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -79,7 +79,6 @@ import dev.vladeezyy.iceandfire.bus.PlayerEvent;
 import dev.vladeezyy.iceandfire.bus.PlayerInteractEvent;
 import dev.vladeezyy.iceandfire.bus.BlockEvent;
 import dev.vladeezyy.iceandfire.bus.ServerAboutToStartEvent;
-import dev.vladeezyy.iceandfire.bus.VillagerTradesEvent;
 import dev.vladeezyy.iceandfire.bus.EventPriority;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -135,7 +134,7 @@ public class ServerEvents {
         }
     }
 
-    private static boolean isInEntityTag(ResourceLocation loc, EntityType<?> type) {
+    private static boolean isInEntityTag(Identifier loc, EntityType<?> type) {
         return type.is(TagKey.create(Registries.ENTITY_TYPE, loc));
     }
 
@@ -208,7 +207,7 @@ public class ServerEvents {
             Registry<StructureTemplatePool> templatePoolRegistry = event.getServer().registryAccess().registry(Registries.TEMPLATE_POOL).orElseThrow();
             Registry<StructureProcessorList> processorListRegistry = event.getServer().registryAccess().registry(Registries.PROCESSOR_LIST).orElseThrow();
             for (String type : VILLAGE_TYPES) {
-                IafVillagerRegistry.addBuildingToPool(templatePoolRegistry, processorListRegistry, ResourceLocation.parse("village/" + type + "/houses"), "iceandfire:village/" + type + "_scriber_1", IafConfig.villagerHouseWeight);
+                IafVillagerRegistry.addBuildingToPool(templatePoolRegistry, processorListRegistry, Identifier.parse("village/" + type + "/houses"), "iceandfire:village/" + type + "_scriber_1", IafConfig.villagerHouseWeight);
             }
         }
 
@@ -299,7 +298,7 @@ public class ServerEvents {
     public void makeItemDropsFireImmune(final LivingDropsEvent event) {
         boolean makeFireImmune = false;
 
-        if (event.getSource().getDirectEntity() instanceof LightningBolt bolt && bolt.getTags().contains(BOLT_DONT_DESTROY_LOOT)) {
+        if (event.getSource().getDirectEntity() instanceof LightningBolt bolt && bolt.entityTags().contains(BOLT_DONT_DESTROY_LOOT)) {
             makeFireImmune = true;
         } else if (event.getSource().getEntity() instanceof Player player && player.getItemInHand(player.getUsedItemHand()).is(IafItemTags.MAKE_ITEM_DROPS_FIREIMMUNE)) {
             makeFireImmune = true;
@@ -396,11 +395,11 @@ public class ServerEvents {
                             ItemNbt.setTag(statuette, tag);
 
                             if (!statue.level().isClientSide()) {
-                                statue.spawnAtLocation(statuette, 1);
+                                statue.spawnAtLocation((net.minecraft.server.level.ServerLevel) statue.level(), statuette, 1);
                             }
                         } else {
-                            if (!statue.level().isClientSide) {
-                                statue.spawnAtLocation(Blocks.COBBLESTONE.asItem(), 2 + event.getEntity().getRandom().nextInt(4));
+                            if (!statue.level().isClientSide()) {
+                                statue.spawnAtLocation((net.minecraft.server.level.ServerLevel) statue.level(), Blocks.COBBLESTONE.asItem(), 2 + event.getEntity().getRandom().nextInt(4));
                             }
                         }
 
@@ -432,7 +431,7 @@ public class ServerEvents {
         });
 
         if (event.getEntity().getUUID().equals(ServerEvents.ALEX_UUID)) {
-            event.getEntity().spawnAtLocation(new ItemStack(IafItemRegistry.WEEZER_BLUE_ALBUM.get()), 1);
+            event.getEntity().spawnAtLocation((net.minecraft.server.level.ServerLevel) event.getEntity().level(), new ItemStack(IafItemRegistry.WEEZER_BLUE_ALBUM.get()), 1);
         }
 
         if (event.getEntity() instanceof Player && IafConfig.ghostsFromPlayerDeaths) {
@@ -446,10 +445,10 @@ public class ServerEvents {
                 }
                 if (flag) {
                     Level world = event.getEntity().level();
-                    EntityGhost ghost = IafEntityRegistry.GHOST.get().create(world);
+                    EntityGhost ghost = IafEntityRegistry.GHOST.get().create(world, EntitySpawnReason.MOB_SUMMONED);
                     ghost.copyPosition(event.getEntity());
-                    if (!world.isClientSide) {
-                        ghost.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(event.getEntity().blockPosition()), MobSpawnType.SPAWNER, null);
+                    if (!world.isClientSide()) {
+                        ghost.finalizeSpawn((ServerLevelAccessor) world, ((net.minecraft.world.level.ServerLevelAccessor) world).getCurrentDifficultyAt(event.getEntity().blockPosition()), EntitySpawnReason.SPAWNER, null);
                         world.addFreshEntity(ghost);
                     }
                     ghost.setDaytimeMode(true);
@@ -495,7 +494,7 @@ public class ServerEvents {
                     data.chainData.removeChain(event.getEntity());
 
                     if (!event.getLevel().isClientSide()) {
-                        event.getTarget().spawnAtLocation(IafItemRegistry.CHAIN.get(), 1);
+                        event.getTarget().spawnAtLocation((net.minecraft.server.level.ServerLevel) event.getTarget().level(), IafItemRegistry.CHAIN.get(), 1);
                     }
 
                     event.setCanceled(true);
@@ -522,7 +521,7 @@ public class ServerEvents {
     @SubscribeEvent // TODO :: Can this be moved into the item itself?
     public void onPlayerLeftClick(PlayerInteractEvent.LeftClickEmpty event) {
         onLeftClick(event.getEntity(), event.getItemStack());
-        if (event.getLevel().isClientSide) {
+        if (event.getLevel().isClientSide()) {
             IceAndFire.sendMSGToServer(new MessageSwingArm());
         }
     }
@@ -576,7 +575,7 @@ public class ServerEvents {
 
     //@SubscribeEvent // FIXME :: Unused
     public void onChestGenerated(LootTableLoadEvent event) {
-        final ResourceLocation eventName = event.getName();
+        final Identifier eventName = event.getName();
         final boolean condition1 = eventName.equals(BuiltInLootTables.SIMPLE_DUNGEON)
                 || eventName.equals(BuiltInLootTables.ABANDONED_MINESHAFT)
                 || eventName.equals(BuiltInLootTables.DESERT_PYRAMID)
@@ -639,20 +638,13 @@ public class ServerEvents {
         }
     }
 
-    @SubscribeEvent
-    public void onVillagerTrades(VillagerTradesEvent event) {
-        if (event.getType() == IafVillagerRegistry.SCRIBE.get()) {
-            IafVillagerRegistry.addScribeTrades(event.getTrades());
-        }
-    }
-
     public static String BOLT_DONT_DESTROY_LOOT = "iceandfire.bolt_skip_loot";
 
     @SubscribeEvent
     public void onLightningHit(final EntityStruckByLightningEvent event) {
-        if ((event.getEntity() instanceof ItemEntity || event.getEntity() instanceof ExperienceOrb) && event.getLightning().getTags().contains(BOLT_DONT_DESTROY_LOOT)) {
+        if ((event.getEntity() instanceof ItemEntity || event.getEntity() instanceof ExperienceOrb) && event.getLightning().entityTags().contains(BOLT_DONT_DESTROY_LOOT)) {
             event.setCanceled(true);
-        } else if (event.getLightning().getTags().contains(event.getEntity().getStringUUID())) {
+        } else if (event.getLightning().entityTags().contains(event.getEntity().getStringUUID())) {
             event.setCanceled(true);
         }
     }

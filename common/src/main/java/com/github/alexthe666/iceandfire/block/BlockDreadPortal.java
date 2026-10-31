@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.block;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 
 import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -47,7 +48,7 @@ public class BlockDreadPortal extends BaseEntityBlock implements IDreadBlock {
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entity) {
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
      /* if(entity.dimension != IafConfig.dreadlandsDimensionId){
             MiscEntityProperties properties = EntityPropertiesHandler.INSTANCE.getProperties(entity, MiscEntityProperties.class);
             if (properties != null) {

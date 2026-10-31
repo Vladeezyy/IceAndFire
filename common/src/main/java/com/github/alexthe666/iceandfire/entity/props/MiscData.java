@@ -109,10 +109,10 @@ public class MiscData {
     }
 
     public void deserialize(final CompoundTag tag) {
-        CompoundTag miscData = tag.getCompound("miscData");
-        loveTicks = miscData.getInt("loveTicks");
-        lungeTicks = miscData.getInt("lungeTicks");
-        hasDismounted = miscData.getBoolean("hasDismounted");
+        CompoundTag miscData = tag.getCompoundOrEmpty("miscData");
+        loveTicks = miscData.getIntOr("loveTicks", 0);
+        lungeTicks = miscData.getIntOr("lungeTicks", 0);
+        hasDismounted = miscData.getBooleanOr("hasDismounted", false);
         int[] loadedChainedToIds = miscData.getIntArray("targetedByScepterIds");
 
         isInitialized = false;

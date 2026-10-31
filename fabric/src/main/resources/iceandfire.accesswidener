@@ -1,4 +1,4 @@
-accessWidener v2 named
+accessWidener v2 official
 # The same as neoforge/src/main/resources/META-INF/accesstransformer.cfg (the common code compiles with that AT)
 accessible field net/minecraft/world/entity/projectile/ThrownTrident ID_LOYALTY Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/entity/projectile/ThrownTrident ID_FOIL Lnet/minecraft/network/syncher/EntityDataAccessor;

@@ -7,7 +7,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class ParticleSerpentBubble extends TextureSheetParticle {
-    private static final ResourceLocation BUBBLE_TEXTURE = ResourceLocation.parse("iceandfire:textures/particles/sea_serpent_bubble.png");
+    private static final Identifier BUBBLE_TEXTURE = Identifier.parse("iceandfire:textures/particles/sea_serpent_bubble.png");
 
     public ParticleSerpentBubble(ClientLevel world, double x, double y, double z, double motX, double motY, double motZ, float size) {
         super(world, x, y, z, motX, motY, motZ);

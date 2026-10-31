@@ -5,10 +5,10 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class IndexPageButton extends Button {
@@ -21,14 +21,14 @@ public class IndexPageButton extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partial) {
+    public void renderWidget(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partial) {
         if (this.active) {
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
             Font font = IafConfig.useVanillaFont ? Minecraft.getInstance().font : (Font) IceAndFire.PROXY.getFontRenderer();
             boolean flag = isHoveredOrFocused();
-            pGuiGraphics.blit(ResourceLocation.parse("iceandfire:textures/gui/bestiary/widgets.png"), this.getX(), this.getY(), 0, flag ? 32 : 0, this.width, this.height);
+            pGuiGraphics.blit(Identifier.parse("iceandfire:textures/gui/bestiary/widgets.png"), this.getX(), this.getY(), 0, flag ? 32 : 0, this.width, this.height);
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
             // Dark ink without a shadow, like the text of the pages: the white button text of the original could not be
             // read on the light parchment; the hovered entry turns the red-brown of the book's spine

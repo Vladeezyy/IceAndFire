@@ -20,10 +20,6 @@ neoForge {
     // -Pneo_version=21.1.197 checks the oldest supported NeoForge
     version = project.findProperty('neo_version')
 
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
 
     runs {
         configureEach {

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.equipment.ArmorType;
 
 import net.minecraft.tags.BlockTags;
 import dev.vladeezyy.iceandfire.platform.ItemEntry;
@@ -14,8 +17,6 @@ import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.github.alexthe666.iceandfire.enums.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
@@ -45,21 +46,21 @@ public class IafItemRegistry {
     public static IafArmorMaterial DRAGONSTEEL_FIRE_ARMOR_MATERIAL = new DragonsteelArmorMaterial("dragonsteel_fire", (int) (0.02D * IafConfig.dragonsteelBaseDurabilityEquipment), new int[]{IafConfig.dragonsteelBaseArmor - 6, IafConfig.dragonsteelBaseArmor - 3, IafConfig.dragonsteelBaseArmor, IafConfig.dragonsteelBaseArmor - 5}, 30, SoundEvents.ARMOR_EQUIP_DIAMOND, IafConfig.dragonsteelBaseArmorToughness);
     public static IafArmorMaterial DRAGONSTEEL_ICE_ARMOR_MATERIAL = new DragonsteelArmorMaterial("dragonsteel_ice", (int) (0.02D * IafConfig.dragonsteelBaseDurabilityEquipment), new int[]{IafConfig.dragonsteelBaseArmor - 6, IafConfig.dragonsteelBaseArmor - 3, IafConfig.dragonsteelBaseArmor, IafConfig.dragonsteelBaseArmor - 5}, 30, SoundEvents.ARMOR_EQUIP_DIAMOND, IafConfig.dragonsteelBaseArmorToughness);
     public static IafArmorMaterial DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL = new DragonsteelArmorMaterial("dragonsteel_lightning", (int) (0.02D * IafConfig.dragonsteelBaseDurabilityEquipment), new int[]{IafConfig.dragonsteelBaseArmor - 6, IafConfig.dragonsteelBaseArmor - 3, IafConfig.dragonsteelBaseArmor, IafConfig.dragonsteelBaseArmor - 5}, 30, SoundEvents.ARMOR_EQUIP_DIAMOND, IafConfig.dragonsteelBaseArmorToughness);
-    public static CustomToolMaterial SILVER_TOOL_MATERIAL = new CustomToolMaterial("silver", 2, 460, 1.0F, 11.0F, 18, BlockTags.INCORRECT_FOR_IRON_TOOL);
-    public static CustomToolMaterial COPPER_TOOL_MATERIAL = new CustomToolMaterial("copper", 2, 300, 0.0F, 0.7F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL);
-    public static CustomToolMaterial DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("Dragonbone", 3, 1660, 4.0F, 10.0F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
-    public static CustomToolMaterial FIRE_DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("FireDragonbone", 3, 2000, 5.5F, 10F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
-    public static CustomToolMaterial ICE_DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("IceDragonbone", 3, 2000, 5.5F, 10F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
-    public static CustomToolMaterial LIGHTNING_DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("LightningDragonbone", 3, 2000, 5.5F, 10F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
-    public static CustomToolMaterial TROLL_WEAPON_TOOL_MATERIAL = new CustomToolMaterial("trollWeapon", 2, 300, 1F, 10F, 1, BlockTags.INCORRECT_FOR_IRON_TOOL);
-    public static CustomToolMaterial MYRMEX_CHITIN_TOOL_MATERIAL = new CustomToolMaterial("MyrmexChitin", 3, 600, 1.0F, 6.0F, 8, BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
-    public static CustomToolMaterial HIPPOGRYPH_SWORD_TOOL_MATERIAL = new CustomToolMaterial("HippogryphSword", 2, 500, 2.5F, 10F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL);
-    public static CustomToolMaterial STYMHALIAN_SWORD_TOOL_MATERIAL = new CustomToolMaterial("StymphalianSword", 2, 500, 2, 10.0F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL);
-    public static CustomToolMaterial AMPHITHERE_SWORD_TOOL_MATERIAL = new CustomToolMaterial("AmphithereSword", 2, 500, 1F, 10F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL);
-    public static CustomToolMaterial HIPPOCAMPUS_SWORD_TOOL_MATERIAL = new CustomToolMaterial("HippocampusSword", 0, 500, -2F, 0F, 50, BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-    public static CustomToolMaterial DREAD_SWORD_TOOL_MATERIAL = new CustomToolMaterial("DreadSword", 0, 100, 1F, 10F, 0, BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-    public static CustomToolMaterial DREAD_KNIGHT_TOOL_MATERIAL = new CustomToolMaterial("DreadKnightSword", 0, 1200, 13F, 0F, 10, BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-    public static CustomToolMaterial GHOST_SWORD_TOOL_MATERIAL = new CustomToolMaterial("GhostSword", 2, 3000, 5, 10.0F, 25, BlockTags.INCORRECT_FOR_IRON_TOOL);
+    public static CustomToolMaterial SILVER_TOOL_MATERIAL = new CustomToolMaterial("silver", 2, 460, 1.0F, 11.0F, 18, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("silver"));
+    public static CustomToolMaterial COPPER_TOOL_MATERIAL = new CustomToolMaterial("copper", 2, 300, 0.0F, 0.7F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("copper"));
+    public static CustomToolMaterial DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("Dragonbone", 3, 1660, 4.0F, 10.0F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, repairs("dragonbone"));
+    public static CustomToolMaterial FIRE_DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("FireDragonbone", 3, 2000, 5.5F, 10F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, repairs("firedragonbone"));
+    public static CustomToolMaterial ICE_DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("IceDragonbone", 3, 2000, 5.5F, 10F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, repairs("icedragonbone"));
+    public static CustomToolMaterial LIGHTNING_DRAGONBONE_TOOL_MATERIAL = new CustomToolMaterial("LightningDragonbone", 3, 2000, 5.5F, 10F, 22, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, repairs("lightningdragonbone"));
+    public static CustomToolMaterial TROLL_WEAPON_TOOL_MATERIAL = new CustomToolMaterial("trollWeapon", 2, 300, 1F, 10F, 1, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("trollweapon"));
+    public static CustomToolMaterial MYRMEX_CHITIN_TOOL_MATERIAL = new CustomToolMaterial("MyrmexChitin", 3, 600, 1.0F, 6.0F, 8, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, repairs("myrmexchitin"));
+    public static CustomToolMaterial HIPPOGRYPH_SWORD_TOOL_MATERIAL = new CustomToolMaterial("HippogryphSword", 2, 500, 2.5F, 10F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("hippogryphsword"));
+    public static CustomToolMaterial STYMHALIAN_SWORD_TOOL_MATERIAL = new CustomToolMaterial("StymphalianSword", 2, 500, 2, 10.0F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("stymphaliansword"));
+    public static CustomToolMaterial AMPHITHERE_SWORD_TOOL_MATERIAL = new CustomToolMaterial("AmphithereSword", 2, 500, 1F, 10F, 10, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("amphitheresword"));
+    public static CustomToolMaterial HIPPOCAMPUS_SWORD_TOOL_MATERIAL = new CustomToolMaterial("HippocampusSword", 0, 500, -2F, 0F, 50, BlockTags.INCORRECT_FOR_WOODEN_TOOL, repairs("hippocampussword"));
+    public static CustomToolMaterial DREAD_SWORD_TOOL_MATERIAL = new CustomToolMaterial("DreadSword", 0, 100, 1F, 10F, 0, BlockTags.INCORRECT_FOR_WOODEN_TOOL, repairs("dreadsword"));
+    public static CustomToolMaterial DREAD_KNIGHT_TOOL_MATERIAL = new CustomToolMaterial("DreadKnightSword", 0, 1200, 13F, 0F, 10, BlockTags.INCORRECT_FOR_WOODEN_TOOL, repairs("dreadknightsword"));
+    public static CustomToolMaterial GHOST_SWORD_TOOL_MATERIAL = new CustomToolMaterial("GhostSword", 2, 3000, 5, 10.0F, 25, BlockTags.INCORRECT_FOR_IRON_TOOL, repairs("ghostsword"));
 
     public static final Registrar.Items ITEMS = Registrar.createItems(IceAndFire.MODID);
 
@@ -71,20 +72,20 @@ public class IafItemRegistry {
     public static final ItemEntry<Item> SILVER_NUGGET = registerItem("silver_nugget", ItemGeneric::new);
     public static final ItemEntry<Item> RAW_SILVER = registerItem("raw_silver", ItemGeneric::new);
     public static final ItemEntry<Item> COPPER_NUGGET = registerItem("copper_nugget", ItemGeneric::new);
-    public static final ItemEntry<Item> SILVER_HELMET = registerItem("armor_silver_metal_helmet", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> SILVER_CHESTPLATE = registerItem("armor_silver_metal_chestplate", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> SILVER_LEGGINGS = registerItem("armor_silver_metal_leggings", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> SILVER_BOOTS = registerItem("armor_silver_metal_boots", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> SILVER_HELMET = registerItem("armor_silver_metal_helmet", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> SILVER_CHESTPLATE = registerItem("armor_silver_metal_chestplate", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> SILVER_LEGGINGS = registerItem("armor_silver_metal_leggings", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> SILVER_BOOTS = registerItem("armor_silver_metal_boots", () -> new ItemSilverArmor(SILVER_ARMOR_MATERIAL, ArmorType.BOOTS));
     public static final ItemEntry<Item> SILVER_SWORD = registerItem("silver_sword", () -> new ItemModSword(SILVER_TOOL_MATERIAL));
     public static final ItemEntry<Item> SILVER_SHOVEL = registerItem("silver_shovel", () -> new ItemModShovel(SILVER_TOOL_MATERIAL));
     public static final ItemEntry<Item> SILVER_PICKAXE = registerItem("silver_pickaxe", () -> new ItemModPickaxe(SILVER_TOOL_MATERIAL));
     public static final ItemEntry<Item> SILVER_AXE = registerItem("silver_axe", () -> new ItemModAxe(SILVER_TOOL_MATERIAL));
     public static final ItemEntry<Item> SILVER_HOE = registerItem("silver_hoe", () -> new ItemModHoe(SILVER_TOOL_MATERIAL));
 
-    public static final ItemEntry<Item> COPPER_HELMET = registerItem("armor_copper_metal_helmet", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> COPPER_CHESTPLATE = registerItem("armor_copper_metal_chestplate", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> COPPER_LEGGINGS = registerItem("armor_copper_metal_leggings", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> COPPER_BOOTS = registerItem("armor_copper_metal_boots", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> COPPER_HELMET = registerItem("armor_copper_metal_helmet", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> COPPER_CHESTPLATE = registerItem("armor_copper_metal_chestplate", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> COPPER_LEGGINGS = registerItem("armor_copper_metal_leggings", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> COPPER_BOOTS = registerItem("armor_copper_metal_boots", () -> new ItemCopperArmor(COPPER_ARMOR_MATERIAL, ArmorType.BOOTS));
     public static final ItemEntry<Item> COPPER_SWORD = registerItem("copper_sword", () -> new ItemModSword(COPPER_TOOL_MATERIAL));
     public static final ItemEntry<Item> COPPER_SHOVEL = registerItem("copper_shovel", () -> new ItemModShovel(COPPER_TOOL_MATERIAL));
     public static final ItemEntry<Item> COPPER_PICKAXE = registerItem("copper_pickaxe", () -> new ItemModPickaxe(COPPER_TOOL_MATERIAL));
@@ -199,31 +200,31 @@ public class IafItemRegistry {
     public static final ItemEntry<Item> PIXIE_WAND = registerItem("pixie_wand", () -> new ItemPixieWand());
     public static final ItemEntry<Item> AMBROSIA = registerItem("ambrosia", () -> new ItemAmbrosia());
     public static final ItemEntry<Item> CYCLOPS_EYE = registerItem("cyclops_eye", () -> new ItemCyclopsEye());
-    public static final ItemEntry<Item> SHEEP_HELMET = registerItem("sheep_helmet", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> SHEEP_CHESTPLATE = registerItem("sheep_chestplate", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> SHEEP_LEGGINGS = registerItem("sheep_leggings", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> SHEEP_BOOTS = registerItem("sheep_boots", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> SHEEP_HELMET = registerItem("sheep_helmet", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> SHEEP_CHESTPLATE = registerItem("sheep_chestplate", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> SHEEP_LEGGINGS = registerItem("sheep_leggings", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> SHEEP_BOOTS = registerItem("sheep_boots", () -> new ItemModArmor(SHEEP_ARMOR_MATERIAL, ArmorType.BOOTS));
     public static final ItemEntry<Item> SHINY_SCALES = registerItem("shiny_scales", ItemGeneric::new);
     public static final ItemEntry<Item> SIREN_TEAR = registerItem("siren_tear", () -> new ItemGeneric(1));
     public static final ItemEntry<Item> SIREN_FLUTE = registerItem("siren_flute", () -> new ItemSirenFlute());
     public static final ItemEntry<Item> HIPPOCAMPUS_FIN = registerItem("hippocampus_fin", () -> new ItemGeneric(1));
     public static final ItemEntry<Item> HIPPOCAMPUS_SLAPPER = registerItem("hippocampus_slapper", () -> new ItemHippocampusSlapper());
-    public static final ItemEntry<Item> EARPLUGS = registerItem("earplugs", () -> new ItemModArmor(EARPLUGS_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
+    public static final ItemEntry<Item> EARPLUGS = registerItem("earplugs", () -> new ItemModArmor(EARPLUGS_ARMOR_MATERIAL, ArmorType.HELMET));
     public static final ItemEntry<Item> DEATH_WORM_CHITIN_YELLOW = registerItem("deathworm_chitin_yellow", ItemGeneric::new);
     public static final ItemEntry<Item> DEATH_WORM_CHITIN_WHITE = registerItem("deathworm_chitin_white", ItemGeneric::new);
     public static final ItemEntry<Item> DEATH_WORM_CHITIN_RED = registerItem("deathworm_chitin_red", ItemGeneric::new);
-    public static final ItemEntry<Item> DEATHWORM_YELLOW_HELMET = registerItem("deathworm_yellow_helmet", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> DEATHWORM_YELLOW_CHESTPLATE = registerItem("deathworm_yellow_chestplate", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> DEATHWORM_YELLOW_LEGGINGS = registerItem("deathworm_yellow_leggings", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> DEATHWORM_YELLOW_BOOTS = registerItem("deathworm_yellow_boots", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
-    public static final ItemEntry<Item> DEATHWORM_WHITE_HELMET = registerItem("deathworm_white_helmet", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> DEATHWORM_WHITE_CHESTPLATE = registerItem("deathworm_white_chestplate", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> DEATHWORM_WHITE_LEGGINGS = registerItem("deathworm_white_leggings", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> DEATHWORM_WHITE_BOOTS = registerItem("deathworm_white_boots", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
-    public static final ItemEntry<Item> DEATHWORM_RED_HELMET = registerItem("deathworm_red_helmet", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> DEATHWORM_RED_CHESTPLATE = registerItem("deathworm_red_chestplate", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> DEATHWORM_RED_LEGGINGS = registerItem("deathworm_red_leggings", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> DEATHWORM_RED_BOOTS = registerItem("deathworm_red_boots", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> DEATHWORM_YELLOW_HELMET = registerItem("deathworm_yellow_helmet", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> DEATHWORM_YELLOW_CHESTPLATE = registerItem("deathworm_yellow_chestplate", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> DEATHWORM_YELLOW_LEGGINGS = registerItem("deathworm_yellow_leggings", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> DEATHWORM_YELLOW_BOOTS = registerItem("deathworm_yellow_boots", () -> new ItemDeathwormArmor(DEATHWORM_0_ARMOR_MATERIAL, ArmorType.BOOTS));
+    public static final ItemEntry<Item> DEATHWORM_WHITE_HELMET = registerItem("deathworm_white_helmet", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> DEATHWORM_WHITE_CHESTPLATE = registerItem("deathworm_white_chestplate", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> DEATHWORM_WHITE_LEGGINGS = registerItem("deathworm_white_leggings", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> DEATHWORM_WHITE_BOOTS = registerItem("deathworm_white_boots", () -> new ItemDeathwormArmor(DEATHWORM_1_ARMOR_MATERIAL, ArmorType.BOOTS));
+    public static final ItemEntry<Item> DEATHWORM_RED_HELMET = registerItem("deathworm_red_helmet", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> DEATHWORM_RED_CHESTPLATE = registerItem("deathworm_red_chestplate", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> DEATHWORM_RED_LEGGINGS = registerItem("deathworm_red_leggings", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> DEATHWORM_RED_BOOTS = registerItem("deathworm_red_boots", () -> new ItemDeathwormArmor(DEATHWORM_2_ARMOR_MATERIAL, ArmorType.BOOTS));
     public static final ItemEntry<Item> DEATHWORM_EGG = registerItem("deathworm_egg", () -> new ItemDeathwormEgg(false));
     public static final ItemEntry<Item> DEATHWORM_EGG_GIGANTIC = registerItem("deathworm_egg_giant", () -> new ItemDeathwormEgg(true));
     public static final ItemEntry<Item> DEATHWORM_TOUNGE = registerItem("deathworm_tounge", () -> new ItemGeneric(1));
@@ -259,14 +260,14 @@ public class IafItemRegistry {
     public static final ItemEntry<Item> MYRMEX_JUNGLE_HOE = registerItem("myrmex_jungle_hoe", () -> new ItemModHoe(MYRMEX_CHITIN_TOOL_MATERIAL));
     public static final ItemEntry<Item> MYRMEX_DESERT_STAFF = registerItem("myrmex_desert_staff", () -> new ItemMyrmexStaff(false));
     public static final ItemEntry<Item> MYRMEX_JUNGLE_STAFF = registerItem("myrmex_jungle_staff", () -> new ItemMyrmexStaff(true));
-    public static final ItemEntry<Item> MYRMEX_DESERT_HELMET = registerItem("myrmex_desert_helmet", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> MYRMEX_DESERT_CHESTPLATE = registerItem("myrmex_desert_chestplate", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> MYRMEX_DESERT_LEGGINGS = registerItem("myrmex_desert_leggings", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> MYRMEX_DESERT_BOOTS = registerItem("myrmex_desert_boots", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
-    public static final ItemEntry<Item> MYRMEX_JUNGLE_HELMET = registerItem("myrmex_jungle_helmet", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> MYRMEX_JUNGLE_CHESTPLATE = registerItem("myrmex_jungle_chestplate", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> MYRMEX_JUNGLE_LEGGINGS = registerItem("myrmex_jungle_leggings", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> MYRMEX_JUNGLE_BOOTS = registerItem("myrmex_jungle_boots", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> MYRMEX_DESERT_HELMET = registerItem("myrmex_desert_helmet", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> MYRMEX_DESERT_CHESTPLATE = registerItem("myrmex_desert_chestplate", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> MYRMEX_DESERT_LEGGINGS = registerItem("myrmex_desert_leggings", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> MYRMEX_DESERT_BOOTS = registerItem("myrmex_desert_boots", () -> new ItemModArmor(MYRMEX_DESERT_ARMOR_MATERIAL, ArmorType.BOOTS));
+    public static final ItemEntry<Item> MYRMEX_JUNGLE_HELMET = registerItem("myrmex_jungle_helmet", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorType.HELMET));
+    public static final ItemEntry<Item> MYRMEX_JUNGLE_CHESTPLATE = registerItem("myrmex_jungle_chestplate", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> MYRMEX_JUNGLE_LEGGINGS = registerItem("myrmex_jungle_leggings", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> MYRMEX_JUNGLE_BOOTS = registerItem("myrmex_jungle_boots", () -> new ItemModArmor(MYRMEX_JUNGLE_ARMOR_MATERIAL, ArmorType.BOOTS));
     public static final ItemEntry<Item> MYRMEX_DESERT_SWARM = registerItem("myrmex_desert_swarm", () -> new ItemMyrmexSwarm(false));
     public static final ItemEntry<Item> MYRMEX_JUNGLE_SWARM = registerItem("myrmex_jungle_swarm", () -> new ItemMyrmexSwarm(true));
     public static final ItemEntry<Item> AMPHITHERE_FEATHER = registerItem("amphithere_feather", ItemGeneric::new);
@@ -284,20 +285,20 @@ public class IafItemRegistry {
     public static final ItemEntry<Item> DRAGONSTEEL_FIRE_AXE = registerItem("dragonsteel_fire_axe", () -> new ItemModAxe(DRAGONSTEEL_TIER_FIRE));
     public static final ItemEntry<Item> DRAGONSTEEL_FIRE_SHOVEL = registerItem("dragonsteel_fire_shovel", () -> new ItemModShovel(DRAGONSTEEL_TIER_FIRE));
     public static final ItemEntry<Item> DRAGONSTEEL_FIRE_HOE = registerItem("dragonsteel_fire_hoe", () -> new ItemModHoe(DRAGONSTEEL_TIER_FIRE));
-    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_HELMET = registerItem("dragonsteel_fire_helmet", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 0, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_CHESTPLATE = registerItem("dragonsteel_fire_chestplate", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 1, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_LEGGINGS = registerItem("dragonsteel_fire_leggings", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 2, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_BOOTS = registerItem("dragonsteel_fire_boots", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 3, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_HELMET = registerItem("dragonsteel_fire_helmet", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 0, ArmorType.HELMET));
+    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_CHESTPLATE = registerItem("dragonsteel_fire_chestplate", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 1, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_LEGGINGS = registerItem("dragonsteel_fire_leggings", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 2, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> DRAGONSTEEL_FIRE_BOOTS = registerItem("dragonsteel_fire_boots", () -> new ItemDragonsteelArmor(DRAGONSTEEL_FIRE_ARMOR_MATERIAL, 3, ArmorType.BOOTS));
     public static final ItemEntry<Item> DRAGONSTEEL_ICE_INGOT = registerItem("dragonsteel_ice_ingot", ItemGeneric::new);
     public static final ItemEntry<Item> DRAGONSTEEL_ICE_SWORD = registerItem("dragonsteel_ice_sword", () -> new ItemModSword(DRAGONSTEEL_TIER_ICE));
     public static final ItemEntry<Item> DRAGONSTEEL_ICE_PICKAXE = registerItem("dragonsteel_ice_pickaxe", () -> new ItemModPickaxe(DRAGONSTEEL_TIER_ICE));
     public static final ItemEntry<Item> DRAGONSTEEL_ICE_AXE = registerItem("dragonsteel_ice_axe", () -> new ItemModAxe(DRAGONSTEEL_TIER_ICE));
     public static final ItemEntry<Item> DRAGONSTEEL_ICE_SHOVEL = registerItem("dragonsteel_ice_shovel", () -> new ItemModShovel(DRAGONSTEEL_TIER_ICE));
     public static final ItemEntry<Item> DRAGONSTEEL_ICE_HOE = registerItem("dragonsteel_ice_hoe", () -> new ItemModHoe(DRAGONSTEEL_TIER_ICE));
-    public static final ItemEntry<Item> DRAGONSTEEL_ICE_HELMET = registerItem("dragonsteel_ice_helmet", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 0, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> DRAGONSTEEL_ICE_CHESTPLATE = registerItem("dragonsteel_ice_chestplate", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 1, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> DRAGONSTEEL_ICE_LEGGINGS = registerItem("dragonsteel_ice_leggings", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 2, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> DRAGONSTEEL_ICE_BOOTS = registerItem("dragonsteel_ice_boots", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 3, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> DRAGONSTEEL_ICE_HELMET = registerItem("dragonsteel_ice_helmet", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 0, ArmorType.HELMET));
+    public static final ItemEntry<Item> DRAGONSTEEL_ICE_CHESTPLATE = registerItem("dragonsteel_ice_chestplate", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 1, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> DRAGONSTEEL_ICE_LEGGINGS = registerItem("dragonsteel_ice_leggings", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 2, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> DRAGONSTEEL_ICE_BOOTS = registerItem("dragonsteel_ice_boots", () -> new ItemDragonsteelArmor(DRAGONSTEEL_ICE_ARMOR_MATERIAL, 3, ArmorType.BOOTS));
 
     public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_INGOT = registerItem("dragonsteel_lightning_ingot", ItemGeneric::new);
     public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_SWORD = registerItem("dragonsteel_lightning_sword", () -> new ItemModSword(DRAGONSTEEL_TIER_LIGHTNING));
@@ -305,10 +306,10 @@ public class IafItemRegistry {
     public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_AXE = registerItem("dragonsteel_lightning_axe", () -> new ItemModAxe(DRAGONSTEEL_TIER_LIGHTNING));
     public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_SHOVEL = registerItem("dragonsteel_lightning_shovel", () -> new ItemModShovel(DRAGONSTEEL_TIER_LIGHTNING));
     public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_HOE = registerItem("dragonsteel_lightning_hoe", () -> new ItemModHoe(DRAGONSTEEL_TIER_LIGHTNING));
-    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_HELMET = registerItem("dragonsteel_lightning_helmet", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 0, ArmorItem.Type.HELMET));
-    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_CHESTPLATE = registerItem("dragonsteel_lightning_chestplate", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 1, ArmorItem.Type.CHESTPLATE));
-    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_LEGGINGS = registerItem("dragonsteel_lightning_leggings", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 2, ArmorItem.Type.LEGGINGS));
-    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_BOOTS = registerItem("dragonsteel_lightning_boots", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 3, ArmorItem.Type.BOOTS));
+    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_HELMET = registerItem("dragonsteel_lightning_helmet", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 0, ArmorType.HELMET));
+    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_CHESTPLATE = registerItem("dragonsteel_lightning_chestplate", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 1, ArmorType.CHESTPLATE));
+    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_LEGGINGS = registerItem("dragonsteel_lightning_leggings", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 2, ArmorType.LEGGINGS));
+    public static final ItemEntry<Item> DRAGONSTEEL_LIGHTNING_BOOTS = registerItem("dragonsteel_lightning_boots", () -> new ItemDragonsteelArmor(DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL, 3, ArmorType.BOOTS));
 
 
     public static final ItemEntry<Item> WEEZER_BLUE_ALBUM = registerItem("weezer_blue_album", () -> new ItemGeneric(1, true));
@@ -328,25 +329,25 @@ public class IafItemRegistry {
     public static final ItemEntry<Item> GHOST_INGOT = registerItem("ghost_ingot", () -> new ItemGeneric(1));
     public static final ItemEntry<Item> GHOST_SWORD = registerItem("ghost_sword", () -> new ItemGhostSword());
 
-    public static final ItemEntry<BannerPatternItem> PATTERN_FIRE = registerItem("banner_pattern_fire", () -> new BannerPatternItem(BannerPatternTagGenerator.FIRE_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_ICE = registerItem("banner_pattern_ice", () -> new BannerPatternItem(BannerPatternTagGenerator.ICE_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_LIGHTNING = registerItem("banner_pattern_lightning", () -> new BannerPatternItem(BannerPatternTagGenerator.LIGHTNING_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_FIRE_HEAD = registerItem("banner_pattern_fire_head", () -> new BannerPatternItem(BannerPatternTagGenerator.FIRE_HEAD_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_ICE_HEAD = registerItem("banner_pattern_ice_head", () -> new BannerPatternItem(BannerPatternTagGenerator.ICE_HEAD_BANNER_PATTERN , unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_LIGHTNING_HEAD = registerItem("banner_pattern_lightning_head", () -> new BannerPatternItem(BannerPatternTagGenerator.LIGHTNING_HEAD_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_AMPHITHERE = registerItem("banner_pattern_amphithere", () -> new BannerPatternItem(BannerPatternTagGenerator.AMPHITHERE_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_BIRD = registerItem("banner_pattern_bird", () -> new BannerPatternItem(BannerPatternTagGenerator.BIRD_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_EYE = registerItem("banner_pattern_eye", () -> new BannerPatternItem(BannerPatternTagGenerator.EYE_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_FAE = registerItem("banner_pattern_fae", () -> new BannerPatternItem(BannerPatternTagGenerator.FAE_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_FEATHER = registerItem("banner_pattern_feather", () -> new BannerPatternItem(BannerPatternTagGenerator.FEATHER_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_GORGON = registerItem("banner_pattern_gorgon", () -> new BannerPatternItem(BannerPatternTagGenerator.GORGON_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_HIPPOCAMPUS = registerItem("banner_pattern_hippocampus", () -> new BannerPatternItem(BannerPatternTagGenerator.HIPPOCAMPUS_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_HIPPOGRYPH_HEAD = registerItem("banner_pattern_hippogryph_head", () -> new BannerPatternItem(BannerPatternTagGenerator.HIPPOGRYPH_HEAD_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_MERMAID = registerItem("banner_pattern_mermaid", () -> new BannerPatternItem(BannerPatternTagGenerator.MERMAID_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_SEA_SERPENT = registerItem("banner_pattern_sea_serpent", () -> new BannerPatternItem(BannerPatternTagGenerator.SEA_SERPENT_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_TROLL = registerItem("banner_pattern_troll", () -> new BannerPatternItem(BannerPatternTagGenerator.TROLL_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_WEEZER = registerItem("banner_pattern_weezer", () -> new BannerPatternItem(BannerPatternTagGenerator.WEEZER_BANNER_PATTERN, unstackable()));
-    public static final ItemEntry<BannerPatternItem> PATTERN_DREAD = registerItem("banner_pattern_dread", () -> new BannerPatternItem(BannerPatternTagGenerator.DREAD_BANNER_PATTERN, unstackable()));
+    public static final ItemEntry<Item> PATTERN_FIRE = registerItem("banner_pattern_fire", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.FIRE_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_ICE = registerItem("banner_pattern_ice", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.ICE_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_LIGHTNING = registerItem("banner_pattern_lightning", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.LIGHTNING_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_FIRE_HEAD = registerItem("banner_pattern_fire_head", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.FIRE_HEAD_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_ICE_HEAD = registerItem("banner_pattern_ice_head", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.ICE_HEAD_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_LIGHTNING_HEAD = registerItem("banner_pattern_lightning_head", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.LIGHTNING_HEAD_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_AMPHITHERE = registerItem("banner_pattern_amphithere", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.AMPHITHERE_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_BIRD = registerItem("banner_pattern_bird", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.BIRD_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_EYE = registerItem("banner_pattern_eye", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.EYE_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_FAE = registerItem("banner_pattern_fae", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.FAE_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_FEATHER = registerItem("banner_pattern_feather", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.FEATHER_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_GORGON = registerItem("banner_pattern_gorgon", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.GORGON_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_HIPPOCAMPUS = registerItem("banner_pattern_hippocampus", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.HIPPOCAMPUS_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_HIPPOGRYPH_HEAD = registerItem("banner_pattern_hippogryph_head", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.HIPPOGRYPH_HEAD_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_MERMAID = registerItem("banner_pattern_mermaid", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.MERMAID_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_SEA_SERPENT = registerItem("banner_pattern_sea_serpent", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.SEA_SERPENT_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_TROLL = registerItem("banner_pattern_troll", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.TROLL_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_WEEZER = registerItem("banner_pattern_weezer", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.WEEZER_BANNER_PATTERN)));
+    public static final ItemEntry<Item> PATTERN_DREAD = registerItem("banner_pattern_dread", () -> new Item(unstackable().component(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, BannerPatternTagGenerator.DREAD_BANNER_PATTERN)));
 
     static {
         EnumDragonArmor.initArmors();
@@ -356,7 +357,7 @@ public class IafItemRegistry {
     }
 
     public static Item.Properties defaultBuilder() {
-        return new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/;
+        return dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/;
     }
 
     public static Item.Properties unstackable() {
@@ -367,35 +368,35 @@ public class IafItemRegistry {
     public static void registerSpawnEggs() {
         //spawn Eggs
         //@formatter:off
-        registerItem("spawn_egg_fire_dragon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.FIRE_DRAGON, 0X340000, 0XA52929, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_ice_dragon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.ICE_DRAGON, 0XB5DDFB, 0X7EBAF0, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_lightning_dragon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.LIGHTNING_DRAGON, 0X422367, 0X725691, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_hippogryph", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.HIPPOGRYPH, 0XD8D8D8, 0XD1B55D, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_gorgon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.GORGON, 0XD0D99F, 0X684530, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_pixie", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.PIXIE, 0XFF7F89, 0XE2CCE2, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_cyclops", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.CYCLOPS, 0XB0826E, 0X3A1F0F, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_siren", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.SIREN, 0X8EE6CA, 0XF2DFC8, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_hippocampus", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.HIPPOCAMPUS, 0X4491C7, 0X4FC56B, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_death_worm", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DEATH_WORM, 0XD1CDA3, 0X423A3A, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_cockatrice", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.COCKATRICE, 0X8F5005, 0X4F5A23, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_stymphalian_bird", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.STYMPHALIAN_BIRD, 0X744F37, 0X9E6C4B, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_troll", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.TROLL, 0X3D413D, 0X58433A, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_myrmex_worker", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_WORKER, 0XA16026, 0X594520, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_myrmex_soldier", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_SOLDIER, 0XA16026, 0X7D622D, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_myrmex_sentinel", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_SENTINEL, 0XA16026, 0XA27F3A, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_myrmex_royal", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_ROYAL, 0XA16026, 0XC79B48, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_myrmex_queen", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_QUEEN, 0XA16026, 0XECB855, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_amphithere", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.AMPHITHERE, 0X597535, 0X00AA98, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_sea_serpent", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.SEA_SERPENT, 0X008299, 0XC5E6E7, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_dread_thrall", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_THRALL, 0XE0E6E6, 0X00FFFF, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_dread_ghoul", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_GHOUL, 0XE0E6E6, 0X7B838A, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_dread_beast", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_BEAST, 0XE0E6E6, 0X38373C, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_dread_scuttler", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_SCUTTLER, 0XE0E6E6, 0X4D5667, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_lich", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_LICH, 0XE0E6E6, 0X274860, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_dread_knight", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_KNIGHT, 0XE0E6E6, 0X4A6C6E, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_dread_horse", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_HORSE, 0XE0E6E6, 0XACACAC, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_hydra", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.HYDRA, 0X8B8B78, 0X2E372B, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
-        registerItem("spawn_egg_ghost", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.GHOST, 0XB9EDB8, 0X73B276, new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_fire_dragon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.FIRE_DRAGON, 0X340000, 0XA52929, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_ice_dragon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.ICE_DRAGON, 0XB5DDFB, 0X7EBAF0, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_lightning_dragon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.LIGHTNING_DRAGON, 0X422367, 0X725691, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_hippogryph", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.HIPPOGRYPH, 0XD8D8D8, 0XD1B55D, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_gorgon", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.GORGON, 0XD0D99F, 0X684530, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_pixie", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.PIXIE, 0XFF7F89, 0XE2CCE2, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_cyclops", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.CYCLOPS, 0XB0826E, 0X3A1F0F, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_siren", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.SIREN, 0X8EE6CA, 0XF2DFC8, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_hippocampus", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.HIPPOCAMPUS, 0X4491C7, 0X4FC56B, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_death_worm", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DEATH_WORM, 0XD1CDA3, 0X423A3A, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_cockatrice", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.COCKATRICE, 0X8F5005, 0X4F5A23, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_stymphalian_bird", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.STYMPHALIAN_BIRD, 0X744F37, 0X9E6C4B, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_troll", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.TROLL, 0X3D413D, 0X58433A, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_myrmex_worker", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_WORKER, 0XA16026, 0X594520, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_myrmex_soldier", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_SOLDIER, 0XA16026, 0X7D622D, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_myrmex_sentinel", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_SENTINEL, 0XA16026, 0XA27F3A, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_myrmex_royal", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_ROYAL, 0XA16026, 0XC79B48, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_myrmex_queen", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.MYRMEX_QUEEN, 0XA16026, 0XECB855, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_amphithere", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.AMPHITHERE, 0X597535, 0X00AA98, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_sea_serpent", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.SEA_SERPENT, 0X008299, 0XC5E6E7, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_dread_thrall", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_THRALL, 0XE0E6E6, 0X00FFFF, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_dread_ghoul", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_GHOUL, 0XE0E6E6, 0X7B838A, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_dread_beast", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_BEAST, 0XE0E6E6, 0X38373C, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_dread_scuttler", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_SCUTTLER, 0XE0E6E6, 0X4D5667, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_lich", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_LICH, 0XE0E6E6, 0X274860, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_dread_knight", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_KNIGHT, 0XE0E6E6, 0X4A6C6E, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_dread_horse", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.DREAD_HORSE, 0XE0E6E6, 0XACACAC, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_hydra", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.HYDRA, 0X8B8B78, 0X2E372B, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
+        registerItem("spawn_egg_ghost", () -> dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.spawnEgg(IafEntityRegistry.GHOST, 0XB9EDB8, 0X73B276, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/));
     }
 
     public static <I extends Item> ItemEntry<I> registerItem(String name, Supplier<I> item) {
@@ -410,47 +411,8 @@ public class IafItemRegistry {
     }
 
 
-    /**
-     Set repair materials etc.
-     Due to the priority it should run after {@link Registrar#addEntries( RegisterEvent)}
-     (and therefor not cause issues when accessing the suppliers)
-    */
-    /** Called by the loader once the items are registered */
-    public static void setRepairMaterials() {
-
-        IafItemRegistry.BLINDFOLD_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(Tags.Items.STRINGS));
-        IafItemRegistry.SILVER_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemTags.INGOTS_SILVER));
-        IafItemRegistry.SILVER_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemTags.INGOTS_SILVER));
-        IafItemRegistry.DRAGONBONE_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGON_BONE.get()));
-        IafItemRegistry.FIRE_DRAGONBONE_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGON_BONE.get()));
-        IafItemRegistry.ICE_DRAGONBONE_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGON_BONE.get()));
-        IafItemRegistry.LIGHTNING_DRAGONBONE_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGON_BONE.get()));
-        for (EnumDragonArmor armor : EnumDragonArmor.values()) {
-            armor.armorMaterial.setRepairMaterial(Ingredient.of(EnumDragonArmor.getScaleItem(armor)));
-        }
-        IafItemRegistry.DRAGONSTEEL_FIRE_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGONSTEEL_FIRE_INGOT.get()));
-        IafItemRegistry.DRAGONSTEEL_ICE_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGONSTEEL_ICE_INGOT.get()));
-        IafItemRegistry.DRAGONSTEEL_LIGHTNING_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DRAGONSTEEL_LIGHTNING_INGOT.get()));
-        IafItemRegistry.SHEEP_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(Blocks.WHITE_WOOL));
-        IafItemRegistry.EARPLUGS_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(Blocks.OAK_BUTTON));
-        IafItemRegistry.DEATHWORM_0_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DEATH_WORM_CHITIN_YELLOW.get()));
-        IafItemRegistry.DEATHWORM_1_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DEATH_WORM_CHITIN_WHITE.get()));
-        IafItemRegistry.DEATHWORM_2_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DEATH_WORM_CHITIN_RED.get()));
-        IafItemRegistry.TROLL_WEAPON_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(Tags.Items.STONES));
-        IafItemRegistry.TROLL_MOUNTAIN_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(EnumTroll.MOUNTAIN.leather.get()));
-        IafItemRegistry.TROLL_FOREST_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(EnumTroll.FOREST.leather.get()));
-        IafItemRegistry.TROLL_FROST_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(EnumTroll.FROST.leather.get()));
-        IafItemRegistry.HIPPOGRYPH_SWORD_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.HIPPOGRYPH_TALON.get()));
-        IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.SHINY_SCALES.get()));
-        IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.AMPHITHERE_FEATHER.get()));
-        IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.STYMPHALIAN_BIRD_FEATHER.get()));
-        IafItemRegistry.MYRMEX_CHITIN_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.MYRMEX_DESERT_CHITIN.get()));
-        IafItemRegistry.MYRMEX_DESERT_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.MYRMEX_DESERT_CHITIN.get()));
-        IafItemRegistry.MYRMEX_JUNGLE_ARMOR_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.MYRMEX_JUNGLE_CHITIN.get()));
-        IafItemRegistry.DREAD_SWORD_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DREAD_SHARD.get()));
-        IafItemRegistry.DREAD_KNIGHT_TOOL_MATERIAL.setRepairMaterial(Ingredient.of(IafItemRegistry.DREAD_SHARD.get()));
-        for (EnumSeaSerpent serpent : EnumSeaSerpent.values()) {
-            serpent.armorMaterial.setRepairMaterial(Ingredient.of(serpent.scale.get()));
-        }
+    /** The tag of the items that repair a tool or armor material (data/iceandfire/tags/item/repairs/<name>.json) */
+    public static TagKey<Item> repairs(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "repairs/" + name));
     }
 }

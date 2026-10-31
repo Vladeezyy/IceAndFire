@@ -4,16 +4,16 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
 import com.github.alexthe666.iceandfire.inventory.HippocampusContainerMenu;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 
 public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainerMenu> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/hippogryph.png");
+    private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/gui/hippogryph.png");
     private float mousePosx;
     private float mousePosY;
 
@@ -22,7 +22,7 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
     }
 
     @Override
-    protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
         int k = 0;
         int l = 0;
         Entity entity = IceAndFire.PROXY.getReferencedMob();
@@ -35,7 +35,7 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor pGuiGraphics,  int mouseX, int mouseY, float partialTicks) {
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
         super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
@@ -43,7 +43,7 @@ public class GuiHippocampus extends AbstractContainerScreen<HippocampusContainer
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight);

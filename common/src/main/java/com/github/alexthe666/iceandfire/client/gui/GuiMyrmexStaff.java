@@ -11,21 +11,21 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class GuiMyrmexStaff extends Screen {
-    private static final ResourceLocation JUNGLE_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/myrmex_staff_jungle.png");
-    private static final ResourceLocation DESERT_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/myrmex_staff_desert.png");
+    private static final Identifier JUNGLE_TEXTURE = Identifier.parse("iceandfire:textures/gui/myrmex_staff_jungle.png");
+    private static final Identifier DESERT_TEXTURE = Identifier.parse("iceandfire:textures/gui/myrmex_staff_desert.png");
     private static final WorldGenMyrmexHive.RoomType[] ROOMS = {WorldGenMyrmexHive.RoomType.FOOD, WorldGenMyrmexHive.RoomType.NURSERY, WorldGenMyrmexHive.RoomType.EMPTY};
     private static final int ROOMS_PER_PAGE = 5;
     private final List<Room> allRoomPos = Lists.newArrayList();
@@ -118,7 +118,7 @@ public class GuiMyrmexStaff extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+    public void renderBackground(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         super.renderBackground(ms, mouseX, mouseY, partialTicks);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - 248) / 2;
@@ -127,7 +127,7 @@ public class GuiMyrmexStaff extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(ms, mouseX, mouseY, partialTicks);
         init();
         int i = (this.width - 248) / 2 + 10;
@@ -185,7 +185,7 @@ public class GuiMyrmexStaff extends Screen {
     }
 
 
-    private void drawRoomInfo(GuiGraphics ms, String type, BlockPos pos, int i, int j, int color) {
+    private void drawRoomInfo(GuiGraphicsExtractor ms, String type, BlockPos pos, int i, int j, int color) {
         String translate = "myrmex.message.room." + type;
         this.minecraft.font.drawInBatch(I18n.get(translate, pos.getX(), pos.getY(), pos.getZ()), i, j + 36 + hiveCount * 22, color, false, ms.pose().last().pose(), ms.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
         hiveCount++;

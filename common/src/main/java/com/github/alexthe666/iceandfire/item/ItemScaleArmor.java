@@ -1,7 +1,9 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.resources.Identifier;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelFireDragonScaleArmor;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelIceDragonScaleArmor;
 import com.github.alexthe666.iceandfire.client.model.armor.ModelLightningDragonScaleArmor;
@@ -14,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,13 +26,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonItem, IafArmorTextureItem {
+public class ItemScaleArmor extends IafArmorItem implements IProtectAgainstDragonItem, IafArmorTextureItem {
 
     public EnumDragonArmor armor_type;
     public EnumDragonEgg eggType;
 
-    public ItemScaleArmor(EnumDragonEgg eggType, EnumDragonArmor armorType, IafArmorMaterial material, ArmorItem.Type slot) {
-        super(material.holder(), slot, new Item.Properties().durability(material.getDurabilityForType(slot))/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemScaleArmor(EnumDragonEgg eggType, EnumDragonArmor armorType, IafArmorMaterial material, ArmorType slot) {
+        super(material, slot);
         this.armor_type = armorType;
         this.eggType = eggType;
     }
@@ -53,14 +54,14 @@ public class ItemScaleArmor extends ArmorItem implements IProtectAgainstDragonIt
 
 
     @Override
-    public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
-        return ResourceLocation.parse("iceandfire:textures/models/armor/" + armor_type.name() + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
+    public Identifier getArmorTexture(ItemStack stack, EquipmentSlot slot) {
+        return Identifier.parse("iceandfire:textures/models/armor/" + armor_type.name() + (slot == EquipmentSlot.LEGS ? "_legs.png" : ".png"));
     }
 
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("dragon." + eggType.toString().toLowerCase()).withStyle(eggType.color));
-        tooltip.add(Component.translatable("item.dragonscales_armor.desc").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("dragon." + eggType.toString().toLowerCase()).withStyle(eggType.color));
+        tooltip.accept(Component.translatable("item.dragonscales_armor.desc").withStyle(ChatFormatting.GRAY));
     }
 }

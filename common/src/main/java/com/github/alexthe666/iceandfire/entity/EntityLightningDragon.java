@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
@@ -18,7 +19,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -43,9 +44,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class EntityLightningDragon extends EntityDragonBase {
-    public static final ResourceKey<LootTable> FEMALE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/dragon/lightning_dragon_female"));
-    public static final ResourceKey<LootTable> MALE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/dragon/lightning_dragon_male"));
-    public static final ResourceKey<LootTable> SKELETON_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/dragon/lightning_dragon_skeleton"));
+    public static final ResourceKey<LootTable> FEMALE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/dragon/lightning_dragon_female"));
+    public static final ResourceKey<LootTable> MALE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/dragon/lightning_dragon_male"));
+    public static final ResourceKey<LootTable> SKELETON_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/dragon/lightning_dragon_skeleton"));
     private static final EntityDataAccessor<Boolean> HAS_LIGHTNING_TARGET = SynchedEntityData.defineId(EntityLightningDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> LIGHTNING_TARGET_X = SynchedEntityData.defineId(EntityLightningDragon.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LIGHTNING_TARGET_Y = SynchedEntityData.defineId(EntityLightningDragon.class, EntityDataSerializers.FLOAT);
@@ -98,7 +99,7 @@ public class EntityLightningDragon extends EntityDragonBase {
 
     @Override
     public boolean isTimeToWake() {
-        return !this.level().isDay() || this.getCommand() == 2;
+        return !this.level().isBrightOutside() || this.getCommand() == 2;
     }
 
     @Override
@@ -121,13 +122,13 @@ public class EntityLightningDragon extends EntityDragonBase {
         }
     }
     @Override
-    public boolean isInvulnerableTo(DamageSource i) {
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource i) {
         if (i.getMsgId().equals(this.level().damageSources().lightningBolt().getMsgId())) {
             this.heal(15F);
             this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20, 1));
             return true;
         }
-        return super.isInvulnerableTo(i);
+        return super.isInvulnerableTo(level, i);
     }
     @Override
     public Item getVariantScale(int variant) {
@@ -194,7 +195,7 @@ public class EntityLightningDragon extends EntityDragonBase {
     }*/
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         this.getLookControl().setLookAt(entityIn, 30.0F, 30.0F);
         if (!this.isPlayingAttackAnimation()) {
             switch (groundAttack) {
@@ -229,9 +230,9 @@ public class EntityLightningDragon extends EntityDragonBase {
     public void aiStep() {
         super.aiStep();
         LivingEntity attackTarget = this.getTarget();
-        if (!level().isClientSide && attackTarget != null) {
+        if (!level().isClientSide() && attackTarget != null) {
             if (this.getBoundingBox().inflate(2.5F + this.getRenderSize() * 0.33F, 2.5F + this.getRenderSize() * 0.33F, 2.5F + this.getRenderSize() * 0.33F).intersects(attackTarget.getBoundingBox())) {
-                doHurtTarget(attackTarget);
+                doHurtTarget((net.minecraft.server.level.ServerLevel) this.level(), attackTarget);
             }
             if (this.groundAttack == IafDragonAttacks.Ground.FIRE && (usingGroundAttack || this.onGround())) {
                 shootFireAtMob(attackTarget);
@@ -242,7 +243,7 @@ public class EntityLightningDragon extends EntityDragonBase {
                 double difZ = attackTarget.getZ() - this.getZ();
                 this.setDeltaMovement(this.getDeltaMovement().add(difX * 0.1D, difY * 0.1D, difZ * 0.1D));
                 if (this.getBoundingBox().inflate(1 + this.getRenderSize() * 0.5F, 1 + this.getRenderSize() * 0.5F, 1 + this.getRenderSize() * 0.5F).intersects(attackTarget.getBoundingBox())) {
-                    doHurtTarget(attackTarget);
+                    doHurtTarget((net.minecraft.server.level.ServerLevel) this.level(), attackTarget);
                     usingGroundAttack = true;
                     randomizeAttacks();
                     setFlying(false);
@@ -290,7 +291,7 @@ public class EntityLightningDragon extends EntityDragonBase {
                 EntityDragonLightningCharge entitylargefireball = new EntityDragonLightningCharge(
                     IafEntityRegistry.LIGHTNING_DRAGON_CHARGE.get(), level(), this, d2, d3, d4);
                 entitylargefireball.setPos(headVec.x, headVec.y, headVec.z);
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     level().addFreshEntity(entitylargefireball);
                 }
             }
@@ -356,7 +357,7 @@ public class EntityLightningDragon extends EntityDragonBase {
                         IafEntityRegistry.LIGHTNING_DRAGON_CHARGE.get(), level(), this, d2, d3, d4);
                     float size = this.isBaby() ? 0.4F : this.shouldDropLoot() ? 1.3F : 0.8F;
                     entitylargefireball.setPos(headVec.x, headVec.y, headVec.z);
-                    if (!level().isClientSide) {
+                    if (!level().isClientSide()) {
                         level().addFreshEntity(entitylargefireball);
                     }
                     if (!entity.isAlive() || entity == null) {
@@ -388,19 +389,19 @@ public class EntityLightningDragon extends EntityDragonBase {
     @Override
     public void stimulateFire(double burnX, double burnY, double burnZ, int syncType) {
         if (dev.vladeezyy.iceandfire.bus.IafBus.post(new DragonFireEvent(this, burnX, burnY, burnZ))) return;
-        if (syncType == 1 && !level().isClientSide) {
+        if (syncType == 1 && !level().isClientSide()) {
             //sync with client
             IceAndFire.sendMSGToTracking(this, new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
         }
-        if (syncType == 2 && level().isClientSide) {
+        if (syncType == 2 && level().isClientSide()) {
             //sync with server
             IceAndFire.sendMSGToServer(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
         }
-        if (syncType == 3 && !level().isClientSide) {
+        if (syncType == 3 && !level().isClientSide()) {
             //sync with client, fire bomb
             IceAndFire.sendMSGToTracking(this, new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 5));
         }
-        if (syncType == 4 && level().isClientSide) {
+        if (syncType == 4 && level().isClientSide()) {
             //sync with server, fire bomb
             IceAndFire.sendMSGToServer(new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 5));
         }
@@ -422,7 +423,7 @@ public class EntityLightningDragon extends EntityDragonBase {
                     IafEntityRegistry.LIGHTNING_DRAGON_CHARGE.get(), level(), this, d2, d3, d4);
                 float size = this.isBaby() ? 0.4F : this.shouldDropLoot() ? 1.3F : 0.8F;
                 entitylargefireball.setPos(headVec.x, headVec.y, headVec.z);
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     level().addFreshEntity(entitylargefireball);
                 }
             }
@@ -447,7 +448,7 @@ public class EntityLightningDragon extends EntityDragonBase {
                 setHasLightningTarget(true);
                 setLightningTargetVec((float)burnX, (float)burnY, (float)burnZ);
             } else {
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     HitResult result = this.level().clip(new ClipContext(
                         new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()),
                         new Vec3(progressX, progressY, progressZ), ClipContext.Block.COLLIDER,
@@ -466,7 +467,7 @@ public class EntityLightningDragon extends EntityDragonBase {
             double spawnZ = burnZ + (random.nextFloat() * 3.0) - 1.5;
             setHasLightningTarget(true);
             setLightningTargetVec((float) spawnX, (float) spawnY, (float) spawnZ);
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 IafDragonDestructionManager.destroyAreaBreath(level(), BlockPos.containing(spawnX, spawnY, spawnZ), this);
             }
         }
@@ -508,7 +509,7 @@ public class EntityLightningDragon extends EntityDragonBase {
             double d2 = this.random.nextGaussian() * 0.02D;
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
-            if (level().isClientSide) {
+            if (level().isClientSide()) {
                 this.level().addParticle(ParticleTypes.RAIN,
                     this.getX() + this.random.nextFloat() * this.getBbWidth() * 2.0F - this.getBbWidth(),
                     this.getY() + this.random.nextFloat() * this.getBbHeight(),

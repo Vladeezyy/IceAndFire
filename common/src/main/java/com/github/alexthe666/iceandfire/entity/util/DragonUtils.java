@@ -9,7 +9,7 @@ import com.github.alexthe666.iceandfire.entity.*;
 import com.github.alexthe666.iceandfire.misc.IafTagRegistry;
 import com.google.common.base.Predicate;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -18,8 +18,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
-import net.minecraft.world.entity.animal.AbstractGolem;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.animal.golem.AbstractGolem;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -303,12 +303,12 @@ public class DragonUtils {
         return false;
     }
 
-    public static boolean isDragonTargetable(Entity entity, ResourceLocation tag) {
+    public static boolean isDragonTargetable(Entity entity, Identifier tag) {
         return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, tag));
     }
 
     public static String getDimensionName(Level world) {
-        return world.dimension().location().toString();
+        return world.dimension().identifier().toString();
     }
 
     public static boolean isInHomeDimension(EntityDragonBase dragonBase) {
@@ -327,7 +327,7 @@ public class DragonUtils {
 
     public static boolean hasSameOwner(TamableAnimal cockatrice, Entity entity) {
         if (entity instanceof TamableAnimal tameable) {
-            return tameable.getOwnerUUID() != null && cockatrice.getOwnerUUID() != null && tameable.getOwnerUUID().equals(cockatrice.getOwnerUUID());
+            return Owners.uuid(tameable) != null && Owners.uuid(cockatrice) != null && Owners.uuid(tameable).equals(Owners.uuid(cockatrice));
         }
         return false;
     }

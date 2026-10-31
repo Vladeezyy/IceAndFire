@@ -5,18 +5,18 @@ import com.github.alexthe666.iceandfire.entity.EntityHippogryph;
 import com.github.alexthe666.iceandfire.inventory.ContainerHippogryph;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 
 //TODO: We do the same thing here as we do for the other GUI entity screens, that's dumb
 public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/hippogryph.png");
+    private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/gui/hippogryph.png");
     private float mousePosx;
     private float mousePosY;
 
@@ -25,7 +25,7 @@ public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> 
     }
 
     @Override
-    protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY) {
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         Font font = this.minecraft.font;
         if (entity instanceof EntityHippogryph) {
@@ -36,7 +36,7 @@ public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> 
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.mousePosx = mouseX;
         this.mousePosY = mouseY;
         super.render(pGuiGraphics, mouseX, mouseY, partialTicks);
@@ -44,7 +44,7 @@ public class GuiHippogryph extends AbstractContainerScreen<ContainerHippogryph> 
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor pGuiGraphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - this.imageWidth) / 2;

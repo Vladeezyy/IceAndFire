@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
 import dev.vladeezyy.rampart.client.model.TabulaModel;
@@ -15,7 +15,7 @@ import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HorseModel;
+import net.minecraft.client.model.animal.equine.HorseModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.QuadrupedModel;
 import net.minecraft.client.renderer.MultiBufferSource;

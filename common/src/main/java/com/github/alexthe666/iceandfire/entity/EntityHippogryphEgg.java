@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownEgg;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEgg;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -59,15 +59,15 @@ public class EntityHippogryphEgg extends ThrownEgg {
             ((EntityHitResult) result).getEntity().hurt(level().damageSources().thrown(this, thrower), 0.0F);
         }
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             EntityHippogryph hippogryph = new EntityHippogryph(IafEntityRegistry.HIPPOGRYPH.get(), this.level());
             hippogryph.setAge(-24000);
-            hippogryph.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+            hippogryph.snapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
             if (itemstack != null) {
                 int variant = 0;
                 CompoundTag tag = ItemNbt.getTag(itemstack);
                 if (tag != null) {
-                    variant = tag.getInt("EggOrdinal");
+                    variant = tag.getIntOr("EggOrdinal", 0);
                 }
                 hippogryph.setVariant(variant);
             }

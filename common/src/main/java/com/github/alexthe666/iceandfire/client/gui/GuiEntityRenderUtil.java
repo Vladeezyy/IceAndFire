@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
@@ -15,7 +15,7 @@ public final class GuiEntityRenderUtil {
     private GuiEntityRenderUtil() {
     }
 
-    public static void renderEntityFollowsMouse(GuiGraphics guiGraphics, int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity) {
+    public static void renderEntityFollowsMouse(GuiGraphicsExtractor guiGraphics, int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity) {
         float f = (float) Math.atan(mouseX / 40.0F);
         float f1 = (float) Math.atan(mouseY / 40.0F);
         Quaternionf quaternionf = new Quaternionf().rotateZ((float) Math.PI);

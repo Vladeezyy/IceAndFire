@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -70,7 +70,7 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile {
             ((EntityHitResult) result).getEntity().hurt(level().damageSources().thrown(this, thrower), 0.0F);
         }
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             float wormSize = 0.25F + (float) (Math.random() * 0.35F);
 
             EntityDeathWorm deathworm = new EntityDeathWorm(IafEntityRegistry.DEATH_WORM.get(), this.level());
@@ -79,7 +79,7 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile {
             deathworm.setWormHome(blockPosition());
             deathworm.setWormAge(1);
             deathworm.setDeathWormScale(isGiant() ? (wormSize * 4) : wormSize);
-            deathworm.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+            deathworm.snapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
             if (thrower instanceof Player) {
                 deathworm.setOwnerUUID(thrower.getUUID());
             }

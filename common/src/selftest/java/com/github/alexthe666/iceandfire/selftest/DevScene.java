@@ -15,7 +15,7 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,10 +24,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.WorldDataConfiguration;
@@ -160,7 +160,7 @@ public final class DevScene {
     private static void addCloseUps() {
         int t0 = 800;
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+            Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
             if (id.getNamespace().equals(IceAndFire.MODID) && MOBS.contains(id.getPath())) {
                 CREATURES.add(type);
             }
@@ -378,7 +378,7 @@ public final class DevScene {
         Entity entity = type.create(level);
         entity.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, yaw, 0);
         if (entity instanceof Mob mob) {
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null);
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
             mob.setNoAi(true);
             mob.setPersistenceRequired();
             mob.setYHeadRot(yaw);
@@ -412,7 +412,7 @@ public final class DevScene {
         int count = 0;
         List<String> skipped = new ArrayList<>();
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+            Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
             if (!id.getNamespace().equals(IceAndFire.MODID) || id.getPath().contains("dragon") || id.getPath().contains("multipart")) {
                 continue;
             }

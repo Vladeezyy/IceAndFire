@@ -4,7 +4,7 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +30,6 @@ public final class IafBlockTags {
     public static TagKey<Block> DRAGON_BLOCK_BREAK_NO_DROPS = createKey("dragon_block_break_no_drops");
 
     private static TagKey<Block> createKey(final String name) {
-        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
+        return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 }

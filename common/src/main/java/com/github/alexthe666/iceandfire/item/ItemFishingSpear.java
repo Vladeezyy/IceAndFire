@@ -5,6 +5,6 @@ import net.minecraft.world.item.Item;
 public class ItemFishingSpear extends Item {
 
     public ItemFishingSpear() {
-        super(new Item.Properties().durability(64));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().durability(64));
     }
 }

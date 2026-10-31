@@ -4,7 +4,7 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -15,19 +15,19 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
-    private static final ResourceLocation STRUCTURE_0 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_0");
-    private static final ResourceLocation STRUCTURE_1 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_1");
-    private static final ResourceLocation STRUCTURE_2 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_2");
-    private static final ResourceLocation STRUCTURE_3 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_3");
-    private static final ResourceLocation STRUCTURE_4 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_4");
-    private static final ResourceLocation STRUCTURE_5 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_5");
-    private static final ResourceLocation STRUCTURE_6 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_6");
-    private static final ResourceLocation STRUCTURE_7 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_7");
-    private static final ResourceLocation STRUCTURE_8 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_8");
-    private static final ResourceLocation STRUCTURE_9 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_9");
-    private static final ResourceLocation STRUCTURE_10 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_10");
-    private static final ResourceLocation STRUCTURE_11 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_11");
-    private static final ResourceLocation STRUCTURE_12 = ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_12");
+    private static final Identifier STRUCTURE_0 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_0");
+    private static final Identifier STRUCTURE_1 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_1");
+    private static final Identifier STRUCTURE_2 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_2");
+    private static final Identifier STRUCTURE_3 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_3");
+    private static final Identifier STRUCTURE_4 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_4");
+    private static final Identifier STRUCTURE_5 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_5");
+    private static final Identifier STRUCTURE_6 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_6");
+    private static final Identifier STRUCTURE_7 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_7");
+    private static final Identifier STRUCTURE_8 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_8");
+    private static final Identifier STRUCTURE_9 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_9");
+    private static final Identifier STRUCTURE_10 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_10");
+    private static final Identifier STRUCTURE_11 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_11");
+    private static final Identifier STRUCTURE_12 = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dread_ruin_12");
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public WorldGenDreadRuin(Codec<NoneFeatureConfiguration> configFactoryIn) {
@@ -48,7 +48,7 @@ public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
     }
 
 
-    private ResourceLocation getRandomStructure(RandomSource rand) {
+    private Identifier getRandomStructure(RandomSource rand) {
         switch (rand.nextInt(11)) {
             case 0:
                 return STRUCTURE_0;
@@ -85,7 +85,7 @@ public class WorldGenDreadRuin extends Feature<NoneFeatureConfiguration> {
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();
-        ResourceLocation structure = getRandomStructure(rand);
+        Identifier structure = getRandomStructure(rand);
         Direction facing = HORIZONTALS[rand.nextInt(3)];
         MinecraftServer server = worldIn.getLevel().getServer();
         Biome biome = worldIn.getBiome(position).value();

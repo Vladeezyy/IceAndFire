@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.block;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.ChatFormatting;
@@ -34,7 +36,7 @@ public class BlockSeaSerpentScales extends Block {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("sea_serpent." + name).withStyle(color));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("sea_serpent." + name).withStyle(color));
     }
 }

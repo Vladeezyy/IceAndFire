@@ -128,7 +128,7 @@ public class MyrmexAIAttackMelee extends Goal {
             if (d0 <= d1 && this.attackTick <= 0) {
                 this.attackTick = 20;
                 this.myrmex.swing(InteractionHand.MAIN_HAND);
-                this.myrmex.doHurtTarget(entity);
+                this.myrmex.doHurtTarget((net.minecraft.server.level.ServerLevel) this.myrmex.level(), entity);
             }
         }
     }

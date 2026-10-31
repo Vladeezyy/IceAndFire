@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelGhost;
 import com.github.alexthe666.iceandfire.client.render.IafRenderType;
 import com.github.alexthe666.iceandfire.entity.EntityGhost;
@@ -8,12 +8,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -23,17 +23,17 @@ import org.joml.Matrix4f;
 
 public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
 
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/ghost/ghost_white.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/ghost/ghost_blue.png");
-    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/ghost/ghost_green.png");
-    public static final ResourceLocation TEXTURE_SHOPPING_LIST = ResourceLocation.parse("iceandfire:textures/models/ghost/haunted_shopping_list.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/ghost/ghost_white.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/ghost/ghost_blue.png");
+    public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/ghost/ghost_green.png");
+    public static final Identifier TEXTURE_SHOPPING_LIST = Identifier.parse("iceandfire:textures/models/ghost/haunted_shopping_list.png");
 
     public RenderGhost(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ModelGhost(0.0F), 0.55F);
 
     }
 
-    public static ResourceLocation getGhostOverlayForType(int ghost) {
+    public static Identifier getGhostOverlayForType(int ghost) {
         switch (ghost) {
             case 1:
                 return TEXTURE_1;
@@ -147,7 +147,7 @@ public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
                 matrixStackIn.popPose();
 
             } else {
-                this.model.renderToBuffer(matrixStackIn, ivertexbuilder, 240, i, FastColor.ARGB32.colorFromFloat(alphaForRender, 1.0F, 1.0F, 1.0F));
+                this.model.renderToBuffer(matrixStackIn, ivertexbuilder, 240, i, ARGB.colorFromFloat(alphaForRender, 1.0F, 1.0F, 1.0F));
             }
         }
 
@@ -181,7 +181,7 @@ public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityGhost ghost) {
+    public @NotNull Identifier getTextureLocation(EntityGhost ghost) {
         switch (ghost.getColor()) {
             case 1:
                 return TEXTURE_1;

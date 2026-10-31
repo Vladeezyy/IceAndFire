@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.misc.IafSoundRegistry;
 import net.minecraft.ChatFormatting;
@@ -21,14 +23,14 @@ import java.util.Random;
 public class ItemAmphithereMacuahuitl extends SwordItem {
 
     public ItemAmphithereMacuahuitl() {
-        super(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, new Item.Properties().attributes(SwordItem.createAttributes(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, LivingEntity targetEntity, LivingEntity attacker) {
+    public void hurtEnemy(@NotNull ItemStack stack, LivingEntity targetEntity, LivingEntity attacker) {
         targetEntity.playSound(IafSoundRegistry.AMPHITHERE_GUST, 1, 1);
-        targetEntity.playSound(SoundEvents.SHIELD_BLOCK, 1, 1);
-        targetEntity.hasImpulse = true;
+        targetEntity.playSound(SoundEvents.SHIELD_BLOCK.value(), 1, 1);
+        targetEntity.needsSync = true;
         double xRatio = -Mth.sin(attacker.getYRot() * 0.017453292F);
         double zRatio = Mth.cos(attacker.getYRot() * 0.017453292F);
         float strength = -0.6F;
@@ -42,7 +44,7 @@ public class ItemAmphithereMacuahuitl extends SwordItem {
             double d3 = 10.0D;
             targetEntity.level().addParticle(ParticleTypes.CLOUD, targetEntity.getX() + (double) (rand.nextFloat() * targetEntity.getBbWidth() * 5.0F) - (double) targetEntity.getBbWidth() - d0 * 10.0D, targetEntity.getY() + (double) (rand.nextFloat() * targetEntity.getBbHeight()) - d1 * 10.0D, targetEntity.getZ() + (double) (rand.nextFloat() * targetEntity.getBbWidth() * 5.0F) - (double) targetEntity.getBbWidth() - d2 * 10.0D, d0, d1, d2);
         }
-        return super.hurtEnemy(stack, targetEntity, attacker);
+        super.hurtEnemy(stack, targetEntity, attacker);
     }
 
     // NeoForge extension method (no vanilla override)
@@ -51,9 +53,9 @@ public class ItemAmphithereMacuahuitl extends SwordItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.amphithere_macuahuitl.desc_0").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.amphithere_macuahuitl.desc_1").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.amphithere_macuahuitl.desc_0").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.amphithere_macuahuitl.desc_1").withStyle(ChatFormatting.GRAY));
     }
 }

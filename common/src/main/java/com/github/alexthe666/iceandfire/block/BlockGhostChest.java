@@ -4,7 +4,7 @@ import com.github.alexthe666.iceandfire.entity.tile.IafTileEntityRegistry;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityGhostChest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
@@ -39,7 +39,7 @@ public class BlockGhostChest extends ChestBlock {
     }
 
     @Override
-    protected @NotNull Stat<ResourceLocation> getOpenChestStat() {
+    protected @NotNull Stat<Identifier> getOpenChestStat() {
         return Stats.CUSTOM.get(Stats.TRIGGER_TRAPPED_CHEST);
     }
 

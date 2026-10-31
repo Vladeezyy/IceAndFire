@@ -4,7 +4,7 @@ import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.recipe.IafBannerPatterns;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import javax.annotation.Nullable;
@@ -36,6 +36,6 @@ public final class BannerPatternTagGenerator {
     public static final TagKey<BannerPattern> DREAD_BANNER_PATTERN = create("pattern_item/dread");
 
     private static TagKey<BannerPattern> create(String name) {
-        return TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
+        return TagKey.create(Registries.BANNER_PATTERN, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 }

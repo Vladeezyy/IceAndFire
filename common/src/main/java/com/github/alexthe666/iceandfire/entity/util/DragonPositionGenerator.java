@@ -23,9 +23,9 @@ public class DragonPositionGenerator {
         RandomSource random = mob.getRandom();
         boolean flag;
 
-        if (mob.hasRestriction()) {
-            double d0 = mob.getRestrictCenter().distToCenterSqr(Mth.floor(mob.getX()), Mth.floor(mob.getY()), Mth.floor(mob.getZ())) + 4.0D;
-            double d1 = mob.getRestrictRadius() + (float) xz;
+        if (mob.hasHome()) {
+            double d0 = mob.getHomePosition().distToCenterSqr(Mth.floor(mob.getX()), Mth.floor(mob.getY()), Mth.floor(mob.getZ())) + 4.0D;
+            double d1 = mob.getHomeRadius() + (float) xz;
             flag = d0 < d1 * d1;
         } else {
             flag = false;
@@ -43,8 +43,8 @@ public class DragonPositionGenerator {
             int j1 = random.nextInt(2 * xz + 1) - xz;
 
             if (vec == null || (double) l * vec.x + (double) j1 * vec.z >= 0.0D) {
-                if (mob.hasRestriction() && xz > 1) {
-                    BlockPos blockpos = mob.getRestrictCenter();
+                if (mob.hasHome() && xz > 1) {
+                    BlockPos blockpos = mob.getHomePosition();
 
                     if (mob.getX() > (double) blockpos.getX()) {
                         l -= random.nextInt(xz / 2);
@@ -61,7 +61,7 @@ public class DragonPositionGenerator {
 
                 BlockPos blockpos1 = new BlockPos(l + mob.getBlockX(), i1 + mob.getBlockY(), j1 + mob.getBlockZ());
 
-                if ((!flag || mob.isWithinRestriction(blockpos1)) && pathnavigate.isStableDestination(blockpos1)) {
+                if ((!flag || mob.isWithinHome(blockpos1)) && pathnavigate.isStableDestination(blockpos1)) {
                     if (skipWater) {
                         blockpos1 = moveAboveSolid(blockpos1, mob);
                         if (isWaterDestination(blockpos1, mob)) {
@@ -95,7 +95,7 @@ public class DragonPositionGenerator {
         } else {
             BlockPos blockpos;
 
-            for (blockpos = pos.above(); blockpos.getY() < mob.level().getMaxBuildHeight() && mob.level().getBlockState(blockpos).isSolid(); blockpos = blockpos.above()) {
+            for (blockpos = pos.above(); blockpos.getY() < mob.level().getMaxY() && mob.level().getBlockState(blockpos).isSolid(); blockpos = blockpos.above()) {
             }
 
             return blockpos;

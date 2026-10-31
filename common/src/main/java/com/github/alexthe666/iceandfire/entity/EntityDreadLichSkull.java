@@ -13,7 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -163,7 +163,7 @@ public class EntityDreadLichSkull extends AbstractArrow {
         if (damage >= 3.0F && dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canShieldBlock(player.getUseItem())) {
             ItemStack copyBeforeUse = player.getUseItem().copy();
             int i = 1 + Mth.floor(damage);
-            player.getUseItem().hurtAndBreak(i, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));;
+            player.getUseItem().hurtAndBreak(i, player, player.getUsedItemHand().asEquipmentSlot());;
 
             if (player.getUseItem().isEmpty()) {
                 InteractionHand Hand = player.getUsedItemHand();
@@ -175,7 +175,7 @@ public class EntityDreadLichSkull extends AbstractArrow {
                     player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
                 }
                 player.stopUsingItem();
-                this.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
+                this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
             }
         }
     }

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -71,13 +74,13 @@ public class TileEntityPixieHouse extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+    public void saveAdditional(ValueOutput compound) {
         compound.putInt("HouseType", houseType);
         compound.putBoolean("HasPixie", hasPixie);
         compound.putInt("PixieType", pixieType);
         compound.putBoolean("TamedPixie", tamedPixie);
         if (pixieOwnerUUID != null) {
-            compound.putUUID("PixieOwnerUUID", pixieOwnerUUID);
+            compound.store("PixieOwnerUUID", UUIDUtil.CODEC, pixieOwnerUUID);
         }
         ContainerHelper.saveAllItems(compound, this.pixieItems, registries);
     }
@@ -90,9 +93,9 @@ public class TileEntityPixieHouse extends BlockEntity {
     // NeoForge extension method (no vanilla override)
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
         loadAdditional(packet.getTag(), registries);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             IceAndFire.sendMSGToTracking(level, worldPosition,
-                new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getInt("HouseType")));
+                new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getIntOr("HouseType", 0)));
         }
     }
 
@@ -102,17 +105,17 @@ public class TileEntityPixieHouse extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        houseType = compound.getInt("HouseType");
-        hasPixie = compound.getBoolean("HasPixie");
-        pixieType = compound.getInt("PixieType");
-        tamedPixie = compound.getBoolean("TamedPixie");
-        if (compound.hasUUID("PixieOwnerUUID")) {
-            pixieOwnerUUID = compound.getUUID("PixieOwnerUUID");
+    protected void loadAdditional(ValueInput compound) {
+        houseType = compound.getIntOr("HouseType", 0);
+        hasPixie = compound.getBooleanOr("HasPixie", false);
+        pixieType = compound.getIntOr("PixieType", 0);
+        tamedPixie = compound.getBooleanOr("TamedPixie", false);
+        if (compound.read("PixieOwnerUUID", UUIDUtil.CODEC).isPresent()) {
+            pixieOwnerUUID = compound.read("PixieOwnerUUID", UUIDUtil.CODEC).orElseThrow();
         }
         this.pixieItems = NonNullList.withSize(1, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, pixieItems, registries);
-        super.loadAdditional(compound, registries);
+        ContainerHelper.loadAllItems(compound, pixieItems, compound.lookup());
+        super.loadAdditional(compound);
     }
 
     public void releasePixie() {
@@ -121,7 +124,7 @@ public class TileEntityPixieHouse extends BlockEntity {
             ThreadLocalRandom.current().nextInt(360), 0);
         pixie.setItemInHand(InteractionHand.MAIN_HAND, pixieItems.get(0));
         pixie.setColor(this.pixieType);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             level.addFreshEntity(pixie);
         }
         this.hasPixie = false;
@@ -129,7 +132,7 @@ public class TileEntityPixieHouse extends BlockEntity {
         pixie.ticksUntilHouseAI = 500;
         pixie.setTame(this.tamedPixie, true);
         pixie.setOwnerUUID(this.pixieOwnerUUID);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));
         }
     }

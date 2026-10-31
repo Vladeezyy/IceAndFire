@@ -7,16 +7,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class RenderDreadKnight extends MobRenderer<EntityDreadKnight, ModelDreadKnight> {
-    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_eyes.png");
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_1.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_2.png");
-    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_knight_3.png");
+    public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_knight_eyes.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/dread/dread_knight_1.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/dread/dread_knight_2.png");
+    public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/dread/dread_knight_3.png");
 
     public RenderDreadKnight(EntityRendererProvider.Context context) {
         super(context, new ModelDreadKnight(0.0F), 0.6F);
@@ -31,7 +31,7 @@ public class RenderDreadKnight extends MobRenderer<EntityDreadKnight, ModelDread
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(EntityDreadKnight entity) {
+    public Identifier getTextureLocation(EntityDreadKnight entity) {
         switch (entity.getArmorVariant()) {
             case 0:
                 return TEXTURE_0;

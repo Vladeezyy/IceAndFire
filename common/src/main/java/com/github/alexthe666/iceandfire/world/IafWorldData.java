@@ -12,7 +12,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class IafWorldData extends SavedData {
     public static IafWorldData get(final Level world) {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
-            DimensionDataStorage storage = overworld.getDataStorage();
+            SavedDataStorage storage = overworld.getDataStorage();
             IafWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(IafWorldData::new, (tag, registries) -> new IafWorldData(tag), null), IDENTIFIER);
             data.setDirty();
 
@@ -95,8 +95,8 @@ public class IafWorldData extends SavedData {
             ListTag list = tag.getList(type.toString(), ListTag.TAG_COMPOUND);
 
             for (int i = 0; i < list.size(); i++) {
-                CompoundTag entry = list.getCompound(i);
-                String id = entry.getString("id");
+                CompoundTag entry = list.getCompoundOrEmpty(i);
+                String id = entry.getStringOr("id", "");
                 BlockPos position = readPosition(entry);
                 LAST_GENERATED.get(type).add(Map.entry(id, position));
             }
@@ -127,8 +127,8 @@ public class IafWorldData extends SavedData {
     /** 1.21 writes positions as int arrays, worlds of 1.20 have compounds with X, Y and Z. */
     private static BlockPos readPosition(CompoundTag entry) {
         if (entry.contains("position", Tag.TAG_COMPOUND)) {
-            CompoundTag old = entry.getCompound("position");
-            return new BlockPos(old.getInt("X"), old.getInt("Y"), old.getInt("Z"));
+            CompoundTag old = entry.getCompoundOrEmpty("position");
+            return new BlockPos(old.getIntOr("X", 0), old.getIntOr("Y", 0), old.getIntOr("Z", 0));
         }
         return NbtUtils.readBlockPos(entry, "position").orElse(BlockPos.ZERO);
     }

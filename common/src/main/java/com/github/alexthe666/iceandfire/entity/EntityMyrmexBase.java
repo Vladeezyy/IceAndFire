@@ -1,7 +1,13 @@
 package com.github.alexthe666.iceandfire.entity;
+import com.github.alexthe666.iceandfire.entity.util.MyrmexTrades;
+import net.minecraft.world.entity.EquipmentSlot;
+import com.github.alexthe666.iceandfire.entity.util.Owners;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
@@ -32,7 +38,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -45,7 +51,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.trading.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -78,10 +84,10 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     private static final EntityDataAccessor<Byte> CLIMBING = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Integer> GROWTH_STAGE = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> VARIANT = SynchedEntityData.defineId(EntityMyrmexBase.class, EntityDataSerializers.BOOLEAN);
-    private static final ResourceLocation TEXTURE_DESERT_LARVA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_larva.png");
-    private static final ResourceLocation TEXTURE_DESERT_PUPA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_pupa.png");
-    private static final ResourceLocation TEXTURE_JUNGLE_LARVA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_larva.png");
-    private static final ResourceLocation TEXTURE_JUNGLE_PUPA = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_pupa.png");
+    private static final Identifier TEXTURE_DESERT_LARVA = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_larva.png");
+    private static final Identifier TEXTURE_DESERT_PUPA = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_pupa.png");
+    private static final Identifier TEXTURE_JUNGLE_LARVA = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_larva.png");
+    private static final Identifier TEXTURE_JUNGLE_PUPA = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_pupa.png");
     private final SimpleContainer villagerInventory = new SimpleContainer(8);
     public boolean isEnteringHive = false;
     public boolean isBeingGuarded = false;
@@ -164,7 +170,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel level) {
         if (!this.hasCustomer() && this.timeUntilReset > 0) {
             --this.timeUntilReset;
             if (this.timeUntilReset <= 0) {
@@ -179,23 +185,23 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             this.level().broadcastEntityEvent(this, (byte) 14);
             this.getHive().setWorld(this.level());
         }
-        super.customServerAiStep();
+        super.customServerAiStep(level);
     }
 
     @Override
-    protected int getBaseExperienceReward() {
-        return (this.getCasteImportance() * 7) + this.level().random.nextInt(3);
+    protected int getBaseExperienceReward(ServerLevel level) {
+        return (this.getCasteImportance() * 7) + this.level().getRandom().nextInt(3);
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource dmg, float i) {
+    public boolean hurtServer(ServerLevel level, DamageSource dmg, float i) {
         if (dmg == this.level().damageSources().inWall() && this.getGrowthStage() < 2) {
             return false;
         }
         if (this.getGrowthStage() < 2) {
             this.setAnimation(ANIMATION_PUPA_WIGGLE);
         }
-        return super.hurt(dmg, i);
+        return super.hurtServer(level, dmg, i);
     }
 
     @Override
@@ -247,7 +253,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             this.yBodyRot = 0;
             this.yBodyRotO = 0;
         }
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.setBesideClimbableBlock(this.horizontalCollision && (this.onGround() || !this.verticalCollision));
         }
         if (this.getGrowthStage() < 2) {
@@ -257,7 +263,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
                 growthTicks = 0;
             }
         }
-        if (!this.level().isClientSide && this.getGrowthStage() < 2 && this.getRandom().nextInt(150) == 0 && this.getAnimation() == NO_ANIMATION) {
+        if (!this.level().isClientSide() && this.getGrowthStage() < 2 && this.getRandom().nextInt(150) == 0 && this.getAnimation() == NO_ANIMATION) {
             this.setAnimation(ANIMATION_PUPA_WIGGLE);
         }
 
@@ -280,17 +286,17 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("GrowthStage", this.getGrowthStage());
         tag.putInt("GrowthTicks", growthTicks);
         tag.putBoolean("Variant", this.isJungle());
         if (this.getHive() != null) {
-            tag.putUUID("HiveUUID", this.getHive().hiveUUID);
+            tag.store("HiveUUID", UUIDUtil.CODEC, this.getHive().hiveUUID);
         }
         MerchantOffers merchantoffers = this.getOffers();
         if (!merchantoffers.isEmpty()) {
-            tag.put("Offers", MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), merchantoffers).getOrThrow());
+            Values.put(tag, "Offers", MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), merchantoffers).getOrThrow());
         }
 
         ListTag listnbt = new ListTag();
@@ -301,23 +307,23 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
                 listnbt.add(itemstack.save(this.registryAccess()));
             }
         }
-        tag.put("Inventory", listnbt);
+        Values.put(tag, "Inventory", listnbt);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.setGrowthStage(tag.getInt("GrowthStage"));
-        this.growthTicks = tag.getInt("GrowthTicks");
-        this.setJungleVariant(tag.getBoolean("Variant"));
-        if (tag.hasUUID("HiveUUID")) {
-            this.setHive(MyrmexWorldData.get(level()).getHiveFromUUID(tag.getUUID("HiveUUID")));
+        this.setGrowthStage(tag.getIntOr("GrowthStage", 0));
+        this.growthTicks = tag.getIntOr("GrowthTicks", 0);
+        this.setJungleVariant(tag.getBooleanOr("Variant", false));
+        if (tag.read("HiveUUID", UUIDUtil.CODEC).isPresent()) {
+            this.setHive(MyrmexWorldData.get(level()).getHiveFromUUID(tag.read("HiveUUID", UUIDUtil.CODEC).orElseThrow()));
         }
-        if (tag.contains("Offers", 10)) {
-            this.offers = MerchantOffers.CODEC.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), tag.get("Offers")).resultOrPartial(IceAndFire.LOGGER::warn).orElse(null);
+        if (Values.contains(tag, "Offers")) {
+            this.offers = MerchantOffers.CODEC.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), Values.get(tag, "Offers")).resultOrPartial(IceAndFire.LOGGER::warn).orElse(null);
         }
 
-        ListTag listnbt = tag.getList("Inventory", 10);
+        ListTag listnbt = Values.list(tag, "Inventory");
 
         for (int i = 0; i < listnbt.size(); ++i) {
             ItemStack itemstack = ItemStack.parseOptional(this.registryAccess(), listnbt.getCompound(i));
@@ -332,7 +338,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     public boolean canAttackTamable(TamableAnimal tameable) {
         if (tameable.getOwner() != null && this.getHive() != null) {
-            return this.getHive().isPlayerReputationLowEnoughToFight(tameable.getOwnerUUID());
+            return this.getHive().isPlayerReputationLowEnoughToFight(Owners.uuid(tameable));
         }
         return true;
     }
@@ -475,7 +481,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             if (this.getOffers().isEmpty()) {
                 return super.mobInteract(player, hand);
             } else {
-                if (!this.level().isClientSide && (this.getTarget() == null || !this.getTarget().equals(player)) && hand == InteractionHand.MAIN_HAND) {
+                if (!this.level().isClientSide() && (this.getTarget() == null || !this.getTarget().equals(player)) && hand == InteractionHand.MAIN_HAND) {
                     if (this.getHive() != null && !this.getHive().isPlayerReputationTooLowToTrade(player.getUUID())) {
                         this.setTradingPlayer(player);
                         this.openTradingScreen(player, this.getDisplayName(), 1);
@@ -495,7 +501,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             return;
         }
         UUID staffUUID = ItemNbt.view(itemstack).hasUUID("HiveUUID") ? ItemNbt.view(itemstack).getUUID("HiveUUID") : null;
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             return;
         }
         if (!player.isCreative()) {
@@ -504,19 +510,19 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
             }
         }
         if (this.getHive() == null) {
-            player.displayClientMessage(Component.translatable("myrmex.message.null_hive"), true);
+            player.sendOverlayMessage(Component.translatable("myrmex.message.null_hive"));
 
         } else {
             if (staffUUID != null && staffUUID.equals(this.getHive().hiveUUID)) {
-                player.displayClientMessage(Component.translatable("myrmex.message.staff_already_set"), true);
+                player.sendOverlayMessage(Component.translatable("myrmex.message.staff_already_set"));
             } else {
                 this.getHive().setWorld(this.level());
                 EntityMyrmexQueen queen = this.getHive().getQueen();
                 BlockPos center = this.getHive().getCenterGround();
                 if (queen != null && queen.hasCustomName()) {
-                    player.displayClientMessage(Component.translatable("myrmex.message.staff_set_named", queen.getName(), center.getX(), center.getY(), center.getZ()), true);
+                    player.sendOverlayMessage(Component.translatable("myrmex.message.staff_set_named", queen.getName(), center.getX(), center.getY(), center.getZ()));
                 } else {
-                    player.displayClientMessage(Component.translatable("myrmex.message.staff_set_unnamed", center.getX(), center.getY(), center.getZ()), true);
+                    player.sendOverlayMessage(Component.translatable("myrmex.message.staff_set_unnamed", center.getX(), center.getY(), center.getZ()));
                 }
                 ItemNbt.update(itemstack, tag -> tag.putUUID("HiveUUID", this.getHive().hiveUUID));
             }
@@ -527,7 +533,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setHive(MyrmexWorldData.get(level()).getNearestHive(this.blockPosition(), 400));
         if (this.getHive() != null) {
@@ -547,11 +553,11 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         return this.getGrowthStage() == 0 ? 0.5F : this.getGrowthStage() == 1 ? 0.75F : 1F;
     }
 
-    public abstract ResourceLocation getAdultTexture();
+    public abstract Identifier getAdultTexture();
 
     public abstract float getModelScale();
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         if (this.getGrowthStage() == 0) {
             return isJungle() ? TEXTURE_JUNGLE_LARVA : TEXTURE_DESERT_LARVA;
         } else if (this.getGrowthStage() == 1) {
@@ -768,7 +774,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     @Override
     public void notifyTradeUpdated(@NotNull ItemStack stack) {
-        if (!this.level().isClientSide && this.ambientSoundTime > -this.getAmbientSoundInterval() + 20) {
+        if (!this.level().isClientSide() && this.ambientSoundTime > -this.getAmbientSoundInterval() + 20) {
             this.ambientSoundTime = -this.getAmbientSoundInterval();
             this.playSound(this.getVillagerYesNoSound(!stack.isEmpty()), this.getSoundVolume(), this.getVoicePitch());
         }
@@ -792,9 +798,9 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
     @Override
     @Nullable
-    public Entity changeDimension(@NotNull DimensionTransition transition) {
+    public Entity teleport(TeleportTransition transition) {
         this.resetCustomer();
-        return super.changeDimension(transition);
+        return super.teleport(transition);
     }
 
     public SimpleContainer getVillagerInventory() {
@@ -803,8 +809,8 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
 
     @Override
-    public @NotNull ItemStack equipItemIfPossible(@NotNull ItemStack stack) {
-        ItemStack superStack = super.equipItemIfPossible(stack);
+    public @NotNull ItemStack equipItemIfPossible(ServerLevel level, ItemStack stack) {
+        ItemStack superStack = super.equipItemIfPossible(level, stack);
         if (ItemStack.isSameItem(superStack, stack) && ItemStack.matches(superStack, stack)) {
             return stack;
         } else {
@@ -819,7 +825,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         }
     }
 
-    protected void addTrades(MerchantOffers givenMerchantOffers, VillagerTrades.ItemListing[] newTrades, int maxNumbers) {
+    protected void addTrades(MerchantOffers givenMerchantOffers, MyrmexTrades.Listing[] newTrades, int maxNumbers) {
         Set<Integer> set = Sets.newHashSet();
         if (newTrades.length > maxNumbers) {
             while (set.size() < maxNumbers) {
@@ -832,7 +838,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         }
 
         for (Integer integer : set) {
-            VillagerTrades.ItemListing villagertrades$itrade = newTrades[integer];
+            MyrmexTrades.Listing villagertrades$itrade = newTrades[integer];
             MerchantOffer merchantoffer = villagertrades$itrade.getOffer(this, this.random);
             if (merchantoffer != null) {
                 givenMerchantOffers.add(merchantoffer);
@@ -845,13 +851,13 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         this.populateTradeData();
     }
 
-    protected abstract VillagerTrades.ItemListing[] getLevel1Trades();
+    protected abstract MyrmexTrades.Listing[] getLevel1Trades();
 
-    protected abstract VillagerTrades.ItemListing[] getLevel2Trades();
+    protected abstract MyrmexTrades.Listing[] getLevel2Trades();
 
     protected void populateTradeData() {
-        VillagerTrades.ItemListing[] level1 = getLevel1Trades();
-        VillagerTrades.ItemListing[] level2 = getLevel2Trades();
+        MyrmexTrades.Listing[] level1 = getLevel1Trades();
+        MyrmexTrades.Listing[] level2 = getLevel2Trades();
         if (level1 != null && level2 != null) {
             MerchantOffers merchantoffers = this.getOffers();
             this.addTrades(merchantoffers, level1, 5);
@@ -868,9 +874,9 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
                 k = this.random.nextInt(level2.length);
                 rolls++;
             }
-            VillagerTrades.ItemListing rareTrade1 = level2[i];
-            VillagerTrades.ItemListing rareTrade2 = level2[j];
-            VillagerTrades.ItemListing rareTrade3 = level2[k];
+            MyrmexTrades.Listing rareTrade1 = level2[i];
+            MyrmexTrades.Listing rareTrade2 = level2[j];
+            MyrmexTrades.Listing rareTrade3 = level2[k];
             MerchantOffer merchantoffer1 = rareTrade1.getOffer(this, this.random);
             if (merchantoffer1 != null) {
                 merchantoffers.add(merchantoffer1);

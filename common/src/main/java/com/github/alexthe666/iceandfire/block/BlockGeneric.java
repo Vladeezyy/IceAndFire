@@ -33,7 +33,7 @@ public class BlockGeneric extends Block {
     }*/
 
     public static BlockGeneric builder(float hardness, float resistance, SoundType sound, MapColor color, NoteBlockInstrument instrument, PushReaction reaction, boolean ignited) {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.of()
+        BlockBehaviour.Properties props = dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(color)
                 .sound(sound)
                 .strength(hardness, resistance)
@@ -51,7 +51,7 @@ public class BlockGeneric extends Block {
     }
 
     public static BlockGeneric builder(float hardness, float resistance, SoundType sound, boolean slippery, MapColor color, NoteBlockInstrument instrument, PushReaction reaction, boolean ignited) {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.of()
+        BlockBehaviour.Properties props = dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(color)
                 .sound(sound)
                 .strength(hardness, resistance)

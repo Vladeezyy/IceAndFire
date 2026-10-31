@@ -1,9 +1,9 @@
 package com.github.alexthe666.iceandfire.client.gui.bestiary;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class ChangePageButton extends Button {
@@ -18,9 +18,9 @@ public class ChangePageButton extends Button {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics matrixStack, int mouseX, int mouseY, float partial) {
+    public void renderWidget(@NotNull GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partial) {
         if (this.active) {
-            ResourceLocation resourceLocation = ResourceLocation.parse("iceandfire:textures/gui/bestiary/widgets.png");
+            Identifier resourceLocation = Identifier.parse("iceandfire:textures/gui/bestiary/widgets.png");
             boolean flag = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
             int i = 0;
             int j = 64;

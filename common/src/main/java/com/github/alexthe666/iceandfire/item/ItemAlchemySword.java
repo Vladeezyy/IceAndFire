@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.world.item.Item;
 import com.github.alexthe666.iceandfire.IafConfig;
@@ -23,12 +26,12 @@ import java.util.List;
 
 public class ItemAlchemySword extends SwordItem {
 
-    public ItemAlchemySword(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+    public ItemAlchemySword(CustomToolMaterial toolmaterial) {
+        super(toolmaterial, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public void hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         if (this == IafItemRegistry.DRAGONBONE_SWORD_FIRE.get() && IafConfig.dragonWeaponFireAbility) {
             if (target instanceof EntityIceDragon) {
                 target.hurt(attacker.level().damageSources().inFire(), 13.5F);
@@ -42,8 +45,8 @@ public class ItemAlchemySword extends SwordItem {
             }
 
             EntityDataProvider.getCapability(target).ifPresent(data -> data.frozenData.setFrozen(target, 200));
-            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
-            target.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 100, 2));
+            target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 2));
+            target.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 100, 2));
             target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
         }
         if (this == IafItemRegistry.DRAGONBONE_SWORD_LIGHTNING.get() && IafConfig.dragonWeaponLightningAbility) {
@@ -53,12 +56,12 @@ public class ItemAlchemySword extends SwordItem {
                     flag = false;
                 }
             }
-            if (!attacker.level().isClientSide && flag) {
-                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level());
-                lightningboltentity.getTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
-                lightningboltentity.getTags().add(attacker.getStringUUID());
-                lightningboltentity.moveTo(target.position());
-                if (!target.level().isClientSide) {
+            if (!attacker.level().isClientSide() && flag) {
+                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
+                lightningboltentity.entityTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
+                lightningboltentity.entityTags().add(attacker.getStringUUID());
+                lightningboltentity.snapTo(target.position());
+                if (!target.level().isClientSide()) {
                     target.level().addFreshEntity(lightningboltentity);
                 }
             }
@@ -67,26 +70,26 @@ public class ItemAlchemySword extends SwordItem {
             }
             target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
         }
-        return super.hurtEnemy(stack, target, attacker);
+        super.hurtEnemy(stack, target, attacker);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
         if (this == IafItemRegistry.DRAGONBONE_SWORD_FIRE.get()) {
-            tooltip.add(Component.translatable("dragon_sword_fire.hurt1").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("dragon_sword_fire.hurt1").withStyle(ChatFormatting.GREEN));
             if (IafConfig.dragonWeaponFireAbility)
-                tooltip.add(Component.translatable("dragon_sword_fire.hurt2").withStyle(ChatFormatting.DARK_RED));
+                tooltip.accept(Component.translatable("dragon_sword_fire.hurt2").withStyle(ChatFormatting.DARK_RED));
         }
         if (this == IafItemRegistry.DRAGONBONE_SWORD_ICE.get()) {
-            tooltip.add(Component.translatable("dragon_sword_ice.hurt1").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("dragon_sword_ice.hurt1").withStyle(ChatFormatting.GREEN));
             if (IafConfig.dragonWeaponIceAbility)
-                tooltip.add(Component.translatable("dragon_sword_ice.hurt2").withStyle(ChatFormatting.AQUA));
+                tooltip.accept(Component.translatable("dragon_sword_ice.hurt2").withStyle(ChatFormatting.AQUA));
         }
         if (this == IafItemRegistry.DRAGONBONE_SWORD_LIGHTNING.get()) {
-            tooltip.add(Component.translatable("dragon_sword_lightning.hurt1").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("dragon_sword_lightning.hurt1").withStyle(ChatFormatting.GREEN));
             if (IafConfig.dragonWeaponLightningAbility)
-                tooltip.add(Component.translatable("dragon_sword_lightning.hurt2").withStyle(ChatFormatting.DARK_PURPLE));
+                tooltip.accept(Component.translatable("dragon_sword_lightning.hurt2").withStyle(ChatFormatting.DARK_PURPLE));
         }
     }
 

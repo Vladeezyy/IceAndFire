@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.network.syncher.SynchedEntityData;
 import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
@@ -80,15 +84,15 @@ public class EntityChainTie extends BlockAttachedEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if (source.getEntity() != null && source.getEntity() instanceof Player) {
-            return super.hurt(source, amount);
+            return super.hurtServer(level, source, amount);
         }
         return false;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         BlockPos blockpos = this.getPos();
         compound.putInt("TileX", blockpos.getX());
         compound.putInt("TileY", blockpos.getY());
@@ -96,8 +100,8 @@ public class EntityChainTie extends BlockAttachedEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        this.pos = new BlockPos(compound.getInt("TileX"), compound.getInt("TileY"), compound.getInt("TileZ"));
+    public void readAdditionalSaveData(ValueInput compound) {
+        this.pos = new BlockPos(compound.getIntOr("TileX", 0), compound.getIntOr("TileY", 0), compound.getIntOr("TileZ", 0));
     }
 
     @Override
@@ -130,8 +134,8 @@ public class EntityChainTie extends BlockAttachedEntity {
     }
 
     @Override
-    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (this.level().isClientSide) {
+    public @NotNull InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        if (this.level().isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             AtomicBoolean flag = new AtomicBoolean(false);

@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +40,7 @@ public class EntityAmphithereArrow extends AbstractArrow {
         if ((tickCount == 1 || this.tickCount % 70 == 0) && !this.inGround && !this.onGround()) {
             this.playSound(IafSoundRegistry.AMPHITHERE_GUST, 1, 1);
         }
-        if (level().isClientSide && !this.inGround) {
+        if (level().isClientSide() && !this.inGround) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;
@@ -54,7 +54,7 @@ public class EntityAmphithereArrow extends AbstractArrow {
 
     @Override
     protected void doPostHurtEffects(LivingEntity living) {
-        living.hasImpulse = true;
+        living.needsSync = true;
         double xRatio = this.getDeltaMovement().x;
         double zRatio = this.getDeltaMovement().z;
         float strength = -1.4F;
@@ -64,7 +64,7 @@ public class EntityAmphithereArrow extends AbstractArrow {
     }
 
     public void spawnExplosionParticle() {
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             for (int height = 0; height < 1 + random.nextInt(2); height++) {
                 for (int i = 0; i < 20; ++i) {
                     double d0 = this.random.nextGaussian() * 0.02D;

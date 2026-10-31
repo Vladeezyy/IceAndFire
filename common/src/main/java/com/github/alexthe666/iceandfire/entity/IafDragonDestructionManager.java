@@ -60,9 +60,9 @@ public class IafDragonDestructionManager {
             });
         } else {
             final int radius = dragon.getDragonStage() == 4 ? 2 : 3;
-            final int x = radius + level.random.nextInt(1);
-            final int y = radius + level.random.nextInt(1);
-            final int z = radius + level.random.nextInt(1);
+            final int x = radius + level.getRandom().nextInt(1);
+            final int y = radius + level.getRandom().nextInt(1);
+            final int z = radius + level.getRandom().nextInt(1);
             final float f = (float) (x + y + z) * 0.333F + 0.5F;
             final float ff = f * f;
 
@@ -75,7 +75,7 @@ public class IafDragonDestructionManager {
                 }
 
                 if (canBreakBlocks && center.distSqr(position) <= ff) {
-                    if (DragonUtils.canGrief(dragon) && level.random.nextFloat() > (float) center.distSqr(position) / ff) {
+                    if (DragonUtils.canGrief(dragon) && level.getRandom().nextFloat() > (float) center.distSqr(position) / ff) {
                         attackBlock(level, dragon, position);
                     }
                 }
@@ -137,9 +137,9 @@ public class IafDragonDestructionManager {
                 });
             } else {
                 final int radius = dragon.getDragonStage() == 4 ? 2 : 3;
-                x = radius + level.random.nextInt(2);
-                y = radius + level.random.nextInt(2);
-                z = radius + level.random.nextInt(2);
+                x = radius + level.getRandom().nextInt(2);
+                y = radius + level.getRandom().nextInt(2);
+                z = radius + level.getRandom().nextInt(2);
                 final float f = (float) (x + y + z) * 0.333F + 0.5F;
                 final float ff = f * f;
 
@@ -281,7 +281,7 @@ public class IafDragonDestructionManager {
                     return;
                 }
 
-                if (world.random.nextFloat() * 3 > (float) center.distSqr(pos) / radius2 && DragonUtils.canDragonBreak(state, destroyer)) {
+                if (world.getRandom().nextFloat() * 3 > (float) center.distSqr(pos) / radius2 && DragonUtils.canDragonBreak(state, destroyer)) {
                     world.destroyBlock(pos, false);
                 }
             }

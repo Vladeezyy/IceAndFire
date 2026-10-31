@@ -19,7 +19,7 @@ public class BlockReturningState extends Block {
     private final BlockState returnState;
 
     public static BlockReturningState builder(float hardness, float resistance, SoundType sound, boolean slippery, MapColor color, NoteBlockInstrument instrument, PushReaction reaction, boolean ignited, BlockState returnToState) {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.of().mapColor(color).sound(sound).strength(hardness, resistance).friction(0.98F).randomTicks();
+        BlockBehaviour.Properties props = dev.vladeezyy.iceandfire.platform.Registrar.blockProps().mapColor(color).sound(sound).strength(hardness, resistance).friction(0.98F).randomTicks();
 
         if (instrument != null) {
             props.instrument(instrument);
@@ -36,7 +36,7 @@ public class BlockReturningState extends Block {
         return new BlockReturningState(props, returnToState);
     }
     public static BlockReturningState builder(float hardness, float resistance, SoundType sound, MapColor color, NoteBlockInstrument instrument, PushReaction reaction, boolean ignited, BlockState returnToState) {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.of().mapColor(color).sound(sound).strength(hardness, resistance).randomTicks();
+        BlockBehaviour.Properties props = dev.vladeezyy.iceandfire.platform.Registrar.blockProps().mapColor(color).sound(sound).strength(hardness, resistance).randomTicks();
 
         if (instrument != null) {
             props.instrument(instrument);
@@ -62,7 +62,7 @@ public class BlockReturningState extends Block {
     // FIXME :: Unused because isRandomlyTicking is not used -> The chunk check might be a performance problem anyway (and potentially not needed)
     @Override
     public void tick(@NotNull BlockState state, ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             if (!worldIn.hasChunksAt(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)))
                 return;
             if (state.getValue(REVERTS) && rand.nextInt(3) == 0) {

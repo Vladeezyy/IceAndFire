@@ -8,7 +8,7 @@ import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
@@ -20,7 +20,7 @@ import dev.vladeezyy.iceandfire.platform.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldGenLightningDragonRoosts extends WorldGenDragonRoosts {
-    private static final ResourceKey<LootTable> DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "chest/lightning_dragon_roost"));
+    private static final ResourceKey<LootTable> DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/lightning_dragon_roost"));
 
     public WorldGenLightningDragonRoosts(final Codec<NoneFeatureConfiguration> configuration) {
         super(configuration, IafBlockRegistry.COPPER_PILE.get());

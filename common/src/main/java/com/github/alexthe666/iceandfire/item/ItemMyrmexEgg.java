@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
@@ -24,7 +26,7 @@ public class ItemMyrmexEgg extends Item {
     boolean isJungle;
 
     public ItemMyrmexEgg(boolean isJungle) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
         this.isJungle = isJungle;
     }
 
@@ -43,12 +45,12 @@ public class ItemMyrmexEgg extends Item {
     }*/
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         String caste;
         CompoundTag tag = ItemNbt.getTag(stack);
         int eggOrdinal = 0;
         if (tag != null) {
-            eggOrdinal = tag.getInt("EggOrdinal");
+            eggOrdinal = tag.getIntOr("EggOrdinal", 0);
         }
         switch (eggOrdinal) {
             default:
@@ -67,9 +69,9 @@ public class ItemMyrmexEgg extends Item {
                 caste = "queen";
         }
         if (eggOrdinal == 4) {
-            tooltip.add(Component.translatable("myrmex.caste_" + caste + ".name").withStyle(ChatFormatting.LIGHT_PURPLE));
+            tooltip.accept(Component.translatable("myrmex.caste_" + caste + ".name").withStyle(ChatFormatting.LIGHT_PURPLE));
         } else {
-            tooltip.add(Component.translatable("myrmex.caste_" + caste + ".name").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Component.translatable("myrmex.caste_" + caste + ".name").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -81,7 +83,7 @@ public class ItemMyrmexEgg extends Item {
         CompoundTag tag = ItemNbt.getTag(itemstack);
         int eggOrdinal = 0;
         if (tag != null) {
-            eggOrdinal = tag.getInt("EggOrdinal");
+            eggOrdinal = tag.getIntOr("EggOrdinal", 0);
         }
         egg.setJungle(isJungle);
         egg.setMyrmexCaste(eggOrdinal);
@@ -90,7 +92,7 @@ public class ItemMyrmexEgg extends Item {
         if (itemstack.has(DataComponents.CUSTOM_NAME)) {
             egg.setCustomName(itemstack.getHoverName());
         }
-        if (!context.getLevel().isClientSide) {
+        if (!context.getLevel().isClientSide()) {
             context.getLevel().addFreshEntity(egg);
         }
         itemstack.shrink(1);
@@ -102,7 +104,7 @@ public class ItemMyrmexEgg extends Item {
         CompoundTag tag = ItemNbt.getTag(stack);
         int eggOrdinal = 0;
         if (tag != null) {
-            eggOrdinal = tag.getInt("EggOrdinal");
+            eggOrdinal = tag.getIntOr("EggOrdinal", 0);
         }
         return super.isFoil(stack) || eggOrdinal == 4;
     }

@@ -1,7 +1,7 @@
 package dev.vladeezyy.iceandfire.platform;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
@@ -18,7 +18,7 @@ public final class Tags {
         public static final TagKey<Block> STONES = tag("stones");
 
         private static TagKey<Block> tag(String name) {
-            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", name));
+            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -27,7 +27,7 @@ public final class Tags {
         public static final TagKey<Item> STRINGS = tag("strings");
 
         private static TagKey<Item> tag(String name) {
-            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
+            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -63,7 +63,7 @@ public final class Tags {
         public static final TagKey<Biome> IS_WET_OVERWORLD = tag("is_wet/overworld");
 
         private static TagKey<Biome> tag(String name) {
-            return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", name));
+            return TagKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("c", name));
         }
     }
 }

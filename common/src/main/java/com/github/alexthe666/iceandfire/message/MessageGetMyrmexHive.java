@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.message;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexHive;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 
 
 public class MessageGetMyrmexHive implements CustomPacketPayload {
-    public static final Type<MessageGetMyrmexHive> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "get_myrmex_hive"));
+    public static final Type<MessageGetMyrmexHive> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "get_myrmex_hive"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageGetMyrmexHive> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageGetMyrmexHive::read);
 
     @Override

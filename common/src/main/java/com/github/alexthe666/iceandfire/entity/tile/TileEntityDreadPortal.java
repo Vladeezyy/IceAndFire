@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
@@ -20,8 +22,8 @@ public class TileEntityDreadPortal extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.saveAdditional(compound, registries);
+    public void saveAdditional(ValueOutput compound) {
+        super.saveAdditional(compound);
         compound.putLong("Age", this.age);
 
         if (this.exitPortal != null) {
@@ -34,15 +36,15 @@ public class TileEntityDreadPortal extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(compound, registries);
-        this.age = compound.getLong("Age");
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.age = compound.getLongOr("Age", 0L);
 
-        if (compound.contains("ExitPortal", 10)) {
+        if (Values.contains(compound, "ExitPortal")) {
             this.exitPortal = BlockPos.ZERO;
         }
 
-        this.exactTeleport = compound.getBoolean("ExactTeleport");
+        this.exactTeleport = compound.getBooleanOr("ExactTeleport", false);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, TileEntityDreadPortal dreadPortal) {

@@ -9,21 +9,21 @@ import com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class GuiMyrmexAddRoom extends Screen {
-    private static final ResourceLocation JUNGLE_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/myrmex_staff_jungle.png");
-    private static final ResourceLocation DESERT_TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/myrmex_staff_desert.png");
+    private static final Identifier JUNGLE_TEXTURE = Identifier.parse("iceandfire:textures/gui/myrmex_staff_jungle.png");
+    private static final Identifier DESERT_TEXTURE = Identifier.parse("iceandfire:textures/gui/myrmex_staff_desert.png");
     private final boolean jungle;
     private final BlockPos interactPos;
     private final Direction facing;
@@ -102,7 +102,7 @@ public class GuiMyrmexAddRoom extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+    public void renderBackground(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         super.renderBackground(ms, mouseX, mouseY, partialTicks);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindForSetup(jungle ? JUNGLE_TEXTURE : DESERT_TEXTURE);
@@ -112,7 +112,7 @@ public class GuiMyrmexAddRoom extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(ms, mouseX, mouseY, partialTicks);
         init();
         int i = (this.width - 248) / 2 + 10;

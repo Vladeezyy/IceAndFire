@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.entity.EntityGhost;
@@ -7,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
@@ -23,19 +24,19 @@ public class TileEntityGhostChest extends ChestBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(nbt, registries);
+    protected void loadAdditional(ValueInput nbt) {
+        super.loadAdditional(nbt);
     }
 
     @Override
     public void startOpen(@NotNull Player player) {
         super.startOpen(player);
         if (this.level.getDifficulty() != Difficulty.PEACEFUL) {
-            EntityGhost ghost = IafEntityRegistry.GHOST.get().create(level);
+            EntityGhost ghost = IafEntityRegistry.GHOST.get().create(level, EntitySpawnReason.MOB_SUMMONED);
             ghost.absMoveTo(this.worldPosition.getX() + 0.5F, this.worldPosition.getY() + 0.5F, this.worldPosition.getZ() + 0.5F,
                 ThreadLocalRandom.current().nextFloat() * 360F, 0);
-            if (!this.level.isClientSide) {
-                ghost.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(this.worldPosition), MobSpawnType.SPAWNER, null);
+            if (!this.level.isClientSide()) {
+                ghost.finalizeSpawn((ServerLevel) level, ((net.minecraft.world.level.ServerLevelAccessor) level).getCurrentDifficultyAt(this.worldPosition), EntitySpawnReason.SPAWNER, null);
                 if (!player.isCreative()) {
                     ghost.setTarget(player);
                 }
@@ -43,7 +44,7 @@ public class TileEntityGhostChest extends ChestBlockEntity {
                 level.addFreshEntity(ghost);
             }
             ghost.setAnimation(EntityGhost.ANIMATION_SCARE);
-            ghost.restrictTo(this.worldPosition, 4);
+            ghost.setHomeTo(this.worldPosition, 4);
             ghost.setFromChest(true);
         }
     }

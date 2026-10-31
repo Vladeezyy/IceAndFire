@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -141,16 +141,16 @@ public class SirenData {
     }
 
     public void deserialize(final CompoundTag tag) {
-        CompoundTag sirenData = tag.getCompound("sirenData");
+        CompoundTag sirenData = tag.getCompoundOrEmpty("sirenData");
         Tag uuidTag = sirenData.get("charmedByUUID");
 
         if (uuidTag != null) {
             charmedByUUID = NbtUtils.loadUUID(uuidTag);
         }
 
-        charmedById = sirenData.getInt("charmedById");
-        charmTime = sirenData.getInt("charmTime");
-        isCharmed = sirenData.getBoolean("isCharmed");
+        charmedById = sirenData.getIntOr("charmedById", 0);
+        charmTime = sirenData.getIntOr("charmTime", 0);
+        isCharmed = sirenData.getBooleanOr("isCharmed", false);
         isInitialized = false;
     }
 

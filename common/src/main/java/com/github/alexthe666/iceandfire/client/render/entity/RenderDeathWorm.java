@@ -6,16 +6,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 
 public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm> {
-    public static final ResourceLocation TEXTURE_RED = ResourceLocation.parse("iceandfire:textures/models/deathworm/deathworm_red.png");
-    public static final ResourceLocation TEXTURE_WHITE = ResourceLocation.parse("iceandfire:textures/models/deathworm/deathworm_white.png");
-    public static final ResourceLocation TEXTURE_YELLOW = ResourceLocation.parse("iceandfire:textures/models/deathworm/deathworm_yellow.png");
+    public static final Identifier TEXTURE_RED = Identifier.parse("iceandfire:textures/models/deathworm/deathworm_red.png");
+    public static final Identifier TEXTURE_WHITE = Identifier.parse("iceandfire:textures/models/deathworm/deathworm_white.png");
+    public static final Identifier TEXTURE_YELLOW = Identifier.parse("iceandfire:textures/models/deathworm/deathworm_yellow.png");
 
     public RenderDeathWorm(EntityRendererProvider.Context context) {
         super(context, new ModelDeathWorm(), 0);
@@ -40,7 +40,7 @@ public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(EntityDeathWorm entity) {
+    public Identifier getTextureLocation(EntityDeathWorm entity) {
         return entity.getVariant() == 2 ? TEXTURE_WHITE : entity.getVariant() == 1 ? TEXTURE_RED : TEXTURE_YELLOW;
     }
 }

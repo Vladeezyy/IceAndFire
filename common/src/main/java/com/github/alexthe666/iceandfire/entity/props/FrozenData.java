@@ -89,9 +89,9 @@ public class FrozenData {
     }
 
     public void deserialize(final CompoundTag tag) {
-        CompoundTag frozenData = tag.getCompound("frozenData");
-        frozenTicks = frozenData.getInt("frozenTicks");
-        isFrozen = frozenData.getBoolean("isFrozen");
+        CompoundTag frozenData = tag.getCompoundOrEmpty("frozenData");
+        frozenTicks = frozenData.getIntOr("frozenTicks", 0);
+        isFrozen = frozenData.getBooleanOr("isFrozen", false);
     }
 
     public boolean doesClientNeedUpdate() {

@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.ai;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.protocol.game.DebugPackets;

@@ -554,7 +554,7 @@ public class AdvancedPathNavigate extends AbstractAdvancedPathNavigate {
                 return handlePathPointOnLadder(pEx);
             } else if (ourEntity.isInWater()) {
                 return handleEntityInWater(oldIndex, pEx);
-            } else if (level.random.nextInt(10) == 0) {
+            } else if (level.getRandom().nextInt(10) == 0) {
                 if (!pEx.isOnLadder() && pExNext != null && pExNext.isOnLadder()) {
                     speedModifier = getSpeedFactor() / 4.0;
                 } else {

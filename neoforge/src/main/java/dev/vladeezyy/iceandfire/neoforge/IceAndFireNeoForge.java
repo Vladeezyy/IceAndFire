@@ -54,7 +54,6 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -99,11 +98,6 @@ public final class IceAndFireNeoForge {
                 event.register(type, placement, heightmap, predicate, RegisterSpawnPlacementsEvent.Operation.REPLACE);
             }
         }));
-        modBus.addListener(EventPriority.LOW, (RegisterEvent event) -> {
-            if (event.getRegistryKey() == Registries.ITEM) {
-                IafItemRegistry.setRepairMaterials();
-            }
-        });
         modBus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(() -> {
             IceAndFire.PROXY.setup();
             IafBus.post(new dev.vladeezyy.iceandfire.bus.FMLCommonSetupEvent());
@@ -251,7 +245,6 @@ public final class IceAndFireNeoForge {
                 event.setCanceled(true);
             }
         });
-        bus.addListener((VillagerTradesEvent event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.VillagerTradesEvent(event.getTrades(), event.getType())));
         bus.addListener((LootTableLoadEvent event) -> {
             var ours = new dev.vladeezyy.iceandfire.bus.LootTableLoadEvent(event.getName(), event.getTable());
             IafBus.post(ours);

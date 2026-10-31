@@ -3,7 +3,7 @@ package com.github.alexthe666.iceandfire.message;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.vladeezyy.iceandfire.platform.PacketContext;
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.entity.util.ISyncMount;
@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 
 
 public class MessageStartRidingMob implements CustomPacketPayload {
-    public static final Type<MessageStartRidingMob> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "start_riding_mob"));
+    public static final Type<MessageStartRidingMob> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "start_riding_mob"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageStartRidingMob> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageStartRidingMob::read);
 
     @Override
@@ -65,9 +65,9 @@ public class MessageStartRidingMob implements CustomPacketPayload {
                         if (tamable.isOwnedBy(player) && tamable.distanceTo(player) < 14) {
                             if (message.ride) {
                                 if (message.baby) {
-                                    tamable.startRiding(player, true);
+                                    tamable.startRiding(player, true, true);
                                 } else {
-                                    player.startRiding(tamable, true);
+                                    player.startRiding(tamable, true, true);
                                 }
                             } else {
                                 if (message.baby) {

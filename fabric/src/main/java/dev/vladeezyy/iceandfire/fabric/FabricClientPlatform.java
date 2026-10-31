@@ -15,15 +15,15 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -36,9 +36,9 @@ public final class FabricClientPlatform implements ClientPlatform {
     }
 
     @Override
-    public ResourceLocation armorTexture(Entity entity, ItemStack stack, ArmorMaterial.Layer layer, boolean innerModel, EquipmentSlot slot) {
+    public Identifier armorTexture(Entity entity, ItemStack stack, ArmorMaterial.Layer layer, boolean innerModel, EquipmentSlot slot) {
         if (stack.getItem() instanceof IafArmorTextureItem armor) {
-            ResourceLocation texture = armor.getArmorTexture(stack, entity, slot, layer, innerModel);
+            Identifier texture = armor.getArmorTexture(stack, entity, slot, layer, innerModel);
             if (texture != null) {
                 return texture;
             }
@@ -47,7 +47,7 @@ public final class FabricClientPlatform implements ClientPlatform {
     }
 
     @Override
-    public ResourceLocation fluidStillTexture(Fluid fluid) {
+    public Identifier fluidStillTexture(Fluid fluid) {
         TextureAtlasSprite sprite = FluidVariantRendering.getSprite(FluidVariant.of(fluid));
         return sprite != null ? sprite.contents().name() : MissingTextureAtlasSprite.getLocation();
     }

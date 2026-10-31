@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -64,9 +66,9 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
         super(type, worldIn);
     }
 
-    public static boolean canLichSpawnOn(EntityType<? extends Mob> typeIn, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
+    public static boolean canLichSpawnOn(EntityType<? extends Mob> typeIn, ServerLevelAccessor worldIn, EntitySpawnReason reason, BlockPos pos, RandomSource randomIn) {
         BlockPos blockpos = pos.below();
-        return reason == MobSpawnType.SPAWNER || worldIn.getBlockState(blockpos).isValidSpawn(worldIn, blockpos, typeIn) && randomIn.nextInt(IafConfig.lichSpawnChance) == 0;
+        return reason == EntitySpawnReason.SPAWNER || worldIn.getBlockState(blockpos).isValidSpawn(worldIn, blockpos, typeIn) && randomIn.nextInt(IafConfig.lichSpawnChance) == 0;
     }
 
     @Override
@@ -125,7 +127,7 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
             this.setDeltaMovement(0, this.getDeltaMovement().y, this.getDeltaMovement().z);
 
         }
-        if (this.level().isClientSide && this.getAnimation() == ANIMATION_SUMMON) {
+        if (this.level().isClientSide() && this.getAnimation() == ANIMATION_SUMMON) {
             double d0 = 0;
             double d1 = 0;
             double d2 = 0;
@@ -152,7 +154,7 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAnimation(ANIMATION_SPAWN);
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
@@ -172,17 +174,17 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("Variant", this.getVariant());
         compound.putInt("MinionCount", this.getMinionCount());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.setVariant(compound.getInt("Variant"));
-        this.setMinionCount(compound.getInt("MinionCount"));
+        this.setVariant(compound.getIntOr("Variant", 0));
+        this.setMinionCount(compound.getIntOr("MinionCount", 0));
         this.setCombatTask();
     }
 
@@ -236,13 +238,13 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
     public void setItemSlot(@NotNull EquipmentSlot slotIn, @NotNull ItemStack stack) {
         super.setItemSlot(slotIn, stack);
 
-        if (!this.level().isClientSide && slotIn == EquipmentSlot.MAINHAND) {
+        if (!this.level().isClientSide() && slotIn == EquipmentSlot.MAINHAND) {
             this.setCombatTask();
         }
     }
 
     public void setCombatTask() {
-        if (this.level()!= null && !this.level().isClientSide) {
+        if (this.level()!= null && !this.level().isClientSide()) {
             this.goalSelector.removeGoal(this.aiAttackOnCollide);
             this.goalSelector.removeGoal(this.aiArrowAttack);
             ItemStack itemstack = this.getMainHandItem();
@@ -266,16 +268,16 @@ public class EntityDreadLich extends EntityDreadMob implements IAnimatedEntity, 
             int x = (int) (this.getX()) - 5 + random.nextInt(10);
             int z = (int) (this.getZ()) - 5 + random.nextInt(10);
             double y = getHeightFromXZ(x, z);
-            minion.moveTo(x + 0.5D, y, z + 0.5D, this.getYRot(), this.getXRot());
+            minion.snapTo(x + 0.5D, y, z + 0.5D, this.getYRot(), this.getXRot());
             minion.setTarget(target);
             Level currentLevel = level();
             if (currentLevel instanceof ServerLevelAccessor) {
-                minion.finalizeSpawn((ServerLevelAccessor) currentLevel, currentLevel.getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
+                minion.finalizeSpawn((ServerLevelAccessor) currentLevel, ((net.minecraft.world.level.ServerLevelAccessor) currentLevel).getCurrentDifficultyAt(this.blockPosition()), EntitySpawnReason.MOB_SUMMONED, null);
             }
             if (minion instanceof EntityDreadMob) {
                 ((EntityDreadMob) minion).setCommanderId(this.getUUID());
             }
-            if (!currentLevel.isClientSide) {
+            if (!currentLevel.isClientSide()) {
                 currentLevel.addFreshEntity(minion);
             }
             minionCooldown = 100;

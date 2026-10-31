@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.entity.EntityStoneStatue;
@@ -25,24 +27,24 @@ import java.util.List;
 public class ItemStoneStatue extends Item {
 
     public ItemStoneStatue() {
-        super(new Item.Properties().stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().stacksTo(1));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (ItemNbt.hasTag(stack)) {
-            boolean isPlayer = ItemNbt.view(stack).getBoolean("IAFStoneStatuePlayerEntity");
-            String id = ItemNbt.view(stack).getString("IAFStoneStatueEntityID");
+            boolean isPlayer = ItemNbt.view(stack).getBooleanOr("IAFStoneStatuePlayerEntity", false);
+            String id = ItemNbt.view(stack).getStringOr("IAFStoneStatueEntityID", "");
             if (EntityType.byString(id).orElse(null) != null) {
                 EntityType type = EntityType.byString(id).orElse(null);
                 MutableComponent untranslated = isPlayer ? Component.translatable("entity.minecraft.player") : Component.translatable(type.getDescriptionId());
-                tooltip.add(untranslated.withStyle(ChatFormatting.GRAY));
+                tooltip.accept(untranslated.withStyle(ChatFormatting.GRAY));
             }
         }
     }
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, new CompoundTag());
         ItemNbt.update(itemStack, tag -> tag.putBoolean("IAFStoneStatuePlayerEntity", true));
     }
@@ -54,8 +56,8 @@ public class ItemStoneStatue extends Item {
         } else {
             ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
             if (ItemNbt.hasTag(stack)) {
-                String id = ItemNbt.view(stack).getString("IAFStoneStatueEntityID");
-                CompoundTag statueNBT = ItemNbt.view(stack).getCompound("IAFStoneStatueNBT");
+                String id = ItemNbt.view(stack).getStringOr("IAFStoneStatueEntityID", "");
+                CompoundTag statueNBT = ItemNbt.view(stack).getCompoundOrEmpty("IAFStoneStatueNBT");
                 EntityStoneStatue statue = new EntityStoneStatue(IafEntityRegistry.STONE_STATUE.get(),
                     context.getLevel());
                 statue.readAdditionalSaveData(statueNBT);
@@ -69,7 +71,7 @@ public class ItemStoneStatue extends Item {
                 statue.yBodyRot = yaw;
                 statue.yBodyRotO = yaw;
                 statue.absMoveTo(context.getClickedPos().getX() + 0.5, context.getClickedPos().getY() + 1, context.getClickedPos().getZ() + 0.5, yaw, 0);
-                if (!context.getLevel().isClientSide) {
+                if (!context.getLevel().isClientSide()) {
                     context.getLevel().addFreshEntity(statue);
                     statue.readAdditionalSaveData(ItemNbt.getTag(stack));
                 }

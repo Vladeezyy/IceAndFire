@@ -49,7 +49,7 @@ public class BlockIceSpikes extends Block {
     }
 
     @Override
-    public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state) {
         return true;
     }
 

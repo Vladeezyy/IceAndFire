@@ -5,12 +5,12 @@ import com.github.alexthe666.iceandfire.entity.EntityStymphalianBird;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderStymphalianBird extends MobRenderer<EntityStymphalianBird, ModelStymphalianBird> {
 
-    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/stymphalianbird/stymphalian_bird.png");
+    public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/stymphalianbird/stymphalian_bird.png");
 
     public RenderStymphalianBird(EntityRendererProvider.Context context) {
         super(context, new ModelStymphalianBird(), 0.6F);
@@ -22,7 +22,7 @@ public class RenderStymphalianBird extends MobRenderer<EntityStymphalianBird, Mo
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityStymphalianBird cyclops) {
+    public @NotNull Identifier getTextureLocation(@NotNull EntityStymphalianBird cyclops) {
         return TEXTURE;
     }
 

@@ -16,12 +16,12 @@ import com.google.common.primitives.Ints;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,10 +41,10 @@ public class GuiBestiary extends Screen {
     private static final int LEFT_PAGE_TEXT_WIDTH = 189;
     /** The right parchment ends at 385.4, its text starts at 220 * 0.945. */
     private static final int RIGHT_PAGE_TEXT_WIDTH = 187;
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/gui/bestiary/bestiary.png");
-    private static final ResourceLocation DRAWINGS_0 = ResourceLocation.parse("iceandfire:textures/gui/bestiary/drawings_0.png");
-    private static final ResourceLocation DRAWINGS_1 = ResourceLocation.parse("iceandfire:textures/gui/bestiary/drawings_1.png");
-    private static final Map<String, ResourceLocation> PICTURE_LOCATION_CACHE = Maps.newHashMap();
+    private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/gui/bestiary/bestiary.png");
+    private static final Identifier DRAWINGS_0 = Identifier.parse("iceandfire:textures/gui/bestiary/drawings_0.png");
+    private static final Identifier DRAWINGS_1 = Identifier.parse("iceandfire:textures/gui/bestiary/drawings_1.png");
+    private static final Map<String, Identifier> PICTURE_LOCATION_CACHE = Maps.newHashMap();
     public List<EnumBestiaryPages> allPageTypes = new ArrayList<>();
     public EnumBestiaryPages pageType;
     public List<IndexPageButton> indexButtons = new ArrayList<>();
@@ -83,7 +83,7 @@ public class GuiBestiary extends Screen {
     }
 
     private static Item getItemByRegistryName(String registryName) {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(registryName));
+        return BuiltInRegistries.ITEM.getValue(Identifier.parse(registryName));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class GuiBestiary extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(ms, mouseX, mouseY, partialTicks);
         for (Renderable widget : this.renderables) {
             if (widget instanceof IndexPageButton) {
@@ -184,7 +184,7 @@ public class GuiBestiary extends Screen {
         RenderSystem.enableDepthTest();
     }
 
-    public void drawPerPage(GuiGraphics ms, int bookPages) {
+    public void drawPerPage(GuiGraphicsExtractor ms, int bookPages) {
         imageFromTxt(ms);
         switch (this.pageType) {
             case INTRODUCTION:
@@ -791,11 +791,11 @@ public class GuiBestiary extends Screen {
         writeFromTxt(ms);
     }
 
-    public void imageFromTxt(GuiGraphics ms) {
+    public void imageFromTxt(GuiGraphicsExtractor ms) {
         String fileName = this.pageType.toString().toLowerCase(Locale.ROOT) + "_" + this.bookPages + ".txt";
         String languageName = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
-        ResourceLocation fileLoc = ResourceLocation.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
-        ResourceLocation backupLoc = ResourceLocation.parse("iceandfire:lang/bestiary/en_us_0/" + fileName);
+        Identifier fileLoc = Identifier.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
+        Identifier backupLoc = Identifier.parse("iceandfire:lang/bestiary/en_us_0/" + fileName);
         Optional<Resource> resource;
 
         resource = Minecraft.getInstance().getResourceManager().getResource(fileLoc);
@@ -813,9 +813,9 @@ public class GuiBestiary extends Screen {
                             line = line.substring(8, line.length() - 1);
                             String[] split = line.split(" ");
                             String texture = "iceandfire:textures/gui/bestiary/" + split[0];
-                            ResourceLocation resourcelocation = PICTURE_LOCATION_CACHE.get(texture);
+                            Identifier resourcelocation = PICTURE_LOCATION_CACHE.get(texture);
                             if (resourcelocation == null) {
-                                resourcelocation = ResourceLocation.parse(texture);
+                                resourcelocation = Identifier.parse(texture);
                                 PICTURE_LOCATION_CACHE.put(texture, resourcelocation);
                             }
                             ms.pose().pushPose();
@@ -862,7 +862,7 @@ public class GuiBestiary extends Screen {
         }
     }
 
-    private void drawRecipe(GuiGraphics ms, ItemStack result, ItemStack[] ingredients, int x, int y, float scale) {
+    private void drawRecipe(GuiGraphicsExtractor ms, ItemStack result, ItemStack[] ingredients, int x, int y, float scale) {
         // Code snippet based on Citadels GuiBasicBook
         int k = (this.width - X + 84) / 2;
         int l = (this.height - Y + 40) / 2;
@@ -895,11 +895,11 @@ public class GuiBestiary extends Screen {
         ms.pose().popPose();
     }
 
-    public void writeFromTxt(GuiGraphics ms) {
+    public void writeFromTxt(GuiGraphicsExtractor ms) {
         String fileName = this.pageType.toString().toLowerCase(Locale.ROOT) + "_" + this.bookPages + ".txt";
         String languageName = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
-        ResourceLocation fileLoc = ResourceLocation.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
-        ResourceLocation backupLoc = ResourceLocation.parse("iceandfire:lang/bestiary/en_us_0/" + fileName);
+        Identifier fileLoc = Identifier.parse("iceandfire:lang/bestiary/" + languageName + "_0/" + fileName);
+        Identifier backupLoc = Identifier.parse("iceandfire:lang/bestiary/en_us_0/" + fileName);
         Optional<Resource> resource;
 
         resource = Minecraft.getInstance().getResourceManager().getResource(fileLoc);
@@ -955,7 +955,7 @@ public class GuiBestiary extends Screen {
         return font == Minecraft.getInstance().font;
     }
 
-    public void drawImage(GuiGraphics ms, ResourceLocation texture, int x, int y, int u, int v, int width, int height, float scale) {
+    public void drawImage(GuiGraphicsExtractor ms, Identifier texture, int x, int y, int u, int v, int width, int height, float scale) {
         ms.pose().pushPose();
         RenderSystem.setShaderTexture(0, texture);
         ms.pose().scale(scale / 512F, scale / 512F, scale / 512F);
@@ -963,7 +963,7 @@ public class GuiBestiary extends Screen {
         ms.pose().popPose();
     }
 
-    private void drawItemStack(GuiGraphics ms, ItemStack stack, int x, int y, float scale) {
+    private void drawItemStack(GuiGraphicsExtractor ms, ItemStack stack, int x, int y, float scale) {
         ms.pose().pushPose();
         ms.pose().scale(scale, scale, scale);
         ms.renderItem(stack, x, y);
@@ -971,7 +971,7 @@ public class GuiBestiary extends Screen {
     }
 
 
-    private void drawBlockStack(GuiGraphics ms, ItemStack stack, int x, int y, float scale, int zScale) {
+    private void drawBlockStack(GuiGraphicsExtractor ms, ItemStack stack, int x, int y, float scale, int zScale) {
         ms.pose().pushPose();
         ms.pose().scale(scale, scale, scale);
         ms.pose().translate(0, 0, zScale * 10);

@@ -6,8 +6,8 @@ import com.github.alexthe666.iceandfire.entity.*;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.core.Position;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 @EventBusSubscriber(modid = IceAndFire.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IafRecipeRegistry {
     public static final Registrar<RecipeType<?>> RECIPE_TYPE = Registrar.create(Registries.RECIPE_TYPE, IceAndFire.MODID);
-    public static final RegistryEntry<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> dev.vladeezyy.iceandfire.platform.Registrar.recipeType(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
+    public static final RegistryEntry<RecipeType<?>, RecipeType<DragonForgeRecipe>> DRAGON_FORGE_TYPE = RECIPE_TYPE.register("dragonforge", () -> dev.vladeezyy.iceandfire.platform.Registrar.recipeType(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dragonforge")));
 
     @SubscribeEvent
     public static void preInit(FMLCommonSetupEvent event) {

@@ -222,7 +222,7 @@ public class IafWorldRegistry {
                 featureList.append("\n").append("\t- ").append(feature);
             }
 
-            IceAndFire.LOGGER.debug("Added the following features to the biome [{}]: {}", biome.unwrapKey().get().location(), featureList);
+            IceAndFire.LOGGER.debug("Added the following features to the biome [{}]: {}", biome.unwrapKey().get().identifier(), featureList);
         }
 
         ADDED_FEATURES.clear();
@@ -234,7 +234,7 @@ public class IafWorldRegistry {
     }
 
     private static void addFeatureToBiome(ResourceKey<PlacedFeature> featureResource, HashMap<String, Holder<PlacedFeature>> features, java.util.function.BiConsumer<GenerationStep.Decoration, Holder<PlacedFeature>> builder, GenerationStep.Decoration step) {
-        String identifier = featureResource.location().toString();
+        String identifier = featureResource.identifier().toString();
         Holder<PlacedFeature> feature = features.get(identifier);
 
         if (feature != null) {

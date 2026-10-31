@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -113,36 +117,36 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 10;
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide && this.level().getDifficulty() == Difficulty.PEACEFUL) {
+        if (!this.level().isClientSide() && this.level().getDifficulty() == Difficulty.PEACEFUL) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         if (this.getVictorId() != null) {
-            tag.putUUID("VictorUUID", this.getVictorId());
+            tag.store("VictorUUID", UUIDUtil.CODEC, this.getVictorId());
         }
         tag.putBoolean("Flying", this.isFlying());
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
         UUID s;
 
-        if (tag.hasUUID("VictorUUID")) {
-            s = tag.getUUID("VictorUUID");
+        if (tag.read("VictorUUID", UUIDUtil.CODEC).isPresent()) {
+            s = tag.read("VictorUUID", UUIDUtil.CODEC).orElseThrow();
         } else {
-            String s1 = tag.getString("VictorUUID");
+            String s1 = tag.getStringOr("VictorUUID", "");
             s = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
         }
 
@@ -152,11 +156,11 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
             } catch (Throwable var4) {
             }
         }
-        this.setFlying(tag.getBoolean("Flying"));
+        this.setFlying(tag.getBooleanOr("Flying", false));
     }
 
     public boolean isFlying() {
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             return this.isFlying = this.entityData.get(FLYING).booleanValue();
         }
         return isFlying;
@@ -164,14 +168,14 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
 
     public void setFlying(boolean flying) {
         this.entityData.set(FLYING, flying);
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             this.isFlying = flying;
         }
     }
 
     @Override
     public void die(DamageSource cause) {
-        if (cause.getEntity() != null && cause.getEntity() instanceof LivingEntity && !level().isClientSide) {
+        if (cause.getEntity() != null && cause.getEntity() instanceof LivingEntity && !level().isClientSide()) {
             this.setVictorId(cause.getEntity().getUUID());
             if (this.flock != null) {
                 this.flock.setFearTarget((LivingEntity) cause.getEntity());
@@ -217,7 +221,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         if (this.getAnimation() == NO_ANIMATION) {
             this.setAnimation(ANIMATION_PECK);
         }
@@ -261,7 +265,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
             }
             this.flock.update();
         }
-        if (!level().isClientSide && this.getTarget() != null && this.getTarget().isAlive()) {
+        if (!level().isClientSide() && this.getTarget() != null && this.getTarget().isAlive()) {
             double dist = this.distanceToSqr(this.getTarget());
             if (this.getAnimation() == ANIMATION_PECK && this.getAnimationTick() == 7) {
                 if (dist < 1.5F) {
@@ -309,7 +313,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
         } else if (!flying && flyProgress > 0.0F) {
             flyProgress -= 1F;
         }
-        if (!this.isFlying() && this.airTarget != null && this.onGround() && !level().isClientSide) {
+        if (!this.isFlying() && this.airTarget != null && this.onGround() && !level().isClientSide()) {
             this.airTarget = null;
         }
         if (this.isFlying() && getTarget() == null) {
@@ -317,27 +321,27 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
         } else if (getTarget() != null) {
             flyTowardsTarget();
         }
-        if (!level().isClientSide && this.doesWantToLand() && !aiFlightLaunch && this.getAnimation() != ANIMATION_SHOOT_ARROWS) {
+        if (!level().isClientSide() && this.doesWantToLand() && !aiFlightLaunch && this.getAnimation() != ANIMATION_SHOOT_ARROWS) {
             this.setFlying(false);
             this.airTarget = null;
         }
-        if (!level().isClientSide && this.isFree(0, 0, 0) && !this.isFlying()) {
+        if (!level().isClientSide() && this.isFree(0, 0, 0) && !this.isFlying()) {
             this.setFlying(true);
             this.launchTicks = 0;
             this.flyTicks = 0;
             this.aiFlightLaunch = true;
         }
-        if (!level().isClientSide && this.onGround() && this.isFlying() && !aiFlightLaunch && this.getAnimation() != ANIMATION_SHOOT_ARROWS) {
+        if (!level().isClientSide() && this.onGround() && this.isFlying() && !aiFlightLaunch && this.getAnimation() != ANIMATION_SHOOT_ARROWS) {
             this.setFlying(false);
             this.airTarget = null;
         }
-        if (!level().isClientSide && (this.flock == null || this.flock != null && this.flock.isLeader(this)) && this.getRandom().nextInt(FLIGHT_CHANCE_PER_TICK) == 0 && !this.isFlying() && this.getPassengers().isEmpty() && !this.isBaby() && this.onGround()) {
+        if (!level().isClientSide() && (this.flock == null || this.flock != null && this.flock.isLeader(this)) && this.getRandom().nextInt(FLIGHT_CHANCE_PER_TICK) == 0 && !this.isFlying() && this.getPassengers().isEmpty() && !this.isBaby() && this.onGround()) {
             this.setFlying(true);
             this.launchTicks = 0;
             this.flyTicks = 0;
             this.aiFlightLaunch = true;
         }
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (aiFlightLaunch && this.launchTicks < 40) {
                 this.launchTicks++;
             } else {
@@ -355,7 +359,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
         } else {
             airBorneCounter = 0;
         }
-        if (this.getAnimation() == ANIMATION_SHOOT_ARROWS && !this.isFlying() && !level().isClientSide) {
+        if (this.getAnimation() == ANIMATION_SHOOT_ARROWS && !this.isFlying() && !level().isClientSide()) {
             this.setFlying(true);
             aiFlightLaunch = true;
         }
@@ -450,7 +454,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(IafConfig.stymphalianBirdTargetSearchLength);
         return spawnDataIn;

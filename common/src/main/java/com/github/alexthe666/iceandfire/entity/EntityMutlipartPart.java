@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.phys.Vec3;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import net.minecraft.nbt.CompoundTag;
@@ -50,12 +53,12 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void readAdditionalSaveData(ValueInput compound) {
 
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void addAdditionalSaveData(ValueOutput compound) {
 
     }
 
@@ -134,7 +137,7 @@ public abstract class EntityMutlipartPart extends Entity {
 
     @Override
     public void tick() {
-        if (!this.addedByParent && !this.level().isClientSide) {
+        if (!this.addedByParent && !this.level().isClientSide()) {
             // Saved with the chunk by 1.20.1: the parent creates its own parts, this one only doubled the hitbox
             this.discard();
             return;
@@ -143,7 +146,7 @@ public abstract class EntityMutlipartPart extends Entity {
         if (this.tickCount > 10) {
             Entity parent = getParent();
             refreshDimensions();
-            if (parent != null && !level().isClientSide) {
+            if (parent != null && !level().isClientSide()) {
                 float renderYawOffset = parent.getYRot();
                 if (parent instanceof LivingEntity) {
                     renderYawOffset = ((LivingEntity) parent).yBodyRot;
@@ -162,13 +165,13 @@ public abstract class EntityMutlipartPart extends Entity {
                 }
                 // No markHurt() here: it sent a motion packet for every part every tick to every player tracking it
                 // (200 packets per second per dragon); the position goes with the usual position updates
-                if (!this.level().isClientSide) {
+                if (!this.level().isClientSide()) {
                     this.collideWithNearbyEntities();
                 }
-                if (parent.isRemoved() && !level().isClientSide) {
+                if (parent.isRemoved() && !level().isClientSide()) {
                     this.remove(RemovalReason.DISCARDED);
                 }
-            } else if (tickCount > 20 && !level().isClientSide) {
+            } else if (tickCount > 20 && !level().isClientSide()) {
                 remove(RemovalReason.DISCARDED);
             }
         }
@@ -255,7 +258,7 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
     @Override
-    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         // Server only: the client has no parent (the interact packet of the vanilla client reaches this on the server)
         Entity parent = getParent();
         if (parent == null) {
@@ -285,14 +288,14 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float damage) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         Entity parent = getParent();
         return parent != null && parent.hurt(source, damage * this.damageMultiplier);
     }
 
     @Override
-    public boolean isInvulnerableTo(@NotNull DamageSource source) {
-        return source.is(DamageTypes.FALL) || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.FALLING_BLOCK) || source.is(DamageTypes.LAVA) || source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(source);
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+        return source.is(DamageTypes.FALL) || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.FALLING_BLOCK) || source.is(DamageTypes.LAVA) || source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(level, source);
     }
 
     public boolean isAddedByParent() {

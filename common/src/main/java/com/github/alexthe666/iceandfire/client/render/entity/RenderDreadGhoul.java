@@ -6,22 +6,22 @@ import com.github.alexthe666.iceandfire.entity.EntityDreadGhoul;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadGhoul extends MobRenderer<EntityDreadGhoul, ModelDreadGhoul> {
 
-    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_eyes.png");
+    public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_eyes.png");
 
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_closed_1.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_closed_2.png");
-    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_closed_3.png");
-    public static final ResourceLocation TEXTURE_0_MID = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_mid_1.png");
-    public static final ResourceLocation TEXTURE_1_MID = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_mid_2.png");
-    public static final ResourceLocation TEXTURE_2_MID = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_mid_3.png");
-    public static final ResourceLocation TEXTURE_0_OPEN = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_open_1.png");
-    public static final ResourceLocation TEXTURE_1_OPEN = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_open_2.png");
-    public static final ResourceLocation TEXTURE_2_OPEN = ResourceLocation.parse("iceandfire:textures/models/dread/dread_ghoul_open_3.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_closed_1.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_closed_2.png");
+    public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_closed_3.png");
+    public static final Identifier TEXTURE_0_MID = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_mid_1.png");
+    public static final Identifier TEXTURE_1_MID = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_mid_2.png");
+    public static final Identifier TEXTURE_2_MID = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_mid_3.png");
+    public static final Identifier TEXTURE_0_OPEN = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_open_1.png");
+    public static final Identifier TEXTURE_1_OPEN = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_open_2.png");
+    public static final Identifier TEXTURE_2_OPEN = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_open_3.png");
 
     public RenderDreadGhoul(EntityRendererProvider.Context context) {
         super(context, new ModelDreadGhoul(0.0F), 0.5F);
@@ -36,7 +36,7 @@ public class RenderDreadGhoul extends MobRenderer<EntityDreadGhoul, ModelDreadGh
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityDreadGhoul ghoul) {
+    public @NotNull Identifier getTextureLocation(EntityDreadGhoul ghoul) {
         if (ghoul.getScreamStage() == 2) {
             switch (ghoul.getVariant()) {
                 case 1:

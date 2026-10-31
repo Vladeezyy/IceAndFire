@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.block;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexBase;
 import net.minecraft.core.BlockPos;
@@ -41,7 +42,7 @@ public class BlockMyrmexResin extends Block {
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entity) {
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
         if (sticky) {
             if (!(entity instanceof EntityMyrmexBase)) {
                 entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.4D, 0.4D, 0.4D));

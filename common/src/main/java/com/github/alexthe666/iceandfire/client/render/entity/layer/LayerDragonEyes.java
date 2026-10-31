@@ -12,11 +12,11 @@ import com.github.alexthe666.iceandfire.enums.EnumDragonTextures;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class LayerDragonEyes extends RenderLayer<EntityDragonBase, AdvancedEntit
     }
 
     @Override
-    protected @NotNull ResourceLocation getTextureLocation(@NotNull EntityDragonBase entityIn) {
+    protected @NotNull Identifier getTextureLocation(@NotNull EntityDragonBase entityIn) {
         return null;
     }
 

@@ -7,7 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.entity.projectile.arrow.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -52,7 +52,7 @@ public class EntityTideTrident extends ThrownTrident {
         entitiesHit++;
         if (entitiesHit >= getMaxPiercing())
             this.dealtDamage = true;
-        if (entity.hurt(damagesource, f)) {
+        if (entity.hurtOrSimulate(damagesource, f)) {
             if (entity.getType() == EntityType.ENDERMAN) {
                 return;
             }

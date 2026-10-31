@@ -7,7 +7,7 @@ import com.github.alexthe666.iceandfire.world.IafProcessors;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.LevelReader;
@@ -51,7 +51,7 @@ public class DreadRuinProcessor extends StructureProcessor {
         if (infoIn2.state().getBlock() == IafBlockRegistry.DREAD_SPAWNER.get()) {
             CompoundTag tag = new CompoundTag();
             CompoundTag spawnData = new CompoundTag();
-            ResourceLocation spawnerMobId = BuiltInRegistries.ENTITY_TYPE.getKey(getRandomMobForMobSpawner(random));
+            Identifier spawnerMobId = BuiltInRegistries.ENTITY_TYPE.getKey(getRandomMobForMobSpawner(random));
             if (spawnerMobId != null) {
                 CompoundTag entity = new CompoundTag();
                 entity.putString("id", spawnerMobId.toString());

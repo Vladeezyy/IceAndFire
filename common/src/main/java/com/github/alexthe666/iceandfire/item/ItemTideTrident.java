@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.client.render.entity.RenderTideTridentItem;
 import com.github.alexthe666.iceandfire.entity.EntityTideTrident;
@@ -20,7 +21,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -41,7 +42,7 @@ import java.util.function.Consumer;
 public class ItemTideTrident extends TridentItem {
 
     public ItemTideTrident() {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(400).attributes(createAttributes()).component(DataComponents.TOOL, TridentItem.createToolProperties()));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(400).attributes(createAttributes()).component(DataComponents.TOOL, TridentItem.createToolProperties()));
     }
 
 
@@ -56,8 +57,8 @@ public class ItemTideTrident extends TridentItem {
                         return;
                     }
                     Holder<SoundEvent> sound = EnchantmentHelper.pickHighestLevel(stack, EnchantmentEffectComponents.TRIDENT_SOUND).orElse(SoundEvents.TRIDENT_THROW);
-                    if (!worldIn.isClientSide) {
-                        stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(entityLiving.getUsedItemHand()));
+                    if (!worldIn.isClientSide()) {
+                        stack.hurtAndBreak(1, player, entityLiving.getUsedItemHand().asEquipmentSlot());
                         if (riptide == 0.0F) {
                             EntityTideTrident trident = new EntityTideTrident(worldIn, player, stack);
                             trident.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 2.5F, 1.0F);
@@ -116,10 +117,10 @@ public class ItemTideTrident extends TridentItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
 
-        tooltip.add(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.tide_trident.desc_0").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.iceandfire.tide_trident.desc_1").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.tide_trident.desc_0").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.iceandfire.tide_trident.desc_1").withStyle(ChatFormatting.GRAY));
     }
 }

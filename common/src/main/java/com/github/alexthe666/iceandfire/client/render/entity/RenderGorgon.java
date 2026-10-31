@@ -6,14 +6,14 @@ import com.github.alexthe666.iceandfire.entity.EntityGorgon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderGorgon extends MobRenderer<EntityGorgon, ModelGorgon> {
 
-    public static final ResourceLocation PASSIVE_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_passive.png");
-    public static final ResourceLocation AGRESSIVE_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_active.png");
-    public static final ResourceLocation DEAD_TEXTURE = ResourceLocation.parse("iceandfire:textures/models/gorgon/gorgon_decapitated.png");
+    public static final Identifier PASSIVE_TEXTURE = Identifier.parse("iceandfire:textures/models/gorgon/gorgon_passive.png");
+    public static final Identifier AGRESSIVE_TEXTURE = Identifier.parse("iceandfire:textures/models/gorgon/gorgon_active.png");
+    public static final Identifier DEAD_TEXTURE = Identifier.parse("iceandfire:textures/models/gorgon/gorgon_decapitated.png");
 
     public RenderGorgon(EntityRendererProvider.Context context) {
         super(context, new ModelGorgon(), 0.4F);
@@ -26,7 +26,7 @@ public class RenderGorgon extends MobRenderer<EntityGorgon, ModelGorgon> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityGorgon gorgon) {
+    public @NotNull Identifier getTextureLocation(EntityGorgon gorgon) {
         if (gorgon.getAnimation() == EntityGorgon.ANIMATION_SCARE) {
             return AGRESSIVE_TEXTURE;
         } else if (gorgon.deathTime > 0) {

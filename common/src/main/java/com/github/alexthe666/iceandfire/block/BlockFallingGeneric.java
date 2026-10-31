@@ -41,7 +41,7 @@ public class BlockFallingGeneric extends FallingBlock {
     }*/
 
     public static BlockFallingGeneric builder(float hardness, float resistance, SoundType sound, MapColor color, NoteBlockInstrument instrument) {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.of()
+        BlockBehaviour.Properties props = dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(color)
                 .instrument(instrument)
                 .sound(sound)

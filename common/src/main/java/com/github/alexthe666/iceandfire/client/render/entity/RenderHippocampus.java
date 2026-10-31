@@ -1,19 +1,19 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelHippocampus;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,18 +22,18 @@ import javax.annotation.Nullable;
 
 public class RenderHippocampus extends MobRenderer<EntityHippocampus, ModelHippocampus> {
 
-    private static final ResourceLocation VARIANT_0 = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_0.png");
-    private static final ResourceLocation VARIANT_0_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_0_blinking.png");
-    private static final ResourceLocation VARIANT_1 = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_1.png");
-    private static final ResourceLocation VARIANT_1_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_1_blinking.png");
-    private static final ResourceLocation VARIANT_2 = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_2.png");
-    private static final ResourceLocation VARIANT_2_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_2_blinking.png");
-    private static final ResourceLocation VARIANT_3 = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_3.png");
-    private static final ResourceLocation VARIANT_3_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_3_blinking.png");
-    private static final ResourceLocation VARIANT_4 = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_4.png");
-    private static final ResourceLocation VARIANT_4_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_4_blinking.png");
-    private static final ResourceLocation VARIANT_5 = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_5.png");
-    private static final ResourceLocation VARIANT_5_BLINK = ResourceLocation.parse("iceandfire:textures/models/hippocampus/hippocampus_5_blinking.png");
+    private static final Identifier VARIANT_0 = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_0.png");
+    private static final Identifier VARIANT_0_BLINK = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_0_blinking.png");
+    private static final Identifier VARIANT_1 = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_1.png");
+    private static final Identifier VARIANT_1_BLINK = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_1_blinking.png");
+    private static final Identifier VARIANT_2 = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_2.png");
+    private static final Identifier VARIANT_2_BLINK = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_2_blinking.png");
+    private static final Identifier VARIANT_3 = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_3.png");
+    private static final Identifier VARIANT_3_BLINK = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_3_blinking.png");
+    private static final Identifier VARIANT_4 = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_4.png");
+    private static final Identifier VARIANT_4_BLINK = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_4_blinking.png");
+    private static final Identifier VARIANT_5 = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_5.png");
+    private static final Identifier VARIANT_5_BLINK = Identifier.parse("iceandfire:textures/models/hippocampus/hippocampus_5_blinking.png");
 
 
     public RenderHippocampus(EntityRendererProvider.Context context) {
@@ -44,7 +44,7 @@ public class RenderHippocampus extends MobRenderer<EntityHippocampus, ModelHippo
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(EntityHippocampus entity) {
+    public Identifier getTextureLocation(EntityHippocampus entity) {
         switch (entity.getVariant()) {
             default:
                 return entity.isBlinking() ? VARIANT_0_BLINK : VARIANT_0;
@@ -65,12 +65,12 @@ public class RenderHippocampus extends MobRenderer<EntityHippocampus, ModelHippo
 
     private class LayerHippocampusSaddle extends RenderLayer<EntityHippocampus, ModelHippocampus> {
         private final RenderHippocampus renderer;
-        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippocampus/saddle.png"));
-        private final RenderType BRIDLE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippocampus/bridle.png"));
-        private final RenderType CHEST = RenderType.entityTranslucent(ResourceLocation.parse("iceandfire:textures/models/hippocampus/chest.png"));
-        private final RenderType TEXTURE_DIAMOND = RenderType.entityCutout(ResourceLocation.parse("iceandfire:textures/models/hippocampus/armor_diamond.png"));
-        private final RenderType TEXTURE_GOLD = RenderType.entityCutout(ResourceLocation.parse("iceandfire:textures/models/hippocampus/armor_gold.png"));
-        private final RenderType TEXTURE_IRON = RenderType.entityCutout(ResourceLocation.parse("iceandfire:textures/models/hippocampus/armor_iron.png"));
+        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippocampus/saddle.png"));
+        private final RenderType BRIDLE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippocampus/bridle.png"));
+        private final RenderType CHEST = RenderType.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippocampus/chest.png"));
+        private final RenderType TEXTURE_DIAMOND = RenderType.entityCutout(Identifier.parse("iceandfire:textures/models/hippocampus/armor_diamond.png"));
+        private final RenderType TEXTURE_GOLD = RenderType.entityCutout(Identifier.parse("iceandfire:textures/models/hippocampus/armor_gold.png"));
+        private final RenderType TEXTURE_IRON = RenderType.entityCutout(Identifier.parse("iceandfire:textures/models/hippocampus/armor_iron.png"));
 
         public LayerHippocampusSaddle(RenderHippocampus renderer) {
             super(renderer);
@@ -113,8 +113,8 @@ public class RenderHippocampus extends MobRenderer<EntityHippocampus, ModelHippo
 
     private class LayerHippocampusRainbow extends RenderLayer<EntityHippocampus, ModelHippocampus> {
         private final RenderHippocampus renderer;
-        private final RenderType TEXTURE = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippocampus/rainbow.png"));
-        private final RenderType TEXTURE_BLINK = RenderType.entityNoOutline(ResourceLocation.parse("iceandfire:textures/models/hippocampus/rainbow_blink.png"));
+        private final RenderType TEXTURE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippocampus/rainbow.png"));
+        private final RenderType TEXTURE_BLINK = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippocampus/rainbow_blink.png"));
 
         public LayerHippocampusRainbow(RenderHippocampus renderer) {
             super(renderer);
@@ -131,7 +131,7 @@ public class RenderHippocampus extends MobRenderer<EntityHippocampus, ModelHippo
                 int k = i % j;
                 int l = (i + 1) % j;
                 float f = ((float) (hippo.tickCount % 25) + partialTicks) / 25.0F;
-                int color = FastColor.ARGB32.lerp(f, Sheep.getColor(DyeColor.byId(k)), Sheep.getColor(DyeColor.byId(l)));
+                int color = ARGB.lerp(f, Sheep.getColor(DyeColor.byId(k)), Sheep.getColor(DyeColor.byId(l)));
                 this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, LivingEntityRenderer.getOverlayCoords(hippo, 0.0F), color);
             }
         }

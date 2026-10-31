@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.world.item.crafting.RecipeHolder;
 import com.github.alexthe666.iceandfire.recipe.DragonForgeInput;
@@ -86,7 +88,7 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
             entityDragonforge.lastDragonFlameTimer--;
         }
         entityDragonforge.updateGrills(entityDragonforge.assembled());
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (entityDragonforge.prevAssembled != entityDragonforge.assembled()) {
                 BlockDragonforgeCore.setState(entityDragonforge.fireType, entityDragonforge.prevAssembled, level, pos);
             }
@@ -97,10 +99,10 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
         if (entityDragonforge.cookTime > 0 && entityDragonforge.canSmelt() && entityDragonforge.lastDragonFlameTimer == 0) {
             entityDragonforge.cookTime--;
         }
-        if (entityDragonforge.getItem(0).isEmpty() && !level.isClientSide) {
+        if (entityDragonforge.getItem(0).isEmpty() && !level.isClientSide()) {
             entityDragonforge.cookTime = 0;
         }
-        if (!entityDragonforge.level.isClientSide) {
+        if (!entityDragonforge.level.isClientSide()) {
             if (entityDragonforge.isBurning()) {
                 if (entityDragonforge.canSmelt()) {
                     ++entityDragonforge.cookTime;
@@ -211,15 +213,15 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
         this.forgeItemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.forgeItemStacks, registries);
-        this.cookTime = compound.getInt("CookTime");
+        ContainerHelper.loadAllItems(compound, this.forgeItemStacks, compound.lookup());
+        this.cookTime = compound.getIntOr("CookTime", 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+    public void saveAdditional(ValueOutput compound) {
         compound.putInt("CookTime", (short) this.cookTime);
         ContainerHelper.saveAllItems(compound, this.forgeItemStacks, registries);
     }
@@ -386,7 +388,7 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     }
 
     public void transferPower(int i) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (this.canSmelt()) {
                 if (canAddFlameAgain) {
                     cookTime = Math.min(this.getMaxCookTime() + 1,

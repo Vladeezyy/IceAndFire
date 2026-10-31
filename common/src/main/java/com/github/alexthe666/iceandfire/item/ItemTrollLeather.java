@@ -6,6 +6,6 @@ import net.minecraft.world.item.Item;
 public class ItemTrollLeather extends Item {
 
     public ItemTrollLeather(EnumTroll troll) {
-        super(new Item.Properties());
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
     }
 }

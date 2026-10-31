@@ -4,19 +4,19 @@ import com.github.alexthe666.iceandfire.block.BlockLectern;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityLectern;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderLectern<T extends TileEntityLectern> implements BlockEntityRenderer<T> {
 
-    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderType.entityCutoutNoCull(ResourceLocation.parse("iceandfire:textures/models/lectern_book.png"));
+    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/lectern_book.png"));
     private final BookModel bookModel;
 
     public RenderLectern(BlockEntityRendererProvider.Context context) {

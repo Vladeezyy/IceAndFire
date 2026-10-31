@@ -7,7 +7,7 @@ import com.github.alexthe666.iceandfire.item.ItemMobSkull;
 import com.github.alexthe666.iceandfire.item.ItemSeaSerpentScales;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
@@ -64,10 +64,10 @@ public final class IafItemTags {
     public static TagKey<Item> TEMPT_HIPPOGRYPH = createKey("tempt_hippogryph");
 
     public static TagKey<Item> createKey(final String name) {
-        return TagKey.create(net.minecraft.core.registries.Registries.ITEM, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
+        return TagKey.create(net.minecraft.core.registries.Registries.ITEM, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     public static TagKey<Item> createForgeKey(final String name) {
-        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", name));
     }
 }

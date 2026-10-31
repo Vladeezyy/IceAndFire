@@ -9,13 +9,13 @@ import com.github.alexthe666.iceandfire.datagen.tags.IafBlockTags;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
 import com.mojang.serialization.Codec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class WorldGenIceDragonCave extends WorldGenDragonCave {
-    public static ResourceKey<LootTable> ICE_DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/ice_dragon_female_cave"));
-    public static ResourceKey<LootTable> ICE_DRAGON_CHEST_MALE = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "chest/ice_dragon_male_cave"));
+    public static ResourceKey<LootTable> ICE_DRAGON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "chest/ice_dragon_female_cave"));
+    public static ResourceKey<LootTable> ICE_DRAGON_CHEST_MALE = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "chest/ice_dragon_male_cave"));
 
     public WorldGenIceDragonCave(final Codec<NoneFeatureConfiguration> configuration) {
         super(configuration);

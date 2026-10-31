@@ -1,19 +1,19 @@
 package dev.vladeezyy.iceandfire.bus;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 /** A loot table is loaded; listeners change it in place or replace it */
 public class LootTableLoadEvent extends Event {
-    private final ResourceLocation name;
+    private final Identifier name;
     private LootTable table;
 
-    public LootTableLoadEvent(ResourceLocation name, LootTable table) {
+    public LootTableLoadEvent(Identifier name, LootTable table) {
         this.name = name;
         this.table = table;
     }
 
-    public ResourceLocation getName() {
+    public Identifier getName() {
         return this.name;
     }
 

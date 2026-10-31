@@ -7,7 +7,7 @@ import com.github.alexthe666.iceandfire.world.structure.MausoleumStructure;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 public class IafStructures {
@@ -17,7 +17,7 @@ public class IafStructures {
     public static final ResourceKey<Structure> GORGON_TEMPLE = registerKey("gorgon_temple");
 
     public static ResourceKey<Structure> registerKey(String name) {
-        return ResourceKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, name));
+        return ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
     public static void bootstrap(BootstrapContext<Structure> context) {

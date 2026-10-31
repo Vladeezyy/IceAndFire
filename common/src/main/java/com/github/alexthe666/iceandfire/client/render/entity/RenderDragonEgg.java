@@ -4,24 +4,24 @@ import com.github.alexthe666.iceandfire.client.model.ModelDragonEgg;
 import com.github.alexthe666.iceandfire.entity.EntityDragonEgg;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
 public class RenderDragonEgg extends LivingEntityRenderer<EntityDragonEgg, ModelDragonEgg<EntityDragonEgg>> {
 
-    public static final ResourceLocation EGG_RED = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_red.png");
-    public static final ResourceLocation EGG_GREEN = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_green.png");
-    public static final ResourceLocation EGG_BRONZE = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_bronze.png");
-    public static final ResourceLocation EGG_GREY = ResourceLocation.parse("iceandfire:textures/models/firedragon/egg_gray.png");
-    public static final ResourceLocation EGG_BLUE = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_blue.png");
-    public static final ResourceLocation EGG_WHITE = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_white.png");
-    public static final ResourceLocation EGG_SAPPHIRE = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_sapphire.png");
-    public static final ResourceLocation EGG_SILVER = ResourceLocation.parse("iceandfire:textures/models/icedragon/egg_silver.png");
-    public static final ResourceLocation EGG_ELECTRIC = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_electric.png");
-    public static final ResourceLocation EGG_AMYTHEST = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_amythest.png");
-    public static final ResourceLocation EGG_BLACK = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_black.png");
-    public static final ResourceLocation EGG_COPPER = ResourceLocation.parse("iceandfire:textures/models/lightningdragon/egg_copper.png");
+    public static final Identifier EGG_RED = Identifier.parse("iceandfire:textures/models/firedragon/egg_red.png");
+    public static final Identifier EGG_GREEN = Identifier.parse("iceandfire:textures/models/firedragon/egg_green.png");
+    public static final Identifier EGG_BRONZE = Identifier.parse("iceandfire:textures/models/firedragon/egg_bronze.png");
+    public static final Identifier EGG_GREY = Identifier.parse("iceandfire:textures/models/firedragon/egg_gray.png");
+    public static final Identifier EGG_BLUE = Identifier.parse("iceandfire:textures/models/icedragon/egg_blue.png");
+    public static final Identifier EGG_WHITE = Identifier.parse("iceandfire:textures/models/icedragon/egg_white.png");
+    public static final Identifier EGG_SAPPHIRE = Identifier.parse("iceandfire:textures/models/icedragon/egg_sapphire.png");
+    public static final Identifier EGG_SILVER = Identifier.parse("iceandfire:textures/models/icedragon/egg_silver.png");
+    public static final Identifier EGG_ELECTRIC = Identifier.parse("iceandfire:textures/models/lightningdragon/egg_electric.png");
+    public static final Identifier EGG_AMYTHEST = Identifier.parse("iceandfire:textures/models/lightningdragon/egg_amythest.png");
+    public static final Identifier EGG_BLACK = Identifier.parse("iceandfire:textures/models/lightningdragon/egg_black.png");
+    public static final Identifier EGG_COPPER = Identifier.parse("iceandfire:textures/models/lightningdragon/egg_copper.png");
 
     public RenderDragonEgg(EntityRendererProvider.Context context) {
         super(context, new ModelDragonEgg(), 0.3F);
@@ -34,7 +34,7 @@ public class RenderDragonEgg extends LivingEntityRenderer<EntityDragonEgg, Model
 
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityDragonEgg entity) {
+    public @NotNull Identifier getTextureLocation(EntityDragonEgg entity) {
         switch (entity.getEggType()) {
             default:
                 return EGG_RED;

@@ -6,13 +6,13 @@ import com.github.alexthe666.iceandfire.entity.EntityDreadScuttler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderDreadScuttler extends MobRenderer<EntityDreadScuttler, ModelDreadScuttler> {
 
-    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_scuttler_eyes.png");
-    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_scuttler.png");
+    public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_scuttler_eyes.png");
+    public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_scuttler.png");
 
     public RenderDreadScuttler(EntityRendererProvider.Context context) {
         super(context, new ModelDreadScuttler(), 0.75F);
@@ -26,7 +26,7 @@ public class RenderDreadScuttler extends MobRenderer<EntityDreadScuttler, ModelD
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EntityDreadScuttler beast) {
+    public @NotNull Identifier getTextureLocation(@NotNull EntityDreadScuttler beast) {
         return TEXTURE;
 
     }

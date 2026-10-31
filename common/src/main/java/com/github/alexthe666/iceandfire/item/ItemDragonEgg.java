@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.core.component.DataComponents;
 import com.github.alexthe666.iceandfire.util.ItemNbt;
@@ -24,7 +26,7 @@ public class ItemDragonEgg extends Item {
     public EnumDragonEgg type;
 
     public ItemDragonEgg(EnumDragonEgg type) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
         this.type = type;
     }
 
@@ -34,13 +36,13 @@ public class ItemDragonEgg extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("dragon." + type.toString().toLowerCase()).withStyle(type.color));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("dragon." + type.toString().toLowerCase()).withStyle(type.color));
     }
 
     @Override
@@ -54,7 +56,7 @@ public class ItemDragonEgg extends Item {
         if (itemstack.has(DataComponents.CUSTOM_NAME)) {
             egg.setCustomName(itemstack.getHoverName());
         }
-        if (!context.getLevel().isClientSide) {
+        if (!context.getLevel().isClientSide()) {
             context.getLevel().addFreshEntity(egg);
         }
         itemstack.shrink(1);

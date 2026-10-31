@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.Fireball;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -75,7 +75,7 @@ public class EntityPixieCharge extends Fireball {
     @Override
     public void tick() {
         Entity shootingEntity = this.getOwner();
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             for (int i = 0; i < 5; ++i) {
                 IceAndFire.PROXY.spawnParticle(EnumParticles.If_Pixie, this.getX() + this.random.nextDouble() * 0.15F * (this.random.nextBoolean() ? -1 : 1), this.getY() + this.random.nextDouble() * 0.15F * (this.random.nextBoolean() ? -1 : 1), this.getZ() + this.random.nextDouble() * 0.15F * (this.random.nextBoolean() ? -1 : 1), rgb[0], rgb[1], rgb[2]);
             }
@@ -84,7 +84,7 @@ public class EntityPixieCharge extends Fireball {
         if (this.tickCount > 30) {
             this.remove(RemovalReason.DISCARDED);
         }
-        if (this.level().isClientSide || (shootingEntity == null || shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
+        if (this.level().isClientSide() || (shootingEntity == null || shootingEntity.isAlive()) && this.level().hasChunkAt(this.blockPosition())) {
             this.baseTick();
             if (this.shouldBurn()) {
                 this.igniteForSeconds(1);
@@ -124,7 +124,7 @@ public class EntityPixieCharge extends Fireball {
     protected void onHit(@NotNull HitResult movingObject) {
         boolean flag = false;
         Entity shootingEntity = this.getOwner();
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (movingObject.getType() == HitResult.Type.ENTITY && !((EntityHitResult) movingObject).getEntity().is(shootingEntity)) {
                 Entity entity = ((EntityHitResult) movingObject).getEntity();
                 if (shootingEntity != null && shootingEntity.equals(entity)) {
@@ -135,14 +135,14 @@ public class EntityPixieCharge extends Fireball {
                         ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.GLOWING, 100, 0));
                         entity.hurt(level().damageSources().indirectMagic(shootingEntity, null), 5.0F);
                     }
-                    if (this.level().isClientSide) {
+                    if (this.level().isClientSide()) {
                         for (int i = 0; i < 20; ++i) {
                             IceAndFire.PROXY.spawnParticle(EnumParticles.If_Pixie, this.getX() + this.random.nextDouble() * 1F * (this.random.nextBoolean() ? -1 : 1), this.getY() + this.random.nextDouble() * 1F * (this.random.nextBoolean() ? -1 : 1), this.getZ() + this.random.nextDouble() * 1F * (this.random.nextBoolean() ? -1 : 1), rgb[0], rgb[1], rgb[2]);
                         }
                     }
                     if (shootingEntity == null || !(shootingEntity instanceof Player) || !((Player) shootingEntity).isCreative()) {
                         if (random.nextInt(3) == 0) {
-                            this.spawnAtLocation(new ItemStack(IafItemRegistry.PIXIE_DUST.get(), 1), 0.45F);
+                            this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), new ItemStack(IafItemRegistry.PIXIE_DUST.get(), 1), 0.45F);
                         }
                     }
                 }

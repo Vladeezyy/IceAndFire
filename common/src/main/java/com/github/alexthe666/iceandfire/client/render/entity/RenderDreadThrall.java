@@ -10,24 +10,24 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class RenderDreadThrall extends MobRenderer<EntityDreadThrall, ModelDreadThrall> implements IHasArmorVariantResource {
-    public static final ResourceLocation TEXTURE = ResourceLocation.parse("iceandfire:textures/models/dread/dread_thrall.png");
-    public static final ResourceLocation TEXTURE_EYES = ResourceLocation.parse("iceandfire:textures/models/dread/dread_thrall_eyes.png");
-    public static final ResourceLocation TEXTURE_LEG_ARMOR = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_legs.png");
-    public static final ResourceLocation TEXTURE_ARMOR_0 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_1.png");
-    public static final ResourceLocation TEXTURE_ARMOR_1 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_2.png");
-    public static final ResourceLocation TEXTURE_ARMOR_2 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_3.png");
-    public static final ResourceLocation TEXTURE_ARMOR_3 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_4.png");
-    public static final ResourceLocation TEXTURE_ARMOR_4 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_5.png");
-    public static final ResourceLocation TEXTURE_ARMOR_5 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_6.png");
-    public static final ResourceLocation TEXTURE_ARMOR_6 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_7.png");
-    public static final ResourceLocation TEXTURE_ARMOR_7 = ResourceLocation.parse("iceandfire:textures/models/dread/thrall_chest_8.png");
+    public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_thrall.png");
+    public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_thrall_eyes.png");
+    public static final Identifier TEXTURE_LEG_ARMOR = Identifier.parse("iceandfire:textures/models/dread/thrall_legs.png");
+    public static final Identifier TEXTURE_ARMOR_0 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_1.png");
+    public static final Identifier TEXTURE_ARMOR_1 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_2.png");
+    public static final Identifier TEXTURE_ARMOR_2 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_3.png");
+    public static final Identifier TEXTURE_ARMOR_3 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_4.png");
+    public static final Identifier TEXTURE_ARMOR_4 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_5.png");
+    public static final Identifier TEXTURE_ARMOR_5 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_6.png");
+    public static final Identifier TEXTURE_ARMOR_6 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_7.png");
+    public static final Identifier TEXTURE_ARMOR_7 = Identifier.parse("iceandfire:textures/models/dread/thrall_chest_8.png");
     public final HideableLayer<EntityDreadThrall, ModelDreadThrall, ItemInHandLayer<EntityDreadThrall, ModelDreadThrall>> itemLayer;
 
     public RenderDreadThrall(EntityRendererProvider.Context context) {
@@ -42,7 +42,7 @@ public class RenderDreadThrall extends MobRenderer<EntityDreadThrall, ModelDread
     }
 
     @Override
-    public ResourceLocation getArmorResource(int variant, EquipmentSlot equipmentSlotType) {
+    public Identifier getArmorResource(int variant, EquipmentSlot equipmentSlotType) {
         if (equipmentSlotType == EquipmentSlot.LEGS)
             return TEXTURE_LEG_ARMOR;
         switch (variant) {
@@ -80,7 +80,7 @@ public class RenderDreadThrall extends MobRenderer<EntityDreadThrall, ModelDread
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(@NotNull EntityDreadThrall entity) {
+    public Identifier getTextureLocation(@NotNull EntityDreadThrall entity) {
         return TEXTURE;
     }
 

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import java.util.Optional;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.core.registries.Registries;
@@ -20,7 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -39,7 +42,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.trading.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -55,10 +58,10 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     public static final Animation ANIMATION_STING = Animation.create(15);
     public static final Animation ANIMATION_EGG = Animation.create(20);
     public static final Animation ANIMATION_DIGNEST = Animation.create(45);
-    public static final ResourceKey<LootTable> DESERT_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_queen_desert"));
-    public static final ResourceKey<LootTable> JUNGLE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("iceandfire", "entities/myrmex_queen_jungle"));
-    private static final ResourceLocation TEXTURE_DESERT = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_desert_queen.png");
-    private static final ResourceLocation TEXTURE_JUNGLE = ResourceLocation.parse("iceandfire:textures/models/myrmex/myrmex_jungle_queen.png");
+    public static final ResourceKey<LootTable> DESERT_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/myrmex_queen_desert"));
+    public static final ResourceKey<LootTable> JUNGLE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/myrmex_queen_jungle"));
+    private static final Identifier TEXTURE_DESERT = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_queen.png");
+    private static final Identifier TEXTURE_JUNGLE = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_queen.png");
     private static final EntityDataAccessor<Boolean> HASMADEHOME = SynchedEntityData.defineId(EntityMyrmexQueen.class, EntityDataSerializers.BOOLEAN);
     private int eggTicks = 0;
 
@@ -68,12 +71,12 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
 
     @Override
     @Nullable
-    protected ResourceKey<LootTable> getDefaultLootTable() {
-        return isJungle() ? JUNGLE_LOOT : DESERT_LOOT;
+    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+        return Optional.of(isJungle() ? JUNGLE_LOOT : DESERT_LOOT);
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 20;
     }
 
@@ -84,12 +87,12 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    protected VillagerTrades.ItemListing[] getLevel1Trades() {
+    protected MyrmexTrades.Listing[] getLevel1Trades() {
         return isJungle() ? MyrmexTrades.JUNGLE_QUEEN.get(1) : MyrmexTrades.DESERT_QUEEN.get(1);
     }
 
     @Override
-    protected VillagerTrades.ItemListing[] getLevel2Trades() {
+    protected MyrmexTrades.Listing[] getLevel2Trades() {
         return isJungle() ? MyrmexTrades.JUNGLE_QUEEN.get(2) : MyrmexTrades.DESERT_QUEEN.get(2);
     }
 
@@ -104,7 +107,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("EggTicks", eggTicks);
         tag.putBoolean("MadeHome", this.hasMadeHome());
@@ -112,10 +115,10 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.eggTicks = tag.getInt("EggTicks");
-        this.setMadeHome(tag.getBoolean("MadeHome"));
+        this.eggTicks = tag.getIntOr("EggTicks", 0);
+        this.setMadeHome(tag.getBooleanOr("MadeHome", false));
     }
 
     public boolean hasMadeHome() {
@@ -147,7 +150,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                 BlockPos genPos = new BlockPos(this.getBlockX(), down, this.getBlockZ());
                 if (!dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, genPos.getX(), genPos.getY(), genPos.getZ()))) {
                     WorldGenMyrmexHive hiveGen = new WorldGenMyrmexHive(true, this.isJungle(), NoneFeatureConfiguration.CODEC);
-                    if (!level().isClientSide && level() instanceof ServerLevel) {
+                    if (!level().isClientSide() && level() instanceof ServerLevel) {
                         hiveGen.placeSmallGen((ServerLevel) level(), this.getRandom(), genPos);
                     }
                     this.setMadeHome(true);
@@ -160,7 +163,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                         worker.copyPosition(this);
                         worker.setHive(this.getHive());
                         worker.setJungleVariant(this.isJungle());
-                        if (!level().isClientSide) {
+                        if (!level().isClientSide()) {
                             level().addFreshEntity(worker);
                         }
                     }
@@ -168,7 +171,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                 }
             }
         }
-        if (!level().isClientSide && eggTicks > IafConfig.myrmexPregnantTicks && this.getHive() == null || !level().isClientSide && this.getHive() != null && this.getHive().repopulate() && eggTicks > IafConfig.myrmexPregnantTicks) {
+        if (!level().isClientSide() && eggTicks > IafConfig.myrmexPregnantTicks && this.getHive() == null || !level().isClientSide() && this.getHive() != null && this.getHive().repopulate() && eggTicks > IafConfig.myrmexPregnantTicks) {
             float radius = -5.25F;
             float angle = (0.01745329251F * this.yBodyRot);
             double extraX = radius * Mth.sin((float) (Math.PI + angle));
@@ -185,7 +188,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                     if (getHive() != null) {
                         egg.hiveUUID = this.getHive().hiveUUID;
                     }
-                    if (!level().isClientSide) {
+                    if (!level().isClientSide()) {
                         level().addFreshEntity(egg);
                     }
                     eggTicks = 0;
@@ -209,7 +212,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                 LivingEntity attackTarget = this.getTarget();
                 attackTarget.hurt(this.level().damageSources().mobAttack(this), ((int) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue() * 2));
                 attackTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 2));
-                attackTarget.hasImpulse = true;
+                attackTarget.needsSync = true;
                 float f = Mth.sqrt((float) (0.5 * 0.5 + 0.5 * 0.5));
                 attackTarget.setDeltaMovement(attackTarget.getDeltaMovement().multiply(0.5D, 1, 0.5D));
                 attackTarget.setDeltaMovement(attackTarget.getDeltaMovement().add(-0.5 / f * 4, 1, -0.5 / f * 4));
@@ -223,8 +226,8 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public boolean isInvulnerableTo(@NotNull DamageSource source) {
-        return super.isInvulnerableTo(source) || this.getAnimation() == ANIMATION_DIGNEST;
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+        return super.isInvulnerableTo(level, source) || this.getAnimation() == ANIMATION_DIGNEST;
     }
 
     @Override
@@ -289,7 +292,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public ResourceLocation getAdultTexture() {
+    public Identifier getAdultTexture() {
         return isJungle() ? TEXTURE_JUNGLE : TEXTURE_DESERT;
     }
 
@@ -314,14 +317,14 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
+    public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         if (this.getGrowthStage() < 2) {
             return false;
         }
         if (this.getAnimation() != ANIMATION_STING && this.getAnimation() != ANIMATION_BITE) {
             this.setAnimation(this.getRandom().nextBoolean() ? ANIMATION_STING : ANIMATION_BITE);
-            if (!this.level().isClientSide && this.getRandom().nextInt(3) == 0 && this.getItemInHand(InteractionHand.MAIN_HAND) != ItemStack.EMPTY) {
-                this.spawnAtLocation(this.getItemInHand(InteractionHand.MAIN_HAND), 0);
+            if (!this.level().isClientSide() && this.getRandom().nextInt(3) == 0 && this.getItemInHand(InteractionHand.MAIN_HAND) != ItemStack.EMPTY) {
+                this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), this.getItemInHand(InteractionHand.MAIN_HAND), 0);
                 this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             }
             if (!this.getPassengers().isEmpty()) {
@@ -353,7 +356,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
 
                 BlockState BlockState = this.level().getBlockState(BlockPos.containing(this.getBlockX() + extraX, this.getBlockY() + extraY - 1, this.getBlockZ() + extraZ));
                 if (BlockState.isAir()) {
-                    if (level().isClientSide) {
+                    if (level().isClientSide()) {
                         level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, BlockState), true, this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ, motionX, motionY, motionZ);
                     }
                 }

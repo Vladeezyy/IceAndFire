@@ -8,7 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.neoforge.common.world.BiomeModifier;
@@ -19,7 +19,7 @@ import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 import java.util.HashMap;
 
 public class IafFeatureBiomeModifier implements BiomeModifier {
-    private static final net.neoforged.neoforge.registries.DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = net.neoforged.neoforge.registries.DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features"));
+    private static final net.neoforged.neoforge.registries.DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = net.neoforged.neoforge.registries.DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_features"));
     private final HolderSet<PlacedFeature> features;
     public final HashMap<String, Holder<PlacedFeature>> featureMap = new HashMap<>();
     public IafFeatureBiomeModifier(HolderSet<PlacedFeature> features) {

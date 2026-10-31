@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -9,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -25,11 +28,11 @@ import java.util.Set;
 public class ItemBestiary extends Item {
 
     public ItemBestiary() {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(1));
     }
 
     @Override
-    public void onCraftedBy(ItemStack stack, @NotNull Level worldIn, @NotNull Player playerIn) {
+    public void onCraftedBy(ItemStack stack, Player playerIn) {
         ItemNbt.setTag(stack, new CompoundTag());
         ItemNbt.update(stack, tag -> tag.putIntArray("Pages", new int[]{0}));
 
@@ -51,16 +54,16 @@ public class ItemBestiary extends Item {
     }*/
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public @NotNull InteractionResult use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack itemStackIn = playerIn.getItemInHand(handIn);
-        if (worldIn.isClientSide) {
+        if (worldIn.isClientSide()) {
             IceAndFire.PROXY.openBestiaryGui(itemStackIn);
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, itemStackIn);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, ServerLevel worldIn, Entity entityIn, @Nullable EquipmentSlot slot) {
         if (!ItemNbt.hasTag(stack)) {
             ItemNbt.setTag(stack, new CompoundTag());
             ItemNbt.update(stack, tag -> tag.putIntArray("Pages", new int[]{EnumBestiaryPages.INTRODUCTION.ordinal()}));
@@ -69,17 +72,17 @@ public class ItemBestiary extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (ItemNbt.hasTag(stack)) {
             if (IceAndFire.PROXY.shouldSeeBestiaryContents()) {
-                tooltip.add(Component.translatable("bestiary.contains").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.translatable("bestiary.contains").withStyle(ChatFormatting.GRAY));
                 final Set<EnumBestiaryPages> pages = EnumBestiaryPages
                     .containedPages(Ints.asList(ItemNbt.view(stack).getIntArray("Pages")));
                 for (EnumBestiaryPages page : pages) {
-                    tooltip.add(Component.literal(ChatFormatting.WHITE + "-").append(Component.translatable("bestiary." + EnumBestiaryPages.values()[page.ordinal()].toString().toLowerCase())).withStyle(ChatFormatting.GRAY));
+                    tooltip.accept(Component.literal(ChatFormatting.WHITE + "-").append(Component.translatable("bestiary." + EnumBestiaryPages.values()[page.ordinal()].toString().toLowerCase())).withStyle(ChatFormatting.GRAY));
                 }
             } else {
-                tooltip.add(Component.translatable("bestiary.hold_shift").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.translatable("bestiary.hold_shift").withStyle(ChatFormatting.GRAY));
             }
 
         }

@@ -8,7 +8,7 @@ import dev.vladeezyy.iceandfire.bus.LivingChangeTargetEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +28,7 @@ public abstract class MobMixin {
     }
 
     @Inject(method = "finalizeSpawn", at = @At("HEAD"))
-    private void iceandfire$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData data, CallbackInfoReturnable<SpawnGroupData> cir) {
+    private void iceandfire$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnType, SpawnGroupData data, CallbackInfoReturnable<SpawnGroupData> cir) {
         IafBus.post(new FinalizeSpawnEvent((Mob) (Object) this));
     }
 }

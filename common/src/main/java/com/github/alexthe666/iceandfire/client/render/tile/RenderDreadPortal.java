@@ -5,17 +5,17 @@ import com.github.alexthe666.iceandfire.entity.tile.TileEntityDreadPortal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public class RenderDreadPortal<T extends TileEntityDreadPortal> implements BlockEntityRenderer<T> {
-    public static final ResourceLocation DREAD_PORTAL_BACKGROUND = ResourceLocation.parse("iceandfire:textures/environment/dread_portal_background.png");
-    public static final ResourceLocation DREAD_PORTAL = ResourceLocation.parse("iceandfire:textures/environment/dread_portal.png");
+    public static final Identifier DREAD_PORTAL_BACKGROUND = Identifier.parse("iceandfire:textures/environment/dread_portal_background.png");
+    public static final Identifier DREAD_PORTAL = Identifier.parse("iceandfire:textures/environment/dread_portal.png");
 
 
     public RenderDreadPortal(BlockEntityRendererProvider.Context context) {

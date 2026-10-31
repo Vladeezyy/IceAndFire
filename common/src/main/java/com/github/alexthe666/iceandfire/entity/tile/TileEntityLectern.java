@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import dev.vladeezyy.iceandfire.platform.transfer.SidedInvWrapper;
 import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
@@ -159,7 +161,7 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
     }
 
     public EnumBestiaryPages[] randomizePages(ItemStack bestiary, ItemStack manuscript) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (bestiary.getItem() == IafItemRegistry.BESTIARY.get()) {
                 List<EnumBestiaryPages> possibleList = getPossiblePages();
                 localRand.setSeed(this.level.getGameTime());
@@ -189,16 +191,16 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
         this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.stacks, registries);
+        ContainerHelper.loadAllItems(compound, this.stacks, compound.lookup());
 
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
-        super.saveAdditional(compound, registries);
+    public void saveAdditional(ValueOutput compound) {
+        super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.stacks, registries);
     }
 

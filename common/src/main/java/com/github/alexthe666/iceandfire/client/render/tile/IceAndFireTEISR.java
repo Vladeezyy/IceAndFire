@@ -1,6 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.block.BlockPixieHouse;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityDreadPortal;

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -16,13 +19,16 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemModSword extends SwordItem implements DragonSteelOverrides<ItemModSword>, IafStackStatsItem {
+public class ItemModSword extends Item implements DragonSteelOverrides<ItemModSword>, IafStackStatsItem, IafTieredItem {
+
+    private final CustomToolMaterial tier;
 
     private ItemAttributeModifiers dragonsteelModifiers;
     private double dragonsteelDamage;
 
-    public ItemModSword(Tier toolmaterial) {
-        super(toolmaterial, new Item.Properties().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F)));
+    public ItemModSword(CustomToolMaterial toolmaterial) {
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(toolmaterial.toolMaterial(), 3, -2.4F));
+        this.tier = toolmaterial;
     }
 
     @Override
@@ -50,14 +56,19 @@ public class ItemModSword extends SwordItem implements DragonSteelOverrides<Item
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public void hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         hurtEnemy(this, stack, target, attacker);
-        return super.hurtEnemy(stack, target, attacker);
+        super.hurtEnemy(stack, target, attacker);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, display, tooltip, flagIn);
         appendHoverText(getTier(), stack, worldIn, tooltip, flagIn);
+    }
+
+    @Override
+    public CustomToolMaterial getTier() {
+        return tier;
     }
 }

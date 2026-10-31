@@ -15,7 +15,7 @@ import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -82,7 +82,7 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
         j -= rand.nextInt(30);
 
         // If the cave generation point is too low
-        if (j < worldIn.getMinBuildHeight() + 20) {
+        if (j < worldIn.getMinY() + 20) {
             return false;
         }
         // Center the position at the "middle" of the chunk

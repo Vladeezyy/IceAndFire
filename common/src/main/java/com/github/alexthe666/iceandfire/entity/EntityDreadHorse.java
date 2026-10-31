@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import com.github.alexthe666.iceandfire.entity.util.IDreadMob;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +13,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
+import net.minecraft.world.entity.animal.equine.SkeletonHorse;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -46,21 +49,21 @@ public class EntityDreadHorse extends SkeletonHorse implements IDreadMob {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         if (this.getCommanderId() != null) {
-            compound.putUUID("CommanderUUID", this.getCommanderId());
+            compound.store("CommanderUUID", UUIDUtil.CODEC, this.getCommanderId());
         }
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
         UUID uuid;
-        if (compound.hasUUID("CommanderUUID")) {
-            uuid = compound.getUUID("CommanderUUID");
+        if (compound.read("CommanderUUID", UUIDUtil.CODEC).isPresent()) {
+            uuid = compound.read("CommanderUUID", UUIDUtil.CODEC).orElseThrow();
         } else {
-            String s = compound.getString("CommanderUUID");
+            String s = compound.getStringOr("CommanderUUID", "");
             uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
         }
 
@@ -75,7 +78,7 @@ public class EntityDreadHorse extends SkeletonHorse implements IDreadMob {
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAge(24000);
         return data;

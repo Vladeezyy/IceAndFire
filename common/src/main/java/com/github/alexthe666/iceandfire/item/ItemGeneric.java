@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.item;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -15,21 +17,21 @@ public class ItemGeneric extends Item {
     int description = 0;
 
     public ItemGeneric() {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/);
     }
 
     public ItemGeneric(int textLength) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/);
         this.description = textLength;
     }
 
     public ItemGeneric(int textLength, boolean hide) {
-        super(new Item.Properties());
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps());
         this.description = textLength;
     }
 
     public ItemGeneric(int textLength, int stacksize) {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(stacksize));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.stacksTo(stacksize));
         this.description = textLength;
     }
 
@@ -43,10 +45,10 @@ public class ItemGeneric extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (description > 0) {
             for (int i = 0; i < description; i++) {
-                tooltip.add(Component.translatable(this.getDescriptionId() + ".desc_" + i).withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc_" + i).withStyle(ChatFormatting.GRAY));
             }
         }
     }

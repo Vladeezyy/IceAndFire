@@ -7,17 +7,17 @@ import com.github.alexthe666.iceandfire.entity.EntityPixie;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderPixie extends MobRenderer<EntityPixie, ModelPixie> {
 
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_0.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_1.png");
-    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_2.png");
-    public static final ResourceLocation TEXTURE_3 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_3.png");
-    public static final ResourceLocation TEXTURE_4 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_4.png");
-    public static final ResourceLocation TEXTURE_5 = ResourceLocation.parse("iceandfire:textures/models/pixie/pixie_5.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/pixie/pixie_0.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/pixie/pixie_1.png");
+    public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/pixie/pixie_2.png");
+    public static final Identifier TEXTURE_3 = Identifier.parse("iceandfire:textures/models/pixie/pixie_3.png");
+    public static final Identifier TEXTURE_4 = Identifier.parse("iceandfire:textures/models/pixie/pixie_4.png");
+    public static final Identifier TEXTURE_5 = Identifier.parse("iceandfire:textures/models/pixie/pixie_5.png");
 
     public RenderPixie(EntityRendererProvider.Context context) {
         super(context, new ModelPixie(), 0.2F);
@@ -36,7 +36,7 @@ public class RenderPixie extends MobRenderer<EntityPixie, ModelPixie> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntityPixie pixie) {
+    public @NotNull Identifier getTextureLocation(EntityPixie pixie) {
         switch (pixie.getColor()) {
             default:
                 return TEXTURE_0;

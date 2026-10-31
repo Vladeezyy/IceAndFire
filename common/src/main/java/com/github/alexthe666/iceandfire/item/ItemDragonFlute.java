@@ -6,7 +6,6 @@ import com.github.alexthe666.iceandfire.misc.IafSoundRegistry;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,11 +19,11 @@ import java.util.*;
 public class ItemDragonFlute extends Item {
 
     public ItemDragonFlute() {
-        super(new Item.Properties().stacksTo(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().stacksTo(1));
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(Level worldIn, Player player, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = player.getItemInHand(hand);
         player.getCooldowns().addCooldown(this, 60);
 
@@ -54,7 +53,7 @@ public class ItemDragonFlute extends Item {
         }
         worldIn.playSound(player, player.blockPosition(), IafSoundRegistry.DRAGONFLUTE, SoundSource.NEUTRAL, 1, 1.75F);
 
-        return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, itemStackIn);
+        return new InteractionResult(InteractionResult.SUCCESS, itemStackIn);
     }
 
     public static class Sorter implements Comparator<Entity> {

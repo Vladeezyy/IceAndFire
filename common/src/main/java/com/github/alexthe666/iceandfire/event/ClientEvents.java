@@ -20,7 +20,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +41,7 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public class ClientEvents {
 
-    private static final ResourceLocation SIREN_SHADER = ResourceLocation.parse("iceandfire:shaders/post/siren.json");
+    private static final Identifier SIREN_SHADER = Identifier.parse("iceandfire:shaders/post/siren.json");
 
     private final Random rand = new Random();
 
@@ -98,7 +98,7 @@ public class ClientEvents {
             }
         }
         if (living instanceof Player player) {
-            if (player.level().isClientSide) {
+            if (player.level().isClientSide()) {
 
                 if (player.getVehicle() instanceof ICustomMoveController) {
                     Entity entity = player.getVehicle();
@@ -115,7 +115,7 @@ public class ClientEvents {
                     }
                 }
             }
-            if (player.level().isClientSide && IafKeybindRegistry.dragon_change_view.isDown()) {
+            if (player.level().isClientSide() && IafKeybindRegistry.dragon_change_view.isDown()) {
                 int currentView = IceAndFire.PROXY.getDragon3rdPersonView();
                 if (currentView + 1 > 3) {
                     currentView = 0;
@@ -125,7 +125,7 @@ public class ClientEvents {
                 IceAndFire.PROXY.setDragon3rdPersonView(currentView);
             }
 
-            if (player.level().isClientSide) {
+            if (player.level().isClientSide()) {
                 GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
                 EntityDataProvider.getCapability(player).ifPresent(data -> {
@@ -143,7 +143,7 @@ public class ClientEvents {
                     }
 
                 if (data.sirenData.isCharmed) {
-                    if (player.level().isClientSide && rand.nextInt(40) == 0) {
+                    if (player.level().isClientSide() && rand.nextInt(40) == 0) {
                         IceAndFire.PROXY.spawnParticle(EnumParticles.Siren_Appearance, player.getX(), player.getY(), player.getZ(), data.sirenData.charmedBy.getHairColor(), 0, 0);
                     }
 
@@ -194,7 +194,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public void onEntityMount(EntityMountEvent event) {
-        if (event.getEntityBeingMounted() instanceof EntityDragonBase dragon && event.getLevel().isClientSide && event.getEntityMounting() == Minecraft.getInstance().player) {
+        if (event.getEntityBeingMounted() instanceof EntityDragonBase dragon && event.getLevel().isClientSide() && event.getEntityMounting() == Minecraft.getInstance().player) {
             if (dragon.isTame() && dragon.isOwnedBy(Minecraft.getInstance().player)) {
                 if (AUTO_ADAPT_3RD_PERSON) {
                     // Auto adjust 3rd person camera's according to dragon's size

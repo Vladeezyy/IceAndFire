@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -11,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -57,7 +61,7 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 0;
     }
 
@@ -133,7 +137,7 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         if (this.getSummonerUUID() == null) {
             compound.putString("SummonerUUID", "");
@@ -145,11 +149,11 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
         String s = "";
-        if (compound.hasUUID("SummonerUUID")) {
-            s = compound.getString("SummonerUUID");
+        if (compound.read("SummonerUUID", UUIDUtil.CODEC).isPresent()) {
+            s = compound.getStringOr("SummonerUUID", "");
         }
         if (!s.isEmpty()) {
             try {
@@ -157,7 +161,7 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
             } catch (Throwable var4) {
             }
         }
-        this.setTicksAlive(compound.getInt("SummonTicks"));
+        this.setTicksAlive(compound.getIntOr("SummonTicks", 0));
     }
 
     public void setSummonedBy(Player player) {
@@ -226,9 +230,9 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     @Override
-    protected ResourceKey<LootTable> getDefaultLootTable() {
+    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
         // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
-        return BuiltInLootTables.EMPTY;
+        return Optional.empty();
     }
 
     @Override

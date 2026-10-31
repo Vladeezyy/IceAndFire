@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import com.github.alexthe666.iceandfire.util.ItemNbt;
 import com.github.alexthe666.iceandfire.client.render.tile.RenderGorgonHead;
@@ -16,7 +17,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -38,12 +38,12 @@ import java.util.function.Consumer;
 public class ItemGorgonHead extends Item {
 
     public ItemGorgonHead() {
-        super(new Item.Properties()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(1));
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(1));
     }
 
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, @NotNull Level world, @NotNull Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         ItemNbt.setTag(itemStack, new CompoundTag());
     }
 
@@ -53,8 +53,8 @@ public class ItemGorgonHead extends Item {
     }
 
     @Override
-    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
-        return UseAnim.BOW;
+    public @NotNull ItemUseAnimation getUseAnimation(@NotNull ItemStack stack) {
+        return ItemUseAnimation.BOW;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ItemGorgonHead extends Item {
             @Override
             public boolean apply(@Nullable Entity entity) {
                 if (entity instanceof LivingEntity livingEntity) {
-                    boolean isImmune = livingEntity instanceof IBlacklistedFromStatues blacklisted && !blacklisted.canBeTurnedToStone() || entity.getType().is(IafEntityTags.IMMUNE_TO_GORGON_STONE) || livingEntity.hasEffect(MobEffects.BLINDNESS);
+                    boolean isImmune = livingEntity instanceof IBlacklistedFromStatues blacklisted && !blacklisted.canBeTurnedToStone() || entity.is(IafEntityTags.IMMUNE_TO_GORGON_STONE) || livingEntity.hasEffect(MobEffects.BLINDNESS);
                     return !isImmune && entity.isPickable() && !livingEntity.isDeadOrDying() && (entity instanceof Player || DragonUtils.isAlive(livingEntity));
                 }
 
@@ -106,9 +106,9 @@ public class ItemGorgonHead extends Item {
                 boolean wasSuccesful = true;
 
                 if (pointedEntity instanceof Player) {
-                     wasSuccesful = pointedEntity.hurt(IafDamageRegistry.causeGorgonDamage(pointedEntity), Integer.MAX_VALUE);
+                     wasSuccesful = pointedEntity.hurtOrSimulate(IafDamageRegistry.causeGorgonDamage(pointedEntity), Integer.MAX_VALUE);
                 } else {
-                    if (!worldIn.isClientSide)
+                    if (!worldIn.isClientSide())
                         pointedEntity.remove(Entity.RemovalReason.KILLED);
                 }
 
@@ -117,7 +117,7 @@ public class ItemGorgonHead extends Item {
                     EntityStoneStatue statue = EntityStoneStatue.buildStatueEntity(livingEntity);
                     statue.absMoveTo(pointedEntity.getX(), pointedEntity.getY(), pointedEntity.getZ(), pointedEntity.getYRot(), pointedEntity.getXRot());
                     statue.yBodyRot = pointedEntity.getYRot();
-                    if (!worldIn.isClientSide) {
+                    if (!worldIn.isClientSide()) {
                         worldIn.addFreshEntity(statue);
                     }
                 }
@@ -131,11 +131,11 @@ public class ItemGorgonHead extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         playerIn.startUsingItem(hand);
         ItemNbt.update(itemStackIn, tag -> tag.putBoolean("Active", true));
-        return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, itemStackIn);
+        return new InteractionResult(InteractionResult.SUCCESS, itemStackIn);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class ItemGorgonHead extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
     }
 }

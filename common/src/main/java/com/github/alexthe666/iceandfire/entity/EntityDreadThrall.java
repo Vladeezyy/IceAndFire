@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import dev.vladeezyy.rampart.animation.Animation;
 import dev.vladeezyy.rampart.animation.AnimationHandler;
@@ -156,7 +158,7 @@ public class EntityDreadThrall extends EntityDreadMob implements IAnimatedEntity
 
     @Override
     @Nullable
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setAnimation(ANIMATION_SPAWN);
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
@@ -174,7 +176,7 @@ public class EntityDreadThrall extends EntityDreadMob implements IAnimatedEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("ArmorVariant", getBodyArmorVariant());
         compound.putBoolean("HasCustomHelmet", hasCustomArmorHead());
@@ -184,13 +186,13 @@ public class EntityDreadThrall extends EntityDreadMob implements IAnimatedEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        setBodyArmorVariant(compound.getInt("ArmorVariant"));
-        setCustomArmorHead(compound.getBoolean("HasCustomHelmet"));
-        setCustomArmorChest(compound.getBoolean("HasCustomChestplate"));
-        setCustomArmorLegs(compound.getBoolean("HasCustomLeggings"));
-        setCustomArmorFeet(compound.getBoolean("HasCustomBoots"));
+        setBodyArmorVariant(compound.getIntOr("ArmorVariant", 0));
+        setCustomArmorHead(compound.getBooleanOr("HasCustomHelmet", false));
+        setCustomArmorChest(compound.getBooleanOr("HasCustomChestplate", false));
+        setCustomArmorLegs(compound.getBooleanOr("HasCustomLeggings", false));
+        setCustomArmorFeet(compound.getBooleanOr("HasCustomBoots", false));
     }
 
     @Override

@@ -7,12 +7,12 @@ import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.github.alexthe666.iceandfire.inventory.ContainerDragon;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
-    private static final ResourceLocation texture = ResourceLocation.parse("iceandfire:textures/gui/dragon.png");
+    private static final Identifier texture = Identifier.parse("iceandfire:textures/gui/dragon.png");
 
     public GuiDragon(ContainerDragon dragonInv, Inventory playerInv, Component name) {
         super(dragonInv, playerInv, name);
@@ -28,18 +28,18 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics matrixStack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull GuiGraphicsExtractor matrixStack, int mouseX, int mouseY) {
 
     }
 
     @Override
-    public void render(@NotNull GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics matrixStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int k = (this.width - this.imageWidth) / 2;

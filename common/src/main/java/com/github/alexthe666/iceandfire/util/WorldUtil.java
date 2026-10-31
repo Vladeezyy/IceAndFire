@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.util;
+import net.minecraft.world.level.gamerules.GameRules;
 
 import com.github.alexthe666.iceandfire.world.IafWorldData;
 import com.github.alexthe666.iceandfire.world.IafWorldRegistry;
@@ -6,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -172,10 +173,10 @@ public class WorldUtil {
      */
     public static boolean isOfWorldType(@NotNull final Level world, @NotNull final ResourceKey<DimensionType> type) {
         RegistryAccess dynRegistries = world.registryAccess();
-        ResourceLocation loc = dynRegistries.registry(Registries.DIMENSION_TYPE).get().getKey(world.dimensionType());
+        Identifier loc = dynRegistries.registry(Registries.DIMENSION_TYPE).get().getKey(world.dimensionType());
         if (loc == null) {
-            if (world.isClientSide) {
-                return world.dimensionType().effectsLocation().equals(type.location());
+            if (world.isClientSide()) {
+                return world.dimensionType().effectsLocation().equals(type.identifier());
             }
             return false;
         }

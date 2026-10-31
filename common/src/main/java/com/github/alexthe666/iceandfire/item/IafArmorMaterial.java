@@ -1,33 +1,38 @@
 package com.github.alexthe666.iceandfire.item;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
- * Armor values of Ice and Fire. In 1.21 the vanilla {@link ArmorMaterial} is a registry entry, so every material
- * registers one on creation and items use {@link #holder()}.
+ * Armor values of Ice and Fire. Since 1.21.2 the vanilla {@link ArmorMaterial} is a record that repairs from an item
+ * tag ({@code data/iceandfire/tags/item/repairs/<id>.json}, the original's repair ingredients) and is drawn from an
+ * equipment asset ({@code assets/iceandfire/equipment/<id>.json}); items take {@link #properties(ArmorType)}.
  */
 public class IafArmorMaterial {
 
     protected static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private final String name;
+    private final String id;
     private final int maxDamageFactor;
     private final int[] damageReduction;
     private final int enchantability;
     private final Holder<SoundEvent> sound;
     private final float toughness;
-    private Ingredient repairMaterial = Ingredient.EMPTY;
-    private final dev.vladeezyy.iceandfire.platform.RegistryEntry<ArmorMaterial, ArmorMaterial> holder;
+    private ArmorMaterial vanilla;
 
     public IafArmorMaterial(String name, int durability, int[] damageReduction, int encantability, Holder<SoundEvent> sound, float toughness) {
         this.name = name;
@@ -36,20 +41,29 @@ public class IafArmorMaterial {
         this.enchantability = encantability;
         this.sound = sound;
         this.toughness = toughness;
-        String id = name.substring(name.indexOf(':') + 1).toLowerCase(Locale.ROOT).replace(' ', '_');
-        this.holder = IafArmorMaterials.MATERIALS.register(id, () -> new ArmorMaterial(
-                Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-                    for (ArmorItem.Type type : ArmorItem.Type.values()) {
-                        map.put(type, getDefenseForType(type));
-                    }
-                }),
-                getEnchantmentValue(), this.sound, this::getRepairIngredient,
-                List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, id))),
-                getToughness(), getKnockbackResistance()));
+        this.id = name.substring(name.indexOf(':') + 1).toLowerCase(Locale.ROOT).replace(' ', '_');
     }
 
-    public Holder<ArmorMaterial> holder() {
-        return holder.holder();
+    /** The vanilla material with this material's values (built once: the dragonsteel values are read from the config then) */
+    public ArmorMaterial vanilla() {
+        if (vanilla == null) {
+            Map<ArmorType, Integer> defense = new EnumMap<>(ArmorType.class);
+            for (ArmorType type : ArmorType.values()) {
+                defense.put(type, getDefenseForType(type));
+            }
+            ResourceKey<EquipmentAsset> asset = ResourceKey.create(EquipmentAssets.ROOT_ID, Identifier.fromNamespaceAndPath(IceAndFire.MODID, id));
+            vanilla = new ArmorMaterial(maxDamageFactor, defense, getEnchantmentValue(), sound, getToughness(), getKnockbackResistance(), repairItems(), asset);
+        }
+        return vanilla;
+    }
+
+    /** Properties of an armor piece of this material: durability, attributes, repair items, equippable */
+    public Item.Properties properties(ArmorType type) {
+        return dev.vladeezyy.iceandfire.platform.Registrar.itemProps().humanoidArmor(vanilla(), type).durability(getDurabilityForType(type));
+    }
+
+    public TagKey<Item> repairItems() {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(IceAndFire.MODID, "repairs/" + id));
     }
 
     public String getName() {
@@ -57,7 +71,7 @@ public class IafArmorMaterial {
     }
 
     /** Index of the armor piece in the arrays of the original: feet, legs, chest, head. */
-    protected static int index(ArmorItem.Type type) {
+    protected static int index(ArmorType type) {
         return switch (type) {
             case BOOTS -> 0;
             case LEGGINGS -> 1;
@@ -66,11 +80,11 @@ public class IafArmorMaterial {
         };
     }
 
-    public int getDurabilityForType(ArmorItem.Type slotIn) {
+    public int getDurabilityForType(ArmorType slotIn) {
         return MAX_DAMAGE_ARRAY[index(slotIn)] * this.maxDamageFactor;
     }
 
-    public int getDefenseForType(ArmorItem.Type slotIn) {
+    public int getDefenseForType(ArmorType slotIn) {
         return damageReduction[index(slotIn)];
     }
 
@@ -84,13 +98,5 @@ public class IafArmorMaterial {
 
     public float getKnockbackResistance() {
         return 0;
-    }
-
-    public Ingredient getRepairIngredient() {
-        return repairMaterial;
-    }
-
-    public void setRepairMaterial(Ingredient repairMaterial) {
-        this.repairMaterial = repairMaterial;
     }
 }

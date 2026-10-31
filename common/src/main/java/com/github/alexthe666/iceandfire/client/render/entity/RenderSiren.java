@@ -5,17 +5,17 @@ import com.github.alexthe666.iceandfire.entity.EntitySiren;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderSiren extends MobRenderer<EntitySiren, ModelSiren> {
 
-    public static final ResourceLocation TEXTURE_0 = ResourceLocation.parse("iceandfire:textures/models/siren/siren_0.png");
-    public static final ResourceLocation TEXTURE_0_AGGRESSIVE = ResourceLocation.parse("iceandfire:textures/models/siren/siren_0_aggressive.png");
-    public static final ResourceLocation TEXTURE_1 = ResourceLocation.parse("iceandfire:textures/models/siren/siren_1.png");
-    public static final ResourceLocation TEXTURE_1_AGGRESSIVE = ResourceLocation.parse("iceandfire:textures/models/siren/siren_1_aggressive.png");
-    public static final ResourceLocation TEXTURE_2 = ResourceLocation.parse("iceandfire:textures/models/siren/siren_2.png");
-    public static final ResourceLocation TEXTURE_2_AGGRESSIVE = ResourceLocation.parse("iceandfire:textures/models/siren/siren_2_aggressive.png");
+    public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/siren/siren_0.png");
+    public static final Identifier TEXTURE_0_AGGRESSIVE = Identifier.parse("iceandfire:textures/models/siren/siren_0_aggressive.png");
+    public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/siren/siren_1.png");
+    public static final Identifier TEXTURE_1_AGGRESSIVE = Identifier.parse("iceandfire:textures/models/siren/siren_1_aggressive.png");
+    public static final Identifier TEXTURE_2 = Identifier.parse("iceandfire:textures/models/siren/siren_2.png");
+    public static final Identifier TEXTURE_2_AGGRESSIVE = Identifier.parse("iceandfire:textures/models/siren/siren_2_aggressive.png");
 
     public RenderSiren(EntityRendererProvider.Context context) {
         super(context, new ModelSiren(), 0.8F);
@@ -28,7 +28,7 @@ public class RenderSiren extends MobRenderer<EntitySiren, ModelSiren> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(EntitySiren siren) {
+    public @NotNull Identifier getTextureLocation(EntitySiren siren) {
         switch (siren.getHairColor()) {
             default:
                 return siren.isAgressive() ? TEXTURE_0_AGGRESSIVE : TEXTURE_0;
@@ -39,7 +39,7 @@ public class RenderSiren extends MobRenderer<EntitySiren, ModelSiren> {
         }
     }
 
-    public static ResourceLocation getSirenOverlayTexture(int siren) {
+    public static Identifier getSirenOverlayTexture(int siren) {
         switch (siren) {
             default:
                 return TEXTURE_0;

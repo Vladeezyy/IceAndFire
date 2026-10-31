@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockBurntTorch extends TorchBlock implements IDreadBlock, IWallBlock {
 
     public BlockBurntTorch() {
-        super(ParticleTypes.SMOKE, Properties.of()
+        super(ParticleTypes.SMOKE, dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                     .mapColor(MapColor.WOOD)
                     .ignitedByLava()
                     .lightLevel((state) -> 0)

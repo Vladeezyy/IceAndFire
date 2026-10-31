@@ -5,7 +5,7 @@ import com.github.alexthe666.iceandfire.config.BiomeConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class IafStructure extends Structure {
 
     protected final Holder<StructureTemplatePool> startPool;
-    protected final Optional<ResourceLocation> startJigsawName;
+    protected final Optional<Identifier> startJigsawName;
     protected final int size;
     protected final HeightProvider startHeight;
     protected final Optional<Heightmap.Types> projectStartToHeightmap;
@@ -29,7 +29,7 @@ public class IafStructure extends Structure {
 
     public IafStructure(Structure.StructureSettings config,
                         Holder<StructureTemplatePool> startPool,
-                        Optional<ResourceLocation> startJigsawName,
+                        Optional<Identifier> startJigsawName,
                         int size,
                         HeightProvider startHeight,
                         Optional<Heightmap.Types> projectStartToHeightmap,

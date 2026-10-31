@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.misc;
 
 import dev.vladeezyy.iceandfire.bus.EventBusSubscriber;
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import dev.vladeezyy.iceandfire.bus.SubscribeEvent;
 import net.minecraft.core.registries.Registries;
@@ -268,7 +268,7 @@ public final class IafSoundRegistry {
     public static final SoundEvent GHOST_JUMPSCARE = createSoundEvent("ghost_jumpscare");
 
     private static SoundEvent createSoundEvent(final String soundName) {
-        final ResourceLocation soundID = ResourceLocation.fromNamespaceAndPath(MODID, soundName);
+        final Identifier soundID = Identifier.fromNamespaceAndPath(MODID, soundName);
         return SoundEvent.createVariableRangeEvent(soundID);
     }
 

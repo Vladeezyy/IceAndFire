@@ -17,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -110,7 +110,7 @@ public class EntityGhostSword extends AbstractArrow {
                     this.onHit(raytraceresult);
 
                 }
-                this.hasImpulse = true;
+                this.needsSync = true;
             }
 
             if (entityraytraceresult == null || this.getPierceLevel() <= 0) {
@@ -198,7 +198,7 @@ public class EntityGhostSword extends AbstractArrow {
             entity.igniteForSeconds(5);
         }
 
-        if (entity.hurt(damagesource, i)) {
+        if (entity.hurtOrSimulate(damagesource, i)) {
             if (flag) {
                 return;
             }
@@ -232,7 +232,7 @@ public class EntityGhostSword extends AbstractArrow {
         } else {
             this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
             //this.ticksInAir = 0;
-            if (!this.level().isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+            if (!this.level().isClientSide() && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                 this.remove(RemovalReason.DISCARDED);
             }
         }

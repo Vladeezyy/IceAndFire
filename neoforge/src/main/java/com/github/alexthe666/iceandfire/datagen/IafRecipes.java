@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.datagen;
+import com.github.alexthe666.iceandfire.item.IafArmorItem;
 
 import net.minecraft.core.HolderLookup;
 import java.util.concurrent.CompletableFuture;
@@ -12,7 +13,7 @@ import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import com.github.alexthe666.iceandfire.item.ItemDragonArmor;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
@@ -803,7 +804,7 @@ public class IafRecipes extends RecipeProvider {
 
     private void armorSet(@NotNull final RecipeOutput consumer, final Ingredient ingredient, final ItemLike... results) {
         for (ItemLike result : results) {
-            if (result.asItem() instanceof ArmorItem armorItem) {
+            if (result.asItem() instanceof IafArmorItem armorItem) {
                 switch (armorItem.getType()) {
                     case HELMET -> helmet(consumer, ingredient, result);
                     case CHESTPLATE -> chestPlate(consumer, ingredient, result);
@@ -1020,8 +1021,8 @@ public class IafRecipes extends RecipeProvider {
                 .save(consumer);
     }
     
-    private static ResourceLocation location(final String path) {
-        return ResourceLocation.fromNamespaceAndPath(IceAndFire.MODID, path);
+    private static Identifier location(final String path) {
+        return Identifier.fromNamespaceAndPath(IceAndFire.MODID, path);
     }
 
     private static String locationString(final String path) {
