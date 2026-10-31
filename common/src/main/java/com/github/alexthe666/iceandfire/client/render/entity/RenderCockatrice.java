@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 
@@ -62,6 +63,7 @@ public class RenderCockatrice extends IafMobRenderer<EntityCockatrice, AdvancedE
 
     @Override
     public void submit(IafMobRenderState iafState, PoseStack matrixStackIn, SubmitNodeCollector iafCollector, CameraRenderState iafCamera) {
+        IafBufferSource bufferIn = new IafBufferSource();
         EntityCockatrice entityIn = (EntityCockatrice) iafState.pose.entity;
         float entityYaw = iafState.bodyRot;
         float partialTicks = iafState.partialTick;
@@ -79,7 +81,7 @@ public class RenderCockatrice extends IafMobRenderer<EntityCockatrice, AdvancedE
                 CockatriceBeamRender.render(entityIn, livingentity, matrixStackIn, bufferIn, partialTicks);
             }
         }
-
+        bufferIn.submit(iafCollector);
     }
 
     @Override

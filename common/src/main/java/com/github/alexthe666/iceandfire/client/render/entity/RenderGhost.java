@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 
@@ -50,13 +51,14 @@ public class RenderGhost extends IafMobRenderer<EntityGhost, ModelGhost> {
 
     @Override
     public void submit(IafMobRenderState iafState, PoseStack matrixStackIn, SubmitNodeCollector iafCollector, CameraRenderState iafCamera) {
+        IafBufferSource bufferIn = new IafBufferSource();
         EntityGhost entityIn = (EntityGhost) iafState.pose.entity;
         float entityYaw = iafState.bodyRot;
         float partialTicks = iafState.partialTick;
         int packedLightIn = iafState.lightCoords;
         shadowRadius = 0;
         if (dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderLivingPre(entityIn, this, partialTicks, matrixStackIn, bufferIn, packedLightIn))
-            return;
+            bufferIn.submit(iafCollector);return;
         matrixStackIn.pushPose();
         this.model.attackTime = this.getAttackAnim(entityIn, partialTicks);
 
@@ -168,6 +170,7 @@ public class RenderGhost extends IafMobRenderer<EntityGhost, ModelGhost> {
             this.renderNameTag(entityIn, entityIn.getDisplayName(), matrixStackIn, bufferIn, packedLightIn, partialTicks);
         }
         dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderLivingPost(entityIn, this, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        bufferIn.submit(iafCollector);
     }
 
     @Override

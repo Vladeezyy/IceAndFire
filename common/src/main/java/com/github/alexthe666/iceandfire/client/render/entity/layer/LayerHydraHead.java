@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -58,11 +59,13 @@ public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderStat
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityHydra entity) {
+        IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (entity.isInvisible()) {
-            return;
+            bufferIn.submit(iafCollector);return;
         }
         renderHydraHeads(renderer.getModel(), false, matrixStackIn, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+        bufferIn.submit(iafCollector);
     }
 
     public static void renderHydraHeads(ModelHydraBody model, boolean stone, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, EntityHydra hydra, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {

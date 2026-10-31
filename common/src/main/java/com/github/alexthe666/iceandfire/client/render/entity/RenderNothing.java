@@ -10,16 +10,15 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderNothing<T extends Entity> extends EntityRenderer<T> {
+public class RenderNothing<T extends Entity> extends IafEntityRenderer<T> {
 
     public RenderNothing(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(@NotNull T entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
+    protected void renderLegacy(@NotNull T entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+            }
 
     // Only render if the debug bboxes are enabled
     @Override
@@ -29,7 +28,6 @@ public class RenderNothing<T extends Entity> extends EntityRenderer<T> {
         return super.shouldRender(livingEntityIn, camera, camX, camY, camZ);
     }
 
-    @Override
     public @NotNull Identifier getTextureLocation(@NotNull Entity entity) {
         return null;
     }

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -46,11 +47,13 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, T entitylivingbaseIn) {
+        IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.CHEST, packedLightIn, this.getSlotModel(EquipmentSlot.CHEST));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.LEGS, packedLightIn, this.getSlotModel(EquipmentSlot.LEGS));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.FEET, packedLightIn, this.getSlotModel(EquipmentSlot.FEET));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.HEAD, packedLightIn, this.getSlotModel(EquipmentSlot.HEAD));
+        bufferIn.submit(iafCollector);
     }
 
     private void renderEquipment(PoseStack matrixStackIn, MultiBufferSource bufferIn, T entityIn, EquipmentSlot slotType, int packedLightIn, A modelIn) {

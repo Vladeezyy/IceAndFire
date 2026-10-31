@@ -16,20 +16,19 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderGhostSword extends EntityRenderer<EntityGhostSword> {
+public class RenderGhostSword extends IafEntityRenderer<EntityGhostSword> {
 
     public RenderGhostSword(EntityRendererProvider.Context context) {
         super(context);
     }
 
 
-    @Override
     public @NotNull Identifier getTextureLocation(@NotNull EntityGhostSword entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override
-    public void render(EntityGhostSword entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(EntityGhostSword entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         matrixStackIn.pushPose();
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90.0F));
         matrixStackIn.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.IafEntityLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -123,6 +124,7 @@ public class RenderHippocampus extends IafMobRenderer<EntityHippocampus, ModelHi
 
         @Override
         protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityHippocampus hippo) {
+        IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
             if (hippo.hasCustomName() && hippo.getCustomName().toString().toLowerCase().contains("rainbow")) {
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(hippo.isBlinking() ? TEXTURE_BLINK : TEXTURE);
@@ -135,6 +137,7 @@ public class RenderHippocampus extends IafMobRenderer<EntityHippocampus, ModelHi
                 int color = ARGB.lerp(f, Sheep.getColor(DyeColor.byId(k)), Sheep.getColor(DyeColor.byId(l)));
                 this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, LivingEntityRenderer.getOverlayCoords(hippo, 0.0F), color);
             }
-        }
+        bufferIn.submit(iafCollector);
+    }
     }
 }

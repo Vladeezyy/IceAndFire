@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderDragonSkull extends EntityRenderer<EntityDragonSkull> {
+public class RenderDragonSkull extends IafEntityRenderer<EntityDragonSkull> {
 
     public static final float[] growth_stage_1 = new float[]{1F, 3F};
     public static final float[] growth_stage_2 = new float[]{3F, 7F};
@@ -43,7 +43,7 @@ public class RenderDragonSkull extends EntityRenderer<EntityDragonSkull> {
     }
 
     @Override
-    public void render(EntityDragonSkull entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(EntityDragonSkull entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         TabulaModel model;
         if (entity.getDragonType() == 2) {
             model = lightningDragonModel;
@@ -67,7 +67,6 @@ public class RenderDragonSkull extends EntityRenderer<EntityDragonSkull> {
         matrixStackIn.popPose();
     }
 
-    @Override
     public @NotNull Identifier getTextureLocation(EntityDragonSkull entity) {
         if (entity.getDragonType() == 2) {
             return EnumDragonTextures.getLightningDragonSkullTextures(entity);

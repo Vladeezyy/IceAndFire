@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
@@ -41,6 +42,7 @@ public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRen
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase dragon) {
+        IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         matrixStackIn.pushPose();
         if (!dragon.getPassengers().isEmpty()) {
@@ -95,6 +97,7 @@ public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRen
             }
         }
         matrixStackIn.popPose();
+        bufferIn.submit(iafCollector);
     }
 
     protected void translateToBody(PoseStack stack) {

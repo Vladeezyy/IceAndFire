@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
@@ -29,6 +30,7 @@ public class LayerPixieItem extends IafEntityLayer<EntityPixie, IafMobRenderStat
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityPixie entity) {
+        IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         ItemStack itemstack = entity.getItemInHand(InteractionHand.MAIN_HAND);
         if (!itemstack.isEmpty()) {
@@ -47,5 +49,6 @@ public class LayerPixieItem extends IafEntityLayer<EntityPixie, IafMobRenderStat
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.FIXED, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, Minecraft.getInstance().level, 0);
             matrixStackIn.popPose();
         }
+        bufferIn.submit(iafCollector);
     }
 }

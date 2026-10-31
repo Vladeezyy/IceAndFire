@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLightningCharge> {
+public class RenderDragonLightningCharge extends IafEntityRenderer<EntityDragonLightningCharge> {
 
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/lightningdragon/charge.png");
     public static final Identifier TEXTURE_CORE = Identifier.parse("iceandfire:textures/models/lightningdragon/charge_core.png");
@@ -29,7 +29,7 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
 
 
     @Override
-    public void render(EntityDragonLightningCharge entity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(EntityDragonLightningCharge entity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         float f = (float) entity.tickCount + partialTicks;
         float yaw = entity.yRotO + (entity.getYRot() - entity.yRotO) * partialTicks;
         VertexConsumer ivertexbuilder2 = bufferIn.getBuffer(RenderTypes.eyes(TEXTURE_CORE));
@@ -64,15 +64,13 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
         MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
 
-        super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
+            }
 
     private float interpolateValue(float start, float end, float pct) {
         return start + (end - start) * pct;
     }
 
     @Nullable
-    @Override
     public Identifier getTextureLocation(@NotNull EntityDragonLightningCharge entity) {
         return TEXTURE;
     }

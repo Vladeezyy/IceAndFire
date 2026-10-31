@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
+public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
 
     protected static final Identifier[] DESTROY_STAGES = new Identifier[]{Identifier.parse("textures/block/destroy_stage_0.png"), Identifier.parse("textures/block/destroy_stage_1.png"), Identifier.parse("textures/block/destroy_stage_2.png"), Identifier.parse("textures/block/destroy_stage_3.png"), Identifier.parse("textures/block/destroy_stage_4.png"), Identifier.parse("textures/block/destroy_stage_5.png"), Identifier.parse("textures/block/destroy_stage_6.png"), Identifier.parse("textures/block/destroy_stage_7.png"), Identifier.parse("textures/block/destroy_stage_8.png"), Identifier.parse("textures/block/destroy_stage_9.png")};
     private final Map<String, EntityModel> modelMap = new HashMap();
@@ -47,7 +47,6 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
         this.context = context;
     }
 
-    @Override
     public @NotNull Identifier getTextureLocation(@NotNull EntityStoneStatue entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
@@ -58,7 +57,7 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
     }
 
     @Override
-    public void render(EntityStoneStatue entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(EntityStoneStatue entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         EntityModel model = new PigModel(context.bakeLayer(ModelLayers.PIG));
 
         // Get the correct model

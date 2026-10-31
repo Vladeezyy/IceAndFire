@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
+public class RenderDreadLichSkull extends IafEntityRenderer<EntityDreadLichSkull> {
 
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_lich_skull.png");
     private static final ModelDreadLichSkull MODEL_SPIRIT = new ModelDreadLichSkull();
@@ -28,7 +28,7 @@ public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
     }
 
     @Override
-    public void render(EntityDreadLichSkull entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(EntityDreadLichSkull entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         float f = 0.0625F;
         if (entity.tickCount > 3) {
             matrixStackIn.pushPose();
@@ -41,15 +41,13 @@ public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
             matrixStackIn.popPose();
         }
 
-        super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
+            }
 
     private float interpolateValue(float start, float end, float pct) {
         return start + (end - start) * pct;
     }
 
     @Nullable
-    @Override
     public Identifier getTextureLocation(@NotNull EntityDreadLichSkull entity) {
         return TEXTURE;
     }

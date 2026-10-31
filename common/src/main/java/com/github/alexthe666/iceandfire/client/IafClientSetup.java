@@ -23,13 +23,9 @@ import com.github.alexthe666.iceandfire.item.ItemSummoningCrystal;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.item.Items;
@@ -46,7 +42,6 @@ public class IafClientSetup {
     public static TabulaModel ICE_DRAGON_BASE_MODEL;
     public static TabulaModel SEA_SERPENT_BASE_MODEL;
     public static TabulaModel LIGHTNING_DRAGON_BASE_MODEL;
-    private static ShaderInstance rendertypeDreadPortalShader;
     public static final Identifier GHOST_CHEST_LOCATION = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "models/ghost/ghost_chest");
     public static final Identifier GHOST_CHEST_LEFT_LOCATION = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "models/ghost/ghost_chest_left");
     public static final Identifier GHOST_CHEST_RIGHT_LOCATION = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "models/ghost/ghost_chest_right");
@@ -124,16 +119,6 @@ public class IafClientSetup {
 
     }
 
-    /** The dread portal shader; the loader loads it (NeoForge: RegisterShadersEvent, Fabric: CoreShaderRegistrationCallback) */
-    public static final Identifier DREAD_PORTAL_SHADER = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "rendertype_dread_portal");
-
-    public static void setRendertypeDreadPortalShader(ShaderInstance shader) {
-        rendertypeDreadPortalShader = shader;
-    }
-
-    public static ShaderInstance getRendertypeDreadPortalShader() {
-        return rendertypeDreadPortalShader;
-    }
 
     @SubscribeEvent
     public static void setupClient(FMLClientSetupEvent event) {
@@ -150,33 +135,7 @@ public class IafClientSetup {
                 e.printStackTrace();
             }
 
-        ItemPropertyFunction pulling = ItemProperties.getProperty(new ItemStack(Items.BOW), Identifier.parse("pulling"));
-        ItemPropertyFunction pull = (stack, worldIn, entity, p) -> {
-            if (entity == null) {
-                return 0.0F;
-            } else {
-                ItemDragonBow item = ((ItemDragonBow) stack.getItem());
-                return entity.getUseItem() != stack ? 0.0F : (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / 20.0F;
-            }
-        };
-
-            ItemProperties.register(IafItemRegistry.DRAGON_BOW.get().asItem(), Identifier.parse("pulling"), (ClampedItemPropertyFunction) pulling::call);
-            ItemProperties.register(IafItemRegistry.DRAGON_BOW.get().asItem(), Identifier.parse("pull"), (ClampedItemPropertyFunction) pull::call);
-            ItemProperties.register(IafItemRegistry.DRAGON_HORN.get(), Identifier.parse("iceorfire"), (stack, level, entity, p) -> {
-                return ItemDragonHorn.getDragonType(stack) * 0.25F;
-            });
-            ItemProperties.register(IafItemRegistry.SUMMONING_CRYSTAL_FIRE.get(), Identifier.parse("has_dragon"), (stack, level, entity, p) -> {
-                return ItemSummoningCrystal.hasDragon(stack) ? 1.0F : 0.0F;
-            });
-            ItemProperties.register(IafItemRegistry.SUMMONING_CRYSTAL_ICE.get(), Identifier.parse("has_dragon"), (stack, level, entity, p) -> {
-                return ItemSummoningCrystal.hasDragon(stack) ? 1.0F : 0.0F;
-            });
-            ItemProperties.register(IafItemRegistry.SUMMONING_CRYSTAL_LIGHTNING.get(), Identifier.parse("has_dragon"), (stack, level, entity, p) -> {
-                return ItemSummoningCrystal.hasDragon(stack) ? 1.0F : 0.0F;
-            });
-            ItemProperties.register(IafItemRegistry.TIDE_TRIDENT.get(), Identifier.parse("throwing"), (stack, level, entity, p) -> {
-                return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F;
-            });
+        // 26.x: the item properties are item definitions (assets/iceandfire/items, IafItemModels)
         });
     }
 

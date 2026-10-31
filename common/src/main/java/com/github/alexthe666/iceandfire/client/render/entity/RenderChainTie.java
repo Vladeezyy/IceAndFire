@@ -15,7 +15,7 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RenderChainTie extends EntityRenderer<EntityChainTie> {
+public class RenderChainTie extends IafEntityRenderer<EntityChainTie> {
     private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/misc/chain_tie.png");
     private final ModelChainTie leashKnotModel = new ModelChainTie();
 
@@ -24,7 +24,7 @@ public class RenderChainTie extends EntityRenderer<EntityChainTie> {
     }
 
     @Override
-    public void render(@NotNull EntityChainTie entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(@NotNull EntityChainTie entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0, 0.5F, 0);
         matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
@@ -32,13 +32,11 @@ public class RenderChainTie extends EntityRenderer<EntityChainTie> {
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
         this.leashKnotModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
+            }
 
     /**
      * Returns the location of an entity's texture.
      */
-    @Override
     public @NotNull Identifier getTextureLocation(@NotNull EntityChainTie entity) {
         return TEXTURE;
     }

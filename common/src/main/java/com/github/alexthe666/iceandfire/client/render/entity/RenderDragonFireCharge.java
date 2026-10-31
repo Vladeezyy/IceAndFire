@@ -15,7 +15,7 @@ import net.minecraft.world.entity.projectile.hurtingprojectile.Fireball;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderDragonFireCharge extends EntityRenderer<Fireball> {
+public class RenderDragonFireCharge extends IafEntityRenderer<Fireball> {
 
     public boolean isFire;
 
@@ -24,13 +24,12 @@ public class RenderDragonFireCharge extends EntityRenderer<Fireball> {
         this.isFire = isFire;
     }
 
-    @Override
     public @NotNull Identifier getTextureLocation(@NotNull Fireball entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override
-    public void render(@NotNull Fireball entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderLegacy(@NotNull Fireball entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.0D, 0.5D, 0.0D);

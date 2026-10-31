@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import com.github.alexthe666.iceandfire.client.render.IafBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
@@ -43,6 +44,7 @@ public class LayerMyrmexItem extends IafEntityLayer<EntityMyrmexBase, IafMobRend
 
     @Override
     protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityMyrmexBase entitylivingbaseIn) {
+        IafBufferSource bufferIn = new IafBufferSource();
         float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (entitylivingbaseIn instanceof EntityMyrmexWorker) {
             ItemStack itemstack = entitylivingbaseIn.getItemInHand(InteractionHand.MAIN_HAND);
@@ -69,5 +71,6 @@ public class LayerMyrmexItem extends IafEntityLayer<EntityMyrmexBase, IafMobRend
                 matrixStackIn.popPose();
             }
         }
+        bufferIn.submit(iafCollector);
     }
 }
