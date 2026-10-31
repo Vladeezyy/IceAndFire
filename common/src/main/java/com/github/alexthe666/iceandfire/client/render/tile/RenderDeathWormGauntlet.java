@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelDeathWormGauntlet;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderDeathWorm;
@@ -26,11 +27,11 @@ public class RenderDeathWormGauntlet extends BlockEntityWithoutLevelRenderer {
         RenderType texture;
 
         if (stack.getItem() == IafItemRegistry.DEATHWORM_GAUNTLET_RED.get()) {
-            texture = RenderType.entityCutout(RenderDeathWorm.TEXTURE_RED);
+            texture = RenderTypes.entityCutoutCull(RenderDeathWorm.TEXTURE_RED);
         } else if (stack.getItem() == IafItemRegistry.DEATHWORM_GAUNTLET_WHITE.get()) {
-            texture = RenderType.entityCutout(RenderDeathWorm.TEXTURE_WHITE);
+            texture = RenderTypes.entityCutoutCull(RenderDeathWorm.TEXTURE_WHITE);
         } else {
-            texture = RenderType.entityCutout(RenderDeathWorm.TEXTURE_YELLOW);
+            texture = RenderTypes.entityCutoutCull(RenderDeathWorm.TEXTURE_YELLOW);
         }
         stackIn.pushPose();
         stackIn.translate(0.5F, 0.5F, 0.5F);

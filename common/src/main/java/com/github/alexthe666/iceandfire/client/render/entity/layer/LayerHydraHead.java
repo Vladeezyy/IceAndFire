@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
 import com.github.alexthe666.iceandfire.client.model.ModelHydraBody;
@@ -14,7 +17,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerHydraHead extends RenderLayer<EntityHydra, ModelHydraBody> {
+public class LayerHydraHead extends IafEntityLayer<EntityHydra, IafMobRenderState, ModelHydraBody> {
     public static final Identifier TEXTURE_STONE = Identifier.parse("iceandfire:textures/models/hydra/stone.png");
     private static final float[][] TRANSLATE = new float[][]{
         {0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},// 1 total heads
@@ -54,7 +57,8 @@ public class LayerHydraHead extends RenderLayer<EntityHydra, ModelHydraBody> {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityHydra entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityHydra entity) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (entity.isInvisible()) {
             return;
         }
@@ -65,7 +69,7 @@ public class LayerHydraHead extends RenderLayer<EntityHydra, ModelHydraBody> {
         matrixStackIn.pushPose();
         int heads = hydra.getHeadCount();
         translateToBody(model, matrixStackIn);
-        RenderType type = RenderType.entityCutout(stone ? TEXTURE_STONE : getHeadTexture(hydra));
+        RenderType type = RenderTypes.entityCutoutCull(stone ? TEXTURE_STONE : getHeadTexture(hydra));
         for (int head = 1; head <= heads; head++) {
             matrixStackIn.pushPose();
             float bodyWidth = 0.5F;

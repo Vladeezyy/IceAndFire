@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RenderDreadKnight extends MobRenderer<EntityDreadKnight, ModelDreadKnight> {
+public class RenderDreadKnight extends IafMobRenderer<EntityDreadKnight, ModelDreadKnight> {
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_knight_eyes.png");
     public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/dread/dread_knight_1.png");
     public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/dread/dread_knight_2.png");
@@ -25,13 +25,15 @@ public class RenderDreadKnight extends MobRenderer<EntityDreadKnight, ModelDread
     }
 
     @Override
-    protected void scale(@NotNull EntityDreadKnight entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityDreadKnight entity = (EntityDreadKnight) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         matrixStackIn.scale(0.95F, 0.95F, 0.95F);
     }
 
     @Nullable
     @Override
-    public Identifier getTextureLocation(EntityDreadKnight entity) {
+    protected Identifier getTexture(EntityDreadKnight entity) {
         switch (entity.getArmorVariant()) {
             case 0:
                 return TEXTURE_0;

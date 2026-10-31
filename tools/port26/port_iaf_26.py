@@ -30,6 +30,14 @@ RENAMES = [
     (r'ResourceKey::location\b', 'ResourceKey::identifier'),
     (r'\.getLevelData\(\)\.getGameRules\(\)', '.getGameRules()'),
     (r'EnumProperty\.create\(("\w+"), Direction\.Plane\.HORIZONTAL\)', r'EnumProperty.create(\1, Direction.class, Direction.Plane.HORIZONTAL)'),
+    # client: 26.1 render types (RenderTypes; entityCutout is no-cull now, entityCutoutCull the old entityCutout)
+    (r'(?<![\w.])RenderType\.entityCutout\(', 'RenderTypes.entityCutoutCull('),
+    (r'(?<![\w.])RenderType\.entityCutoutNoCull\(', 'RenderTypes.entityCutout('),
+    (r'(?<![\w.])RenderType\.entityCutoutNoCullZOffset\(', 'RenderTypes.entityCutoutZOffset('),
+    (r'(?<![\w.])RenderType\.entityNoOutline\(([^()]*(?:\([^()]*\))*)\)', r'RenderTypes.entityTranslucent(\1, false)'),
+    (r'(?<![\w.])RenderType\.(entityTranslucent|eyes|lightning|energySwirl|armorCutoutNoCull|entitySolid|lines)\(', r'RenderTypes.\1('),
+    # block render layers come from the textures in 26.1 (no ItemBlockRenderTypes)
+    (r'\n[ \t]*dev\.vladeezyy\.iceandfire\.platform\.ClientPlatform\.INSTANCE\.setRenderLayer\([^;]*\);', ''),
     (r'\.registryOrThrow\(', '.lookupOrThrow('),
     (r'\.registry\((Registries\.\w+)\)\.(?:orElseThrow|get)\(\)', r'.lookupOrThrow(\1)'),
     (r'(\.lookupOrThrow\([^()]*\))\.getHolderOrThrow\(', r'\1.getOrThrow('),
@@ -69,6 +77,7 @@ IMPORTS = {
     'UUIDUtil': 'net.minecraft.core.UUIDUtil',
     'EntitySpawnReason': 'net.minecraft.world.entity.EntitySpawnReason',
     'ItemStackWithSlot': 'net.minecraft.world.ItemStackWithSlot',
+    'RenderTypes': 'net.minecraft.client.renderer.rendertype.RenderTypes',
 }
 
 changed = 0

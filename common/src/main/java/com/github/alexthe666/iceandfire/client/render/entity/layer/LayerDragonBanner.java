@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
@@ -18,16 +20,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.StreamSupport;
 
-public class LayerDragonBanner extends RenderLayer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
-    private final RenderLayerParent<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> renderer;
+public class LayerDragonBanner extends IafEntityLayer<EntityDragonBase, IafMobRenderState, AdvancedEntityModel<EntityDragonBase>> {
+    private final RenderLayerParent<IafMobRenderState, AdvancedEntityModel<EntityDragonBase>> renderer;
 
-    public LayerDragonBanner(RenderLayerParent<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> renderIn) {
+    public LayerDragonBanner(RenderLayerParent<IafMobRenderState, AdvancedEntityModel<EntityDragonBase>> renderIn) {
         super(renderIn);
         this.renderer = renderIn;
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityDragonBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase entity) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         ItemStack itemstack = entity.getItemInHand(InteractionHand.OFF_HAND);
         matrixStackIn.pushPose();
         if (!itemstack.isEmpty() && itemstack.getItem() instanceof BannerItem) {

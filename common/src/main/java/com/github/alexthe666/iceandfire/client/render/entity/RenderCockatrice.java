@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 
 import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
@@ -19,7 +21,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderCockatrice extends MobRenderer<EntityCockatrice, AdvancedEntityModel<EntityCockatrice>> {
+public class RenderCockatrice extends IafMobRenderer<EntityCockatrice, AdvancedEntityModel<EntityCockatrice>> {
 
     public static final Identifier TEXTURE_ROOSTER = Identifier.parse("iceandfire:textures/models/cockatrice/cockatrice_0.png");
     public static final Identifier TEXTURE_HEN = Identifier.parse("iceandfire:textures/models/cockatrice/cockatrice_1.png");
@@ -59,13 +61,17 @@ public class RenderCockatrice extends MobRenderer<EntityCockatrice, AdvancedEnti
     }
 
     @Override
-    public void render(EntityCockatrice entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    public void submit(IafMobRenderState iafState, PoseStack matrixStackIn, SubmitNodeCollector iafCollector, CameraRenderState iafCamera) {
+        EntityCockatrice entityIn = (EntityCockatrice) iafState.pose.entity;
+        float entityYaw = iafState.bodyRot;
+        float partialTicks = iafState.partialTick;
+        int packedLightIn = iafState.lightCoords;
         if (entityIn.isBaby()) {
             model = BABY_MODEL;
         } else {
             model = ADULT_MODEL;
         }
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        super.submit(iafState, matrixStackIn, iafCollector, iafCamera);
         LivingEntity livingentity = entityIn.getTargetedEntity();
         boolean blindness = entityIn.hasEffect(MobEffects.BLINDNESS) || livingentity != null && livingentity.hasEffect(MobEffects.BLINDNESS);
         if (!blindness && livingentity != null && EntityGorgon.isEntityLookingAt(entityIn, livingentity, EntityCockatrice.VIEW_RADIUS) && EntityGorgon.isEntityLookingAt(livingentity, entityIn, EntityCockatrice.VIEW_RADIUS)) {
@@ -77,14 +83,16 @@ public class RenderCockatrice extends MobRenderer<EntityCockatrice, AdvancedEnti
     }
 
     @Override
-    protected void scale(EntityCockatrice entity, @NotNull PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityCockatrice entity = (EntityCockatrice) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         if (entity.isBaby()) {
             matrixStackIn.scale(0.5F, 0.5F, 0.5F);
         }
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityCockatrice cockatrice) {
+    protected Identifier getTexture(EntityCockatrice cockatrice) {
         if (cockatrice.isBaby()) {
             return cockatrice.isHen() ? TEXTURE_HEN_CHICK : TEXTURE_ROOSTER_CHICK;
         } else {

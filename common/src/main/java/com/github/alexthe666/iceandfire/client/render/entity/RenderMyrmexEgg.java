@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderMyrmexEgg extends LivingEntityRenderer<EntityMyrmexEgg, AdvancedEntityModel<EntityMyrmexEgg>> {
+public class RenderMyrmexEgg extends IafLivingRenderer<EntityMyrmexEgg, AdvancedEntityModel<EntityMyrmexEgg>> {
 
     public static final Identifier EGG_JUNGLE = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_jungle_egg.png");
     public static final Identifier EGG_DESERT = Identifier.parse("iceandfire:textures/models/myrmex/myrmex_desert_egg.png");
@@ -18,12 +18,12 @@ public class RenderMyrmexEgg extends LivingEntityRenderer<EntityMyrmexEgg, Advan
     }
 
     @Override
-    protected boolean shouldShowName(EntityMyrmexEgg entity) {
+    protected boolean shouldShowName(EntityMyrmexEgg entity, double iafDistanceSq) {
         return entity.shouldShowName() && entity.hasCustomName();
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityMyrmexEgg entity) {
+    protected Identifier getTexture(EntityMyrmexEgg entity) {
         return entity.isJungle() ? EGG_JUNGLE : EGG_DESERT;
     }
 

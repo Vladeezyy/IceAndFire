@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderCyclops extends MobRenderer<EntityCyclops, ModelCyclops> {
+public class RenderCyclops extends IafMobRenderer<EntityCyclops, ModelCyclops> {
 
     public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/cyclops/cyclops_0.png");
     public static final Identifier BLINK_0_TEXTURE = Identifier.parse("iceandfire:textures/models/cyclops/cyclops_0_blink.png");
@@ -28,13 +28,15 @@ public class RenderCyclops extends MobRenderer<EntityCyclops, ModelCyclops> {
     }
 
     @Override
-    protected void scale(@NotNull EntityCyclops entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityCyclops entity = (EntityCyclops) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         matrixStackIn.scale(2.25F, 2.25F, 2.25F);
 
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityCyclops cyclops) {
+    protected Identifier getTexture(EntityCyclops cyclops) {
         switch (cyclops.getVariant()) {
             case 0:
                 if (cyclops.isBlinded()) {

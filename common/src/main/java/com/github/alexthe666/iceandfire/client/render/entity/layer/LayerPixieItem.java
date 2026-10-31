@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
 import com.github.alexthe666.iceandfire.client.model.ModelPixie;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderPixie;
@@ -16,7 +18,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerPixieItem extends RenderLayer<EntityPixie, ModelPixie> {
+public class LayerPixieItem extends IafEntityLayer<EntityPixie, IafMobRenderState, ModelPixie> {
 
     RenderPixie renderer;
 
@@ -26,7 +28,8 @@ public class LayerPixieItem extends RenderLayer<EntityPixie, ModelPixie> {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityPixie entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityPixie entity) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         ItemStack itemstack = entity.getItemInHand(InteractionHand.MAIN_HAND);
         if (!itemstack.isEmpty()) {
             matrixStackIn.pushPose();

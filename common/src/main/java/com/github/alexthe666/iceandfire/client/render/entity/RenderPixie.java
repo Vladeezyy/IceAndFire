@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderPixie extends MobRenderer<EntityPixie, ModelPixie> {
+public class RenderPixie extends IafMobRenderer<EntityPixie, ModelPixie> {
 
     public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/pixie/pixie_0.png");
     public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/pixie/pixie_1.png");
@@ -21,8 +21,8 @@ public class RenderPixie extends MobRenderer<EntityPixie, ModelPixie> {
 
     public RenderPixie(EntityRendererProvider.Context context) {
         super(context, new ModelPixie(), 0.2F);
-        this.layers.add(new LayerPixieItem(this));
-        this.layers.add(new LayerPixieGlow(this));
+        this.addLayer(new LayerPixieItem(this));
+        this.addLayer(new LayerPixieGlow(this));
 
     }
 
@@ -36,7 +36,7 @@ public class RenderPixie extends MobRenderer<EntityPixie, ModelPixie> {
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityPixie pixie) {
+    protected Identifier getTexture(EntityPixie pixie) {
         switch (pixie.getColor()) {
             default:
                 return TEXTURE_0;

@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 
 import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
@@ -14,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RenderMyrmexBase extends MobRenderer<EntityMyrmexBase, AdvancedEntityModel<EntityMyrmexBase>> {
+public class RenderMyrmexBase extends IafMobRenderer<EntityMyrmexBase, AdvancedEntityModel<EntityMyrmexBase>> {
 
     private static final AdvancedEntityModel<EntityMyrmexBase> LARVA_MODEL = new ModelMyrmexPupa();
     private static final AdvancedEntityModel<EntityMyrmexBase> PUPA_MODEL = new ModelMyrmexPupa();
@@ -27,7 +29,11 @@ public class RenderMyrmexBase extends MobRenderer<EntityMyrmexBase, AdvancedEnti
     }
 
     @Override
-    public void render(EntityMyrmexBase entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    public void submit(IafMobRenderState iafState, PoseStack matrixStackIn, SubmitNodeCollector iafCollector, CameraRenderState iafCamera) {
+        EntityMyrmexBase entityIn = (EntityMyrmexBase) iafState.pose.entity;
+        float entityYaw = iafState.bodyRot;
+        float partialTicks = iafState.partialTick;
+        int packedLightIn = iafState.lightCoords;
         if (entityIn.getGrowthStage() == 0) {
             model = LARVA_MODEL;
         } else if (entityIn.getGrowthStage() == 1) {
@@ -35,12 +41,14 @@ public class RenderMyrmexBase extends MobRenderer<EntityMyrmexBase, AdvancedEnti
         } else {
             model = adultModel;
         }
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        super.submit(iafState, matrixStackIn, iafCollector, iafCamera);
 
     }
 
     @Override
-    protected void scale(EntityMyrmexBase myrmex, @NotNull PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityMyrmexBase myrmex = (EntityMyrmexBase) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         float scale = myrmex.getModelScale();
         if (myrmex.getGrowthStage() == 0) {
             scale /= 2;
@@ -56,7 +64,7 @@ public class RenderMyrmexBase extends MobRenderer<EntityMyrmexBase, AdvancedEnti
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityMyrmexBase myrmex) {
+    protected Identifier getTexture(EntityMyrmexBase myrmex) {
         return myrmex.getTexture();
     }
 

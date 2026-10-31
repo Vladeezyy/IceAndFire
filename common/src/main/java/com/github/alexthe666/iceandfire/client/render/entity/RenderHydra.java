@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderHydra extends MobRenderer<EntityHydra, ModelHydraBody> {
+public class RenderHydra extends IafMobRenderer<EntityHydra, ModelHydraBody> {
 
     public static final Identifier TEXUTURE_0 = Identifier.parse("iceandfire:textures/models/hydra/hydra_0.png");
     public static final Identifier TEXUTURE_1 = Identifier.parse("iceandfire:textures/models/hydra/hydra_1.png");
@@ -29,7 +29,7 @@ public class RenderHydra extends MobRenderer<EntityHydra, ModelHydraBody> {
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityHydra gorgon) {
+    protected Identifier getTexture(EntityHydra gorgon) {
         switch (gorgon.getVariant()) {
             default:
                 return TEXUTURE_0;

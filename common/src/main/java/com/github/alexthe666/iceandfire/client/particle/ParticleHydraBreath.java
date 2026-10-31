@@ -6,7 +6,8 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class ParticleHydraBreath extends TextureSheetParticle {
+public class ParticleHydraBreath extends SingleQuadParticle {
     private static final Identifier HYDRA_POISON = Identifier.parse("iceandfire:textures/particles/hydra_poison.png");
     float reddustParticleScale;
 
@@ -23,7 +24,7 @@ public class ParticleHydraBreath extends TextureSheetParticle {
     }
 
     protected ParticleHydraBreath(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float scale, float red, float green, float blue) {
-        super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
+        super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D, IafParticleSprites.get(HYDRA_POISON));
         this.xd *= 0.10000000149011612D;
         this.yd *= 0.10000000149011612D;
         this.zd *= 0.10000000149011612D;
@@ -38,8 +39,7 @@ public class ParticleHydraBreath extends TextureSheetParticle {
     }
 
     @Override
-    public void render(@NotNull VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-        Vec3 inerp = renderInfo.getPosition();
+    public void extract(QuadParticleRenderState iafRenderState, Camera renderInfo, float partialTicks) {
         float scaley = ((float) this.age + partialTicks) / (float) this.lifetime * 32.0F;
         scaley = Mth.clamp(scaley, 0.0F, 1.0F);
         this.quadSize = this.reddustParticleScale * scaley;
@@ -48,50 +48,13 @@ public class ParticleHydraBreath extends TextureSheetParticle {
         if (age > this.getLifetime()) {
             this.remove();
         }
-
-        Vec3 Vector3d = renderInfo.getPosition();
-        float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - Vector3d.x());
-        float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - Vector3d.y());
-        float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - Vector3d.z());
-        Quaternionf quaternion;
-        if (this.roll == 0.0F) {
-            quaternion = renderInfo.rotation();
-        } else {
-            quaternion = new Quaternionf(renderInfo.rotation());
-            float f3 = Mth.lerp(partialTicks, this.oRoll, this.roll);
-            quaternion.mul(Axis.ZP.rotation(f3));
-        }
-
-        Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-        vector3f1 = quaternion.transform(vector3f1);
-        Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float f4 = this.getQuadSize(partialTicks);
-
-        for (int i = 0; i < 4; ++i) {
-            Vector3f vector3f = avector3f[i];
-            vector3f = quaternion.transform(vector3f);
-            vector3f.mul(f4);
-            vector3f.add(f, f1, f2);
-        }
-        float f7 = 0;
-        float f8 = 1;
-        float f5 = 0;
-        float f6 = 1;
-        RenderSystem.setShaderTexture(0, HYDRA_POISON);
-        int j = this.getLightColor(partialTicks);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        vertexbuffer.addVertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        BufferUploader.drawWithShader(vertexbuffer.buildOrThrow());
+        super.extract(iafRenderState, renderInfo, partialTicks);
     }
 
 
     @Override
-    public int getLightColor(float partialTick) {
-        return super.getLightColor(partialTick);
+    protected int getLightCoords(float partialTick) {
+        return super.getLightCoords(partialTick);
     }
 
     public void onUpdate() {
@@ -121,7 +84,7 @@ public class ParticleHydraBreath extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.CUSTOM;
+    protected Layer getLayer() {
+        return Layer.TRANSLUCENT;
     }
 }

@@ -9,16 +9,16 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderTroll extends MobRenderer<EntityTroll, ModelTroll> {
+public class RenderTroll extends IafMobRenderer<EntityTroll, ModelTroll> {
 
     public RenderTroll(EntityRendererProvider.Context context) {
         super(context, new ModelTroll(), 0.9F);
-        this.layers.add(new LayerTrollWeapon(this));
-        this.layers.add(new LayerTrollEyes(this));
+        this.addLayer(new LayerTrollWeapon(this));
+        this.addLayer(new LayerTrollEyes(this));
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityTroll troll) {
+    protected Identifier getTexture(EntityTroll troll) {
         return troll.getTrollType().TEXTURE;
     }
 }

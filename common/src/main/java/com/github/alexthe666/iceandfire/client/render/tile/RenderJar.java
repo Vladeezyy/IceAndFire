@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelPixie;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderPixie;
@@ -14,18 +15,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderJar<T extends TileEntityJar> implements BlockEntityRenderer<T> {
 
-    public static final RenderType TEXTURE_0 = RenderType.entityCutoutNoCull(RenderPixie.TEXTURE_0, false);
-    public static final RenderType TEXTURE_1 = RenderType.entityCutoutNoCull(RenderPixie.TEXTURE_1, false);
-    public static final RenderType TEXTURE_2 = RenderType.entityCutoutNoCull(RenderPixie.TEXTURE_2, false);
-    public static final RenderType TEXTURE_3 = RenderType.entityCutoutNoCull(RenderPixie.TEXTURE_3, false);
-    public static final RenderType TEXTURE_4 = RenderType.entityCutoutNoCull(RenderPixie.TEXTURE_4, false);
-    public static final RenderType TEXTURE_5 = RenderType.entityCutoutNoCull(RenderPixie.TEXTURE_5, false);
-    public static final RenderType TEXTURE_0_GLO = RenderType.eyes(RenderPixie.TEXTURE_0);
-    public static final RenderType TEXTURE_1_GLO = RenderType.eyes(RenderPixie.TEXTURE_1);
-    public static final RenderType TEXTURE_2_GLO = RenderType.eyes(RenderPixie.TEXTURE_2);
-    public static final RenderType TEXTURE_3_GLO = RenderType.eyes(RenderPixie.TEXTURE_3);
-    public static final RenderType TEXTURE_4_GLO = RenderType.eyes(RenderPixie.TEXTURE_4);
-    public static final RenderType TEXTURE_5_GLO = RenderType.eyes(RenderPixie.TEXTURE_5);
+    public static final RenderType TEXTURE_0 = RenderTypes.entityCutout(RenderPixie.TEXTURE_0, false);
+    public static final RenderType TEXTURE_1 = RenderTypes.entityCutout(RenderPixie.TEXTURE_1, false);
+    public static final RenderType TEXTURE_2 = RenderTypes.entityCutout(RenderPixie.TEXTURE_2, false);
+    public static final RenderType TEXTURE_3 = RenderTypes.entityCutout(RenderPixie.TEXTURE_3, false);
+    public static final RenderType TEXTURE_4 = RenderTypes.entityCutout(RenderPixie.TEXTURE_4, false);
+    public static final RenderType TEXTURE_5 = RenderTypes.entityCutout(RenderPixie.TEXTURE_5, false);
+    public static final RenderType TEXTURE_0_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_0);
+    public static final RenderType TEXTURE_1_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_1);
+    public static final RenderType TEXTURE_2_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_2);
+    public static final RenderType TEXTURE_3_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_3);
+    public static final RenderType TEXTURE_4_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_4);
+    public static final RenderType TEXTURE_5_GLO = RenderTypes.eyes(RenderPixie.TEXTURE_5);
     private static ModelPixie MODEL_PIXIE;
 
     public RenderJar(BlockEntityRendererProvider.Context context) {

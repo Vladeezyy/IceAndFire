@@ -1,0 +1,48 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/blood"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/dragon_flame"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/ember"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/flame"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/frost"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/hydra_poison"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/pixie_dust"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/sea_serpent_bubble"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/siren_music"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/snowflake_0"
+    },
+    {
+      "type": "single",
+      "resource": "iceandfire:particles/snowflake_1"
+    }
+  ]
+}

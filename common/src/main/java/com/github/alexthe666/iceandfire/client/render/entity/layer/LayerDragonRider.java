@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
 import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
@@ -27,7 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerDragonRider extends RenderLayer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
+public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRenderState, AdvancedEntityModel<EntityDragonBase>> {
     private final MobRenderer render;
     private final boolean excludeDreadQueenMob;
 
@@ -38,7 +40,8 @@ public class LayerDragonRider extends RenderLayer<EntityDragonBase, AdvancedEnti
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityDragonBase dragon, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase dragon) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         matrixStackIn.pushPose();
         if (!dragon.getPassengers().isEmpty()) {
             float dragonScale = dragon.getRenderSize() / 3;

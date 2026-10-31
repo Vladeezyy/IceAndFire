@@ -7,7 +7,8 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -17,7 +18,7 @@ import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 
-public class ParticleDragonFrost extends TextureSheetParticle {
+public class ParticleDragonFrost extends SingleQuadParticle {
 
     private static final Identifier SNOWFLAKE = Identifier.parse("iceandfire:textures/particles/snowflake_0.png");
     private static final Identifier SNOWFLAKE_BIG = Identifier.parse("iceandfire:textures/particles/snowflake_1.png");
@@ -36,7 +37,7 @@ public class ParticleDragonFrost extends TextureSheetParticle {
 
 
     public ParticleDragonFrost(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, float dragonSize) {
-        super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+        super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, IafParticleSprites.get(SNOWFLAKE));
         this.lifetime = 30;
         this.initialX = xCoordIn;
         this.initialY = yCoordIn;
@@ -64,49 +65,12 @@ public class ParticleDragonFrost extends TextureSheetParticle {
 
 
     @Override
-    public void render(@NotNull VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-        Vec3 inerp = renderInfo.getPosition();
+    public void extract(QuadParticleRenderState iafRenderState, Camera renderInfo, float partialTicks) {
+        this.setSprite(IafParticleSprites.get(big ? SNOWFLAKE_BIG : SNOWFLAKE));
         if (age > this.getLifetime()) {
             this.remove();
         }
-
-        Vec3 Vector3d = renderInfo.getPosition();
-        float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - Vector3d.x());
-        float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - Vector3d.y());
-        float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - Vector3d.z());
-        Quaternionf quaternion;
-        if (this.roll == 0.0F) {
-            quaternion = renderInfo.rotation();
-        } else {
-            quaternion = new Quaternionf(renderInfo.rotation());
-            float f3 = Mth.lerp(partialTicks, this.oRoll, this.roll);
-            quaternion.mul(Axis.ZP.rotation(f3));
-        }
-
-        Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-        vector3f1 = quaternion.transform(vector3f1);
-        Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float f4 = this.getQuadSize(partialTicks);
-
-        for (int i = 0; i < 4; ++i) {
-            Vector3f vector3f = avector3f[i];
-            vector3f = quaternion.transform(vector3f);
-            vector3f.mul(f4);
-            vector3f.add(f, f1, f2);
-        }
-        float f7 = 0;
-        float f8 = 1;
-        float f5 = 0;
-        float f6 = 1;
-        RenderSystem.setShaderTexture(0, big ? SNOWFLAKE_BIG : SNOWFLAKE);
-        int j = this.getLightColor(partialTicks);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        vertexbuffer.addVertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        BufferUploader.drawWithShader(vertexbuffer.buildOrThrow());
+        super.extract(iafRenderState, renderInfo, partialTicks);
     }
 
     @Override
@@ -115,10 +79,10 @@ public class ParticleDragonFrost extends TextureSheetParticle {
     }
 
     @Override
-    public int getLightColor(float partialTick) {
+    protected int getLightCoords(float partialTick) {
         float f = 0;
         f = Mth.clamp(f, 0.0F, 1.0F);
-        int i = super.getLightColor(partialTick);
+        int i = super.getLightCoords(partialTick);
         int j = i & 255;
         int k = i >> 16 & 255;
         j = j + (int) (f * 15.0F * 16.0F);
@@ -156,8 +120,8 @@ public class ParticleDragonFrost extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.CUSTOM;
+    protected Layer getLayer() {
+        return Layer.TRANSLUCENT;
     }
 
 }

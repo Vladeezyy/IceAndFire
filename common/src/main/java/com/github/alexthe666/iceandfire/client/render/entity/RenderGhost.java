@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 
 import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelGhost;
@@ -21,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
+public class RenderGhost extends IafMobRenderer<EntityGhost, ModelGhost> {
 
     public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/ghost/ghost_white.png");
     public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/ghost/ghost_blue.png");
@@ -47,7 +49,11 @@ public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
     }
 
     @Override
-    public void render(@NotNull EntityGhost entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    public void submit(IafMobRenderState iafState, PoseStack matrixStackIn, SubmitNodeCollector iafCollector, CameraRenderState iafCamera) {
+        EntityGhost entityIn = (EntityGhost) iafState.pose.entity;
+        float entityYaw = iafState.bodyRot;
+        float partialTicks = iafState.partialTick;
+        int packedLightIn = iafState.lightCoords;
         shadowRadius = 0;
         if (dev.vladeezyy.iceandfire.platform.ClientPlatform.INSTANCE.renderLivingPre(entityIn, this, partialTicks, matrixStackIn, bufferIn, packedLightIn))
             return;
@@ -165,7 +171,7 @@ public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
     }
 
     @Override
-    protected float getFlipDegrees(@NotNull EntityGhost ghost) {
+    protected float getFlipDegrees() {
         return 0.0F;
     }
 
@@ -181,7 +187,7 @@ public class RenderGhost extends MobRenderer<EntityGhost, ModelGhost> {
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityGhost ghost) {
+    protected Identifier getTexture(EntityGhost ghost) {
         switch (ghost.getColor()) {
             case 1:
                 return TEXTURE_1;

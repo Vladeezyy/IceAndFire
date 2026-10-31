@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.particle;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelSiren;
@@ -44,7 +45,7 @@ public class ParticleSirenAppearance extends Particle {
         matrixstack.scale(-1.0F, -1.0F, 1.0F);
         matrixstack.translate(0.0D, -1.101F, 1.5D);
         MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
-        VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderType.entityTranslucent(RenderSiren.getSirenOverlayTexture(sirenType)));
+        VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderTypes.entityTranslucent(RenderSiren.getSirenOverlayTexture(sirenType)));
         this.model.renderToBuffer(matrixstack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
         irendertypebuffer$impl.endBatch();
     }

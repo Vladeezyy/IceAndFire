@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import dev.vladeezyy.rampart.client.model.TabulaModel;
 import dev.vladeezyy.rampart.client.model.basic.BasicModelPart;
@@ -51,7 +52,7 @@ public class RenderDragonSkull extends EntityRenderer<EntityDragonSkull> {
         } else {
             model = fireDragonModel;
         }
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityTranslucent(getTextureLocation(entity)));
         matrixStackIn.pushPose();
         matrixStackIn.mulPose(Axis.XP.rotationDegrees(-180.0F));
         matrixStackIn.mulPose(Axis.YN.rotationDegrees(-180.0F - entity.getYaw()));

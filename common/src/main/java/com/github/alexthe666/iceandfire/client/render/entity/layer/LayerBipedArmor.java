@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.alexthe666.iceandfire.item.IafArmorItem;
 
 import net.minecraft.util.ARGB;
@@ -26,14 +29,14 @@ import javax.annotation.Nullable;
 
 public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
     M extends ModelBipedBase<T>,
-    A extends ModelBipedBase<T>> extends RenderLayer<T, M> {
+    A extends ModelBipedBase<T>> extends IafEntityLayer<T, IafMobRenderState, M> {
 
     private final A modelLeggings;
     private final A modelArmor;
     private final Identifier defaultLegArmor;
     private final Identifier defaultArmor;
 
-    public LayerBipedArmor(RenderLayerParent<T, M> mobRenderer, A modelLeggings, A modelArmor, Identifier defaultArmor, Identifier defaultLegArmor) {
+    public LayerBipedArmor(RenderLayerParent<IafMobRenderState, M> mobRenderer, A modelLeggings, A modelArmor, Identifier defaultArmor, Identifier defaultLegArmor) {
         super(mobRenderer);
         this.modelLeggings = modelLeggings;
         this.modelArmor = modelArmor;
@@ -42,7 +45,8 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, T entitylivingbaseIn) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.CHEST, packedLightIn, this.getSlotModel(EquipmentSlot.CHEST));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.LEGS, packedLightIn, this.getSlotModel(EquipmentSlot.LEGS));
         this.renderEquipment(matrixStackIn, bufferIn, entitylivingbaseIn, EquipmentSlot.FEET, packedLightIn, this.getSlotModel(EquipmentSlot.FEET));
@@ -86,7 +90,7 @@ public class LayerBipedArmor<T extends LivingEntity & IAnimatedEntity,
     }
 
     private void renderArmorItem(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, boolean p_241738_5_, A modelIn, float red, float green, float blue, Identifier armorResource) {
-        VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(bufferIn, RenderType.armorCutoutNoCull(armorResource), p_241738_5_);
+        VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(bufferIn, RenderTypes.armorCutoutNoCull(armorResource), p_241738_5_);
         modelIn.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1.0F, red, green, blue));
     }
 

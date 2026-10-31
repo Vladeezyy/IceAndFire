@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.entity.EntitySeaSerpent;
@@ -12,7 +14,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerSeaSerpentAncient extends RenderLayer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> {
+public class LayerSeaSerpentAncient extends IafEntityLayer<EntitySeaSerpent, IafMobRenderState, AdvancedEntityModel<EntitySeaSerpent>> {
 
     private static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/seaserpent/ancient_overlay.png");
     private static final Identifier TEXTURE_BLINK = Identifier.parse("iceandfire:textures/models/seaserpent/ancient_overlay_blink.png");
@@ -22,11 +24,11 @@ public class LayerSeaSerpentAncient extends RenderLayer<EntitySeaSerpent, Advanc
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntitySeaSerpent serpent, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntitySeaSerpent serpent) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (serpent.isAncient()) {
             RenderType tex = RenderType.entityNoOutline(serpent.isBlinking() ? TEXTURE_BLINK : TEXTURE);
-            VertexConsumer ivertexbuilder = bufferIn.getBuffer(tex);
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            submitParent(matrixStackIn, iafCollector, iafState, tex, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
 
         }
     }

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
@@ -67,7 +68,7 @@ public class RenderMobSkull extends EntityRenderer<EntityMobSkull> {
     }
 
     private void renderForEnum(EnumSkullType skull, boolean onWall, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(getSkullTexture(skull)));
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityTranslucent(getSkullTexture(skull)));
         switch (skull) {
             case HIPPOGRYPH:
                 matrixStackIn.translate(0, -0.0F, -0.2F);

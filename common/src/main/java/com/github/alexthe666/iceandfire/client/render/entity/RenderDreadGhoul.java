@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderDreadGhoul extends MobRenderer<EntityDreadGhoul, ModelDreadGhoul> {
+public class RenderDreadGhoul extends IafMobRenderer<EntityDreadGhoul, ModelDreadGhoul> {
 
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_ghoul_eyes.png");
 
@@ -30,13 +30,15 @@ public class RenderDreadGhoul extends MobRenderer<EntityDreadGhoul, ModelDreadGh
 
 
     @Override
-    protected void scale(EntityDreadGhoul entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityDreadGhoul entity = (EntityDreadGhoul) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         float scale = (entity.getSize() < 0.01F ? 1F : entity.getSize()) * VanillaScale.undo(entity);
         matrixStackIn.scale(scale, scale, scale);
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityDreadGhoul ghoul) {
+    protected Identifier getTexture(EntityDreadGhoul ghoul) {
         if (ghoul.getScreamStage() == 2) {
             switch (ghoul.getVariant()) {
                 case 1:

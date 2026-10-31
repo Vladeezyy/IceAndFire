@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.model.ModelMyrmexBase;
@@ -18,7 +20,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerMyrmexItem extends RenderLayer<EntityMyrmexBase, AdvancedEntityModel<EntityMyrmexBase>> {
+public class LayerMyrmexItem extends IafEntityLayer<EntityMyrmexBase, IafMobRenderState, AdvancedEntityModel<EntityMyrmexBase>> {
 
     protected final RenderMyrmexBase livingEntityRenderer;
 
@@ -40,7 +42,8 @@ public class LayerMyrmexItem extends RenderLayer<EntityMyrmexBase, AdvancedEntit
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull EntityMyrmexBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityMyrmexBase entitylivingbaseIn) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (entitylivingbaseIn instanceof EntityMyrmexWorker) {
             ItemStack itemstack = entitylivingbaseIn.getItemInHand(InteractionHand.MAIN_HAND);
             if (!itemstack.isEmpty()) {

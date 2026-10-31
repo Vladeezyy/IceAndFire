@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelChainTie;
@@ -28,7 +29,7 @@ public class RenderChainTie extends EntityRenderer<EntityChainTie> {
         matrixStackIn.translate(0, 0.5F, 0);
         matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
         this.leashKnotModel.setupAnim(entityIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
         this.leashKnotModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);

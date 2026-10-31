@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.particle;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.entity.EntityCockatrice;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,7 +17,7 @@ import org.joml.Matrix4f;
 
 public class CockatriceBeamRender {
 
-    public static final RenderType TEXTURE_BEAM = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/cockatrice/beam.png"));
+    public static final RenderType TEXTURE_BEAM = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/cockatrice/beam.png"));
 
     private static void vertex(VertexConsumer p_229108_0_, Matrix4f p_229108_1_, PoseStack.Pose p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
         p_229108_0_.addVertex(p_229108_1_, p_229108_3_, p_229108_4_, p_229108_5_).setColor(p_229108_6_, p_229108_7_, p_229108_8_, 255).setUv(p_229108_9_, p_229108_10_).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(p_229108_2_, 0.0F, 1.0F, 0.0F);

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.block.BlockLectern;
 import com.github.alexthe666.iceandfire.entity.tile.TileEntityLectern;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RenderLectern<T extends TileEntityLectern> implements BlockEntityRenderer<T> {
 
-    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderType.entityCutoutNoCull(Identifier.parse("iceandfire:textures/models/lectern_book.png"));
+    private static final RenderType ENCHANTMENT_TABLE_BOOK_TEXTURE = RenderTypes.entityCutout(Identifier.parse("iceandfire:textures/models/lectern_book.png"));
     private final BookModel bookModel;
 
     public RenderLectern(BlockEntityRendererProvider.Context context) {

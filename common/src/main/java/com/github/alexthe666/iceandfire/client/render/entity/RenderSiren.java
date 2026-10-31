@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderSiren extends MobRenderer<EntitySiren, ModelSiren> {
+public class RenderSiren extends IafMobRenderer<EntitySiren, ModelSiren> {
 
     public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/siren/siren_0.png");
     public static final Identifier TEXTURE_0_AGGRESSIVE = Identifier.parse("iceandfire:textures/models/siren/siren_0_aggressive.png");
@@ -28,7 +28,7 @@ public class RenderSiren extends MobRenderer<EntitySiren, ModelSiren> {
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntitySiren siren) {
+    protected Identifier getTexture(EntitySiren siren) {
         switch (siren.getHairColor()) {
             default:
                 return siren.isAgressive() ? TEXTURE_0_AGGRESSIVE : TEXTURE_0;

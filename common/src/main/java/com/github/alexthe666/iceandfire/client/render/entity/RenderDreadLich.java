@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 
-public class RenderDreadLich extends MobRenderer<EntityDreadLich, ModelDreadLich> {
+public class RenderDreadLich extends IafMobRenderer<EntityDreadLich, ModelDreadLich> {
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_lich_eyes.png");
     public static final Identifier TEXTURE_0 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_0.png");
     public static final Identifier TEXTURE_1 = Identifier.parse("iceandfire:textures/models/dread/dread_lich_1.png");
@@ -29,7 +29,9 @@ public class RenderDreadLich extends MobRenderer<EntityDreadLich, ModelDreadLich
     }
 
     @Override
-    protected void scale(EntityDreadLich entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityDreadLich entity = (EntityDreadLich) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         matrixStackIn.scale(0.95F, 0.95F, 0.95F);
         if (entity.getAnimation() == this.getModel().getSpawnAnimation()) {
             this.itemLayer.hidden = entity.getAnimationTick() <= this.getModel().getSpawnAnimation().getDuration() - 10;
@@ -40,7 +42,7 @@ public class RenderDreadLich extends MobRenderer<EntityDreadLich, ModelDreadLich
 
     @Nullable
     @Override
-    public Identifier getTextureLocation(EntityDreadLich entity) {
+    protected Identifier getTexture(EntityDreadLich entity) {
         switch (entity.getVariant()) {
             case 1:
                 return TEXTURE_1;

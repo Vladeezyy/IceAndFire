@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderSeaSerpent extends MobRenderer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> {
+public class RenderSeaSerpent extends IafMobRenderer<EntitySeaSerpent, AdvancedEntityModel<EntitySeaSerpent>> {
 
     public static final Identifier TEXTURE_BLUE = Identifier.parse("iceandfire:textures/models/seaserpent/seaserpent_blue.png");
     public static final Identifier TEXTURE_BLUE_BLINK = Identifier.parse("iceandfire:textures/models/seaserpent/seaserpent_blue_blink.png");
@@ -28,19 +28,21 @@ public class RenderSeaSerpent extends MobRenderer<EntitySeaSerpent, AdvancedEnti
 
     public RenderSeaSerpent(EntityRendererProvider.Context context, AdvancedEntityModel<EntitySeaSerpent> model) {
         super(context, model, 1.6F);
-        this.layers.add(new LayerSeaSerpentAncient(this));
+        this.addLayer(new LayerSeaSerpentAncient(this));
 
     }
 
     @Override
-    protected void scale(EntitySeaSerpent entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntitySeaSerpent entity = (EntitySeaSerpent) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         float s = entity.getSeaSerpentScale() * VanillaScale.undo(entity);
         this.shadowRadius = s;
         matrixStackIn.scale(s, s, s);
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntitySeaSerpent serpent) {
+    protected Identifier getTexture(EntitySeaSerpent serpent) {
         switch (serpent.getVariant()) {
             case 0:
                 if (serpent.isBlinking()) {

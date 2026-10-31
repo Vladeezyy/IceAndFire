@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelDreadLichSkull;
@@ -35,7 +36,7 @@ public class RenderDreadLichSkull extends EntityRenderer<EntityDreadLichSkull> {
             float yaw = entity.yRotO + (entity.getYRot() - entity.yRotO) * partialTicks;
             matrixStackIn.translate(0F, 0F, 0F);
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw - 180.0F));
-            VertexConsumer ivertexbuilder = ItemRenderer.getFoilBuffer(bufferIn, RenderType.eyes(TEXTURE), false, false);
+            VertexConsumer ivertexbuilder = ItemRenderer.getFoilBuffer(bufferIn, RenderTypes.eyes(TEXTURE), false, false);
             MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, -1);
             matrixStackIn.popPose();
         }

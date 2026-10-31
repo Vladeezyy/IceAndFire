@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 
-public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm> {
+public class RenderDeathWorm extends IafMobRenderer<EntityDeathWorm, ModelDeathWorm> {
     public static final Identifier TEXTURE_RED = Identifier.parse("iceandfire:textures/models/deathworm/deathworm_red.png");
     public static final Identifier TEXTURE_WHITE = Identifier.parse("iceandfire:textures/models/deathworm/deathworm_white.png");
     public static final Identifier TEXTURE_YELLOW = Identifier.parse("iceandfire:textures/models/deathworm/deathworm_yellow.png");
@@ -22,7 +22,9 @@ public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm
     }
 
     @Override
-    protected void scale(EntityDeathWorm entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityDeathWorm entity = (EntityDeathWorm) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         // vanilla already scaled the model and the shadow by getIafScale() (the same size)
         this.shadowRadius = 1F / 3;
     }
@@ -40,7 +42,7 @@ public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm
 
     @Nullable
     @Override
-    public Identifier getTextureLocation(EntityDeathWorm entity) {
+    protected Identifier getTexture(EntityDeathWorm entity) {
         return entity.getVariant() == 2 ? TEXTURE_WHITE : entity.getVariant() == 1 ? TEXTURE_RED : TEXTURE_YELLOW;
     }
 }

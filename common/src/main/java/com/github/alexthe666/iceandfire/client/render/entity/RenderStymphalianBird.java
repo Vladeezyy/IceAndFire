@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderStymphalianBird extends MobRenderer<EntityStymphalianBird, ModelStymphalianBird> {
+public class RenderStymphalianBird extends IafMobRenderer<EntityStymphalianBird, ModelStymphalianBird> {
 
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/stymphalianbird/stymphalian_bird.png");
 
@@ -22,7 +22,7 @@ public class RenderStymphalianBird extends MobRenderer<EntityStymphalianBird, Mo
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull EntityStymphalianBird cyclops) {
+    protected Identifier getTexture(EntityStymphalianBird cyclops) {
         return TEXTURE;
     }
 

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.util.ARGB;
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
@@ -92,7 +93,7 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
         }
         RenderType tex = IafRenderType.getStoneMobRenderType(200, 200);
         if (fakeEntity instanceof EntityTroll) {
-            tex = RenderType.entityCutout(((EntityTroll) fakeEntity).getTrollType().TEXTURE_STONE);
+            tex = RenderTypes.entityCutoutCull(((EntityTroll) fakeEntity).getTrollType().TEXTURE_STONE);
         }
 
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(tex);

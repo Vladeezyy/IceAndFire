@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -66,7 +67,7 @@ public class RenderChain {
         float f32 = 0.75F;
         float f31 = f4 + f32;
 
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(getTexture()));
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.entityCutout(getTexture()));
         PoseStack.Pose matrixstack$entry = matrixStackIn.last();
         Matrix4f matrix4f = matrixstack$entry.pose();
         PoseStack.Pose matrix3f = matrixstack$entry;

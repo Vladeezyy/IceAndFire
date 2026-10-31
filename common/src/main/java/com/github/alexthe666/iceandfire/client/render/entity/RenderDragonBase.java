@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
+public class RenderDragonBase extends IafMobRenderer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
 
     private final Map<String, Identifier> LAYERED_TEXTURE_CACHE = Maps.newHashMap();
     private final int dragonType;
@@ -45,7 +45,9 @@ public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEnti
     }
 
     @Override
-    protected void scale(EntityDragonBase entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityDragonBase entity = (EntityDragonBase) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         float size = entity.getRenderSize() / 3;
         // vanilla already scaled the model (and the shadow) by getIafScale(): only the dragon's own size on top
         this.shadowRadius = size * VanillaScale.undo(entity);
@@ -56,7 +58,7 @@ public class RenderDragonBase extends MobRenderer<EntityDragonBase, AdvancedEnti
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityDragonBase entity) {
+    protected Identifier getTexture(EntityDragonBase entity) {
         String baseTexture = entity.getVariantName(entity.getVariant()) + entity.getDragonStage() + entity.isModelDead() + entity.isMale() + entity.isSkeletal() + entity.isSleeping() + entity.isBlinking();
         Identifier resourcelocation = LAYERED_TEXTURE_CACHE.get(baseTexture);
         if (resourcelocation == null) {

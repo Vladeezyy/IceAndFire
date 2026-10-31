@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import dev.vladeezyy.rampart.client.model.AdvancedModelBox;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LayerDragonEyes extends RenderLayer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
+public class LayerDragonEyes extends IafEntityLayer<EntityDragonBase, IafMobRenderState, AdvancedEntityModel<EntityDragonBase>> {
     private final MobRenderer render;
     private TabulaModel fireHead;
     private TabulaModel iceHead;
@@ -45,9 +48,10 @@ public class LayerDragonEyes extends RenderLayer<EntityDragonBase, AdvancedEntit
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityDragonBase dragon, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase dragon) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (dragon.shouldRenderEyes()) {
-            RenderType eyes = RenderType.eyes(EnumDragonTextures.getEyeTextureFromDragon(dragon));
+            RenderType eyes = RenderTypes.eyes(EnumDragonTextures.getEyeTextureFromDragon(dragon));
             VertexConsumer ivertexbuilder = bufferIn.getBuffer(eyes);
             if (dragon instanceof EntityLightningDragon && lightningHead != null) {
                 copyPositions(lightningHead, (TabulaModel) this.getParentModel());

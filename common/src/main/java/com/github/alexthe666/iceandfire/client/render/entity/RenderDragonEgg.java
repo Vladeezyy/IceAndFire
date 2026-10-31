@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RenderDragonEgg extends LivingEntityRenderer<EntityDragonEgg, ModelDragonEgg<EntityDragonEgg>> {
+public class RenderDragonEgg extends IafLivingRenderer<EntityDragonEgg, ModelDragonEgg<EntityDragonEgg>> {
 
     public static final Identifier EGG_RED = Identifier.parse("iceandfire:textures/models/firedragon/egg_red.png");
     public static final Identifier EGG_GREEN = Identifier.parse("iceandfire:textures/models/firedragon/egg_green.png");
@@ -28,13 +28,13 @@ public class RenderDragonEgg extends LivingEntityRenderer<EntityDragonEgg, Model
     }
 
     @Override
-    protected boolean shouldShowName(EntityDragonEgg entity) {
+    protected boolean shouldShowName(EntityDragonEgg entity, double iafDistanceSq) {
         return entity.shouldShowName() && entity.hasCustomName();
     }
 
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityDragonEgg entity) {
+    protected Identifier getTexture(EntityDragonEgg entity) {
         switch (entity.getEggType()) {
             default:
                 return EGG_RED;

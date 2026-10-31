@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderDreadHorse extends MobRenderer<EntityDreadHorse, HorseModel<EntityDreadHorse>> {
+public class RenderDreadHorse extends IafMobRenderer<EntityDreadHorse, HorseModel<EntityDreadHorse>> {
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_knight_horse.png");
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_knight_horse_eyes.png");
 
@@ -19,7 +19,7 @@ public class RenderDreadHorse extends MobRenderer<EntityDreadHorse, HorseModel<E
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull EntityDreadHorse entity) {
+    protected Identifier getTexture(EntityDreadHorse entity) {
         return TEXTURE;
     }
 }

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelTroll;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderTroll;
@@ -11,7 +14,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerTrollWeapon extends RenderLayer<EntityTroll, ModelTroll> {
+public class LayerTrollWeapon extends IafEntityLayer<EntityTroll, IafMobRenderState, ModelTroll> {
     private final RenderTroll renderer;
 
     public LayerTrollWeapon(RenderTroll renderer) {
@@ -24,9 +27,10 @@ public class LayerTrollWeapon extends RenderLayer<EntityTroll, ModelTroll> {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityTroll troll, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityTroll troll) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (troll.getWeaponType() != null && !EntityGorgon.isStoneMob(troll)) {
-            RenderType tex = RenderType.entityCutout(troll.getWeaponType().TEXTURE);
+            RenderType tex = RenderTypes.entityCutoutCull(troll.getWeaponType().TEXTURE);
             this.getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(tex), packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         }
     }

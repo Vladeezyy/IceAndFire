@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelPixie;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderPixie;
@@ -12,7 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerPixieGlow extends RenderLayer<EntityPixie, ModelPixie> {
+public class LayerPixieGlow extends IafEntityLayer<EntityPixie, IafMobRenderState, ModelPixie> {
 
     private final RenderPixie render;
 
@@ -22,7 +25,8 @@ public class LayerPixieGlow extends RenderLayer<EntityPixie, ModelPixie> {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityPixie pixie, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityPixie pixie) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         Identifier texture = RenderPixie.TEXTURE_0;
         switch (pixie.getColor()) {
             default:
@@ -44,8 +48,7 @@ public class LayerPixieGlow extends RenderLayer<EntityPixie, ModelPixie> {
                 texture = RenderPixie.TEXTURE_5;
                 break;
         }
-        RenderType eyes = RenderType.eyes(texture);
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(eyes);
-        this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+        RenderType eyes = RenderTypes.eyes(texture);
+        submitParent(matrixStackIn, iafCollector, iafState, eyes, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
     }
 }

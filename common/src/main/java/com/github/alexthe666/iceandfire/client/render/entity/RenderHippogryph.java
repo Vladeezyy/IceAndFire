@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.layer.IafEntityLayer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelHippogryph;
 import com.github.alexthe666.iceandfire.entity.EntityHippogryph;
@@ -15,34 +18,36 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RenderHippogryph extends MobRenderer<EntityHippogryph, ModelHippogryph> {
+public class RenderHippogryph extends IafMobRenderer<EntityHippogryph, ModelHippogryph> {
 
     public RenderHippogryph(EntityRendererProvider.Context context) {
         super(context, new ModelHippogryph(), 0.8F);
-        this.layers.add(new LayerHippogriffSaddle(this));
+        this.addLayer(new LayerHippogriffSaddle(this));
 
     }
 
     @Override
-    protected void scale(@NotNull EntityHippogryph entity, PoseStack matrix, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrix) {
+        EntityHippogryph entity = (EntityHippogryph) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         matrix.scale(1.2F, 1.2F, 1.2F);
     }
 
     @Nullable
     @Override
-    public Identifier getTextureLocation(EntityHippogryph entity) {
+    protected Identifier getTexture(EntityHippogryph entity) {
         return entity.isBlinking() ? entity.getEnumVariant().TEXTURE_BLINK : entity.getEnumVariant().TEXTURE;
     }
 
 
-    private class LayerHippogriffSaddle extends RenderLayer<EntityHippogryph, ModelHippogryph> {
+    private class LayerHippogriffSaddle extends IafEntityLayer<EntityHippogryph, IafMobRenderState, ModelHippogryph> {
         private final RenderHippogryph renderer;
-        private final RenderType SADDLE_TEXTURE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/saddle.png"));
-        private final RenderType BRIDLE = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/bridle.png"));
-        private final RenderType CHEST = RenderType.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/chest.png"));
-        private final RenderType TEXTURE_DIAMOND = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/armor_diamond.png"));
-        private final RenderType TEXTURE_GOLD = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/armor_gold.png"));
-        private final RenderType TEXTURE_IRON = RenderType.entityNoOutline(Identifier.parse("iceandfire:textures/models/hippogryph/armor_iron.png"));
+        private final RenderType SADDLE_TEXTURE = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/saddle.png"), false);
+        private final RenderType BRIDLE = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/bridle.png"), false);
+        private final RenderType CHEST = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/chest.png"));
+        private final RenderType TEXTURE_DIAMOND = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/armor_diamond.png"), false);
+        private final RenderType TEXTURE_GOLD = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/armor_gold.png"), false);
+        private final RenderType TEXTURE_IRON = RenderTypes.entityTranslucent(Identifier.parse("iceandfire:textures/models/hippogryph/armor_iron.png"), false);
 
 
         public LayerHippogriffSaddle(RenderHippogryph renderer) {
@@ -51,7 +56,8 @@ public class RenderHippogryph extends MobRenderer<EntityHippogryph, ModelHippogr
         }
 
         @Override
-        public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityHippogryph hippo, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityHippogryph hippo) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
             if (hippo.getArmor() != 0) {
                 RenderType type = null;
                 switch (hippo.getArmor()) {
@@ -65,20 +71,16 @@ public class RenderHippogryph extends MobRenderer<EntityHippogryph, ModelHippogr
                         type = TEXTURE_DIAMOND;
                         break;
                 }
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(type);
-                this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                submitParent(matrixStackIn, iafCollector, iafState, type, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
             }
             if (hippo.isSaddled()) {
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(SADDLE_TEXTURE);
-                this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                submitParent(matrixStackIn, iafCollector, iafState, SADDLE_TEXTURE, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
             }
             if (hippo.isSaddled() && hippo.getControllingPassenger() != null) {
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(BRIDLE);
-                this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                submitParent(matrixStackIn, iafCollector, iafState, BRIDLE, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
             }
             if (hippo.isChested()) {
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(CHEST);
-                this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+                submitParent(matrixStackIn, iafCollector, iafState, CHEST, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
             }
         }
     }

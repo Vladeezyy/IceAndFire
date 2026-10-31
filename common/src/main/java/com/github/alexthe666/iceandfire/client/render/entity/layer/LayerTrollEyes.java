@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelTroll;
 import com.github.alexthe666.iceandfire.client.render.entity.RenderTroll;
@@ -12,7 +15,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.NotNull;
 
-public class LayerTrollEyes extends RenderLayer<EntityTroll, ModelTroll> {
+public class LayerTrollEyes extends IafEntityLayer<EntityTroll, IafMobRenderState, ModelTroll> {
 
     private final RenderTroll renderer;
 
@@ -22,11 +25,11 @@ public class LayerTrollEyes extends RenderLayer<EntityTroll, ModelTroll> {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull EntityTroll troll, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityTroll troll) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         if (!EntityGorgon.isStoneMob(troll)) {
-            RenderType tex = RenderType.eyes(troll.getTrollType().TEXTURE_EYES);
-            VertexConsumer ivertexbuilder = bufferIn.getBuffer(tex);
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            RenderType tex = RenderTypes.eyes(troll.getTrollType().TEXTURE_EYES);
+            submitParent(matrixStackIn, iafCollector, iafState, tex, packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
 
         }
     }

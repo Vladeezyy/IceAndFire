@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.world.phys.AABB;
 import com.github.alexthe666.iceandfire.client.model.ModelDragonEgg;
@@ -34,18 +35,18 @@ public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRend
 
     protected static RenderType getEggTexture(EnumDragonEgg type) {
         return switch (type) {
-            default -> RenderType.entityCutout(RenderDragonEgg.EGG_RED);
-            case GREEN -> RenderType.entityCutout(RenderDragonEgg.EGG_GREEN);
-            case BRONZE -> RenderType.entityCutout(RenderDragonEgg.EGG_BRONZE);
-            case GRAY -> RenderType.entityCutout(RenderDragonEgg.EGG_GREY);
-            case BLUE -> RenderType.entityCutout(RenderDragonEgg.EGG_BLUE);
-            case WHITE -> RenderType.entityCutout(RenderDragonEgg.EGG_WHITE);
-            case SAPPHIRE -> RenderType.entityCutout(RenderDragonEgg.EGG_SAPPHIRE);
-            case SILVER -> RenderType.entityCutout(RenderDragonEgg.EGG_SILVER);
-            case ELECTRIC -> RenderType.entityCutout(RenderDragonEgg.EGG_ELECTRIC);
-            case AMYTHEST -> RenderType.entityCutout(RenderDragonEgg.EGG_AMYTHEST);
-            case COPPER -> RenderType.entityCutout(RenderDragonEgg.EGG_COPPER);
-            case BLACK -> RenderType.entityCutout(RenderDragonEgg.EGG_BLACK);
+            default -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_RED);
+            case GREEN -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_GREEN);
+            case BRONZE -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_BRONZE);
+            case GRAY -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_GREY);
+            case BLUE -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_BLUE);
+            case WHITE -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_WHITE);
+            case SAPPHIRE -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_SAPPHIRE);
+            case SILVER -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_SILVER);
+            case ELECTRIC -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_ELECTRIC);
+            case AMYTHEST -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_AMYTHEST);
+            case COPPER -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_COPPER);
+            case BLACK -> RenderTypes.entityCutoutCull(RenderDragonEgg.EGG_BLACK);
         };
     }
 
@@ -73,7 +74,7 @@ public class RenderPodium<T extends TileEntityPodium> implements BlockEntityRend
                 matrixStackIn.pushPose();
                 matrixStackIn.pushPose();
                 model.renderPodium();
-                model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(jungle ? RenderMyrmexEgg.EGG_JUNGLE : RenderMyrmexEgg.EGG_DESERT)), combinedLightIn, combinedOverlayIn, -1);
+                model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutoutCull(jungle ? RenderMyrmexEgg.EGG_JUNGLE : RenderMyrmexEgg.EGG_DESERT)), combinedLightIn, combinedOverlayIn, -1);
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();

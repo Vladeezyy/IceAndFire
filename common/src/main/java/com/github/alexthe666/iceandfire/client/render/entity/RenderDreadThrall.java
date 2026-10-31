@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RenderDreadThrall extends MobRenderer<EntityDreadThrall, ModelDreadThrall> implements IHasArmorVariantResource {
+public class RenderDreadThrall extends IafMobRenderer<EntityDreadThrall, ModelDreadThrall> implements IHasArmorVariantResource  {
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_thrall.png");
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_thrall_eyes.png");
     public static final Identifier TEXTURE_LEG_ARMOR = Identifier.parse("iceandfire:textures/models/dread/thrall_legs.png");
@@ -80,7 +80,7 @@ public class RenderDreadThrall extends MobRenderer<EntityDreadThrall, ModelDread
 
     @Nullable
     @Override
-    public Identifier getTextureLocation(@NotNull EntityDreadThrall entity) {
+    protected Identifier getTexture(EntityDreadThrall entity) {
         return TEXTURE;
     }
 

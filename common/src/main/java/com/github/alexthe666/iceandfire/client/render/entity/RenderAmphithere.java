@@ -9,7 +9,7 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RenderAmphithere extends MobRenderer<EntityAmphithere, ModelAmphithere> {
+public class RenderAmphithere extends IafMobRenderer<EntityAmphithere, ModelAmphithere> {
 
     public static final Identifier TEXTURE_BLUE = Identifier.parse("iceandfire:textures/models/amphithere/amphithere_blue.png");
     public static final Identifier TEXTURE_BLUE_BLINK = Identifier.parse("iceandfire:textures/models/amphithere/amphithere_blue_blink.png");
@@ -27,13 +27,15 @@ public class RenderAmphithere extends MobRenderer<EntityAmphithere, ModelAmphith
     }
 
     @Override
-    protected void scale(@NotNull EntityAmphithere entity, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(IafMobRenderState iafState, PoseStack matrixStackIn) {
+        EntityAmphithere entity = (EntityAmphithere) iafState.pose.entity;
+        float partialTickTime = iafState.partialTick;
         matrixStackIn.scale(2.0F, 2.0F, 2.0F);
 
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityAmphithere amphithere) {
+    protected Identifier getTexture(EntityAmphithere amphithere) {
         switch (amphithere.getVariant()) {
             case 0:
                 if (amphithere.isBlinking()) {

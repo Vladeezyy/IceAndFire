@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderDreadScuttler extends MobRenderer<EntityDreadScuttler, ModelDreadScuttler> {
+public class RenderDreadScuttler extends IafMobRenderer<EntityDreadScuttler, ModelDreadScuttler> {
 
     public static final Identifier TEXTURE_EYES = Identifier.parse("iceandfire:textures/models/dread/dread_scuttler_eyes.png");
     public static final Identifier TEXTURE = Identifier.parse("iceandfire:textures/models/dread/dread_scuttler.png");
@@ -26,7 +26,7 @@ public class RenderDreadScuttler extends MobRenderer<EntityDreadScuttler, ModelD
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull EntityDreadScuttler beast) {
+    protected Identifier getTexture(EntityDreadScuttler beast) {
         return TEXTURE;
 
     }

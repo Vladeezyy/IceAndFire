@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.tile;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.github.alexthe666.iceandfire.client.model.ModelTrollWeapon;
 import com.github.alexthe666.iceandfire.enums.EnumTroll;
@@ -28,7 +29,7 @@ public class RenderTrollWeapon extends BlockEntityWithoutLevelRenderer {
 
         stackIn.pushPose();
         stackIn.translate(0.5F, -0.75F, 0.5F);
-        MODEL.renderToBuffer(stackIn, bufferIn.getBuffer(RenderType.entityCutout(weapon.TEXTURE)), combinedLightIn, combinedOverlayIn, -1);
+        MODEL.renderToBuffer(stackIn, bufferIn.getBuffer(RenderTypes.entityCutoutCull(weapon.TEXTURE)), combinedLightIn, combinedOverlayIn, -1);
         stackIn.popPose();
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderGorgon extends MobRenderer<EntityGorgon, ModelGorgon> {
+public class RenderGorgon extends IafMobRenderer<EntityGorgon, ModelGorgon> {
 
     public static final Identifier PASSIVE_TEXTURE = Identifier.parse("iceandfire:textures/models/gorgon/gorgon_passive.png");
     public static final Identifier AGRESSIVE_TEXTURE = Identifier.parse("iceandfire:textures/models/gorgon/gorgon_active.png");
@@ -17,7 +17,7 @@ public class RenderGorgon extends MobRenderer<EntityGorgon, ModelGorgon> {
 
     public RenderGorgon(EntityRendererProvider.Context context) {
         super(context, new ModelGorgon(), 0.4F);
-        this.layers.add(new LayerGorgonEyes(this));
+        this.addLayer(new LayerGorgonEyes(this));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RenderGorgon extends MobRenderer<EntityGorgon, ModelGorgon> {
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(EntityGorgon gorgon) {
+    protected Identifier getTexture(EntityGorgon gorgon) {
         if (gorgon.getAnimation() == EntityGorgon.ANIMATION_SCARE) {
             return AGRESSIVE_TEXTURE;
         } else if (gorgon.deathTime > 0) {

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import net.minecraft.util.ARGB;
 import com.github.alexthe666.iceandfire.client.model.ModelDreadLichSkull;
@@ -31,8 +32,8 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
     public void render(EntityDragonLightningCharge entity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         float f = (float) entity.tickCount + partialTicks;
         float yaw = entity.yRotO + (entity.getYRot() - entity.yRotO) * partialTicks;
-        VertexConsumer ivertexbuilder2 = bufferIn.getBuffer(RenderType.eyes(TEXTURE_CORE));
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.energySwirl(TEXTURE, f * 0.01F, f * 0.01F));
+        VertexConsumer ivertexbuilder2 = bufferIn.getBuffer(RenderTypes.eyes(TEXTURE_CORE));
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderTypes.energySwirl(TEXTURE, f * 0.01F, f * 0.01F));
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0F, 0.5F, 0F);

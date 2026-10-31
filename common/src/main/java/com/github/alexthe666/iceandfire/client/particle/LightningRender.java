@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.client.particle;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -28,7 +29,7 @@ public class LightningRender {
     private final Map<Object, BoltOwnerData> boltOwners = new Object2ObjectOpenHashMap<>();
 
     public void render(float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn) {
-        VertexConsumer buffer = bufferIn.getBuffer(RenderType.lightning());
+        VertexConsumer buffer = bufferIn.getBuffer(RenderTypes.lightning());
         Matrix4f matrix = matrixStackIn.last().pose();
         Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
         boolean refresh = timestamp.isPassed(refreshTimestamp, (1 / REFRESH_TIME));

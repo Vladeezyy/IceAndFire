@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
 import com.github.alexthe666.iceandfire.client.texture.ArrayLayeredTexture;
@@ -22,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class LayerDragonArmor extends RenderLayer<EntityDragonBase, AdvancedEntityModel<EntityDragonBase>> {
+public class LayerDragonArmor extends IafEntityLayer<EntityDragonBase, IafMobRenderState, AdvancedEntityModel<EntityDragonBase>> {
     private static final Map<String, Identifier> LAYERED_ARMOR_CACHE = Maps.newHashMap();
     private static final EquipmentSlot[] ARMOR_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     private final MobRenderer render;
@@ -37,7 +40,8 @@ public class LayerDragonArmor extends RenderLayer<EntityDragonBase, AdvancedEnti
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, EntityDragonBase dragon, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void submit(PoseStack matrixStackIn, SubmitNodeCollector iafCollector, int packedLightIn, IafMobRenderState iafState, EntityDragonBase dragon) {
+        float limbSwing = iafState.pose.limbSwing, limbSwingAmount = iafState.pose.limbSwingAmount, partialTicks = iafState.partialTick, ageInTicks = iafState.ageInTicks, netHeadYaw = iafState.pose.netHeadYaw, headPitch = iafState.pose.headPitch;
         int armorHead = dragon.getArmorOrdinal(dragon.getItemBySlot(EquipmentSlot.HEAD));
         int armorNeck = dragon.getArmorOrdinal(dragon.getItemBySlot(EquipmentSlot.CHEST));
         int armorLegs = dragon.getArmorOrdinal(dragon.getItemBySlot(EquipmentSlot.LEGS));
@@ -61,8 +65,7 @@ public class LayerDragonArmor extends RenderLayer<EntityDragonBase, AdvancedEnti
                 Minecraft.getInstance().getTextureManager().register(resourcelocation, layeredBase);
                 LAYERED_ARMOR_CACHE.put(armorTexture, resourcelocation);
             }
-            VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(resourcelocation));
-            this.getParentModel().renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
+            submitParent(matrixStackIn, iafCollector, iafState, RenderTypes.entityCutout(resourcelocation), packedLightIn, OverlayTexture.NO_OVERLAY, -1, 1);
         }
     }
 }
