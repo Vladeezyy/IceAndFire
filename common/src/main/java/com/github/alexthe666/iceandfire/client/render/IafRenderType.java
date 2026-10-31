@@ -52,8 +52,8 @@ public final class IafRenderType {
 
     /** The ghost: premultiplied blending (ONE, ONE_MINUS_SRC_ALPHA) as the original's ghost transparency */
     private static final RenderPipeline GHOST_PIPELINE = entity("pipeline/ghost")
+        // its own blending only: a second withColorTargetState(DEFAULT) after it (26.3 port) drew the ghost opaque
         .withColorTargetState(new ColorTargetState(new BlendFunction(BlendFactor.ONE, BlendFactor.ONE_MINUS_SRC_ALPHA, BlendFactor.ONE, BlendFactor.ONE_MINUS_SRC_ALPHA)))
-        .withColorTargetState(ColorTargetState.DEFAULT)
         .withDepthStencilState(DepthStencilState.DEFAULT)
         .build();
     /** The crack overlay of a stone statue: translucent, only where the statue already is (equal depth) */
