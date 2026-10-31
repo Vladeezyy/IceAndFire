@@ -8,6 +8,6 @@ import dev.vladeezyy.iceandfire.platform.RegistryEntry;
 
 public class IafRecipeSerializers {
     public static final Registrar<RecipeSerializer<?>> SERIALIZERS = Registrar.create(BuiltInRegistries.RECIPE_SERIALIZER, IceAndFire.MODID);
-    public static final RegistryEntry<RecipeSerializer<?>, RecipeSerializer<?>> DRAGONFORGE_SERIALIZER = SERIALIZERS.register("dragonforge", DragonForgeRecipe.Serializer::new);
+    public static final RegistryEntry<RecipeSerializer<?>, RecipeSerializer<?>> DRAGONFORGE_SERIALIZER = SERIALIZERS.register("dragonforge", () -> DragonForgeRecipe.SERIALIZER);
 
 }

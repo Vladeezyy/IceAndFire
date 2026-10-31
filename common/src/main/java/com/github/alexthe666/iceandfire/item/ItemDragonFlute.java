@@ -25,7 +25,7 @@ public class ItemDragonFlute extends Item {
     @Override
     public @NotNull InteractionResult use(Level worldIn, Player player, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = player.getItemInHand(hand);
-        player.getCooldowns().addCooldown(this, 60);
+        player.getCooldowns().addCooldown(itemStackIn, 60);
 
         float chunksize = 16 * IafConfig.dragonFluteDistance;
         List<Entity> list = worldIn.getEntities(player, (new AABB(player.getX(), player.getY(), player.getZ(), player.getX() + 1.0D, player.getY() + 1.0D, player.getZ() + 1.0D)).inflate(chunksize, 256, chunksize));
@@ -53,7 +53,7 @@ public class ItemDragonFlute extends Item {
         }
         worldIn.playSound(player, player.blockPosition(), IafSoundRegistry.DRAGONFLUTE, SoundSource.NEUTRAL, 1, 1.75F);
 
-        return new InteractionResult(InteractionResult.SUCCESS, itemStackIn);
+        return InteractionResult.SUCCESS;
     }
 
     public static class Sorter implements Comparator<Entity> {

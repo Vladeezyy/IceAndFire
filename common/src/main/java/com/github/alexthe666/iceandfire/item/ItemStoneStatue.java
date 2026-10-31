@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -60,7 +61,7 @@ public class ItemStoneStatue extends Item {
                 CompoundTag statueNBT = ItemNbt.view(stack).getCompoundOrEmpty("IAFStoneStatueNBT");
                 EntityStoneStatue statue = new EntityStoneStatue(IafEntityRegistry.STONE_STATUE.get(),
                     context.getLevel());
-                statue.readAdditionalSaveData(statueNBT);
+                statue.readAdditionalSaveData(Values.input(context.getLevel().registryAccess(), statueNBT));
                 statue.setTrappedEntityTypeString(id);
                 double d1 = context.getPlayer().getX() - (context.getClickedPos().getX() + 0.5);
                 double d2 = context.getPlayer().getZ() - (context.getClickedPos().getZ() + 0.5);
@@ -70,7 +71,7 @@ public class ItemStoneStatue extends Item {
                 statue.yHeadRot = yaw;
                 statue.yBodyRot = yaw;
                 statue.yBodyRotO = yaw;
-                statue.absMoveTo(context.getClickedPos().getX() + 0.5, context.getClickedPos().getY() + 1, context.getClickedPos().getZ() + 0.5, yaw, 0);
+                statue.absSnapTo(context.getClickedPos().getX() + 0.5, context.getClickedPos().getY() + 1, context.getClickedPos().getZ() + 0.5, yaw, 0);
                 if (!context.getLevel().isClientSide()) {
                     context.getLevel().addFreshEntity(statue);
                     statue.readAdditionalSaveData(ItemNbt.getTag(stack));

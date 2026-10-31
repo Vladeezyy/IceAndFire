@@ -427,7 +427,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
     public static Direction getXZFacing(final BlockPos pos, final BlockPos neighbor) {
         final BlockPos vector = neighbor.subtract(pos);
-        return Direction.getNearest(vector.getX(), 0, vector.getZ());
+        return Direction.getApproximateNearest(vector.getX(), 0, vector.getZ());
     }
 
     /**

@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.mojang.serialization.MapCodec;
@@ -13,13 +17,30 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class DragonForgeRecipe implements Recipe<DragonForgeInput> {
+    private static final MapCodec<DragonForgeRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Ingredient.CODEC.fieldOf("input").forGetter(DragonForgeRecipe::getInput),
+            Ingredient.CODEC.fieldOf("blood").forGetter(DragonForgeRecipe::getBlood),
+            ItemStackTemplate.CODEC.fieldOf("result").forGetter(DragonForgeRecipe::getResult),
+            com.mojang.serialization.Codec.STRING.fieldOf("dragon_type").forGetter(DragonForgeRecipe::getDragonType),
+            com.mojang.serialization.Codec.INT.fieldOf("cook_time").forGetter(DragonForgeRecipe::getCookTime)
+    ).apply(instance, DragonForgeRecipe::new));
+    private static final StreamCodec<RegistryFriendlyByteBuf, DragonForgeRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, DragonForgeRecipe::getInput,
+            Ingredient.CONTENTS_STREAM_CODEC, DragonForgeRecipe::getBlood,
+            ItemStackTemplate.STREAM_CODEC, DragonForgeRecipe::getResult,
+            ByteBufCodecs.STRING_UTF8, DragonForgeRecipe::getDragonType,
+            ByteBufCodecs.VAR_INT, DragonForgeRecipe::getCookTime,
+            DragonForgeRecipe::new);
+    /** 26.x: a serializer is a record of the two codecs */
+    public static final RecipeSerializer<DragonForgeRecipe> SERIALIZER = new RecipeSerializer<>(CODEC, STREAM_CODEC);
+
     private final Ingredient input;
     private final Ingredient blood;
-    private final ItemStack result;
+    private final ItemStackTemplate result;
     private final String dragonType;
     private final int cookTime;
 
-    public DragonForgeRecipe(Ingredient input, Ingredient blood, ItemStack result, String dragonType, int cookTime) {
+    public DragonForgeRecipe(Ingredient input, Ingredient blood, ItemStackTemplate result, String dragonType, int cookTime) {
         this.input = input;
         this.blood = blood;
         this.result = result;
@@ -43,6 +64,10 @@ public class DragonForgeRecipe implements Recipe<DragonForgeInput> {
         return dragonType;
     }
 
+    public ItemStackTemplate getResult() {
+        return result;
+    }
+
     @Override
     public boolean isSpecial() {
         return true;
@@ -61,65 +86,42 @@ public class DragonForgeRecipe implements Recipe<DragonForgeInput> {
         return this.blood.test(blood);
     }
 
-    @Override
-    public @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider registries) {
-        return result;
-    }
-
     public @NotNull ItemStack getResultItem() {
-        return result;
+        return result.create();
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull DragonForgeInput dragonforge, @NotNull HolderLookup.Provider registries) {
-        return result.copy();
+    public @NotNull ItemStack assemble(@NotNull DragonForgeInput dragonforge) {
+        return result.create();
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public boolean showNotification() {
         return false;
     }
 
     @Override
-    public @NotNull ItemStack getToastSymbol() {
-        return new ItemStack(IafBlockRegistry.DRAGONFORGE_FIRE_CORE.get());
+    public @NotNull String group() {
+        return "";
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return IafRecipeSerializers.DRAGONFORGE_SERIALIZER.get();
+    public @NotNull PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public @NotNull RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
+
+    @Override
+    public @NotNull RecipeSerializer<DragonForgeRecipe> getSerializer() {
+        return SERIALIZER;
+    }
+
+    @Override
+    public @NotNull RecipeType<DragonForgeRecipe> getType() {
         return IafRecipeRegistry.DRAGON_FORGE_TYPE.get();
     }
-
-    public static class Serializer implements RecipeSerializer<DragonForgeRecipe> {
-        private static final MapCodec<DragonForgeRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(DragonForgeRecipe::getInput),
-                Ingredient.CODEC_NONEMPTY.fieldOf("blood").forGetter(DragonForgeRecipe::getBlood),
-                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(DragonForgeRecipe::getResultItem),
-                com.mojang.serialization.Codec.STRING.fieldOf("dragon_type").forGetter(DragonForgeRecipe::getDragonType),
-                com.mojang.serialization.Codec.INT.fieldOf("cook_time").forGetter(DragonForgeRecipe::getCookTime)
-        ).apply(instance, DragonForgeRecipe::new));
-        private static final StreamCodec<RegistryFriendlyByteBuf, DragonForgeRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, DragonForgeRecipe::getInput,
-                Ingredient.CONTENTS_STREAM_CODEC, DragonForgeRecipe::getBlood,
-                ItemStack.STREAM_CODEC, DragonForgeRecipe::getResultItem,
-                ByteBufCodecs.STRING_UTF8, DragonForgeRecipe::getDragonType,
-                ByteBufCodecs.VAR_INT, DragonForgeRecipe::getCookTime,
-                DragonForgeRecipe::new);
-
-        @Override
-        public @NotNull MapCodec<DragonForgeRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, DragonForgeRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
-
 }

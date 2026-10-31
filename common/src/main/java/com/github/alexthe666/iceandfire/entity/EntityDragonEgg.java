@@ -1,4 +1,9 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
+import com.github.alexthe666.iceandfire.entity.util.Owners;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -40,7 +45,7 @@ import java.util.UUID;
 
 public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromStatues, IDeadMob {
 
-    protected static final EntityDataAccessor<java.util.Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityDragonEgg.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityDragonEgg.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<Integer> DRAGON_TYPE = SynchedEntityData.defineId(EntityDragonEgg.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DRAGON_AGE = SynchedEntityData.defineId(EntityDragonEgg.class, EntityDataSerializers.INT);
 
@@ -83,7 +88,7 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
             s = tag.getStringOr("OwnerUUID", "");
         } else {
             String s1 = tag.getStringOr("Owner", "");
-            UUID converedUUID = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
+            UUID converedUUID = OldUsersConverter.convertMobOwnerIfNecessary(this.level().getServer(), s1);
             s = converedUUID == null ? s1 : converedUUID.toString();
         }
         if (!s.isEmpty()) {
@@ -101,11 +106,11 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
 
     @Nullable
     public UUID getOwnerId() {
-        return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
+        return this.entityData.get(OWNER_UNIQUE_ID).map(EntityReference::getUUID).orElse(null);
     }
 
     public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.entityData.set(OWNER_UNIQUE_ID, java.util.Optional.ofNullable(p_184754_1_));
+        this.entityData.set(OWNER_UNIQUE_ID, (java.util.Optional.ofNullable(p_184754_1_)).map(EntityReference::of));
     }
 
     public EnumDragonEgg getEggType() {
@@ -195,7 +200,7 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
             }
 
             dragon.setTame(true, true);
-            dragon.setOwnerUUID(getOwnerId());
+            Owners.set(dragon, getOwnerId());
 
             if (dragonType == DragonType.LIGHTNING) {
                 LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level(), EntitySpawnReason.MOB_SUMMONED);
@@ -221,7 +226,6 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
         return null;
     }
 
-    @Override
     public @NotNull Iterable<ItemStack> getArmorSlots() {
         return ImmutableList.of();
     }
@@ -241,7 +245,7 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
         if (var1.is(DamageTypeTags.IS_FIRE) && getEggType().dragonType == DragonType.FIRE)
             return false;
         if (!this.level().isClientSide() && !var1.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !isRemoved()) {
-            this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), this.getItem().getItem(), 1);
+            this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), new net.minecraft.world.item.ItemStack(this.getItem().getItem()), 1);
         }
         this.remove(RemovalReason.KILLED);
         return true;

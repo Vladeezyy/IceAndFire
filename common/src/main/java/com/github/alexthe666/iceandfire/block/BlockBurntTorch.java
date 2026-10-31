@@ -22,7 +22,7 @@ public class BlockBurntTorch extends TorchBlock implements IDreadBlock, IWallBlo
                     .sound(SoundType.WOOD)
                     .noOcclusion()
                     .dynamicShape()
-                    .noCollission());
+                    .noCollision());
     }
 
     @Override

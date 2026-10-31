@@ -279,10 +279,10 @@ public final class IafSoundRegistry {
                 Object obj = f.get(null);
                 if (obj instanceof SoundEvent) {
                     SoundEvent sound = (SoundEvent) obj;
-                    dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.register(Registries.SOUND_EVENT, sound.getLocation(), () -> sound);
+                    dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.register(Registries.SOUND_EVENT, sound.location(), () -> sound);
                 } else if (obj instanceof SoundEvent[]) {
                     for (SoundEvent soundEvent : (SoundEvent[]) obj) {
-                        dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.register(Registries.SOUND_EVENT, soundEvent.getLocation(), () -> soundEvent);
+                        dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.register(Registries.SOUND_EVENT, soundEvent.location(), () -> soundEvent);
                     }
                 }
             }

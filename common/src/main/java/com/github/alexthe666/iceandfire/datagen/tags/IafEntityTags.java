@@ -1,13 +1,10 @@
 package com.github.alexthe666.iceandfire.datagen.tags;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Nullable;
-import java.util.concurrent.CompletableFuture;
 
 /** The tags of the data provider IafEntityTagsProvider (NeoForge module), for the game code of both loaders */
 public final class IafEntityTags {

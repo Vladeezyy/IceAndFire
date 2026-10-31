@@ -8,7 +8,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class BlockElementalFlower extends BushBlock {
+public class BlockElementalFlower extends net.minecraft.world.level.block.VegetationBlock {
     public static final MapCodec<BlockElementalFlower> CODEC = simpleCodec(properties -> new BlockElementalFlower());
 
     @Override
@@ -32,14 +31,13 @@ public class BlockElementalFlower extends BushBlock {
 
     public BlockElementalFlower() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.PLANT)
                 .replaceable()
                 .ignitedByLava()
                 .pushReaction(PushReaction.DESTROY)
                 .noOcclusion()
-                .noCollission()
+                .noCollision()
                 .dynamicShape()
                 .randomTicks()
                 .sound(SoundType.GRASS)
@@ -64,7 +62,7 @@ public class BlockElementalFlower extends BushBlock {
         } else if (this == IafBlockRegistry.LIGHTNING_LILY.get()) {
             return soil.is(BlockTags.DIRT) || soil.is(Blocks.SHORT_GRASS);
         } else {
-            return soil.is(BlockTags.ICE) || soil.is(BlockTags.SNOW) || soil.is(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON);
+            return soil.is(BlockTags.ICE) || soil.is(BlockTags.SNOW) || soil.is(BlockTags.SUPPORT_OVERRIDE_SNOW_LAYER);
         }
     }
 

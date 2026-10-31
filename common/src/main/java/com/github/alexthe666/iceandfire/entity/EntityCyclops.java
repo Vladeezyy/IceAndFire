@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.server.level.ServerLevel;
@@ -121,9 +123,9 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F, 1.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, true, new Predicate<LivingEntity>() {
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, true, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable LivingEntity entity) {
+            public boolean test(LivingEntity entity, ServerLevel serverLevel) {
                 if (EntityGorgon.isStoneMob(entity))
                     return false;
                 if (!DragonUtils.isAlive(entity))
@@ -146,9 +148,10 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
             }
         }));
 
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, 10, true, true, new Predicate<Player>() {
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, 10, true, true, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Player entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Player entity = (Player) iafTarget;
                 return entity != null && !(entity.isCreative() || entity.isSpectator());
             }
         }));
@@ -172,7 +175,7 @@ public class EntityCyclops extends Monster implements IAnimatedEntity, IBlacklis
             if (!entityIn.hasPassenger(this)
                 && entityIn.getBbWidth() < 1.95F
                 && !(entityIn instanceof EntityDragonBase)
-                && !entityIn.getType().is((TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.CYCLOPS_UNLIFTABLES)))) {
+                && !entityIn.is((TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.CYCLOPS_UNLIFTABLES)))) {
                 this.setAnimation(ANIMATION_EATPLAYER);
                 entityIn.stopRiding();
                 entityIn.startRiding(this, true, true);

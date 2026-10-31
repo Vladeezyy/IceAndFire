@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.entity.EntitySpawnReason;
 import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -24,10 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemAlchemySword extends SwordItem {
+public class ItemAlchemySword extends Item implements IafTieredItem {
+
+    private final CustomToolMaterial tier;
 
     public ItemAlchemySword(CustomToolMaterial toolmaterial) {
-        super(toolmaterial, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(toolmaterial, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(toolmaterial.toolMaterial(), 3, -2.4F));
+        this.tier = toolmaterial;
     }
 
     @Override
@@ -96,5 +100,10 @@ public class ItemAlchemySword extends SwordItem {
     @Override
     public boolean isFoil(@NotNull ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public CustomToolMaterial getTier() {
+        return tier;
     }
 }

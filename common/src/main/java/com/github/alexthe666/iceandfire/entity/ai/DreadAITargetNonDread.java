@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.ai;
+import com.github.alexthe666.iceandfire.entity.util.IafSelectors;
 
 import com.github.alexthe666.iceandfire.entity.util.DragonUtils;
 import com.github.alexthe666.iceandfire.entity.util.IDreadMob;
@@ -15,7 +16,7 @@ public class DreadAITargetNonDread extends NearestAttackableTargetGoal<LivingEnt
 
     public DreadAITargetNonDread(Mob entityIn, Class<LivingEntity> classTarget, boolean checkSight,
                                  Predicate<LivingEntity> targetSelector) {
-        super(entityIn, classTarget, 0, checkSight, false, targetSelector);
+        super(entityIn, classTarget, 0, checkSight, false, IafSelectors.of(targetSelector));
     }
 
     @Override

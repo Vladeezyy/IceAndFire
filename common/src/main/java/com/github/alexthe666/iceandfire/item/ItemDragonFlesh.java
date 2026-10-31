@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

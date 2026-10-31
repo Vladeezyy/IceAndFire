@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -96,10 +98,15 @@ public class EntityMyrmexRoyal extends EntityMyrmexBase {
         return pos;
     }
 
-    @Override
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
     @Nullable
-    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+    protected Optional<ResourceKey<LootTable>> getIafLootTable() {
         return Optional.of(isJungle() ? JUNGLE_LOOT : DESERT_LOOT);
+    }
+
+    @Override
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Override
@@ -260,9 +267,9 @@ public class EntityMyrmexRoyal extends EntityMyrmexBase {
         this.targetSelector.addGoal(2, new MyrmexAIFindMate(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new MyrmexAIAttackPlayers(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, true, new Predicate<LivingEntity>() {
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, true, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable LivingEntity entity) {
+            public boolean test(LivingEntity entity, ServerLevel serverLevel) {
                 if (entity instanceof EntityMyrmexBase && EntityMyrmexRoyal.this.isBreedingSeason() || entity instanceof EntityMyrmexRoyal) {
                     return false;
                 }

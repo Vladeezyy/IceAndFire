@@ -48,7 +48,7 @@ public class GuiDragon extends AbstractContainerScreen<ContainerDragon> {
         Entity entity = IceAndFire.PROXY.getReferencedMob();
         if (entity instanceof EntityDragonBase) {
             EntityDragonBase dragon = (EntityDragonBase) entity;
-            float dragonScale = 1F / Math.max(0.0001F, dragon.getScale());
+            float dragonScale = 1F / Math.max(0.0001F, dragon.getIafScale());
             Quaternionf quaternionf = (new Quaternionf()).rotateY((float) Mth.lerp((float) mouseX / this.width, 0, Math.PI)).rotateZ((float) Mth.lerp((float) mouseY / this.width, Math.PI, Math.PI + 0.2));
             InventoryScreen.renderEntityInInventory(matrixStack, k + 88, l + (int) (0.5F * (dragon.flyProgress)) + 55, (int) (dragonScale * 23F), new Vector3f(), quaternionf, null, dragon);
         }

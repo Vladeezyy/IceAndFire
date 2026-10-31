@@ -22,8 +22,7 @@ public class BlockFallingGeneric extends FallingBlock {
 
 /*    public BlockFallingGeneric(float hardness, float resistance, SoundType sound) {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .sound(sound)
                 .strength(hardness, resistance)
         );
@@ -32,8 +31,7 @@ public class BlockFallingGeneric extends FallingBlock {
     @SuppressWarnings("deprecation")
     public BlockFallingGeneric(float hardness, float resistance, SoundType sound, boolean slippery) {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .sound(sound)
                 .strength(hardness, resistance)
                 .friction(0.98F)
@@ -56,5 +54,11 @@ public class BlockFallingGeneric extends FallingBlock {
 
     public int getDustColor(BlockState blkst) {
         return -8356741;
+    }
+
+    // 26.x: abstract in FallingBlock (the state-only color above is the original's)
+    @Override
+    public int getDustColor(@NotNull BlockState state, @NotNull net.minecraft.world.level.BlockGetter level, @NotNull net.minecraft.core.BlockPos pos) {
+        return this.getDustColor(state);
     }
 }

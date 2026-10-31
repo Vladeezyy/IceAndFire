@@ -136,7 +136,7 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
             }
             myrmex.setJungleVariant(this.isJungle());
             myrmex.setGrowthStage(0);
-            myrmex.absMoveTo(this.getX(), this.getY(), this.getZ(), 0, 0);
+            myrmex.absSnapTo(this.getX(), this.getY(), this.getZ(), 0, 0);
             if (myrmex instanceof EntityMyrmexQueen) {
                 MyrmexHive hive = new MyrmexHive(level(), this.blockPosition(), 100);
                 Player player = level().getNearestPlayer(this, 30);
@@ -177,7 +177,6 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
         return null;
     }
 
-    @Override
     public @NotNull Iterable<ItemStack> getArmorSlots() {
         return ImmutableList.of();
     }

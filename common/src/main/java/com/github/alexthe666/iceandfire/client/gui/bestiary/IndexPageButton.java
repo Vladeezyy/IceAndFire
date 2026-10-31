@@ -24,9 +24,7 @@ public class IndexPageButton extends Button {
     public void renderWidget(GuiGraphicsExtractor pGuiGraphics, int mouseX, int mouseY, float partial) {
         if (this.active) {
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
-            Font font = IafConfig.useVanillaFont ? Minecraft.getInstance().font : (Font) IceAndFire.PROXY.getFontRenderer();
+                                    Font font = IafConfig.useVanillaFont ? Minecraft.getInstance().font : (Font) IceAndFire.PROXY.getFontRenderer();
             boolean flag = isHoveredOrFocused();
             pGuiGraphics.blit(Identifier.parse("iceandfire:textures/gui/bestiary/widgets.png"), this.getX(), this.getY(), 0, flag ? 32 : 0, this.width, this.height);
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);

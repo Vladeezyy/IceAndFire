@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -25,14 +26,17 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemGhostSword extends SwordItem {
+public class ItemGhostSword extends Item implements IafTieredItem {
+
+    private final CustomToolMaterial tier;
 
     public ItemGhostSword() {
-        super(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL, 5, -1.0F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL.toolMaterial(), 5, -1.0F));
+        this.tier = IafItemRegistry.GHOST_SWORD_TOOL_MATERIAL;
     }
 
     public static void spawnGhostSwordEntity(ItemStack stack, Player playerEntity) {
-        if (playerEntity.getCooldowns().isOnCooldown(stack.getItem()))
+        if (playerEntity.getCooldowns().isOnCooldown(stack))
             return;
         if (playerEntity.getItemInHand(InteractionHand.MAIN_HAND) != stack)
             return;
@@ -47,7 +51,7 @@ public class ItemGhostSword extends SwordItem {
         shot.shootFromRotation(playerEntity, playerEntity.getXRot(), playerEntity.getYRot(), 0.0F, 1, 0.5f);
         playerEntity.level().addFreshEntity(shot);
         stack.hurtAndBreak(1, playerEntity, EquipmentSlot.MAINHAND);
-        playerEntity.getCooldowns().addCooldown(stack.getItem(), 10);
+        playerEntity.getCooldowns().addCooldown(stack, 10);
     }
 
     @Override
@@ -59,5 +63,10 @@ public class ItemGhostSword extends SwordItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.iceandfire.ghost_sword.desc_0").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public CustomToolMaterial getTier() {
+        return tier;
     }
 }

@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import com.github.alexthe666.iceandfire.entity.util.Owners;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -36,7 +40,7 @@ import java.util.UUID;
 
 public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
 
-    private static final EntityDataAccessor<Optional<UUID>> SUMMONER_ID = SynchedEntityData.defineId(EntityMyrmexSwarmer.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> SUMMONER_ID = SynchedEntityData.defineId(EntityMyrmexSwarmer.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<Integer> TICKS_ALIVE = SynchedEntityData.defineId(EntityMyrmexSwarmer.class, EntityDataSerializers.INT);
 
     public EntityMyrmexSwarmer(EntityType type, Level worldIn) {
@@ -118,7 +122,7 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
     }
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entityIn) {
+    protected boolean considersEntityAsAlly(@NotNull Entity entityIn) {
         if (entityIn == null) {
             return false;
         }
@@ -126,14 +130,14 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
             return false;
         }
         if (entityIn instanceof TamableAnimal) {
-            UUID ownerID = ((TamableAnimal) entityIn).getOwnerUUID();
+            UUID ownerID = Owners.uuid((TamableAnimal) entityIn);
             return ownerID != null && ownerID.equals(this.getSummonerUUID());
         }
         return entityIn.getUUID().equals(this.getSummonerUUID()) || entityIn instanceof EntityMyrmexSwarmer && ((EntityMyrmexSwarmer) entityIn).getSummonerUUID() != null && ((EntityMyrmexSwarmer) entityIn).getSummonerUUID().equals(this.getSummonerUUID());
     }
 
     public void setSummonerID(@Nullable UUID uuid) {
-        this.entityData.set(SUMMONER_ID, Optional.ofNullable(uuid));
+        this.entityData.set(SUMMONER_ID, (Optional.ofNullable(uuid)).map(EntityReference::of));
     }
 
     @Override
@@ -170,7 +174,7 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
 
     @Nullable
     public UUID getSummonerUUID() {
-        return (UUID) ((Optional) this.entityData.get(SUMMONER_ID)).orElse(null);
+        return (UUID) ((Optional) this.entityData.get(SUMMONER_ID).map(EntityReference::getUUID)).orElse(null);
     }
 
     public int getTicksAlive() {
@@ -203,7 +207,9 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
             }
         }
         if (this.getTicksAlive() > 1800) {
-            this.kill();
+            if (this.level() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+                this.kill(serverLevel);
+            }
         }
         if (this.getAnimation() == ANIMATION_BITE && this.getTarget() != null && this.getAnimationTick() == 6) {
             this.playBiteSound();
@@ -229,10 +235,15 @@ public class EntityMyrmexSwarmer extends EntityMyrmexRoyal {
         return 2;
     }
 
-    @Override
-    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
+    protected Optional<ResourceKey<LootTable>> getIafLootTable() {
         // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
         return Optional.empty();
+    }
+
+    @Override
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Override

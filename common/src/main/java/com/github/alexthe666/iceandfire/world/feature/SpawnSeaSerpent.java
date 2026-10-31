@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world.feature;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntitySeaSerpent;
@@ -32,9 +33,9 @@ public class SpawnSeaSerpent extends Feature<NoneFeatureConfiguration> {
         if (IafWorldRegistry.isFarEnoughFromSpawn(worldIn, position) && rand.nextInt(IafConfig.seaSerpentSpawnChance + 1) == 0) {
             BlockPos pos = oceanPos.offset(rand.nextInt(10) - 5, rand.nextInt(30), rand.nextInt(10) - 5);
             if (worldIn.getFluidState(pos).getType() == Fluids.WATER) {
-                EntitySeaSerpent serpent = IafEntityRegistry.SEA_SERPENT.get().create(worldIn.getLevel());
+                EntitySeaSerpent serpent = IafEntityRegistry.SEA_SERPENT.get().create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                 serpent.onWorldSpawn(rand);
-                serpent.moveTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0, 0);
+                serpent.snapTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0, 0);
                 worldIn.addFreshEntity(serpent);
             }
         }

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import net.minecraft.nbt.Tag;
 import net.minecraft.core.HolderLookup;
@@ -28,6 +29,7 @@ public class IafWorldData extends SavedData {
     }
 
     private static final String IDENTIFIER = IceAndFire.MODID + "_general";
+    private static final SavedDataType<IafWorldData> TYPE = IafSavedData.type("general", IafWorldData::new, IafWorldData::new, (data, tag) -> data.save(tag, null));
     private static final EnumMap<FeatureType, ArrayList<Map.Entry<String, BlockPos>>> LAST_GENERATED = new EnumMap<>(FeatureType.class);
     static {
         LAST_GENERATED.put(FeatureType.SURFACE, new ArrayList<>());
@@ -44,8 +46,7 @@ public class IafWorldData extends SavedData {
     public static IafWorldData get(final Level world) {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
-            SavedDataStorage storage = overworld.getDataStorage();
-            IafWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(IafWorldData::new, (tag, registries) -> new IafWorldData(tag), null), IDENTIFIER);
+            IafWorldData data = IafSavedData.get(overworld, TYPE, IDENTIFIER);
             data.setDirty();
 
             return data;
@@ -92,7 +93,7 @@ public class IafWorldData extends SavedData {
         FeatureType[] types = FeatureType.values();
 
         for (FeatureType type : types) {
-            ListTag list = tag.getList(type.toString(), ListTag.TAG_COMPOUND);
+            ListTag list = tag.getListOrEmpty(type.toString());
 
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag entry = list.getCompoundOrEmpty(i);
@@ -105,7 +106,7 @@ public class IafWorldData extends SavedData {
         return this;
     }
 
-    @Override
+    // 26.x: through IafSavedData (the 1.21.1 NBT)
     public @NotNull CompoundTag save(@NotNull final CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         for (var e : LAST_GENERATED.entrySet()) {
             ListTag listTag = new ListTag();
@@ -113,7 +114,7 @@ public class IafWorldData extends SavedData {
             for (Map.Entry<String, BlockPos> entry : e.getValue()) {
                 CompoundTag subTag = new CompoundTag();
                 subTag.putString("id", entry.getKey());
-                subTag.put("position", NbtUtils.writeBlockPos(entry.getValue()));
+                subTag.store("position", BlockPos.CODEC, entry.getValue());
 
                 listTag.add(subTag);
             }
@@ -126,10 +127,9 @@ public class IafWorldData extends SavedData {
 
     /** 1.21 writes positions as int arrays, worlds of 1.20 have compounds with X, Y and Z. */
     private static BlockPos readPosition(CompoundTag entry) {
-        if (entry.contains("position", Tag.TAG_COMPOUND)) {
-            CompoundTag old = entry.getCompoundOrEmpty("position");
+        if (entry.get("position") instanceof CompoundTag old) {
             return new BlockPos(old.getIntOr("X", 0), old.getIntOr("Y", 0), old.getIntOr("Z", 0));
         }
-        return NbtUtils.readBlockPos(entry, "position").orElse(BlockPos.ZERO);
+        return entry.read("position", BlockPos.CODEC).orElse(BlockPos.ZERO);
     }
 }

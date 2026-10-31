@@ -90,7 +90,7 @@ public class IafEntityRegistry {
     public static final RegistryEntry<EntityType<?>, EntityType<EntityGhostSword>> GHOST_SWORD = registerEntity(EntityType.Builder.<EntityGhostSword>of(EntityGhostSword::new, MobCategory.MISC).sized(0.5F, 0.5F), "ghost_sword");
 
     private static <T extends Entity> RegistryEntry<EntityType<?>, EntityType<T>> registerEntity(EntityType.Builder<T> builder, String entityName) {
-        return ENTITIES.register(entityName, () -> builder.build(entityName));
+        return ENTITIES.register(entityName, () -> builder.build(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath(IceAndFire.MODID, entityName))));
     }
 
     /** The attributes of the mobs (NeoForge: EntityAttributeCreationEvent, Fabric: FabricDefaultAttributeRegistry) */
@@ -156,21 +156,27 @@ public class IafEntityRegistry {
     	LOADED_ENTITIES.put("TROLL_S", false);
     	LOADED_ENTITIES.put("TROLL_M", false);
     }
-    public static void addSpawners(Holder<Biome> biome, java.util.function.BiConsumer<MobCategory, MobSpawnSettings.SpawnerData> builder) {
+    /** A spawn the loader adds to a biome: 26.x spawner data has no weight, the weighted list keeps it */
+    @FunctionalInterface
+    public interface SpawnSink {
+        void add(MobCategory category, MobSpawnSettings.SpawnerData spawner, int weight);
+    }
+
+    public static void addSpawners(Holder<Biome> biome, SpawnSink builder) {
         if (IafConfig.spawnHippogryphs && BiomeConfig.test(BiomeConfig.hippogryphBiomes, biome)) {
-            builder.accept(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.HIPPOGRYPH.get(), IafConfig.hippogryphSpawnRate, 1, 1));
+            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.HIPPOGRYPH.get(), 1, 1), IafConfig.hippogryphSpawnRate);
             LOADED_ENTITIES.put("HIPPOGRYPH", true);
         }
         if (IafConfig.spawnLiches && BiomeConfig.test(BiomeConfig.mausoleumBiomes, biome)) {
-            builder.accept(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.DREAD_LICH.get(), IafConfig.lichSpawnRate, 1, 1));
+            builder.add(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.DREAD_LICH.get(), 1, 1), IafConfig.lichSpawnRate);
             LOADED_ENTITIES.put("DREAD_LICH", true);
         }
         if (IafConfig.spawnCockatrices && BiomeConfig.test(BiomeConfig.cockatriceBiomes, biome)) {
-            builder.accept(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.COCKATRICE.get(), IafConfig.cockatriceSpawnRate, 1, 2));
+            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.COCKATRICE.get(), 1, 2), IafConfig.cockatriceSpawnRate);
             LOADED_ENTITIES.put("COCKATRICE", true);
         }
         if (IafConfig.spawnAmphitheres && BiomeConfig.test(BiomeConfig.amphithereBiomes, biome)) {
-            builder.accept(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.AMPHITHERE.get(), IafConfig.amphithereSpawnRate, 1, 3));
+            builder.add(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(IafEntityRegistry.AMPHITHERE.get(), 1, 3), IafConfig.amphithereSpawnRate);
             LOADED_ENTITIES.put("AMPHITHERE", true);
         }
         if (IafConfig.spawnTrolls && (
@@ -178,7 +184,7 @@ public class IafEntityRegistry {
     		BiomeConfig.test(BiomeConfig.snowyTrollBiomes, biome) ||
     		BiomeConfig.test(BiomeConfig.mountainTrollBiomes, biome)
 		)) {
-            builder.accept(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.TROLL.get(), IafConfig.trollSpawnRate, 1, 3));
+            builder.add(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(IafEntityRegistry.TROLL.get(), 1, 3), IafConfig.trollSpawnRate);
     		if (BiomeConfig.test(BiomeConfig.forestTrollBiomes, biome)) LOADED_ENTITIES.put("TROLL_F", true);
     		if (BiomeConfig.test(BiomeConfig.snowyTrollBiomes, biome)) LOADED_ENTITIES.put("TROLL_S", true);
     		if (BiomeConfig.test(BiomeConfig.mountainTrollBiomes, biome)) LOADED_ENTITIES.put("TROLL_M", true);

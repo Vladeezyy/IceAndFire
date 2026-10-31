@@ -143,7 +143,7 @@ public final class IceAndFireFabric implements ModInitializer {
                 (step, feature) -> context.getGenerationSettings().addFeature(step, feature.unwrapKey().orElseThrow())));
         BiomeModifications.create(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "iaf_mob_spawns")).add(ModificationPhase.ADDITIONS, BiomeSelectors.all(),
             (selection, context) -> IafEntityRegistry.addSpawners(selection.getBiomeRegistryEntry(),
-                (category, spawner) -> context.getSpawnSettings().addSpawn(category, spawner)));
+                (category, spawner, weight) -> context.getSpawnSettings().addSpawn(category, spawner, weight)));
     }
 
     /** Hoppers and pipes: the forge bricks and inputs give the core's slots (NeoForge: IafCapabilities) */

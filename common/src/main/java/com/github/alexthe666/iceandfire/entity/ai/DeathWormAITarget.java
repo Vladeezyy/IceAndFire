@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.ai;
+import com.github.alexthe666.iceandfire.entity.util.IafSelectors;
 
 import com.github.alexthe666.iceandfire.entity.EntityDeathWorm;
 import com.github.alexthe666.iceandfire.entity.IafEntityRegistry;
@@ -17,7 +18,7 @@ public class DeathWormAITarget<T extends LivingEntity> extends NearestAttackable
     private final EntityDeathWorm deathworm;
 
     public DeathWormAITarget(EntityDeathWorm entityIn, Class<T> classTarget, boolean checkSight, Predicate<LivingEntity> targetPredicate) {
-        super(entityIn, classTarget, 20, checkSight, false, targetPredicate);
+        super(entityIn, classTarget, 20, checkSight, false, IafSelectors.of(targetPredicate));
         this.deathworm = entityIn;
         this.setFlags(EnumSet.of(Flag.TARGET));
     }

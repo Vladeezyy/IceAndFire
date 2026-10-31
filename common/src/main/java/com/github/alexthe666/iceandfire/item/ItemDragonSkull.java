@@ -85,7 +85,7 @@ public class ItemDragonSkull extends Item {
             skull.setStage(ItemNbt.view(stack).getIntOr("Stage", 0));
             skull.setDragonAge(ItemNbt.view(stack).getIntOr("DragonAge", 0));
             BlockPos offset = context.getClickedPos().relative(context.getClickedFace(), 1);
-            skull.moveTo(offset.getX() + 0.5, offset.getY(), offset.getZ() + 0.5, 0, 0);
+            skull.snapTo(offset.getX() + 0.5, offset.getY(), offset.getZ() + 0.5, 0, 0);
             float yaw = context.getPlayer().getYRot();
             if (context.getClickedFace() != Direction.UP) {
                 yaw = context.getPlayer().getDirection().toYRot();

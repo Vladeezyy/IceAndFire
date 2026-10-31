@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -25,7 +26,7 @@ public class EntityCyclopsEye extends EntityMutlipartPart {
             ((EntityCyclops) parent).onHitEye(source, damage);
             return true;
         } else {
-            return parent != null && parent.hurt(source, damage);
+            return parent != null && parent.hurtOrSimulate(source, damage);
         }
     }
 }

@@ -29,8 +29,7 @@ public class BlockDreadStoneFace extends HorizontalDirectionalBlock implements I
 
     public BlockDreadStoneFace() {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .sound(SoundType.STONE)

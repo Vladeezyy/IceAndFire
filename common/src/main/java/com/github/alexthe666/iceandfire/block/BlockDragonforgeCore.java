@@ -45,8 +45,7 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
 
     public BlockDragonforgeCore(int isFire, boolean activated) {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.METAL)
                 .dynamicShape()
@@ -134,14 +133,10 @@ public class BlockDragonforgeCore extends BaseEntityBlock implements IDragonProo
         return RenderShape.MODEL;
     }
 
+    // 26.x: the block entity drops its contents itself (BlockEntity.preRemoveSideEffects, as onRemove did here)
     @Override
-    public void onRemove(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof TileEntityDragonforge) {
-            Containers.dropContents(worldIn, pos, (TileEntityDragonforge) tileentity);
-            worldIn.updateNeighbourForOutputSignal(pos, this);
-            worldIn.removeBlockEntity(pos);
-        }
+    protected void affectNeighborsAfterRemoval(@NotNull BlockState state, @NotNull net.minecraft.server.level.ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
+        Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
 
     @Override

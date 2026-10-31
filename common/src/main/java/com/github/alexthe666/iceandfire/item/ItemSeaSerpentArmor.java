@@ -36,7 +36,11 @@ public class ItemSeaSerpentArmor extends IafArmorItem implements IafArmorTexture
     }
 
     @Override
-    public @NotNull String getDescriptionId() {
+    public @NotNull Component getName(@NotNull ItemStack iafStack) {
+        return Component.translatable(this.iafDescriptionId());
+    }
+
+    private String iafDescriptionId() {
         switch (this.type) {
             case HELMET:
                 return "item.iceandfire.sea_serpent_helmet";
@@ -58,7 +62,7 @@ public class ItemSeaSerpentArmor extends IafArmorItem implements IafArmorTexture
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
-        super.inventoryTick(stack, world, entity, slot, (slot == EquipmentSlot.MAINHAND));
+        super.inventoryTick(stack, world, entity, slot);
         if (!(entity instanceof Player player) || player.getItemBySlot(this.getEquipmentSlot()) != stack) {
             return;
         }

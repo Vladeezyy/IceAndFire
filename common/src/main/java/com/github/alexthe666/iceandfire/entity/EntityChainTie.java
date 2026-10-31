@@ -110,7 +110,7 @@ public class EntityChainTie extends BlockAttachedEntity {
     }
 
     @Override
-    public void dropItem(@Nullable Entity brokenEntity) {
+    public void dropItem(net.minecraft.server.level.ServerLevel level, @Nullable Entity brokenEntity) {
         this.playSound(SoundEvents.ARMOR_EQUIP_CHAIN.value(), 1.0F, 1.0F);
     }
 

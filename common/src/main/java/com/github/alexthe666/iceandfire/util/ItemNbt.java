@@ -37,7 +37,7 @@ public final class ItemNbt {
     /** Read-only view of the tag for hot paths (rendering, tooltips). Never modify it. */
     @SuppressWarnings("deprecation")
     public static CompoundTag view(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
     }
 
     public static void setTag(ItemStack stack, @Nullable CompoundTag tag) {

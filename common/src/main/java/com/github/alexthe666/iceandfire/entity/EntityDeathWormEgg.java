@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import com.github.alexthe666.iceandfire.entity.util.Owners;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
@@ -29,13 +30,13 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile {
 
     public EntityDeathWormEgg(EntityType<? extends ThrowableItemProjectile> type, LivingEntity throwerIn, Level worldIn,
                               boolean giant) {
-        super(type, throwerIn, worldIn);
+        super(type, throwerIn, worldIn, new net.minecraft.world.item.ItemStack(giant ? IafItemRegistry.DEATHWORM_EGG_GIGANTIC.get() : IafItemRegistry.DEATHWORM_EGG.get()));
         this.entityData.set(GIANT, giant);
     }
 
     public EntityDeathWormEgg(EntityType<? extends ThrowableItemProjectile> type, double x, double y, double z,
                               Level worldIn, boolean giant) {
-        super(type, x, y, z, worldIn);
+        super(type, x, y, z, worldIn, new net.minecraft.world.item.ItemStack(giant ? IafItemRegistry.DEATHWORM_EGG_GIGANTIC.get() : IafItemRegistry.DEATHWORM_EGG.get()));
         this.entityData.set(GIANT, giant);
     }
 
@@ -55,7 +56,7 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile {
     public void handleEntityEvent(byte id) {
         if (id == 3) {
             for (int i = 0; i < 8; ++i) {
-                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem()), this.getX(), this.getY(), this.getZ(), (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D);
+                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem().getItem()), this.getX(), this.getY(), this.getZ(), (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D);
             }
         }
     }
@@ -81,7 +82,7 @@ public class EntityDeathWormEgg extends ThrowableItemProjectile {
             deathworm.setDeathWormScale(isGiant() ? (wormSize * 4) : wormSize);
             deathworm.snapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
             if (thrower instanceof Player) {
-                deathworm.setOwnerUUID(thrower.getUUID());
+                Owners.set(deathworm, thrower.getUUID());
             }
             this.level().addFreshEntity(deathworm);
 

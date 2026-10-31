@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 

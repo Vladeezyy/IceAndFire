@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.world;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.core.UUIDUtil;
 
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class DragonPosWorldData extends SavedData {
 
     private static final String IDENTIFIER = "iceandfire_dragonPositions";
+    private static final SavedDataType<DragonPosWorldData> TYPE = IafSavedData.type("dragon_positions", DragonPosWorldData::new, DragonPosWorldData::new, (data, tag) -> data.save(tag, null));
     protected final Map<UUID, BlockPos> lastDragonPositions = new HashMap<>();
     private Level world;
     private int tickCounter;
@@ -38,8 +41,7 @@ public class DragonPosWorldData extends SavedData {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
-            SavedDataStorage storage = overworld.getDataStorage();
-            DragonPosWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(DragonPosWorldData::new, (tag, registries) -> new DragonPosWorldData(tag), null), IDENTIFIER);
+            DragonPosWorldData data = IafSavedData.get(overworld, TYPE, IDENTIFIER);
             if (data != null) {
                 data.world = world;
                 data.setDirty();
@@ -74,24 +76,24 @@ public class DragonPosWorldData extends SavedData {
 
     public DragonPosWorldData load(CompoundTag nbt) {
         this.tickCounter = nbt.getIntOr("Tick", 0);
-        ListTag nbttaglist = nbt.getList("DragonMap", 10);
+        ListTag nbttaglist = nbt.getListOrEmpty("DragonMap");
         this.lastDragonPositions.clear();
         for (int i = 0; i < nbttaglist.size(); ++i) {
             CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
-            UUID uuid = CompoundNBT.getUUID("DragonUUID");
+            UUID uuid = CompoundNBT.read("DragonUUID", UUIDUtil.CODEC).orElse(null);
             BlockPos pos = new BlockPos(CompoundNBT.getIntOr("DragonPosX", 0), CompoundNBT.getIntOr("DragonPosY", 0), CompoundNBT.getIntOr("DragonPosZ", 0));
             this.lastDragonPositions.put(uuid, pos);
         }
         return this;
     }
 
-    @Override
+    // 26.x: through IafSavedData (the 1.21.1 NBT)
     public @NotNull CompoundTag save(CompoundTag compound, @NotNull HolderLookup.Provider registries) {
         compound.putInt("Tick", this.tickCounter);
         ListTag nbttaglist = new ListTag();
         for (Map.Entry<UUID, BlockPos> pair : lastDragonPositions.entrySet()) {
             CompoundTag CompoundNBT = new CompoundTag();
-            CompoundNBT.putUUID("DragonUUID", pair.getKey());
+            CompoundNBT.store("DragonUUID", UUIDUtil.CODEC, pair.getKey());
             CompoundNBT.putInt("DragonPosX", pair.getValue().getX());
             CompoundNBT.putInt("DragonPosY", pair.getValue().getY());
             CompoundNBT.putInt("DragonPosZ", pair.getValue().getZ());

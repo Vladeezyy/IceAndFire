@@ -2,14 +2,9 @@ package com.github.alexthe666.iceandfire.datagen;
 
 import net.minecraft.core.registries.Registries;
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.core.registries.BuiltInRegistries;
-import org.jetbrains.annotations.Nullable;
-import java.util.concurrent.CompletableFuture;
 
 /** The tags of the data provider IafBiomeTagGeneratorProvider (NeoForge module), for the game code of both loaders */
 public final class IafBiomeTagGenerator {

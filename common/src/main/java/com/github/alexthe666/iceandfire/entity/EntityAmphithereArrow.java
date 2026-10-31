@@ -37,10 +37,10 @@ public class EntityAmphithereArrow extends AbstractArrow {
     @Override
     public void tick() {
         super.tick();
-        if ((tickCount == 1 || this.tickCount % 70 == 0) && !this.inGround && !this.onGround()) {
+        if ((tickCount == 1 || this.tickCount % 70 == 0) && !this.isInGround() && !this.onGround()) {
             this.playSound(IafSoundRegistry.AMPHITHERE_GUST, 1, 1);
         }
-        if (level().isClientSide() && !this.inGround) {
+        if (level().isClientSide() && !this.isInGround()) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;

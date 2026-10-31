@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -27,7 +30,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EntityDreadMob extends Monster implements IDreadMob {
-    protected static final EntityDataAccessor<Optional<UUID>> COMMANDER_UNIQUE_ID = SynchedEntityData.defineId(EntityDreadMob.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> COMMANDER_UNIQUE_ID = SynchedEntityData.defineId(EntityDreadMob.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 
     public EntityDreadMob(EntityType<? extends Monster> t, Level worldIn) {
         super(t, worldIn);
@@ -106,7 +109,7 @@ public class EntityDreadMob extends Monster implements IDreadMob {
             uuid = compound.read("CommanderUUID", UUIDUtil.CODEC).orElseThrow();
         } else {
             String s = compound.getStringOr("CommanderUUID", "");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.level().getServer(), s);
         }
 
         if (uuid != null) {
@@ -120,17 +123,17 @@ public class EntityDreadMob extends Monster implements IDreadMob {
 
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entityIn) {
-        return entityIn instanceof IDreadMob || super.isAlliedTo(entityIn);
+    protected boolean considersEntityAsAlly(@NotNull Entity entityIn) {
+        return entityIn instanceof IDreadMob || super.considersEntityAsAlly(entityIn);
     }
 
     @Nullable
     public UUID getCommanderId() {
-        return (UUID) ((Optional) this.entityData.get(COMMANDER_UNIQUE_ID)).orElse(null);
+        return (UUID) ((Optional) this.entityData.get(COMMANDER_UNIQUE_ID).map(EntityReference::getUUID)).orElse(null);
     }
 
     public void setCommanderId(@Nullable UUID uuid) {
-        this.entityData.set(COMMANDER_UNIQUE_ID, Optional.ofNullable(uuid));
+        this.entityData.set(COMMANDER_UNIQUE_ID, (Optional.ofNullable(uuid)).map(EntityReference::of));
     }
 
     @Override

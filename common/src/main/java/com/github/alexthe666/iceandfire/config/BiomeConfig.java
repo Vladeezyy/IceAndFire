@@ -106,7 +106,7 @@ public class BiomeConfig {
     }
 
     private static Identifier getBiomeName(Holder<Biome> biome) {
-        return biome.unwrap().map(ResourceKey::location, (noKey) -> null);
+        return biome.unwrap().map(ResourceKey::identifier, (noKey) -> null);
     }
 
     public static boolean test(Map.Entry<String, SpawnBiomeData> entry, Holder<Biome> biome, Identifier name) {

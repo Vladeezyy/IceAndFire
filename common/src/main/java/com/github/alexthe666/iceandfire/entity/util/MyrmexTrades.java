@@ -22,7 +22,6 @@ import net.minecraft.world.item.trading.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -278,7 +277,7 @@ public class MyrmexTrades {
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), this.emeraldCount);
             PotionBrewing brewing = trader.level().potionBrewing();
-            List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.holders().filter((potion) -> {
+            List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.listElements().filter((potion) -> {
                 return !potion.value().getEffects().isEmpty() && brewing.isBrewablePotion(potion);
             }).collect(Collectors.toList());
             Holder<Potion> lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
@@ -310,7 +309,7 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             int lvt_3_1_ = 5 + rand.nextInt(15);
-            ItemStack lvt_4_1_ = EnchantmentHelper.enchantItem(rand, new ItemStack(this.sellingStack.getItem()), lvt_3_1_, trader.level().registryAccess(), trader.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.ON_TRADED_EQUIPMENT));
+            ItemStack lvt_4_1_ = EnchantmentHelper.enchantItem(rand, new ItemStack(this.sellingStack.getItem()), lvt_3_1_, trader.level().registryAccess(), trader.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(EnchantmentTags.ON_TRADED_EQUIPMENT));
             int lvt_5_1_ = Math.min(this.emeraldCount + lvt_3_1_, 64);
             ItemStack lvt_6_1_ = new ItemStack(IafItemRegistry.MYRMEX_DESERT_RESIN.get(), lvt_5_1_);
             return new MerchantOffer(new ItemCost(lvt_6_1_.getItem(), lvt_6_1_.getCount()), lvt_4_1_, this.maxUses, this.xpValue, this.priceMultiplier);
@@ -460,7 +459,7 @@ public class MyrmexTrades {
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             ItemStack lvt_3_1_ = new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get(), this.emeraldCount);
             PotionBrewing brewing = trader.level().potionBrewing();
-            List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.holders().filter((potion) -> {
+            List<Holder<Potion>> lvt_4_1_ = BuiltInRegistries.POTION.listElements().filter((potion) -> {
                 return !potion.value().getEffects().isEmpty() && brewing.isBrewablePotion(potion);
             }).collect(Collectors.toList());
             Holder<Potion> lvt_5_1_ = lvt_4_1_.get(rand.nextInt(lvt_4_1_.size()));
@@ -492,7 +491,7 @@ public class MyrmexTrades {
         @Override
         public MerchantOffer getOffer(@NotNull Entity trader, RandomSource rand) {
             int lvt_3_1_ = 5 + rand.nextInt(15);
-            ItemStack lvt_4_1_ = EnchantmentHelper.enchantItem(rand, new ItemStack(this.sellingStack.getItem()), lvt_3_1_, trader.level().registryAccess(), trader.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.ON_TRADED_EQUIPMENT));
+            ItemStack lvt_4_1_ = EnchantmentHelper.enchantItem(rand, new ItemStack(this.sellingStack.getItem()), lvt_3_1_, trader.level().registryAccess(), trader.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(EnchantmentTags.ON_TRADED_EQUIPMENT));
             int lvt_5_1_ = Math.min(this.emeraldCount + lvt_3_1_, 64);
             ItemStack lvt_6_1_ = new ItemStack(IafItemRegistry.MYRMEX_JUNGLE_RESIN.get(), lvt_5_1_);
             return new MerchantOffer(new ItemCost(lvt_6_1_.getItem(), lvt_6_1_.getCount()), lvt_4_1_, this.maxUses, this.xpValue, this.priceMultiplier);

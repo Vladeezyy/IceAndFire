@@ -47,14 +47,14 @@ public class ItemTideTrident extends TridentItem {
 
 
     @Override
-    public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving, int timeLeft) {
+    public boolean releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player player) {
             int useTicks = this.getUseDuration(stack, entityLiving) - timeLeft;
             if (useTicks >= 10) {
                 float riptide = EnchantmentHelper.getTridentSpinAttackStrength(stack, player);
                 if (!(riptide > 0.0F) || player.isInWaterOrRain()) {
                     if (stack.getDamageValue() >= stack.getMaxDamage() - 1) {
-                        return;
+                        return false;
                     }
                     Holder<SoundEvent> sound = EnchantmentHelper.pickHighestLevel(stack, EnchantmentEffectComponents.TRIDENT_SOUND).orElse(SoundEvents.TRIDENT_THROW);
                     if (!worldIn.isClientSide()) {
@@ -96,6 +96,7 @@ public class ItemTideTrident extends TridentItem {
                 }
             }
         }
+        return true;
     }
 
     public static ItemAttributeModifiers createAttributes() {

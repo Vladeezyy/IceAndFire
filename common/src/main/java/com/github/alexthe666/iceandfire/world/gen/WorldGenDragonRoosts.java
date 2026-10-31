@@ -232,13 +232,13 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
     }
 
     private void spawnDragon(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context, int ageOffset, boolean isMale) {
-        EntityDragonBase dragon = getDragonType().create(context.level().getLevel());
+        EntityDragonBase dragon = getDragonType().create(context.level().getLevel(), net.minecraft.world.entity.EntitySpawnReason.STRUCTURE);
         dragon.setGender(isMale);
         dragon.growDragon(40 + ageOffset);
         dragon.setAgingDisabled(true);
         dragon.setHealth(dragon.getMaxHealth());
         dragon.setVariant(new Random().nextInt(4));
-        dragon.absMoveTo(context.origin().getX() + 0.5, context.level().getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, context.origin()).getY() + 1.5, context.origin().getZ() + 0.5, context.random().nextFloat() * 360, 0);
+        dragon.absSnapTo(context.origin().getX() + 0.5, context.level().getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, context.origin()).getY() + 1.5, context.origin().getZ() + 0.5, context.random().nextFloat() * 360, 0);
         dragon.homePos = new HomePosition(context.origin(), context.level().getLevel());
         dragon.hasHomePosition = true;
         dragon.setHunger(50);

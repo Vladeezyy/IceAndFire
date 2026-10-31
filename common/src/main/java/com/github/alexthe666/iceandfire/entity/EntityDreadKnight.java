@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 
@@ -68,9 +71,9 @@ public class EntityDreadKnight extends EntityDreadMob implements IAnimatedEntity
 
     private static ItemStack generateShield(Level level) {
         ItemStack shield = new ItemStack(Items.SHIELD, 1);
-        Registry<BannerPattern> patterns = level.registryAccess().registryOrThrow(Registries.BANNER_PATTERN);
+        Registry<BannerPattern> patterns = level.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN);
         shield.set(DataComponents.BASE_COLOR, DyeColor.CYAN);
-        patterns.getHolder(IafBannerPatterns.PATTERN_DREAD).ifPresent(dread ->
+        patterns.get(IafBannerPatterns.PATTERN_DREAD).ifPresent(dread ->
                 shield.set(DataComponents.BANNER_PATTERNS, new BannerPatternLayers.Builder().add(dread, DyeColor.WHITE).build()));
         return shield;
     }
@@ -98,9 +101,9 @@ public class EntityDreadKnight extends EntityDreadMob implements IAnimatedEntity
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IDreadMob.class));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, new Predicate<LivingEntity>() {
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable LivingEntity entity) {
+            public boolean test(LivingEntity entity, ServerLevel serverLevel) {
                 return DragonUtils.canHostilesTarget(entity);
             }
         }));

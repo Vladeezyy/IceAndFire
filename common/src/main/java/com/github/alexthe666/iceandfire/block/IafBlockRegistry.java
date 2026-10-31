@@ -166,7 +166,7 @@ public class IafBlockRegistry {
 
     public static <T extends TorchBlock> BlockEntry<T> registerWallBlock(String name, Supplier<T> block) {
         BlockEntry<T> ret = BLOCKS.register(name, block);
-        IafItemRegistry.registerItem(name, () -> new StandingAndWallBlockItem(ret.get(), ((IWallBlock) ret.get()).wallBlock(), dev.vladeezyy.iceandfire.platform.Registrar.itemProps(), Direction.DOWN), false);
+        IafItemRegistry.registerItem(name, () -> new StandingAndWallBlockItem(ret.get(), ((IWallBlock) ret.get()).wallBlock(), Direction.DOWN, dev.vladeezyy.iceandfire.platform.Registrar.itemProps()), false);
         IafTabRegistry.TAB_BLOCKS_LIST.add(ret);
         return ret;
     }

@@ -29,8 +29,7 @@ public class BlockFallingReturningState extends FallingBlock {
 
     public BlockFallingReturningState(float hardness, float resistance, SoundType sound, MapColor color, BlockState revertState) {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(color)
                 .sound(sound)
                 .strength(hardness, resistance)
@@ -44,8 +43,7 @@ public class BlockFallingReturningState extends FallingBlock {
     @SuppressWarnings("deprecation")
     public BlockFallingReturningState(float hardness, float resistance, SoundType sound, boolean slippery, MapColor color, BlockState revertState) {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(color)
                 .sound(sound)
                 .strength(hardness, resistance)
@@ -76,5 +74,11 @@ public class BlockFallingReturningState extends FallingBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(REVERTS);
+    }
+
+    // 26.x: abstract in FallingBlock (the state-only color above is the original's)
+    @Override
+    public int getDustColor(@NotNull BlockState state, @NotNull net.minecraft.world.level.BlockGetter level, @NotNull net.minecraft.core.BlockPos pos) {
+        return this.getDustColor(state);
     }
 }

@@ -50,13 +50,14 @@ public class ItemCockatriceScepter extends Item {
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity livingEntity, int timeLeft) {
+    public boolean releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity livingEntity, int timeLeft) {
         if (specialWeaponDmg > 0) {
             stack.hurtAndBreak(specialWeaponDmg, livingEntity, livingEntity.getUsedItemHand().asEquipmentSlot());
             specialWeaponDmg = 0;
         }
 
         EntityDataProvider.getCapability(livingEntity).ifPresent(data -> data.miscData.getTargetedByScepter().clear());
+        return true;
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ItemCockatriceScepter extends Item {
     public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         playerIn.startUsingItem(hand);
-        return new InteractionResultHolder<>(InteractionResult.PASS, itemStackIn);
+        return InteractionResult.PASS;
     }
 
     @Override

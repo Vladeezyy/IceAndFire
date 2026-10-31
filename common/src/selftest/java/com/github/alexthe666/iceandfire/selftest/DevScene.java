@@ -346,7 +346,7 @@ public final class DevScene {
     private static void setup(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         player.setGameMode(GameType.CREATIVE);
-        server.getGameRules().getRule(GameRules.RULE_DOMOBSPAWNING).set(false, server);
+        server.getGameRules().getRule(GameRules.SPAWN_MOBS).set(false, server);
         server.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, server);
         server.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, server);
         player.serverLevel().setDayTime(6000);

@@ -44,8 +44,7 @@ public class BlockDragonforgeBricks extends BaseEntityBlock implements IDragonPr
 
     public BlockDragonforgeBricks(int isFire) {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)

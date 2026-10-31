@@ -53,10 +53,10 @@ public class IafVillagerRegistry {
                                          String nbtPieceRL,
                                          int weight) {
 
-        Holder<StructureProcessorList> villageHouseProcessorList = processorListRegistry.getHolderOrThrow(IafProcessorLists.HOUSE_PROCESSOR);
+        Holder<StructureProcessorList> villageHouseProcessorList = processorListRegistry.getOrThrow(IafProcessorLists.HOUSE_PROCESSOR);
 
         // Grab the pool we want to add to
-        StructureTemplatePool pool = templatePoolRegistry.get(poolRL);
+        StructureTemplatePool pool = templatePoolRegistry.getValue(poolRL);
         if (pool == null) return;
 
         // Grabs the nbt piece and creates a SinglePoolElement of it that we can add to a structure's pool.

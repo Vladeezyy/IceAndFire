@@ -8,7 +8,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,7 @@ public class CustomizeToDragon extends LootItemConditionalFunction {
 
     @Override
     protected @NotNull ItemStack run(final ItemStack stack, @NotNull final LootContext context) {
-        if (!stack.isEmpty() && context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof EntityDragonBase dragon) {
+        if (!stack.isEmpty() && context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof EntityDragonBase dragon) {
             if (stack.getItem() == IafItemRegistry.DRAGON_BONE.get()) {
                 stack.setCount(1 + dragon.getRandom().nextInt(1 + (dragon.getAgeInDays() / 25)));
                 return stack;
@@ -56,7 +55,7 @@ public class CustomizeToDragon extends LootItemConditionalFunction {
     }
 
     @Override
-    public @NotNull LootItemFunctionType<CustomizeToDragon> getType() {
-        return IafLootRegistry.CUSTOMIZE_TO_DRAGON.get();
+    public @NotNull MapCodec<CustomizeToDragon> codec() {
+        return CODEC;
     }
 }

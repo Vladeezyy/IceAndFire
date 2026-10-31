@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import com.github.alexthe666.iceandfire.entity.util.Owners;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -47,7 +48,7 @@ public class TileEntityEggInIce extends BlockEntity {
                 dragon.setGender(ThreadLocalRandom.current().nextBoolean());
                 dragon.setTame(true, true);
                 dragon.setHunger(50);
-                dragon.setOwnerUUID(entityEggInIce.ownerUUID);
+                Owners.set(dragon, entityEggInIce.ownerUUID);
                 level.addFreshEntity(dragon);
                 entityEggInIce.spawned = true;
                 level.destroyBlock(pos, false);
@@ -94,16 +95,10 @@ public class TileEntityEggInIce extends BlockEntity {
         }
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void handleUpdateTag(CompoundTag parentNBTTagCompound, HolderLookup.@NotNull Provider registries) {
-        this.loadAdditional(parentNBTTagCompound, registries);
-    }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-        CompoundTag nbtTagCompound = new CompoundTag();
-        saveAdditional(nbtTagCompound, registries);
-        return nbtTagCompound;
+        return this.saveWithoutMetadata(registries);
     }
 
     @Override
@@ -112,10 +107,6 @@ public class TileEntityEggInIce extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider registries) {
-        loadAdditional(pkt.getTag(), registries);   // read from the nbt in the packet
-    }
 
     public void spawnEgg() {
         if (type != null) {

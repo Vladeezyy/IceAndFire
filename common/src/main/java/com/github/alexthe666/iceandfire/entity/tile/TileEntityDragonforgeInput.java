@@ -65,10 +65,6 @@ public class TileEntityDragonforgeInput extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
-        loadAdditional(packet.getTag(), registries);
-    }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {

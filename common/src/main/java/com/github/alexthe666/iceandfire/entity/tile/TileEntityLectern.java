@@ -194,22 +194,22 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
     protected void loadAdditional(ValueInput compound) {
         super.loadAdditional(compound);
         this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.stacks, compound.lookup());
+        ContainerHelper.loadAllItems(compound, this.stacks);
 
     }
 
     @Override
     public void saveAdditional(ValueOutput compound) {
         super.saveAdditional(compound);
-        ContainerHelper.saveAllItems(compound, this.stacks, registries);
+        ContainerHelper.saveAllItems(compound, this.stacks);
     }
 
     @Override
-    public void startOpen(@NotNull Player player) {
+    public void startOpen(@NotNull net.minecraft.world.entity.ContainerUser user) {
     }
 
     @Override
-    public void stopOpen(@NotNull Player player) {
+    public void stopOpen(@NotNull net.minecraft.world.entity.ContainerUser user) {
     }
 
     @Override
@@ -273,10 +273,6 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
-        loadAdditional(packet.getTag(), registries);
-    }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {

@@ -162,8 +162,7 @@ public class IceAndFireMainMenu extends TitleScreen {
     @Override
     public void render(@NotNull GuiGraphicsExtractor ms, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableBlend();
-        int width = this.width;
+                int width = this.width;
         int height = this.height;
         ms.blit(TABLE_TEXTURE, 0, 0, 0, 0, width, height, width, height);
         ms.blit(BESTIARY_TEXTURE, 50, 0, 0, 0, width - 100, height, width - 100, height);
@@ -179,11 +178,9 @@ public class IceAndFireMainMenu extends TitleScreen {
             float imageScale = Math.min(widthScale, heightScale) * 192;
             for (Picture picture : drawnPictures) {
                 float alpha = (picture.alpha * globalAlpha + 0.01F);
-                RenderSystem.enableBlend();
-                RenderSystem.setShaderColor(1, 1, 1, 1);
+                                RenderSystem.setShaderColor(1, 1, 1, 1);
                 ms.blit(drawingTextures[picture.image], (int) (picture.x * widthScale) + middleX, (int) ((picture.y * heightScale) + middleY), 0, 0, (int) imageScale, (int) imageScale, (int) imageScale, (int) imageScale);
-                RenderSystem.disableBlend();
-            }
+                            }
         }
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager._enableBlend();

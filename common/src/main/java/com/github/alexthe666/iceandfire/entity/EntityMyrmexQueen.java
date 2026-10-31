@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -69,10 +70,15 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
         super(t, worldIn);
     }
 
-    @Override
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
     @Nullable
-    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+    protected Optional<ResourceKey<LootTable>> getIafLootTable() {
         return Optional.of(isJungle() ? JUNGLE_LOOT : DESERT_LOOT);
+    }
+
+    @Override
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Override
@@ -154,7 +160,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                         hiveGen.placeSmallGen((ServerLevel) level(), this.getRandom(), genPos);
                     }
                     this.setMadeHome(true);
-                    this.moveTo(genPos.getX(), down, genPos.getZ(), 0, 0);
+                    this.snapTo(genPos.getX(), down, genPos.getZ(), 0, 0);
                     this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 30));
                     this.setHive(hiveGen.hive);
                     for (int i = 0; i < 3; i++) {
@@ -184,7 +190,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                     egg.setJungle(this.isJungle());
                     int caste = getRandomCaste(level(), this.getRandom(), getHive() == null || getHive().reproduces);
                     egg.setMyrmexCaste(caste);
-                    egg.moveTo(this.getX() + extraX, this.getY() + 0.75F, this.getZ() + extraZ, 0, 0);
+                    egg.snapTo(this.getX() + extraX, this.getY() + 0.75F, this.getZ() + extraZ, 0, 0);
                     if (getHive() != null) {
                         egg.hiveUUID = this.getHive().hiveUUID;
                     }
@@ -244,9 +250,9 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
         this.targetSelector.addGoal(1, new MyrmexAIDefendHive(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(3, new MyrmexAIAttackPlayers(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, true, new Predicate<LivingEntity>() {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, true, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable LivingEntity entity) {
+            public boolean test(LivingEntity entity, ServerLevel serverLevel) {
                 return entity != null && !EntityMyrmexBase.haveSameHive(EntityMyrmexQueen.this, entity) && DragonUtils.isAlive(entity) && !(entity instanceof Enemy);
             }
         }));
@@ -357,7 +363,7 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
                 BlockState BlockState = this.level().getBlockState(BlockPos.containing(this.getBlockX() + extraX, this.getBlockY() + extraY - 1, this.getBlockZ() + extraZ));
                 if (BlockState.isAir()) {
                     if (level().isClientSide()) {
-                        level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, BlockState), true, this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ, motionX, motionY, motionZ);
+                        level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, BlockState), true, false, this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ, motionX, motionY, motionZ);
                     }
                 }
             }

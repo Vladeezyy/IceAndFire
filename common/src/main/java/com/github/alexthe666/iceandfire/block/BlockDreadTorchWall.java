@@ -18,8 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockDreadTorchWall extends WallTorchBlock implements IDreadBlock {
 
     public BlockDreadTorchWall() {
-        super(ParticleTypes.SMOKE, Properties
-                .of()
+        super(ParticleTypes.SMOKE, dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
                 .ignitedByLava()
@@ -27,8 +26,8 @@ public class BlockDreadTorchWall extends WallTorchBlock implements IDreadBlock {
                 .sound(SoundType.STONE)
                 .noOcclusion()
                 .dynamicShape()
-                .noCollission()
-                .dropsLike(IafBlockRegistry.DREAD_TORCH.get()));
+                .noCollision()
+                .overrideLootTable(IafBlockRegistry.DREAD_TORCH.get().getLootTable()));
     }
 
     @Override

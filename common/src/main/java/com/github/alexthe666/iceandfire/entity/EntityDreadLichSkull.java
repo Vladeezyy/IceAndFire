@@ -104,7 +104,7 @@ public class EntityDreadLichSkull extends AbstractArrow {
                 flag = false;
             }
         }
-        if ((sqrt < 0.1F || this.horizontalCollision || this.verticalCollision || this.inGround) && this.tickCount > 5 && flag) {
+        if ((sqrt < 0.1F || this.horizontalCollision || this.verticalCollision || this.isInGround()) && this.tickCount > 5 && flag) {
             this.remove(RemovalReason.DISCARDED);
         }
         double d0 = 0;
@@ -154,7 +154,7 @@ public class EntityDreadLichSkull extends AbstractArrow {
         Entity shootingEntity = this.getOwner();
         if (living != null && (shootingEntity == null || !living.is(shootingEntity))) {
             if (living instanceof Player) {
-                this.damageShield((Player) living, (float) this.getBaseDamage());
+                this.damageShield((Player) living, (float) this.baseDamage);
             }
         }
     }
@@ -175,7 +175,7 @@ public class EntityDreadLichSkull extends AbstractArrow {
                     player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
                 }
                 player.stopUsingItem();
-                this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
+                this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
             }
         }
     }

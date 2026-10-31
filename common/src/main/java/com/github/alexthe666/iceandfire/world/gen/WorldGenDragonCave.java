@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world.gen;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -86,7 +87,7 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
             return false;
         }
         // Center the position at the "middle" of the chunk
-        position = new BlockPos((chunkPos.x << 4) + 8, j, (chunkPos.z << 4) + 8);
+        position = new BlockPos((chunkPos.x() << 4) + 8, j, (chunkPos.z() << 4) + 8);
         int dragonAge = 75 + rand.nextInt(50);
         int radius = (int) (dragonAge * 0.2F) + rand.nextInt(4);
         generateCave(worldIn, radius, 3, position, rand);
@@ -169,7 +170,7 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
             return List.of();
         }
 
-        return tagManager.getTag(tagKey).map(set -> set.stream().map(Holder::value).toList()).orElse(List.of());
+        return tagManager.get(tagKey).map(set -> set.stream().map(Holder::value).toList()).orElse(List.of());
     }
 
     public void hollowOut(LevelAccessor worldIn, Set<BlockPos> positions) {
@@ -223,13 +224,13 @@ public abstract class WorldGenDragonCave extends Feature<NoneFeatureConfiguratio
     }
 
     private EntityDragonBase createDragon(final WorldGenLevel worldGen, final RandomSource random, final BlockPos position, int dragonAge) {
-        EntityDragonBase dragon = getDragonType().create(worldGen.getLevel());
+        EntityDragonBase dragon = getDragonType().create(worldGen.getLevel(), EntitySpawnReason.STRUCTURE);
         dragon.setGender(isMale);
         dragon.growDragon(dragonAge);
         dragon.setAgingDisabled(true);
         dragon.setHealth(dragon.getMaxHealth());
         dragon.setVariant(random.nextInt(4));
-        dragon.absMoveTo(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5, random.nextFloat() * 360, 0);
+        dragon.absSnapTo(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5, random.nextFloat() * 360, 0);
         dragon.setInSittingPose(true);
         dragon.homePos = new HomePosition(position, worldGen.getLevel());
         dragon.setHunger(50);

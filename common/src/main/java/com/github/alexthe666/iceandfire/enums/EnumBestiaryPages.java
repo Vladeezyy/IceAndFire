@@ -58,7 +58,7 @@ public enum EnumBestiaryPages {
     }
 
     public static boolean hasAllPages(ItemStack book) {
-        return Ints.asList(ItemNbt.view(book).getIntArray("Pages")).containsAll(ALL_INDEXES);
+        return Ints.asList(ItemNbt.view(book).getIntArray("Pages").orElse(new int[0])).containsAll(ALL_INDEXES);
     }
 
     public static List<Integer> enumToInt(List<EnumBestiaryPages> pages) {
@@ -82,7 +82,7 @@ public enum EnumBestiaryPages {
     public static List<EnumBestiaryPages> possiblePages(ItemStack book) {
         if (book.getItem() instanceof ItemBestiary) {
             CompoundTag tag = ItemNbt.getOrEmpty(book);
-            Collection<EnumBestiaryPages> containedPages = containedPages(Ints.asList(tag.getIntArray("Pages")));
+            Collection<EnumBestiaryPages> containedPages = containedPages(Ints.asList(tag.getIntArray("Pages").orElse(new int[0])));
             List<EnumBestiaryPages> possiblePages = new ArrayList<>(ALL_PAGES);
             possiblePages.removeAll(containedPages);
             return possiblePages;
@@ -95,7 +95,7 @@ public enum EnumBestiaryPages {
         boolean flag = false;
         if (book.getItem() instanceof ItemBestiary) {
             CompoundTag tag = ItemNbt.getOrEmpty(book);
-            final List<Integer> already = new ArrayList<>(Ints.asList(tag.getIntArray("Pages")));
+            final List<Integer> already = new ArrayList<>(Ints.asList(tag.getIntArray("Pages").orElse(new int[0])));
             if (!already.contains(page.ordinal())) {
                 already.add(page.ordinal());
                 flag = true;

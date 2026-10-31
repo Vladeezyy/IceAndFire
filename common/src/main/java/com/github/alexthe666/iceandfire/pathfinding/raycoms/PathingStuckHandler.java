@@ -430,7 +430,7 @@ public class PathingStuckHandler implements IStuckHandler
     public static Direction getFacing(final BlockPos pos, final BlockPos neighbor)
     {
         final BlockPos vector = neighbor.subtract(pos);
-        return Direction.getNearest(vector.getX(), vector.getY(), -vector.getZ());
+        return Direction.getApproximateNearest(vector.getX(), vector.getY(), -vector.getZ());
     }
 
     /**

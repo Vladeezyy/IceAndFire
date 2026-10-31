@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.server.level.ServerLevel;
 
@@ -120,15 +121,17 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
         });
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, 10, false, false, new Predicate<Entity>() {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, 10, false, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Entity entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Entity entity = iafTarget;
                 return entity.isAlive();
             }
         }));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, LivingEntity.class, 10, true, false, new Predicate<Entity>() {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, LivingEntity.class, 10, true, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Entity entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Entity entity = iafTarget;
                 return entity instanceof LivingEntity && DragonUtils.isAlive((LivingEntity) entity) || (entity instanceof IBlacklistedFromStatues && ((IBlacklistedFromStatues) entity).canBeTurnedToStone());
             }
         }));
@@ -190,9 +193,9 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
             }
         }
         if (this.deathTime >= 200) {
-            if (!this.level().isClientSide() && (this.isAlwaysExperienceDropper() || this.lastHurtByPlayerTime > 0 && this.shouldDropExperience() && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))) {
-                int i = this.getBaseExperienceReward();
-                i = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.experienceDrop(this, this.lastHurtByPlayer, i);
+            if (!this.level().isClientSide() && (this.isAlwaysExperienceDropper() || this.lastHurtByPlayerMemoryTime > 0 && this.shouldDropExperience() && ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.ENTITY_DROPS))) {
+                int i = this.getBaseExperienceReward((net.minecraft.server.level.ServerLevel) this.level());
+                i = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.experienceDrop(this, this.getLastHurtByPlayer(), i);
                 while (i > 0) {
                     int j = ExperienceOrb.getExperienceValue(i);
                     i -= j;
@@ -240,7 +243,7 @@ public class EntityGorgon extends Monster implements IAnimatedEntity, IVillagerF
                         if (!level().isClientSide()) {
                             if (playerStatueCooldown == 0) {
                                 EntityStoneStatue statue = EntityStoneStatue.buildStatueEntity(attackTarget);
-                                statue.absMoveTo(attackTarget.getX(), attackTarget.getY(), attackTarget.getZ(), attackTarget.getYRot(), attackTarget.getXRot());
+                                statue.absSnapTo(attackTarget.getX(), attackTarget.getY(), attackTarget.getZ(), attackTarget.getYRot(), attackTarget.getXRot());
                                 if (!level().isClientSide()) {
                                     level().addFreshEntity(statue);
                                 }

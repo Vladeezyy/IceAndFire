@@ -136,7 +136,7 @@ public class SelfTest {
         long advancements = server.getAdvancements().getAllAdvancements().stream().filter(a -> a.id().getNamespace().equals(IceAndFire.MODID)).count();
         check("advancements loaded", advancements > 300, advancements);
 
-        long patterns = server.registryAccess().registryOrThrow(Registries.BANNER_PATTERN).keySet().stream().filter(id -> id.getNamespace().equals(IceAndFire.MODID)).count();
+        long patterns = server.registryAccess().lookupOrThrow(Registries.BANNER_PATTERN).keySet().stream().filter(id -> id.getNamespace().equals(IceAndFire.MODID)).count();
         check("banner patterns", patterns == 19, patterns);
     }
 
@@ -282,7 +282,7 @@ public class SelfTest {
 
     /** Locates every structure of the mod (this runs their biome checks) and places it there. */
     private static void structures(MinecraftServer server, ServerLevel level) {
-        var registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        var registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
         CommandSourceStack source = server.createCommandSourceStack().withSuppressedOutput().withPermission(4);
         for (String name : List.of("gorgon_temple", "graveyard", "mausoleum")) {
             var holder = registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name)));

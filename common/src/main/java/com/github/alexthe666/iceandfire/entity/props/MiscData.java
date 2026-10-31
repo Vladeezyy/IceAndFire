@@ -40,7 +40,7 @@ public class MiscData {
             }
 
             if (entity instanceof Mob mob) {
-                mob.setLastHurtByPlayer(null);
+                mob.setLastHurtByPlayer((net.minecraft.world.entity.player.Player) null, 0);
                 mob.setLastHurtByMob(null);
                 mob.setTarget(null);
                 mob.setAggressive(false);
@@ -113,7 +113,7 @@ public class MiscData {
         loveTicks = miscData.getIntOr("loveTicks", 0);
         lungeTicks = miscData.getIntOr("lungeTicks", 0);
         hasDismounted = miscData.getBooleanOr("hasDismounted", false);
-        int[] loadedChainedToIds = miscData.getIntArray("targetedByScepterIds");
+        int[] loadedChainedToIds = miscData.getIntArray("targetedByScepterIds").orElse(new int[0]);
 
         isInitialized = false;
 

@@ -51,8 +51,7 @@ public class BlockJar extends BaseEntityBlock {
     public BlockJar(int pixieType) {
         super(
             pixieType != -1 ?
-                Properties
-                    .of()
+                dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                     .mapColor(MapColor.NONE)
                     .instrument(NoteBlockInstrument.HAT)
                     .noOcclusion()
@@ -60,9 +59,8 @@ public class BlockJar extends BaseEntityBlock {
                     .strength(1, 2)
                     .sound(SoundType.GLASS)
                     .lightLevel((state) -> pixieType == -1 ? 0 : 10)
-                    .dropsLike(IafBlockRegistry.JAR_EMPTY.get())
-				: Properties
-                .of()
+                    .overrideLootTable(IafBlockRegistry.JAR_EMPTY.get().getLootTable())
+				: dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.NONE)
                 .instrument(NoteBlockInstrument.HAT)
                 .noOcclusion()
@@ -92,11 +90,7 @@ public class BlockJar extends BaseEntityBlock {
     }
 
 
-    @Override
-    public void onRemove(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-        dropPixie(worldIn, pos);
-        super.onRemove(state, worldIn, pos, newState, isMoving);
-    }
+    // 26.x: the pixie is released by the block entity (preRemoveSideEffects), before it is removed
 
     public void dropPixie(Level world, BlockPos pos) {
         if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityJar && ((TileEntityJar) world.getBlockEntity(pos)).hasPixie) {

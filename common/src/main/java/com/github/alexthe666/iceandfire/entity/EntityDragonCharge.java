@@ -68,7 +68,7 @@ public abstract class EntityDragonCharge extends Fireball implements IDragonProj
                 this.onHit(raytraceresult);
             }
 
-            this.checkInsideBlocks();
+            this.applyEffectsFromBlocks();
             Vec3 vector3d = this.getDeltaMovement();
             double d0 = this.getX() + vector3d.x;
             double d1 = this.getY() + vector3d.y;

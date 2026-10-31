@@ -60,9 +60,9 @@ public class ItemPixieWand extends Item {
             }
             playerIn.playSound(IafSoundRegistry.PIXIE_WAND, 1F, 0.75F + 0.5F * playerIn.getRandom().nextFloat());
             itemstack.hurtAndBreak(1, playerIn, playerIn.getUsedItemHand().asEquipmentSlot());
-            playerIn.getCooldowns().addCooldown(this, 5);
+            playerIn.getCooldowns().addCooldown(itemstack, 5);
         }
-        return new InteractionResult(InteractionResult.PASS, itemStackIn);
+        return InteractionResult.PASS;
     }
 
     public boolean isInfinite(ItemStack stack, ItemStack bow, net.minecraft.world.entity.player.Player player) {

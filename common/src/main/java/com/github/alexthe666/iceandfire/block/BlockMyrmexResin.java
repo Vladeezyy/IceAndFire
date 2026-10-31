@@ -19,8 +19,7 @@ public class BlockMyrmexResin extends Block {
 
     public BlockMyrmexResin(boolean sticky) {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.CLAY)
                 .strength(2.5F)
                 .sound(sticky ? SoundType.SLIME_BLOCK : SoundType.GRAVEL)

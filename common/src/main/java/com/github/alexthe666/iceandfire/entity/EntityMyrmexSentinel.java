@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -73,10 +74,15 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
         return isJungle() ? MyrmexTrades.JUNGLE_SENTINEL.get(2) : MyrmexTrades.DESERT_SENTINEL.get(2);
     }
 
-    @Override
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
     @Nullable
-    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+    protected Optional<ResourceKey<LootTable>> getIafLootTable() {
         return Optional.of(isJungle() ? JUNGLE_LOOT : DESERT_LOOT);
+    }
+
+    @Override
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Override
@@ -176,9 +182,9 @@ public class EntityMyrmexSentinel extends EntityMyrmexBase {
         this.targetSelector.addGoal(1, new MyrmexAIDefendHive(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new MyrmexAIAttackPlayers(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 4, true, true, new Predicate<LivingEntity>() {
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 4, true, true, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable LivingEntity entity) {
+            public boolean test(LivingEntity entity, ServerLevel serverLevel) {
                 return entity != null && !EntityMyrmexBase.haveSameHive(EntityMyrmexSentinel.this, entity) && DragonUtils.isAlive(entity) && !(entity instanceof Enemy);
             }
         }));

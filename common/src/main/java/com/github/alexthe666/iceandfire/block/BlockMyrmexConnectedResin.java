@@ -27,8 +27,7 @@ public class BlockMyrmexConnectedResin extends HalfTransparentBlock {
 
     public BlockMyrmexConnectedResin(boolean jungle, boolean glass) {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .strength(glass ? 1.5F : 3.5F)
@@ -79,7 +78,7 @@ public class BlockMyrmexConnectedResin extends HalfTransparentBlock {
     }
 
     @Override
-    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, @NotNull net.minecraft.world.level.LevelReader worldIn, @NotNull net.minecraft.world.level.ScheduledTickAccess iafTicks, @NotNull BlockPos currentPos, @NotNull Direction facing, @NotNull BlockPos facingPos, @NotNull BlockState facingState, @NotNull net.minecraft.util.RandomSource iafRandom) {
         BooleanProperty connect = null;
         switch (facing) {
             case NORTH:

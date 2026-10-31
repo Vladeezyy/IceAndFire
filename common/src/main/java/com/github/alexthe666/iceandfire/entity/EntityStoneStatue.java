@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.IafScaled;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -20,10 +23,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
-public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromStatues {
+public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromStatues, IafScaled {
 
     private static final EntityDataAccessor<String> TRAPPED_ENTITY_TYPE = SynchedEntityData.defineId(EntityStoneStatue.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<CompoundTag> TRAPPED_ENTITY_DATA = SynchedEntityData.defineId(EntityStoneStatue.class, EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<CompoundTag> TRAPPED_ENTITY_DATA = SynchedEntityData.defineId(EntityStoneStatue.class, IafDataSerializers.COMPOUND_TAG);
     private static final EntityDataAccessor<Float> TRAPPED_ENTITY_WIDTH = SynchedEntityData.defineId(EntityStoneStatue.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> TRAPPED_ENTITY_HEIGHT = SynchedEntityData.defineId(EntityStoneStatue.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> TRAPPED_ENTITY_SCALE = SynchedEntityData.defineId(EntityStoneStatue.class, EntityDataSerializers.FLOAT);
@@ -49,7 +52,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
         CompoundTag entityTag = new CompoundTag();
         try {
             if (!(parent instanceof Player)) {
-                parent.saveWithoutId(entityTag);
+                entityTag = Values.save(parent);
             }
         } catch (Exception e) {
             IceAndFire.LOGGER.debug("Encountered issue creating stone statue from {}", parent);
@@ -58,7 +61,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
         statue.setTrappedEntityTypeString(BuiltInRegistries.ENTITY_TYPE.getKey(parent.getType()).toString());
         statue.setTrappedEntityWidth(parent.getBbWidth());
         statue.setTrappedHeight(parent.getBbHeight());
-        statue.setTrappedScale(parent.getScale());
+        statue.setTrappedScale(IafScaled.of(parent));
 
         return statue;
     }
@@ -139,8 +142,12 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
         Values.put(tag, "StatueEntityTag", this.getTrappedTag());
     }
 
+    /**
+     * The creature's size (1.20.1's {@code getIafScale()} override). 26.x {@code LivingEntity.getIafScale()} is final and only
+     * the scale attribute: the hitbox is scaled in {@code getDefaultDimensions}, the model by the renderer.
+     */
     @Override
-    public float getScale() {
+    public float getIafScale() {
         return this.getTrappedScale();
     }
 
@@ -165,7 +172,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
 
     @Override
     protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose poseIn) {
-        return stoneStatueSize;
+        return stoneStatueSize.scale(this.getIafScale());
     }
 
     @Override
@@ -187,7 +194,6 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
         this.remove(RemovalReason.KILLED);
     }
 
-    @Override
     public @NotNull Iterable<ItemStack> getArmorSlots() {
         return ImmutableList.of();
     }

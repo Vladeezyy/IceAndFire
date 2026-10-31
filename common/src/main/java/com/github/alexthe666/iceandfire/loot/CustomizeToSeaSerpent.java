@@ -8,7 +8,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,7 @@ public class CustomizeToSeaSerpent extends LootItemConditionalFunction {
 
     @Override
     public @NotNull ItemStack run(ItemStack stack, @NotNull LootContext context) {
-        if (!stack.isEmpty() && context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof EntitySeaSerpent seaSerpent) {
+        if (!stack.isEmpty() && context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof EntitySeaSerpent seaSerpent) {
             final int ancientModifier = seaSerpent.isAncient() ? 2 : 1;
             if (stack.getItem() instanceof ItemSeaSerpentScales) {
                 stack.setCount(1 + seaSerpent.getRandom().nextInt(1 + (int) Math.ceil(seaSerpent.getSeaSerpentScale() * 3 * ancientModifier)));
@@ -40,7 +39,7 @@ public class CustomizeToSeaSerpent extends LootItemConditionalFunction {
     }
 
     @Override
-    public @NotNull LootItemFunctionType<CustomizeToSeaSerpent> getType() {
-        return IafLootRegistry.CUSTOMIZE_TO_SERPENT.get();
+    public @NotNull MapCodec<CustomizeToSeaSerpent> codec() {
+        return CODEC;
     }
 }

@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -77,9 +79,14 @@ public class EntityGhost extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
 
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
+    protected @NotNull Optional<ResourceKey<LootTable>> getIafLootTable() {
+        return this.wasFromChest() ? java.util.Optional.empty() : this.getType().getDefaultLootTable();
+    }
+
     @Override
-    protected @NotNull Optional<ResourceKey<LootTable>> getDefaultLootTable() {
-        return this.wasFromChest() ? BuiltInLootTables.EMPTY : this.getType().getDefaultLootTable();
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Override
@@ -198,15 +205,17 @@ public class EntityGhost extends Monster implements IAnimatedEntity, IVillagerFe
         });
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, 10, false, false, new Predicate<Entity>() {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, Player.class, 10, false, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Entity entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Entity entity = iafTarget;
                 return entity.isAlive();
             }
         }));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, LivingEntity.class, 10, false, false, new Predicate<Entity>() {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, LivingEntity.class, 10, false, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Entity entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Entity entity = iafTarget;
                 return entity instanceof LivingEntity && DragonUtils.isAlive((LivingEntity) entity) && DragonUtils.isVillager(entity);
             }
         }));
@@ -264,11 +273,10 @@ public class EntityGhost extends Monster implements IAnimatedEntity, IVillagerFe
         return this.isDaytimeMode() || super.isSilent();
     }
 
-    @Override
     protected boolean isSunBurnTick() {
         if (this.level().isBrightOutside() && !this.level().isClientSide()) {
             float f = this.level().getBrightness(LightLayer.BLOCK, this.blockPosition());
-            BlockPos blockpos = this.getVehicle() instanceof Boat ? (new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ())).above() : new BlockPos(this.getBlockX(), this.getBlockY() + 4, this.getBlockZ());
+            BlockPos blockpos = this.getVehicle() instanceof net.minecraft.world.entity.vehicle.boat.AbstractBoat ? (new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ())).above() : new BlockPos(this.getBlockX(), this.getBlockY() + 4, this.getBlockZ());
             return f > 0.5F && this.level().canSeeSky(blockpos);
         }
 

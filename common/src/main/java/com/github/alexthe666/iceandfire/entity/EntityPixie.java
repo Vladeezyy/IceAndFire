@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EquipmentSlot;
 import com.github.alexthe666.iceandfire.entity.util.Owners;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -439,7 +440,7 @@ public class EntityPixie extends TamableAnimal {
     }
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entityIn) {
+    protected boolean considersEntityAsAlly(@NotNull Entity entityIn) {
         if (this.isTame()) {
             LivingEntity livingentity = this.getOwner();
             if (entityIn == livingentity) {
@@ -453,7 +454,7 @@ public class EntityPixie extends TamableAnimal {
             }
         }
 
-        return super.isAlliedTo(entityIn);
+        return super.considersEntityAsAlly(entityIn);
     }
 
     class AIMoveControl extends MoveControl {

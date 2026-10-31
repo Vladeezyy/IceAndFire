@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
@@ -33,7 +35,7 @@ import java.util.UUID;
 
 public abstract class EntityMutlipartPart extends Entity {
 
-    private static final EntityDataAccessor<Optional<UUID>> PARENT_UUID = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> PARENT_UUID = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<Float> SCALE_WIDTH = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> SCALE_HEIGHT = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PART_YAW = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.FLOAT);
@@ -104,11 +106,11 @@ public abstract class EntityMutlipartPart extends Entity {
 
     @Nullable
     public UUID getParentId() {
-        return this.entityData.get(PARENT_UUID).orElse(null);
+        return this.entityData.get(PARENT_UUID).map(EntityReference::getUUID).orElse(null);
     }
 
     public void setParentId(@Nullable UUID uniqueId) {
-        this.entityData.set(PARENT_UUID, Optional.ofNullable(uniqueId));
+        this.entityData.set(PARENT_UUID, (Optional.ofNullable(uniqueId)).map(EntityReference::of));
     }
 
     private float getScaleX() {
@@ -264,7 +266,7 @@ public abstract class EntityMutlipartPart extends Entity {
         if (parent == null) {
             return InteractionResult.PASS;
         }
-        InteractionResult result = parent.interact(player, hand);
+        InteractionResult result = parent.interact(player, hand, location);
         // Player.interactOn offers the held item (dragon horn, lead...) only to living entities and a part is not one:
         // a click on a part never picked the dragon up with the horn (#5196)
         if (!result.consumesAction() && parent instanceof LivingEntity living) {
@@ -290,12 +292,12 @@ public abstract class EntityMutlipartPart extends Entity {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         Entity parent = getParent();
-        return parent != null && parent.hurt(source, damage * this.damageMultiplier);
+        return parent != null && parent.hurtOrSimulate(source, damage * this.damageMultiplier);
     }
 
     @Override
     public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
-        return source.is(DamageTypes.FALL) || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.FALLING_BLOCK) || source.is(DamageTypes.LAVA) || source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(level, source);
+        return source.is(DamageTypes.FALL) || source.is(DamageTypes.DROWN) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.FALLING_BLOCK) || source.is(DamageTypes.LAVA) || source.is(DamageTypeTags.IS_FIRE) || this.isInvulnerableToBase(source);
     }
 
     public boolean isAddedByParent() {

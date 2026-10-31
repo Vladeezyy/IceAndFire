@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.server.level.ServerLevel;
@@ -107,15 +109,17 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F, 1.0F));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, Player.class, 10, true, false, new Predicate<Player>() {
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, Player.class, 10, true, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Player entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Player entity = (Player) iafTarget;
                 return EntitySiren.this.isAgressive() && !(entity.isCreative() || entity.isSpectator());
             }
         }));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, AbstractVillager.class, 10, true, false, new Predicate<AbstractVillager>() {
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, AbstractVillager.class, 10, true, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable AbstractVillager entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                AbstractVillager entity = (AbstractVillager) iafTarget;
                 return EntitySiren.this.isAgressive();
             }
         }));

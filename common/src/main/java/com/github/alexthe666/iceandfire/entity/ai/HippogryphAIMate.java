@@ -106,7 +106,7 @@ public class HippogryphAIMate extends Goal {
                 this.hippo.getZ() + d5, d0, d1, d2);
         }
 
-        if (((net.minecraft.server.level.ServerLevel) this.world).getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if (((net.minecraft.server.level.ServerLevel) this.world).getGameRules().get(GameRules.MOB_DROPS)) {
             this.world.addFreshEntity(new ExperienceOrb(this.world, this.hippo.getX(), this.hippo.getY(),
                 this.hippo.getZ(), random.nextInt(7) + 1));
         }

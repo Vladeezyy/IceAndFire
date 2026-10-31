@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -18,10 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemHippocampusSlapper extends SwordItem {
+public class ItemHippocampusSlapper extends Item implements IafTieredItem {
+
+    private final CustomToolMaterial tier;
 
     public ItemHippocampusSlapper() {
-        super(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL, 3, -2.4F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL.toolMaterial(), 3, -2.4F));
+        this.tier = IafItemRegistry.HIPPOCAMPUS_SWORD_TOOL_MATERIAL;
     }
 
     @Override
@@ -38,5 +42,10 @@ public class ItemHippocampusSlapper extends SwordItem {
         tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.iceandfire.hippocampus_slapper.desc_0").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.iceandfire.hippocampus_slapper.desc_1").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public CustomToolMaterial getTier() {
+        return tier;
     }
 }

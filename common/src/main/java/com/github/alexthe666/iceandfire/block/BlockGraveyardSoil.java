@@ -20,8 +20,7 @@ public class BlockGraveyardSoil extends Block {
 
     public BlockGraveyardSoil() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.DIRT)
                 .sound(SoundType.GRAVEL)
                 .strength(5, 1F)
@@ -39,8 +38,8 @@ public class BlockGraveyardSoil extends Block {
                 int checkRange = 32;
                 int k = worldIn.getEntitiesOfClass(EntityGhost.class, (new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1)).inflate(checkRange)).size();
                 if (k < 10) {
-                    EntityGhost ghost = IafEntityRegistry.GHOST.get().create(worldIn);
-                    ghost.absMoveTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F,
+                    EntityGhost ghost = IafEntityRegistry.GHOST.get().create(worldIn, EntitySpawnReason.STRUCTURE);
+                    ghost.absSnapTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F,
                         ThreadLocalRandom.current().nextFloat() * 360F, 0);
                     if (!worldIn.isClientSide()) {
                         ghost.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWNER, null);

@@ -33,7 +33,11 @@ public class ItemDragonArmor extends Item {
     }
 
     @Override
-    public @NotNull String getDescriptionId() {
+    public @NotNull Component getName(@NotNull ItemStack iafStack) {
+        return Component.translatable(this.iafDescriptionId());
+    }
+
+    private String iafDescriptionId() {
         String fullName = BuiltInRegistries.ITEM.getKey(this).getPath();
         Matcher matcher = baseName.matcher(fullName);
         name = matcher.find() ? matcher.group() : fullName;

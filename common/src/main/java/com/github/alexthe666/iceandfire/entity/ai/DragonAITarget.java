@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.ai;
+import com.github.alexthe666.iceandfire.entity.util.IafSelectors;
 
 import com.github.alexthe666.iceandfire.api.FoodUtils;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
@@ -18,7 +19,7 @@ public class DragonAITarget<T extends LivingEntity> extends NearestAttackableTar
     private final EntityDragonBase dragon;
 
     public DragonAITarget(EntityDragonBase entityIn, Class<T> classTarget, boolean checkSight, Predicate<LivingEntity> targetSelector) {
-        super(entityIn, classTarget, 3, checkSight, false, targetSelector);
+        super(entityIn, classTarget, 3, checkSight, false, IafSelectors.of(targetSelector));
         this.setFlags(EnumSet.of(Flag.TARGET));
         this.dragon = entityIn;
     }

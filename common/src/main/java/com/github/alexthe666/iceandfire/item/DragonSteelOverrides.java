@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.entity.EntitySpawnReason;
 import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 
 import net.minecraft.core.component.DataComponents;
@@ -107,21 +108,21 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
 
     }
 
-    default void appendHoverText(CustomToolMaterial tier, ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    default void appendHoverText(CustomToolMaterial tier, ItemStack stack, @Nullable Item.TooltipContext worldIn, java.util.function.Consumer<Component> tooltip, TooltipFlag flagIn) {
         if (tier == IafItemRegistry.SILVER_TOOL_MATERIAL) {
-            tooltip.add(Component.translatable("silvertools.hurt").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("silvertools.hurt").withStyle(ChatFormatting.GREEN));
         }
         if (tier == IafItemRegistry.MYRMEX_CHITIN_TOOL_MATERIAL) {
-            tooltip.add(Component.translatable("myrmextools.hurt").withStyle(ChatFormatting.GREEN));
+            tooltip.accept(Component.translatable("myrmextools.hurt").withStyle(ChatFormatting.GREEN));
         }
         if (isDragonsteelFire(tier) && IafConfig.dragonWeaponFireAbility) {
-            tooltip.add(Component.translatable("dragon_sword_fire.hurt2").withStyle(ChatFormatting.DARK_RED));
+            tooltip.accept(Component.translatable("dragon_sword_fire.hurt2").withStyle(ChatFormatting.DARK_RED));
         }
         if (isDragonsteelIce(tier) && IafConfig.dragonWeaponIceAbility) {
-            tooltip.add(Component.translatable("dragon_sword_ice.hurt2").withStyle(ChatFormatting.AQUA));
+            tooltip.accept(Component.translatable("dragon_sword_ice.hurt2").withStyle(ChatFormatting.AQUA));
         }
         if (isDragonsteelLightning(tier) && IafConfig.dragonWeaponLightningAbility) {
-            tooltip.add(Component.translatable("dragon_sword_lightning.hurt2").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltip.accept(Component.translatable("dragon_sword_lightning.hurt2").withStyle(ChatFormatting.DARK_PURPLE));
         }
     }
 }

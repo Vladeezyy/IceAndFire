@@ -216,14 +216,14 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     protected void loadAdditional(ValueInput compound) {
         super.loadAdditional(compound);
         this.forgeItemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.forgeItemStacks, compound.lookup());
+        ContainerHelper.loadAllItems(compound, this.forgeItemStacks);
         this.cookTime = compound.getIntOr("CookTime", 0);
     }
 
     @Override
     public void saveAdditional(ValueOutput compound) {
         compound.putInt("CookTime", (short) this.cookTime);
-        ContainerHelper.saveAllItems(compound, this.forgeItemStacks, registries);
+        ContainerHelper.saveAllItems(compound, this.forgeItemStacks);
     }
 
     @Override
@@ -274,11 +274,18 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     }
 
     public Optional<DragonForgeRecipe> getCurrentRecipe() {
-        return level.getRecipeManager().getRecipeFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get(), new DragonForgeInput(this.getItem(0), this.getItem(1), this.getTypeID()), level).map(RecipeHolder::value);
+        // 26.x: recipes are on the server only (the client asks the synced list, see ClientRecipes)
+        if (!(level instanceof net.minecraft.server.level.ServerLevel serverLevel)) {
+            return dev.vladeezyy.iceandfire.platform.ClientRecipes.dragonForge().stream().filter(recipe -> recipe.matches(new DragonForgeInput(this.getItem(0), this.getItem(1), this.getTypeID()), level)).findFirst();
+        }
+        return serverLevel.recipeAccess().getRecipeFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get(), new DragonForgeInput(this.getItem(0), this.getItem(1), this.getTypeID()), level).map(RecipeHolder::value);
     }
 
     public List<DragonForgeRecipe> getRecipes() {
-        return level.getRecipeManager().getAllRecipesFor(IafRecipeRegistry.DRAGON_FORGE_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        if (!(level instanceof net.minecraft.server.level.ServerLevel serverLevel)) {
+            return dev.vladeezyy.iceandfire.platform.ClientRecipes.dragonForge();
+        }
+        return serverLevel.recipeAccess().getRecipes().stream().map(RecipeHolder::value).filter(DragonForgeRecipe.class::isInstance).map(DragonForgeRecipe.class::cast).toList();
     }
 
     public boolean canSmelt() {
@@ -429,10 +436,6 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
-        loadAdditional(packet.getTag(), registries);
-    }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {

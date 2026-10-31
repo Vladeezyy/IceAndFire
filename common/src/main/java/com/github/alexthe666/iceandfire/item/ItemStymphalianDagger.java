@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -15,10 +16,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemStymphalianDagger extends SwordItem {
+public class ItemStymphalianDagger extends Item implements IafTieredItem {
+
+    private final CustomToolMaterial tier;
 
     public ItemStymphalianDagger() {
-        super(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, dev.vladeezyy.iceandfire.platform.Registrar.itemProps().attributes(SwordItem.createAttributes(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL, 3, -1.0F))/*.tab(IceAndFire.TAB_ITEMS)*/);
+        super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL.toolMaterial(), 3, -1.0F));
+        this.tier = IafItemRegistry.STYMHALIAN_SWORD_TOOL_MATERIAL;
     }
 
 
@@ -31,5 +35,10 @@ public class ItemStymphalianDagger extends SwordItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.accept(Component.translatable("item.iceandfire.legendary_weapon.desc").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.iceandfire.stymphalian_bird_dagger.desc_0").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public CustomToolMaterial getTier() {
+        return tier;
     }
 }

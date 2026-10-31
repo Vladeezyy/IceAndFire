@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.props;
+import net.minecraft.core.UUIDUtil;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -99,7 +100,7 @@ public class ChainData {
                 Entity entity = chainedTo.get(i);
 
                 ids[i] = entity.getId();
-                uuids.add(NbtUtils.createUUID(entity.getUUID()));
+                uuids.add(new net.minecraft.nbt.IntArrayTag(UUIDUtil.uuidToIntArray(entity.getUUID())));
             }
 
             chainedData.putIntArray("chainedToIds", ids);
@@ -111,8 +112,8 @@ public class ChainData {
 
     public void deserialize(final CompoundTag tag) {
         CompoundTag chainedData = tag.getCompoundOrEmpty("chainedData");
-        int[] loadedChainedToIds = chainedData.getIntArray("chainedToIds");
-        ListTag uuids = chainedData.getList("chainedToUUIDs", ListTag.TAG_INT_ARRAY);
+        int[] loadedChainedToIds = chainedData.getIntArray("chainedToIds").orElse(new int[0]);
+        ListTag uuids = chainedData.getListOrEmpty("chainedToUUIDs");
 
         isInitialized = false;
 
@@ -130,7 +131,7 @@ public class ChainData {
             chainedToUUIDs = new ArrayList<>();
 
             for (Tag uuid : uuids) {
-                chainedToUUIDs.add(NbtUtils.loadUUID(uuid));
+                chainedToUUIDs.add(UUIDUtil.uuidFromIntArray(((net.minecraft.nbt.IntArrayTag) uuid).getAsIntArray()));
             }
         } else {
             chainedToUUIDs = null;

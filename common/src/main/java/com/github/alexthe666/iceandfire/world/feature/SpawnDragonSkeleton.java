@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world.feature;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
@@ -31,7 +32,7 @@ public class SpawnDragonSkeleton extends Feature<NoneFeatureConfiguration> {
 
         if (IafConfig.generateDragonSkeletons) {
             if (rand.nextInt(IafConfig.generateDragonSkeletonChance + 1) == 0) {
-                EntityDragonBase dragon = dragonType.create(worldIn.getLevel());
+                EntityDragonBase dragon = dragonType.create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                 dragon.setPos(position.getX() + 0.5F, position.getY() + 1, position.getZ() + 0.5F);
                 int dragonage = 10 + rand.nextInt(100);
                 dragon.growDragon(dragonage);

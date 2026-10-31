@@ -32,6 +32,16 @@ public class ItemHydraHeart extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
+        // 26.x passes the equipment slot only: the hotbar index of the stack, as 1.21.1's itemSlot 0 - 8
+        int itemSlot = -1;
+        if (entity instanceof Player holder) {
+            for (int i = 0; i < 9; i++) {
+                if (holder.getInventory().getItem(i) == stack) {
+                    itemSlot = i;
+                    break;
+                }
+            }
+        }
         if (entity instanceof Player && itemSlot >= 0 && itemSlot <= 8) {
             double healthPercentage = ((Player) entity).getHealth() / Math.max(1, ((Player) entity).getMaxHealth());
             if (healthPercentage < 1.0D) {

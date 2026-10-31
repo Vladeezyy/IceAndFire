@@ -54,14 +54,14 @@ public class TileEntityMyrmexCocoon extends RandomizableContainerBlockEntity {
         this.chestContents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
 
         if (!this.tryLoadLootTable(compound)) {
-            ContainerHelper.loadAllItems(compound, this.chestContents, compound.lookup());
+            ContainerHelper.loadAllItems(compound, this.chestContents);
         }
     }
 
     @Override
     public void saveAdditional(ValueOutput compound) {
         if (!this.trySaveLootTable(compound)) {
-            ContainerHelper.saveAllItems(compound, this.chestContents, registries);
+            ContainerHelper.saveAllItems(compound, this.chestContents);
         }
     }
 
@@ -99,15 +99,15 @@ public class TileEntityMyrmexCocoon extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void startOpen(Player player) {
+    public void startOpen(@NotNull net.minecraft.world.entity.ContainerUser user) {
         this.unpackLootTable(null);
-        player.level().playLocalSound(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), SoundEvents.SLIME_JUMP, SoundSource.BLOCKS, 1, 1, false);
+        user.getLivingEntity().level().playLocalSound(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), SoundEvents.SLIME_JUMP, SoundSource.BLOCKS, 1, 1, false);
     }
 
     @Override
-    public void stopOpen(Player player) {
+    public void stopOpen(@NotNull net.minecraft.world.entity.ContainerUser user) {
         this.unpackLootTable(null);
-        player.level().playLocalSound(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1, 1, false);
+        user.getLivingEntity().level().playLocalSound(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1, 1, false);
     }
 
     @Override
@@ -115,10 +115,6 @@ public class TileEntityMyrmexCocoon extends RandomizableContainerBlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
-        loadAdditional(packet.getTag(), registries);
-    }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {

@@ -36,8 +36,7 @@ public class BlockDreadPortal extends BaseEntityBlock implements IDreadBlock {
 
     public BlockDreadPortal() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.NONE)
                 .pushReaction(PushReaction.BLOCK)
                 .dynamicShape()
@@ -130,7 +129,7 @@ public class BlockDreadPortal extends BaseEntityBlock implements IDreadBlock {
 
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Nullable

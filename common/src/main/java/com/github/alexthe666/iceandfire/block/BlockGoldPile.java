@@ -34,8 +34,7 @@ public class BlockGoldPile extends Block {
 
     public BlockGoldPile() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.DIRT)
                 .strength(0.3F, 1)
                 .randomTicks()
@@ -95,8 +94,8 @@ public class BlockGoldPile extends Block {
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
-        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, @NotNull net.minecraft.world.level.LevelReader worldIn, @NotNull net.minecraft.world.level.ScheduledTickAccess iafTicks, @NotNull BlockPos currentPos, @NotNull Direction facing, @NotNull BlockPos facingPos, @NotNull BlockState facingState, @NotNull net.minecraft.util.RandomSource iafRandom) {
+        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, worldIn, iafTicks, currentPos, facing, facingPos, facingState, iafRandom);
     }
 
 
@@ -119,7 +118,7 @@ public class BlockGoldPile extends Block {
 
     @Override
     protected @NotNull InteractionResult useItemOn(@NotNull ItemStack heldStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player playerIn, @NotNull InteractionHand handIn, @NotNull BlockHitResult resultIn) {
-        ItemStack item = playerIn.getInventory().getSelected();
+        ItemStack item = playerIn.getInventory().getSelectedItem();
 
         if (!item.isEmpty()) {
             if (item.getItem() != null) {
@@ -131,9 +130,9 @@ public class BlockGoldPile extends Block {
                                 item.shrink(1);
 
                                 if (item.isEmpty()) {
-                                    playerIn.getInventory().setItem(playerIn.getInventory().selected, ItemStack.EMPTY);
+                                    playerIn.getInventory().setItem(playerIn.getInventory().getSelectedSlot(), ItemStack.EMPTY);
                                 } else {
-                                    playerIn.getInventory().setItem(playerIn.getInventory().selected, item);
+                                    playerIn.getInventory().setItem(playerIn.getInventory().getSelectedSlot(), item);
                                 }
                             }
                             return InteractionResult.SUCCESS;

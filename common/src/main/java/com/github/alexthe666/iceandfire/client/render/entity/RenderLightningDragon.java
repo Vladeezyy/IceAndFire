@@ -48,7 +48,7 @@ public class RenderLightningDragon extends RenderDragonBase {
             if (dist <= Math.max(256, Minecraft.getInstance().options.renderDistance().get() * 16F)) {
                 Vec3 Vector3d1 = lightningDragon.getHeadPosition();
                 Vec3 Vector3d = new Vec3(lightningDragon.getLightningTargetX(), lightningDragon.getLightningTargetY(), lightningDragon.getLightningTargetZ());
-                float energyScale = 0.4F * lightningDragon.getScale();
+                float energyScale = 0.4F * lightningDragon.getIafScale();
                 LightningBoltData bolt = new LightningBoltData(LightningBoltData.BoltRenderInfo.ELECTRICITY, Vector3d1, Vector3d, 15)
                     .size(0.05F * getBoundedScale(energyScale, 0.5F, 2))
                     .lifespan(4)

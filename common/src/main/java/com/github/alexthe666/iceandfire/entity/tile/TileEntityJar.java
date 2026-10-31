@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.tile;
+import com.github.alexthe666.iceandfire.entity.util.Owners;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -71,7 +72,7 @@ public class TileEntityJar extends BlockEntity {
             compound.store("PixieOwnerUUID", UUIDUtil.CODEC, pixieOwnerUUID);
         }
         compound.putInt("TicksExisted", ticksExisted);
-        ContainerHelper.saveAllItems(compound, this.pixieItems, registries);
+        ContainerHelper.saveAllItems(compound, this.pixieItems);
     }
 
     @Override
@@ -79,13 +80,6 @@ public class TileEntityJar extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // NeoForge extension method (no vanilla override)
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.@NotNull Provider registries) {
-        loadAdditional(packet.getTag(), registries);
-        if (!level.isClientSide()) {
-            IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdatePixieHouseModel(worldPosition.asLong(), packet.getTag().getIntOr("PixieType", 0)));
-        }
-    }
 
     @Override
     protected void loadAdditional(ValueInput compound) {
@@ -98,7 +92,7 @@ public class TileEntityJar extends BlockEntity {
             pixieOwnerUUID = compound.read("PixieOwnerUUID", UUIDUtil.CODEC).orElseThrow();
         }
         this.pixieItems = NonNullList.withSize(1, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, pixieItems, compound.lookup());
+        ContainerHelper.loadAllItems(compound, pixieItems);
         super.loadAdditional(compound);
     }
 
@@ -135,7 +129,7 @@ public class TileEntityJar extends BlockEntity {
 
     public void releasePixie() {
         EntityPixie pixie = new EntityPixie(IafEntityRegistry.PIXIE.get(), this.level);
-        pixie.absMoveTo(this.worldPosition.getX() + 0.5F, this.worldPosition.getY() + 1F, this.worldPosition.getZ() + 0.5F, new Random().nextInt(360), 0);
+        pixie.absSnapTo(this.worldPosition.getX() + 0.5F, this.worldPosition.getY() + 1F, this.worldPosition.getZ() + 0.5F, new Random().nextInt(360), 0);
         pixie.setItemInHand(InteractionHand.MAIN_HAND, pixieItems.get(0));
         pixie.setColor(this.pixieType);
         level.addFreshEntity(pixie);
@@ -143,7 +137,7 @@ public class TileEntityJar extends BlockEntity {
         this.pixieType = 0;
         pixie.ticksUntilHouseAI = 500;
         pixie.setTame(this.tamedPixie, true);
-        pixie.setOwnerUUID(this.pixieOwnerUUID);
+        Owners.set(pixie, this.pixieOwnerUUID);
 
         if (!level.isClientSide()) {
             IceAndFire.sendMSGToTracking(level, worldPosition, new MessageUpdatePixieHouse(worldPosition.asLong(), false, 0));
@@ -154,5 +148,14 @@ public class TileEntityJar extends BlockEntity {
     @Nullable
     public ItemHandler getItemHandler(@Nullable Direction facing) {
         return facing == Direction.DOWN ? downHandler : null;
+    }
+
+    // 1.21.1's block onRemove: a broken house or jar lets its pixie out
+    @Override
+    public void preRemoveSideEffects(@NotNull BlockPos pos, @NotNull BlockState state) {
+        if (this.hasPixie) {
+            this.releasePixie();
+        }
+        super.preRemoveSideEffects(pos, state);
     }
 }

@@ -26,7 +26,11 @@ public class ItemModArmor extends IafArmorItem implements IafArmorTextureItem {
     }
 
     @Override
-    public @NotNull String getDescriptionId(@NotNull ItemStack stack) {
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return Component.translatable(this.iafDescriptionId(stack));
+    }
+
+    private String iafDescriptionId(ItemStack stack) {
         if (this == IafItemRegistry.EARPLUGS.get()) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
@@ -34,7 +38,7 @@ public class ItemModArmor extends IafArmorItem implements IafArmorTextureItem {
                 return "item.iceandfire.air_pods";
             }
         }
-        return super.getDescriptionId(stack);
+        return this.getDescriptionId();
     }
 
     @Override

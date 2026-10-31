@@ -31,8 +31,7 @@ public class BlockMyrmexCocoon extends BaseEntityBlock {
 
     public BlockMyrmexCocoon() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.DIRT)
                 .strength(2.5F)
                 .noOcclusion()
@@ -46,14 +45,10 @@ public class BlockMyrmexCocoon extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+    // 26.x: the block entity drops its contents itself (BlockEntity.preRemoveSideEffects, as onRemove did here)
     @Override
-    public void onRemove(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof Container) {
-            Containers.dropContents(worldIn, pos, (Container) tileentity);
-            worldIn.updateNeighbourForOutputSignal(pos, this);
-        }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
+    protected void affectNeighborsAfterRemoval(@NotNull BlockState state, @NotNull net.minecraft.server.level.ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
+        Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
 
     @Override

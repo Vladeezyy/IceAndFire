@@ -40,6 +40,9 @@ public interface Platform {
     /** Registers {@code factory}'s value under {@code id} (NeoForge: on its register event, Fabric: in registry order at init) */
     <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, Identifier id, Supplier<? extends T> factory);
 
+    /** A synced entity data type of the mod (26.x has no CompoundTag one: the stone statue's trapped mob) */
+    void registerDataSerializer(Identifier id, net.minecraft.network.syncher.EntityDataSerializer<?> serializer);
+
     // --- network ---
 
     void sendToServer(CustomPacketPayload payload);

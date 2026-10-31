@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world.feature;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityHippocampus;
@@ -32,9 +33,9 @@ public class SpawnHippocampus extends Feature<NoneFeatureConfiguration> {
             for (int i = 0; i < rand.nextInt(5); i++) {
                 BlockPos pos = oceanPos.offset(rand.nextInt(10) - 5, rand.nextInt(30), rand.nextInt(10) - 5);
                 if (worldIn.getFluidState(pos).getType() == Fluids.WATER) {
-                    EntityHippocampus campus = IafEntityRegistry.HIPPOCAMPUS.get().create(worldIn.getLevel());
+                    EntityHippocampus campus = IafEntityRegistry.HIPPOCAMPUS.get().create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                     campus.setVariant(rand.nextInt(6));
-                    campus.moveTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0, 0);
+                    campus.snapTo(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0, 0);
                     worldIn.addFreshEntity(campus);
                 }
             }

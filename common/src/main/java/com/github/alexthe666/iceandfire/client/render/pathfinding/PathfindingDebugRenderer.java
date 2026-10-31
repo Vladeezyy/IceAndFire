@@ -2,25 +2,24 @@ package com.github.alexthe666.iceandfire.client.render.pathfinding;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.MNode;
-import com.github.alexthe666.iceandfire.pathfinding.raycoms.WorldEventContext;
-import com.github.alexthe666.iceandfire.pathfinding.raycoms.WorldRenderMacros;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderBuffers;
-import net.minecraft.core.BlockPos;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.gizmos.Gizmos;
+import net.minecraft.gizmos.TextGizmo;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The pathfinding debug view (the original's, from Minecolonies): a small box per node, a line to its parent and the
+ * cost of the nodes near the camera. 26.x draws it with vanilla's debug gizmos (the original drew its own quads).
+ */
 public class PathfindingDebugRenderer {
-    public static final RenderBuffers renderBuffers = new RenderBuffers(1);
-    private static final MultiBufferSource.BufferSource renderBuffer = renderBuffers.bufferSource();
     /**
      * Set of visited nodes.
      */
@@ -37,25 +36,26 @@ public class PathfindingDebugRenderer {
     public static Set<MNode> lastDebugNodesPath = new HashSet<>();
 
     /**
-     * Render debugging information for the pathfinding system.
-     *
-     * @param ctx rendering context
+     * Adds the debug view of the last synced path to the frame's gizmos (call inside a gizmo collection).
      */
-    public static void render(final WorldEventContext ctx) {
+    public static void render() {
+        if (lastDebugNodesVisited.isEmpty() && lastDebugNodesNotVisited.isEmpty() && lastDebugNodesPath.isEmpty()) {
+            return;
+        }
         try {
             for (final MNode n : lastDebugNodesVisited) {
-                debugDrawNode(n, 0xffff0000, ctx);
+                debugDrawNode(n, 0xffff0000);
             }
 
             for (final MNode n : lastDebugNodesNotVisited) {
-                debugDrawNode(n, 0xff0000ff, ctx);
+                debugDrawNode(n, 0xff0000ff);
             }
 
             for (final MNode n : lastDebugNodesPath) {
                 if (n.isReachedByWorker()) {
-                    debugDrawNode(n, 0xffff6600, ctx);
+                    debugDrawNode(n, 0xffff6600);
                 } else {
-                    debugDrawNode(n, 0xff00ff00, ctx);
+                    debugDrawNode(n, 0xff00ff00);
                 }
             }
         } catch (final ConcurrentModificationException exc) {
@@ -63,59 +63,26 @@ public class PathfindingDebugRenderer {
         }
     }
 
-    private static void debugDrawNode(final MNode n, final int argbColor, final WorldEventContext ctx) {
-        ctx.poseStack.pushPose();
-        ctx.poseStack.translate(n.pos.getX() + 0.375d, n.pos.getY() + 0.375d, n.pos.getZ() + 0.375d);
-
-        final Entity entity = Minecraft.getInstance().getCameraEntity();
-        if (n.pos.closerThan(entity.blockPosition(), 5d)) {
-            renderDebugText(n, ctx);
-        }
-
-        ctx.poseStack.scale(0.25F, 0.25F, 0.25F);
-
-        WorldRenderMacros.renderBox(ctx.bufferSource, ctx.poseStack, BlockPos.ZERO, BlockPos.ZERO, argbColor);
+    private static void debugDrawNode(final MNode n, final int argbColor) {
+        final double x = n.pos.getX() + 0.375D, y = n.pos.getY() + 0.375D, z = n.pos.getZ() + 0.375D;
+        Gizmos.cuboid(new AABB(x, y, z, x + 0.25D, y + 0.25D, z + 0.25D), GizmoStyle.fill(argbColor));
 
         if (n.parent != null) {
-            final Matrix4f lineMatrix = ctx.poseStack.last().pose();
-
-            final float pdx = n.parent.pos.getX() - n.pos.getX() + 0.125f;
-            final float pdy = n.parent.pos.getY() - n.pos.getY() + 0.125f;
-            final float pdz = n.parent.pos.getZ() - n.pos.getZ() + 0.125f;
-
-            final VertexConsumer buffer = ctx.bufferSource.getBuffer(WorldRenderMacros.LINES);
-
-            buffer.addVertex(lineMatrix, 0.5f, 0.5f, 0.5f).setColor(0.75F, 0.75F, 0.75F, 1.0F);
-            buffer.addVertex(lineMatrix, pdx / 0.25f, pdy / 0.25f, pdz / 0.25f).setColor(0.75F, 0.75F, 0.75F, 1.0F);
+            final Vec3 center = new Vec3(x + 0.125D, y + 0.125D, z + 0.125D);
+            final Vec3 parent = new Vec3(n.parent.pos.getX() + 0.5D, n.parent.pos.getY() + 0.5D, n.parent.pos.getZ() + 0.5D);
+            Gizmos.line(center, parent, 0xffbfbfbf);
         }
 
-        ctx.poseStack.popPose();
+        final Entity entity = Minecraft.getInstance().getCameraEntity();
+        if (entity != null && n.pos.closerThan(entity.blockPosition(), 5d)) {
+            renderDebugText(n, x + 0.125D, y + 0.75D, z + 0.125D);
+        }
     }
 
-    private static void renderDebugText(@NotNull final MNode n, final WorldEventContext ctx) {
-        final Font fontrenderer = Minecraft.getInstance().font;
-
+    private static void renderDebugText(@NotNull final MNode n, double x, double y, double z) {
         final String s1 = String.format("F: %.3f [%d]", n.getCost(), n.getCounterAdded());
         final String s2 = String.format("G: %.3f [%d]", n.getScore(), n.getCounterVisited());
-        final int i = Math.max(fontrenderer.width(s1), fontrenderer.width(s2)) / 2;
-
-        ctx.poseStack.pushPose();
-        ctx.poseStack.translate(0.0F, 0.75F, 0.0F);
-
-        ctx.poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-        ctx.poseStack.scale(-0.014F, -0.014F, 0.014F);
-        ctx.poseStack.translate(0.0F, 18F, 0.0F);
-        final Matrix4f mat = ctx.poseStack.last().pose();
-
-        WorldRenderMacros.renderFillRectangle(ctx.bufferSource, ctx.poseStack, -i - 1, -5, 0, 2 * i + 2, 17, 0x7f000000);
-
-        ctx.poseStack.translate(0.0F, -5F, -0.1F);
-        fontrenderer.drawInBatch(s1, -fontrenderer.width(s1) / 2.0f, 1, 0xFFFFFFFF, false, mat, ctx.bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
-        ctx.poseStack.translate(0.0F, 8F, -0.1F);
-        fontrenderer.drawInBatch(s2, -fontrenderer.width(s2) / 2.0f, 1, 0xFFFFFFFF, false, mat, ctx.bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
-
-        ctx.poseStack.popPose();
+        Gizmos.billboardText(s1, new Vec3(x, y + 0.12D, z), TextGizmo.Style.whiteAndCentered());
+        Gizmos.billboardText(s2, new Vec3(x, y, z), TextGizmo.Style.whiteAndCentered());
     }
-
-
 }

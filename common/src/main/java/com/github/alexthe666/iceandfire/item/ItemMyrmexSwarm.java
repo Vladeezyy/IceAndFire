@@ -33,7 +33,7 @@ public class ItemMyrmexSwarm extends Item {
         playerIn.swing(hand);
         if (!playerIn.isCreative()) {
             itemStackIn.shrink(1);
-            playerIn.getCooldowns().addCooldown(this, 20);
+            playerIn.getCooldowns().addCooldown(itemStackIn, 20);
         }
         for (int i = 0; i < 5; i++) {
             EntityMyrmexSwarmer myrmex = new EntityMyrmexSwarmer(IafEntityRegistry.MYRMEX_SWARMER.get(), worldIn);
@@ -45,8 +45,8 @@ public class ItemMyrmexSwarm extends Item {
                 worldIn.addFreshEntity(myrmex);
             }
         }
-        playerIn.getCooldowns().addCooldown(this, 1800);
-        return new InteractionResult(InteractionResult.PASS, itemStackIn);
+        playerIn.getCooldowns().addCooldown(itemStackIn, 1800);
+        return InteractionResult.PASS;
     }
 
     @Override

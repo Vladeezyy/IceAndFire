@@ -14,8 +14,7 @@ import net.minecraft.world.level.material.PushReaction;
 public class BlockGeneric extends Block {
 /*    public BlockGeneric(float hardness, float resistance, SoundType sound) {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .sound(sound)
                 .strength(hardness, resistance)
                 .requiresCorrectToolForDrops()
@@ -24,8 +23,7 @@ public class BlockGeneric extends Block {
 
     public BlockGeneric(float hardness, float resistance, SoundType sound, boolean slippery) {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .sound(sound)
                 .strength(hardness, resistance)
                 .friction(0.98F)

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.message;
+import net.minecraft.core.UUIDUtil;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -77,7 +78,7 @@ public class MessageGetMyrmexHive implements CustomPacketPayload {
     private static boolean holdsStaffOf(Player player, UUID hive) {
         for (InteractionHand hand : InteractionHand.values()) {
             ItemStack stack = player.getItemInHand(hand);
-            if (stack.getItem() instanceof ItemMyrmexStaff && ItemNbt.view(stack).hasUUID("HiveUUID") && hive.equals(ItemNbt.view(stack).getUUID("HiveUUID"))) {
+            if (stack.getItem() instanceof ItemMyrmexStaff && ItemNbt.view(stack).read("HiveUUID", UUIDUtil.CODEC).isPresent() && hive.equals(ItemNbt.view(stack).read("HiveUUID", UUIDUtil.CODEC).orElse(null))) {
                 return true;
             }
         }

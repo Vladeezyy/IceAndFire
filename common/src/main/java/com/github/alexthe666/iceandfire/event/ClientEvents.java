@@ -15,7 +15,6 @@ import com.github.alexthe666.iceandfire.entity.props.EntityDataProvider;
 import com.github.alexthe666.iceandfire.entity.util.ICustomMoveController;
 import com.github.alexthe666.iceandfire.enums.EnumParticles;
 import com.github.alexthe666.iceandfire.message.MessageDragonControl;
-import com.github.alexthe666.iceandfire.pathfinding.raycoms.WorldEventContext;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -55,7 +54,12 @@ public class ClientEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void renderWorldLastEvent(@NotNull final RenderLevelStageEvent event)
     {
-        WorldEventContext.INSTANCE.renderWorldLastEvent(event);
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS) {
+            // 26.x: vanilla's debug gizmos (shown with the next frame)
+            try (net.minecraft.gizmos.Gizmos.TemporaryCollection ignored = net.minecraft.client.Minecraft.getInstance().levelRenderer.collectPerFrameGizmos()) {
+                com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDebugRenderer.render();
+            }
+        }
     }
 
     @SubscribeEvent

@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -18,7 +17,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockMyrmexBiolight extends BushBlock {
+public class BlockMyrmexBiolight extends net.minecraft.world.level.block.VegetationBlock {
     public static final MapCodec<BlockMyrmexBiolight> CODEC = simpleCodec(properties -> new BlockMyrmexBiolight());
 
     @Override
@@ -31,12 +30,11 @@ public class BlockMyrmexBiolight extends BushBlock {
 
     public BlockMyrmexBiolight() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.PLANT)
                 .pushReaction(PushReaction.DESTROY)
                 .noOcclusion()
-                .noCollission()
+                .noCollision()
                 .dynamicShape()
                 .strength(0)
                 .lightLevel((state) -> 7)
@@ -54,7 +52,7 @@ public class BlockMyrmexBiolight extends BushBlock {
 
 
     @Override
-    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, @NotNull BlockPos facingPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, @NotNull net.minecraft.world.level.LevelReader worldIn, @NotNull net.minecraft.world.level.ScheduledTickAccess iafTicks, @NotNull BlockPos currentPos, @NotNull Direction facing, @NotNull BlockPos facingPos, @NotNull BlockState facingState, @NotNull net.minecraft.util.RandomSource iafRandom) {
         boolean flag3 = worldIn.getBlockState(currentPos.below()).getBlock() == this;
         return stateIn.setValue(CONNECTED_DOWN, flag3);
     }

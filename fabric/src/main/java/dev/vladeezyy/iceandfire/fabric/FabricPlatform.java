@@ -211,7 +211,7 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public boolean canEntityGrief(Level level, @Nullable Entity entity) {
-        return level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+        return level.getGameRules().get(GameRules.MOB_GRIEFING);
     }
 
     @Override

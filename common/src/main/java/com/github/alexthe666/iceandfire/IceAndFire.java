@@ -49,6 +49,8 @@ public class IceAndFire {
         IafBlockRegistry.BLOCKS.getRegistryKey();
         IafItemRegistry.registerSpawnEggs();
         IafSoundRegistry.registerSoundEvents();
+        com.github.alexthe666.iceandfire.entity.IafDataSerializers.register();
+        com.github.alexthe666.iceandfire.world.IafTicketTypes.TICKET_TYPES.getRegistryKey();
         IafTabRegistry.TAB_REGISTER.getRegistryKey();
         IafEntityRegistry.ENTITIES.getRegistryKey();
         IafTileEntityRegistry.TYPES.getRegistryKey();

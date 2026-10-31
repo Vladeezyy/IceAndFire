@@ -42,18 +42,18 @@ public class RegistryEntry<R, T extends R> implements Supplier<T> {
     public Holder<R> holder() {
         Holder<R> holder = this.holder;
         if (holder == null) {
-            Registry<R> registry = (Registry<R>) BuiltInRegistries.REGISTRY.get(this.registryKey.identifier());
+            Registry<R> registry = (Registry<R>) BuiltInRegistries.REGISTRY.getValue(this.registryKey.identifier());
             if (registry == null) {
                 throw new IllegalStateException("Registry " + this.registryKey.identifier() + " does not exist (yet) for " + this.key.identifier());
             }
-            holder = registry.getHolderOrThrow(this.key);
+            holder = registry.getOrThrow(this.key);
             this.holder = holder;
         }
         return holder;
     }
 
     public boolean isBound() {
-        Registry<?> registry = BuiltInRegistries.REGISTRY.get(this.registryKey.identifier());
+        Registry<?> registry = BuiltInRegistries.REGISTRY.getValue(this.registryKey.identifier());
         return registry != null && registry.containsKey(this.key.identifier());
     }
 

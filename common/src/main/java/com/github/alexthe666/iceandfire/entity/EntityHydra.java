@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.server.level.ServerLevel;
@@ -107,9 +109,10 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, LivingEntity.class, 10, true, false, new Predicate<Entity>() {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, LivingEntity.class, 10, true, false, new TargetingConditions.Selector() {
             @Override
-            public boolean apply(@Nullable Entity entity) {
+            public boolean test(LivingEntity iafTarget, ServerLevel serverLevel) {
+                Entity entity = iafTarget;
                 return entity instanceof LivingEntity && DragonUtils.isAlive((LivingEntity) entity) && !(entity instanceof EntityMutlipartPart) && !(entity instanceof Enemy) || (entity instanceof IBlacklistedFromStatues && ((IBlacklistedFromStatues) entity).canBeTurnedToStone());
             }
         }));
@@ -343,7 +346,7 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
         this.setHeadCount(compound.getIntOr("HeadCount", 0));
         this.setSeveredHead(compound.getIntOr("SeveredHead", 0));
         for (int i = 0; i < HEADS; i++) {
-            headDamageTracker[i] = compound.getFloat("HeadDamage" + i);
+            headDamageTracker[i] = compound.getFloatOr("HeadDamage" + i, 0.0F);
         }
         this.setConfigurableAttributes();
     }

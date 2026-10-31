@@ -55,7 +55,7 @@ public class ItemDeathwormGauntlet extends Item {
     public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         playerIn.startUsingItem(hand);
-        return new InteractionResultHolder<>(InteractionResult.PASS, itemStackIn);
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -64,13 +64,13 @@ public class ItemDeathwormGauntlet extends Item {
             if (entity instanceof Player player) {
                 CompoundTag tag = ItemNbt.getOrEmpty(stack);
 
-                if (tag.getInt("HolderID") != player.getId()) {
+                if (tag.getIntOr("HolderID", 0) != player.getId()) {
                     tag.putInt("HolderID", player.getId());
                     ItemNbt.setTag(stack, tag);
                 }
 
-                if (player.getCooldowns().getCooldownPercent(this, 0.0F) == 0) {
-                    player.getCooldowns().addCooldown(this, 10);
+                if (player.getCooldowns().getCooldownPercent(stack, 0.0F) == 0) {
+                    player.getCooldowns().addCooldown(stack, 10);
                     player.playSound(IafSoundRegistry.DEATHWORM_ATTACK, 1F, 1F);
                     deathwormReceded = false;
                     deathwormLaunched = true;
@@ -80,7 +80,7 @@ public class ItemDeathwormGauntlet extends Item {
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity LivingEntity, int timeLeft) {
+    public boolean releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity LivingEntity, int timeLeft) {
         if (specialDamage > 0) {
             stack.hurtAndBreak(specialDamage, LivingEntity, LivingEntity.getUsedItemHand().asEquipmentSlot());
             specialDamage = 0;
@@ -88,10 +88,11 @@ public class ItemDeathwormGauntlet extends Item {
 
         CompoundTag tag = ItemNbt.getOrEmpty(stack);
 
-        if (tag.getInt("HolderID") != -1) {
+        if (tag.getIntOr("HolderID", 0) != -1) {
             tag.putInt("HolderID", -1);
             ItemNbt.setTag(stack, tag);
         }
+        return true;
     }
 
     // NeoForge extension method (no vanilla override)

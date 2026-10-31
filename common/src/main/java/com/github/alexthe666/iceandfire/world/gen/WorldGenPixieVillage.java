@@ -62,7 +62,7 @@ public class WorldGenPixieVillage extends Feature<NoneFeatureConfiguration> impl
                         case 5 -> IafBlockRegistry.PIXIE_HOUSE_DARK_OAK.get().defaultBlockState().setValue(BlockPixieHouse.FACING, houseDir.getOpposite());
                         default -> houseState;
                     };
-                    EntityPixie pixie = IafEntityRegistry.PIXIE.get().create(worldIn.getLevel());
+                    EntityPixie pixie = IafEntityRegistry.PIXIE.get().create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                     pixie.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(buildPosition2.above()), EntitySpawnReason.SPAWNER, null);
                     pixie.setPos(buildPosition2.getX(), buildPosition2.getY() + 2, buildPosition2.getZ());
                     pixie.setPersistenceRequired();

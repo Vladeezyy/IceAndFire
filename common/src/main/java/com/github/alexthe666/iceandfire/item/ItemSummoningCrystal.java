@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.core.UUIDUtil;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -34,9 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ItemSummoningCrystal extends Item {
-    // Chunk tickets of the summons that wait for an unloaded dragon; registered in IafItemRegistry
     /** Keeps the chunk of a summoned dragon loaded until it arrived (NeoForge's TicketController before; a vanilla ticket as forced chunks use) */
-    public static final net.minecraft.server.level.TicketType<ChunkPos> CHUNK_TICKETS = net.minecraft.server.level.TicketType.create(IceAndFire.MODID + ":summoning_crystal", java.util.Comparator.comparingLong(ChunkPos::toLong));
     /**
      * Summons waiting for their dragon to load, by dragon UUID. The original kept the state of a summon in fields
      * of the item, which exists once for the whole game: two players summoning at the same time overwrote each other.
@@ -49,7 +48,7 @@ public class ItemSummoningCrystal extends Item {
 
     private static CompoundTag getDragonTag(ItemStack stack) {
         if (stack.getItem() instanceof ItemSummoningCrystal && ItemNbt.hasTag(stack)) {
-            for (String tagInfo : ItemNbt.view(stack).getAllKeys()) {
+            for (String tagInfo : ItemNbt.view(stack).keySet()) {
                 if (tagInfo.contains("Dragon")) {
                     return ItemNbt.view(stack).getCompoundOrEmpty(tagInfo);
                 }
@@ -83,11 +82,11 @@ public class ItemSummoningCrystal extends Item {
             desc = "entity.iceandfire.lightning_dragon";
         }
         if (ItemNbt.hasTag(stack)) {
-            for (String tagInfo : ItemNbt.view(stack).getAllKeys()) {
+            for (String tagInfo : ItemNbt.view(stack).keySet()) {
                 if (tagInfo.contains("Dragon")) {
                     CompoundTag dragonTag = ItemNbt.view(stack).getCompoundOrEmpty(tagInfo);
                     Component dragonName = Component.translatable(desc);
-                    if (!dragonTag.getString("CustomName").isEmpty()) {
+                    if (!dragonTag.getStringOr("CustomName", "").isEmpty()) {
                         dragonName = Component.literal(dragonTag.getStringOr("CustomName", ""));
                     }
                     tooltip.accept(Component.translatable("item.iceandfire.summoning_crystal.bound", dragonName).withStyle(ChatFormatting.GRAY));
@@ -128,7 +127,7 @@ public class ItemSummoningCrystal extends Item {
             return InteractionResult.PASS;
         }
 
-        UUID dragonUuid = dragonTag.getUUID("DragonUUID");
+        UUID dragonUuid = dragonTag.read("DragonUUID", UUIDUtil.CODEC).orElse(null);
 
         IceAndFire.LOGGER.info("Trying to summon dragon {} {}", dragonUuid, dragonTag.getString("CustomName"));
         Entity entity = serverWorld.getEntity(dragonUuid);
@@ -160,18 +159,18 @@ public class ItemSummoningCrystal extends Item {
             return InteractionResult.PASS;
         }
 
-        ChunkPos pos = new ChunkPos(dragonOriginPosition);
+        ChunkPos pos = ChunkPos.containing(dragonOriginPosition);
         IceAndFire.LOGGER.info("Dragon entity not loaded, loading chunk {}", pos);
 
         // try to load the chunk, and mark the entity to be summoned as soon as it gets added to the world
-        serverWorld.getChunkSource().addRegionTicket(CHUNK_TICKETS, pos, 2, pos);
+        serverWorld.getChunkSource().addTicketWithRadius(com.github.alexthe666.iceandfire.world.IafTicketTypes.SUMMONING_CRYSTAL.get(), pos, 2);
         DELAYED_SUMMONS.put(dragonUuid, new PendingSummon(this, dragonUuid, dragonTargetPosition, dragonTargetYaw, summoningPlayer, summoningHand, serverWorld, dragonOriginPosition, stack, serverWorld.getGameTime()));
 
         return InteractionResult.PASS;
     }
 
     public void summonEntity(Entity entity, Level worldIn, BlockPos offsetPos, float yaw, Player summoningPlayer, InteractionHand summoningHand, ItemStack stack) {
-        entity.moveTo(offsetPos.getX() + 0.5D, offsetPos.getY() + 0.5D, offsetPos.getZ() + 0.5D, yaw, 0);
+        entity.snapTo(offsetPos.getX() + 0.5D, offsetPos.getY() + 0.5D, offsetPos.getZ() + 0.5D, yaw, 0);
         if (entity instanceof EntityDragonBase) {
             ((EntityDragonBase) entity).setCrystalBound(false);
         }
@@ -191,7 +190,7 @@ public class ItemSummoningCrystal extends Item {
     /** Called when the dragon of a pending summon was added to the level. */
     public static void delayedSummon(PendingSummon summon) {
         DELAYED_SUMMONS.remove(summon.dragonUuid());
-        ChunkPos pos = new ChunkPos(summon.dragonOriginPosition());
+        ChunkPos pos = ChunkPos.containing(summon.dragonOriginPosition());
 
         // make delayed summons expire if for some reason the chunk loading, or entity loading takes too long
         // wouldn't want the dragon to summon minutes later at the original position
@@ -210,7 +209,7 @@ public class ItemSummoningCrystal extends Item {
             }
         }
 
-        summon.serverWorld().getChunkSource().removeRegionTicket(CHUNK_TICKETS, pos, 2, pos);
+        summon.serverWorld().getChunkSource().removeTicketWithRadius(com.github.alexthe666.iceandfire.world.IafTicketTypes.SUMMONING_CRYSTAL.get(), pos, 2);
     }
 
     public record PendingSummon(ItemSummoningCrystal item, UUID dragonUuid, BlockPos dragonTargetPosition, float dragonTargetYaw, Player summoningPlayer,

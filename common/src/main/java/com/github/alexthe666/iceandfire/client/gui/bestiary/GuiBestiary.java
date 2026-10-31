@@ -64,7 +64,7 @@ public class GuiBestiary extends Screen {
         if (!book.isEmpty() && book.getItem() != null && book.getItem() == IafItemRegistry.BESTIARY.get()) {
             if (ItemNbt.hasTag(book)) {
                 Set<EnumBestiaryPages> pages = EnumBestiaryPages
-                        .containedPages(Ints.asList(ItemNbt.view(book).getIntArray("Pages")));
+                        .containedPages(Ints.asList(ItemNbt.view(book).getIntArray("Pages").orElse(new int[0])));
                 allPageTypes.addAll(pages);
                 // Make sure the pages are sorted according to the enum
                 allPageTypes.sort(Comparator.comparingInt(Enum::ordinal));
@@ -162,8 +162,7 @@ public class GuiBestiary extends Screen {
         int cornerX = (width - X) / 2;
         int cornerY = (height - Y) / 2;
         ms.blit(TEXTURE, cornerX, cornerY, 0, 0, X, Y, 390, 390);
-        RenderSystem.disableDepthTest();
-        // Screen#render would draw the background a second time (and blur twice, which throws in 1.21)
+                // Screen#render would draw the background a second time (and blur twice, which throws in 1.21)
         for (Renderable renderable : this.renderables) {
             renderable.render(ms, mouseX, mouseY, partialTicks);
         }
@@ -181,8 +180,7 @@ public class GuiBestiary extends Screen {
         }
         ms.pose().popPose();
         this.renderables.forEach((widget -> widget.render(ms, mouseX, mouseY, partialTicks)));
-        RenderSystem.enableDepthTest();
-    }
+            }
 
     public void drawPerPage(GuiGraphicsExtractor ms, int bookPages) {
         imageFromTxt(ms);
@@ -826,21 +824,18 @@ public class GuiBestiary extends Screen {
                     if (line.contains("<item>")) {
                         line = line.substring(7, line.length() - 1);
                         String[] split = line.split(" ");
-                        RenderSystem.enableDepthTest();
-                        drawItemStack(ms, new ItemStack(getItemByRegistryName(split[0]), 1), Integer.parseInt(split[2]), Integer.parseInt(split[3]), Float.parseFloat(split[4]) * 2F);
+                                                drawItemStack(ms, new ItemStack(getItemByRegistryName(split[0]), 1), Integer.parseInt(split[2]), Integer.parseInt(split[3]), Float.parseFloat(split[4]) * 2F);
                     }
                     if (line.contains("<block>")) {
                         zLevelAdd += 1;
                         line = line.substring(8, line.length() - 1);
                         String[] split = line.split(" ");
-                        RenderSystem.enableDepthTest();
-                        drawBlockStack(ms, new ItemStack(getItemByRegistryName(split[0]), 1), Integer.parseInt(split[2]), Integer.parseInt(split[3]), Float.parseFloat(split[4]) * 2F, zLevelAdd);
+                                                drawBlockStack(ms, new ItemStack(getItemByRegistryName(split[0]), 1), Integer.parseInt(split[2]), Integer.parseInt(split[3]), Float.parseFloat(split[4]) * 2F, zLevelAdd);
                     }
                     if (line.contains("<recipe>")) {
                         line = line.substring(9, line.length() - 1);
                         String[] split = line.split(" ");
-                        RenderSystem.enableDepthTest();
-                        float scale = Float.parseFloat(split[split.length - 1]);
+                                                float scale = Float.parseFloat(split[split.length - 1]);
                         int x = Integer.parseInt(split[split.length - 3]);
                         int y = Integer.parseInt(split[split.length - 2]);
                         ItemStack result = new ItemStack(getItemByRegistryName(split[0]), 1);
@@ -850,8 +845,7 @@ public class GuiBestiary extends Screen {
                             ingredients[j] = new ItemStack(getItemByRegistryName(split[i]), 1);
                             j--;
                         }
-                        RenderSystem.enableDepthTest();
-                        ms.pose().pushPose();
+                                                ms.pose().pushPose();
                         drawRecipe(ms, result, ingredients, x, y, scale);
                         ms.pose().popPose();
                     }

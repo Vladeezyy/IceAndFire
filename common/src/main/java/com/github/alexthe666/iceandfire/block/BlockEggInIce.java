@@ -35,8 +35,7 @@ public class BlockEggInIce extends BaseEntityBlock {
     @SuppressWarnings("deprecation")
     public BlockEggInIce() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.ICE)
                 .noOcclusion()
                 .dynamicShape()

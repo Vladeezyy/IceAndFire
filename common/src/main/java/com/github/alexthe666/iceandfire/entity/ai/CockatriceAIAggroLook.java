@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.ai;
+import com.github.alexthe666.iceandfire.entity.util.IafSelectors;
 
 import com.github.alexthe666.iceandfire.entity.EntityCockatrice;
 import com.github.alexthe666.iceandfire.entity.EntityGorgon;
@@ -22,7 +23,7 @@ public class CockatriceAIAggroLook extends NearestAttackableTargetGoal<Player> {
             return EntityGorgon.isEntityLookingAt(target, this.cockatrice,
                 EntityCockatrice.VIEW_RADIUS) && cockatrice.distanceTo(target) < getFollowDistance();
         };
-        this.predicate = TargetingConditions.forCombat().range(25.0D).selector(LIVING_ENTITY_SELECTOR);
+        this.predicate = TargetingConditions.forCombat().range(25.0D).selector(IafSelectors.of(LIVING_ENTITY_SELECTOR));
     }
 
     /**
@@ -32,7 +33,7 @@ public class CockatriceAIAggroLook extends NearestAttackableTargetGoal<Player> {
     public boolean canUse() {
         if (cockatrice.isTame())
             return false;
-        this.player = this.cockatrice.level().getNearestPlayer(predicate, this.cockatrice.getX(),
+        this.player = !(this.cockatrice.level() instanceof net.minecraft.server.level.ServerLevel serverLevel) ? null : serverLevel.getNearestPlayer(predicate, this.cockatrice.getX(),
             this.cockatrice.getY(), this.cockatrice.getZ());
         return this.player != null;
     }

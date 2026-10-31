@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.ai;
+import com.github.alexthe666.iceandfire.entity.util.IafSelectors;
 
 import com.github.alexthe666.iceandfire.entity.EntitySeaSerpent;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +23,7 @@ public class FlyingAITarget<T extends LivingEntity> extends NearestAttackableTar
 
     public FlyingAITarget(Mob creature, Class<T> classTarget, int chance, boolean checkSight,
                           boolean onlyNearby, @Nullable final Predicate<LivingEntity> targetSelector) {
-        super(creature, classTarget, chance, checkSight, onlyNearby, targetSelector);
+        super(creature, classTarget, chance, checkSight, onlyNearby, IafSelectors.of(targetSelector));
     }
 
     @Override

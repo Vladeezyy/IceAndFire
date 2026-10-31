@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.ai;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -10,9 +12,9 @@ import java.util.function.Predicate;
 public class CyclopsAITargetSheepPlayers<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
 
     public CyclopsAITargetSheepPlayers(Mob goalOwnerIn, Class<T> targetClassIn, boolean checkSight) {
-        super(goalOwnerIn, targetClassIn, 0, checkSight, true, new Predicate<LivingEntity>() {
+        super(goalOwnerIn, targetClassIn, 0, checkSight, true, new TargetingConditions.Selector() {
             @Override
-            public boolean test(LivingEntity livingEntity) {
+            public boolean test(LivingEntity livingEntity, ServerLevel serverLevel) {
                 return false; //TODO Sheep hunt cyclops
             }
         });

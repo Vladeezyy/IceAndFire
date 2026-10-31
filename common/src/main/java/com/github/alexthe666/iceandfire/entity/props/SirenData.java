@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity.props;
+import net.minecraft.core.UUIDUtil;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntitySiren;
@@ -128,7 +129,7 @@ public class SirenData {
         CompoundTag sirenData = new CompoundTag();
 
         if (charmedBy != null) {
-            sirenData.put("charmedByUUID", NbtUtils.createUUID(charmedBy.getUUID()));
+            sirenData.put("charmedByUUID", new net.minecraft.nbt.IntArrayTag(UUIDUtil.uuidToIntArray(charmedBy.getUUID())));
             sirenData.putInt("charmedById", charmedBy.getId());
         } else {
             sirenData.putInt("charmedById", -1);
@@ -145,7 +146,7 @@ public class SirenData {
         Tag uuidTag = sirenData.get("charmedByUUID");
 
         if (uuidTag != null) {
-            charmedByUUID = NbtUtils.loadUUID(uuidTag);
+            charmedByUUID = UUIDUtil.uuidFromIntArray(((net.minecraft.nbt.IntArrayTag) uuidTag).getAsIntArray());
         }
 
         charmedById = sirenData.getIntOr("charmedById", 0);

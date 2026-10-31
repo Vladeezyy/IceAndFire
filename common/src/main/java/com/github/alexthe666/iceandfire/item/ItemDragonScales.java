@@ -22,7 +22,11 @@ public class ItemDragonScales extends Item {
     }
 
     @Override
-    public @NotNull String getDescriptionId() {
+    public @NotNull Component getName(@NotNull ItemStack iafStack) {
+        return Component.translatable(this.iafDescriptionId());
+    }
+
+    private String iafDescriptionId() {
         return "item.iceandfire.dragonscales";
     }
 

@@ -1,4 +1,9 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.IafScaled;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.EntityDimensions;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import com.github.alexthe666.iceandfire.entity.util.MyrmexTrades;
 import net.minecraft.world.entity.EquipmentSlot;
 import com.github.alexthe666.iceandfire.entity.util.Owners;
@@ -71,7 +76,7 @@ import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.UUID;
 
-public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity, Merchant, ICustomSizeNavigator, IPassabilityNavigator, IHasCustomizableAttributes {
+public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity, Merchant, ICustomSizeNavigator, IPassabilityNavigator, IHasCustomizableAttributes, IafScaled {
 
     @Override
     public boolean isFood(@NotNull ItemStack stack) {
@@ -304,7 +309,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         for (int i = 0; i < this.villagerInventory.getContainerSize(); ++i) {
             ItemStack itemstack = this.villagerInventory.getItem(i);
             if (!itemstack.isEmpty()) {
-                listnbt.add(itemstack.save(this.registryAccess()));
+                listnbt.add(Values.saveItem(this.registryAccess(), itemstack, new CompoundTag()));
             }
         }
         Values.put(tag, "Inventory", listnbt);
@@ -326,7 +331,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         ListTag listnbt = Values.list(tag, "Inventory");
 
         for (int i = 0; i < listnbt.size(); ++i) {
-            ItemStack itemstack = ItemStack.parseOptional(this.registryAccess(), listnbt.getCompound(i));
+            ItemStack itemstack = Values.parseItem(this.registryAccess(), listnbt.getCompoundOrEmpty(i));
             if (!itemstack.isEmpty()) {
                 this.villagerInventory.addItem(itemstack);
             }
@@ -500,7 +505,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         if (!ItemNbt.hasTag(itemstack)) {
             return;
         }
-        UUID staffUUID = ItemNbt.view(itemstack).hasUUID("HiveUUID") ? ItemNbt.view(itemstack).getUUID("HiveUUID") : null;
+        UUID staffUUID = ItemNbt.view(itemstack).read("HiveUUID", UUIDUtil.CODEC).isPresent() ? ItemNbt.view(itemstack).read("HiveUUID", UUIDUtil.CODEC).orElse(null) : null;
         if (level().isClientSide()) {
             return;
         }
@@ -524,7 +529,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
                 } else {
                     player.sendOverlayMessage(Component.translatable("myrmex.message.staff_set_unnamed", center.getX(), center.getY(), center.getZ()));
                 }
-                ItemNbt.update(itemstack, tag -> tag.putUUID("HiveUUID", this.getHive().hiveUUID));
+                ItemNbt.update(itemstack, tag -> tag.store("HiveUUID", UUIDUtil.CODEC, this.getHive().hiveUUID));
             }
 
         }
@@ -548,9 +553,18 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     public abstract boolean shouldEnterHive();
 
+    /**
+     * The creature's size (1.20.1's {@code getIafScale()} override). 26.x {@code LivingEntity.getIafScale()} is final and only
+     * the scale attribute: the hitbox is scaled in {@code getDefaultDimensions}, the model by the renderer.
+     */
     @Override
-    public float getScale() {
+    public float getIafScale() {
         return this.getGrowthStage() == 0 ? 0.5F : this.getGrowthStage() == 1 ? 0.75F : 1F;
+    }
+
+    @Override
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pose) {
+        return super.getDefaultDimensions(pose).scale(this.getIafScale());
     }
 
     public abstract Identifier getAdultTexture();
@@ -717,8 +731,14 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     }
 
     public AABB getAttackBounds() {
-        float size = this.getScale() * 0.65F;
+        float size = this.getIafScale() * 0.65F;
         return this.getBoundingBox().inflate(1.0F + size, 1.0F + size, 1.0F + size);
+    }
+
+    // 26.x Merchant: the trading screen stays open while the player is trading and near (as vanilla villagers)
+    @Override
+    public boolean stillValid(@NotNull Player player) {
+        return this.getTradingPlayer() == player && this.isAlive() && player.isWithinEntityInteractionRange(this, 4.0D);
     }
 
     @Override

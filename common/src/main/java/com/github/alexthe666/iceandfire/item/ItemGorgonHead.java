@@ -58,7 +58,7 @@ public class ItemGorgonHead extends Item {
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack stack, Level worldIn, LivingEntity entity, int timeLeft) {
+    public boolean releaseUsing(@NotNull ItemStack stack, Level worldIn, LivingEntity entity, int timeLeft) {
         double dist = 32;
         Vec3 Vector3d = entity.getEyePosition(1.0F);
         Vec3 Vector3d1 = entity.getViewVector(1.0F);
@@ -115,7 +115,7 @@ public class ItemGorgonHead extends Item {
                 if (wasSuccesful) {
                     pointedEntity.playSound(IafSoundRegistry.TURN_STONE, 1, 1);
                     EntityStoneStatue statue = EntityStoneStatue.buildStatueEntity(livingEntity);
-                    statue.absMoveTo(pointedEntity.getX(), pointedEntity.getY(), pointedEntity.getZ(), pointedEntity.getYRot(), pointedEntity.getXRot());
+                    statue.absSnapTo(pointedEntity.getX(), pointedEntity.getY(), pointedEntity.getZ(), pointedEntity.getYRot(), pointedEntity.getXRot());
                     statue.yBodyRot = pointedEntity.getYRot();
                     if (!worldIn.isClientSide()) {
                         worldIn.addFreshEntity(statue);
@@ -128,6 +128,7 @@ public class ItemGorgonHead extends Item {
             }
         }
         ItemNbt.update(stack, tag -> tag.putBoolean("Active", false));
+        return true;
     }
 
     @Override
@@ -135,7 +136,7 @@ public class ItemGorgonHead extends Item {
         ItemStack itemStackIn = playerIn.getItemInHand(hand);
         playerIn.startUsingItem(hand);
         ItemNbt.update(itemStackIn, tag -> tag.putBoolean("Active", true));
-        return new InteractionResult(InteractionResult.SUCCESS, itemStackIn);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

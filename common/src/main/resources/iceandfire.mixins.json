@@ -3,6 +3,7 @@
   "package": "com.github.alexthe666.iceandfire.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "LivingEntityFrictionMixin",
     "ServerLevelEntityCallbacksMixin",
     "gen.NoLakesInStructuresMixin",
     "gen.WorldGenRegionMixin"

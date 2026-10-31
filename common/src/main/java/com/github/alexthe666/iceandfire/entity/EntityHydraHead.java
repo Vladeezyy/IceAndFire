@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.server.level.ServerLevel;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
 import com.github.alexthe666.iceandfire.enums.EnumParticles;
@@ -48,7 +49,7 @@ public class EntityHydraHead extends EntityMutlipartPart {
             ((EntityHydra) parent).onHitHead(damage, headIndex);
             return parent.hurtOrSimulate(source, damage);
         } else {
-            return parent != null && parent.hurt(source, damage);
+            return parent != null && parent.hurtOrSimulate(source, damage);
         }
     }
 

@@ -32,4 +32,10 @@ public class ListHolderSet<T> extends HolderSet.ListBacked<T> {
     public Optional<TagKey<T>> unwrapKey() {
         return Optional.empty();
     }
+
+    // 26.x HolderSet: a direct list is always bound
+    @Override
+    public boolean isBound() {
+        return true;
+    }
 }

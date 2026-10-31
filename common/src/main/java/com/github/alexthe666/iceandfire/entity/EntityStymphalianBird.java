@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -57,7 +60,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
         }
     };
     private static final int FLIGHT_CHANCE_PER_TICK = 100;
-    private static final EntityDataAccessor<Optional<UUID>> VICTOR_ENTITY = SynchedEntityData.defineId(EntityStymphalianBird.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> VICTOR_ENTITY = SynchedEntityData.defineId(EntityStymphalianBird.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(EntityStymphalianBird.class, EntityDataSerializers.BOOLEAN);
     public static Animation ANIMATION_PECK = Animation.create(20);
     public static Animation ANIMATION_SHOOT_ARROWS = Animation.create(30);
@@ -147,7 +150,7 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
             s = tag.read("VictorUUID", UUIDUtil.CODEC).orElseThrow();
         } else {
             String s1 = tag.getStringOr("VictorUUID", "");
-            s = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
+            s = OldUsersConverter.convertMobOwnerIfNecessary(this.level().getServer(), s1);
         }
 
         if (s != null) {
@@ -191,11 +194,11 @@ public class EntityStymphalianBird extends Monster implements IAnimatedEntity, E
 
     @Nullable
     public UUID getVictorId() {
-        return this.entityData.get(VICTOR_ENTITY).orElse(null);
+        return this.entityData.get(VICTOR_ENTITY).map(EntityReference::getUUID).orElse(null);
     }
 
     public void setVictorId(@Nullable UUID uuid) {
-        this.entityData.set(VICTOR_ENTITY, Optional.ofNullable(uuid));
+        this.entityData.set(VICTOR_ENTITY, (Optional.ofNullable(uuid)).map(EntityReference::of));
     }
 
     @Nullable

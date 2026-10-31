@@ -28,7 +28,7 @@ public class ItemMobSkull extends Item {
         EntityMobSkull skull = new EntityMobSkull(IafEntityRegistry.MOB_SKULL.get(), context.getLevel());
         ItemStack stack = player.getItemInHand(context.getHand());
         BlockPos offset = context.getClickedPos().relative(context.getClickedFace(), 1);
-        skull.moveTo(offset.getX() + 0.5, offset.getY(), offset.getZ() + 0.5, 0, 0);
+        skull.snapTo(offset.getX() + 0.5, offset.getY(), offset.getZ() + 0.5, 0, 0);
         float yaw = player.getYRot();
         if (context.getClickedFace() != Direction.UP) {
             yaw = player.getDirection().toYRot();

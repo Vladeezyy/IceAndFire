@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.server.level.ServerLevel;
 import javax.annotation.Nullable;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -38,7 +39,7 @@ public class ItemMyrmexStaff extends Item {
     public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
         if (!ItemNbt.hasTag(stack)) {
             ItemNbt.setTag(stack, new CompoundTag());
-            ItemNbt.update(stack, tag -> tag.putUUID("HiveUUID", new UUID(0, 0)));
+            ItemNbt.update(stack, tag -> tag.store("HiveUUID", UUIDUtil.CODEC, new UUID(0, 0)));
         }
     }
 
@@ -48,8 +49,8 @@ public class ItemMyrmexStaff extends Item {
         if (playerIn.isShiftKeyDown()) {
             return super.use(worldIn, playerIn, hand);
         }
-        if (ItemNbt.hasTag(itemStackIn) && ItemNbt.view(itemStackIn).hasUUID("HiveUUID")) {
-            UUID id = ItemNbt.view(itemStackIn).getUUID("HiveUUID");
+        if (ItemNbt.hasTag(itemStackIn) && ItemNbt.view(itemStackIn).read("HiveUUID", UUIDUtil.CODEC).isPresent()) {
+            UUID id = ItemNbt.view(itemStackIn).read("HiveUUID", UUIDUtil.CODEC).orElse(null);
             if (!worldIn.isClientSide()) {
                 MyrmexHive hive = MyrmexWorldData.get(worldIn).getHiveFromUUID(id);
                 if (hive != null) {
@@ -62,7 +63,7 @@ public class ItemMyrmexStaff extends Item {
             }
         }
         playerIn.swing(hand);
-        return new InteractionResult(InteractionResult.PASS, itemStackIn);
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -71,8 +72,8 @@ public class ItemMyrmexStaff extends Item {
             return super.useOn(context);
         } else {
             CompoundTag tag = ItemNbt.getTag(context.getPlayer().getItemInHand(context.getHand()));
-            if (tag != null && tag.hasUUID("HiveUUID")) {
-                UUID id = tag.getUUID("HiveUUID");
+            if (tag != null && tag.read("HiveUUID", UUIDUtil.CODEC).isPresent()) {
+                UUID id = tag.read("HiveUUID", UUIDUtil.CODEC).orElse(null);
                 if (!context.getLevel().isClientSide()) {
                     MyrmexHive hive = MyrmexWorldData.get(context.getLevel()).getHiveFromUUID(id);
                     if (hive != null) {

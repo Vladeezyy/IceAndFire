@@ -25,8 +25,7 @@ public class BlockIceSpikes extends Block {
 
     public BlockIceSpikes() {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.ICE)
                 .noOcclusion()
                 .dynamicShape()
@@ -38,8 +37,8 @@ public class BlockIceSpikes extends Block {
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
-        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, @NotNull net.minecraft.world.level.LevelReader worldIn, @NotNull net.minecraft.world.level.ScheduledTickAccess iafTicks, @NotNull BlockPos currentPos, @NotNull Direction facing, @NotNull BlockPos facingPos, @NotNull BlockState facingState, @NotNull net.minecraft.util.RandomSource iafRandom) {
+        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, worldIn, iafTicks, currentPos, facing, facingPos, facingState, iafRandom);
     }
 
     @Override

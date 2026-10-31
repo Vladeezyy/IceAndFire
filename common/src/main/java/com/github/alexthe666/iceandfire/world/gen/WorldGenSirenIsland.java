@@ -92,7 +92,7 @@ public class WorldGenSirenIsland extends Feature<NoneFeatureConfiguration> imple
         siren.setSinging(true);
         siren.setHairColor(rand.nextInt(2));
         siren.setSingingPose(rand.nextInt(2));
-        siren.absMoveTo(position.getX() + 0.5D, position.getY() + 1, position.getZ() + 0.5D, rand.nextFloat() * 360, 0);
+        siren.absSnapTo(position.getX() + 0.5D, position.getY() + 1, position.getZ() + 0.5D, rand.nextFloat() * 360, 0);
         worldIn.addFreshEntity(siren);
     }
 

@@ -231,7 +231,7 @@ public class PathNavigateDeathWormLand extends PathNavigation {
                             return false;
                         }
 
-                        if (pathnodetype == PathType.DAMAGE_FIRE || pathnodetype == PathType.DANGER_FIRE || pathnodetype == PathType.DAMAGE_OTHER) {
+                        if (pathnodetype == PathType.FIRE || pathnodetype == PathType.FIRE_IN_NEIGHBOR || pathnodetype == PathType.DAMAGING) {
                             return false;
                         }
                     }
@@ -286,5 +286,11 @@ public class PathNavigateDeathWormLand extends PathNavigation {
 
     public void setAvoidSun(boolean avoidSun) {
         this.shouldAvoidSun = avoidSun;
+    }
+
+    // 1.21.2+: walks on the sand like a ground navigation
+    @Override
+    public boolean canNavigateGround() {
+        return true;
     }
 }

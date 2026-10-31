@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity.util;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -12,11 +14,11 @@ public class HomePosition {
     BlockPos pos;
     String dimension;
 
-    public HomePosition(CompoundTag compound) {
+    public HomePosition(ValueInput compound) {
         read(compound);
     }
 
-    public HomePosition(CompoundTag compound, Level world) {
+    public HomePosition(ValueInput compound, Level world) {
         read(compound, world);
     }
 
@@ -40,7 +42,7 @@ public class HomePosition {
         return dimension == null ? "" : dimension;
     }
 
-    public CompoundTag write(CompoundTag compound) {
+    public ValueOutput write(ValueOutput compound) {
         compound.putInt("HomeAreaX", this.x);
         compound.putInt("HomeAreaY", this.y);
         compound.putInt("HomeAreaZ", this.z);
@@ -49,23 +51,19 @@ public class HomePosition {
         return compound;
     }
 
-    public HomePosition read(CompoundTag compound, Level world) {
+    public HomePosition read(ValueInput compound, Level world) {
         read(compound);
         if (this.dimension == null)
             this.dimension = DragonUtils.getDimensionName(world);
         return this;
     }
 
-    public HomePosition read(CompoundTag compound) {
-        if (compound.contains("HomeAreaX"))
-            this.x = compound.getIntOr("HomeAreaX", 0);
-        if (compound.contains("HomeAreaY"))
-            this.y = compound.getIntOr("HomeAreaY", 0);
-        if (compound.contains("HomeAreaZ"))
-            this.z = compound.getIntOr("HomeAreaZ", 0);
+    public HomePosition read(ValueInput compound) {
+        this.x = compound.getIntOr("HomeAreaX", this.x);
+        this.y = compound.getIntOr("HomeAreaY", this.y);
+        this.z = compound.getIntOr("HomeAreaZ", this.z);
         pos = new BlockPos(x, y, z);
-        if (compound.contains("HomeDimension"))
-            this.dimension = compound.getStringOr("HomeDimension", "");
+        this.dimension = compound.getString("HomeDimension").orElse(this.dimension);
         return this;
     }
 }

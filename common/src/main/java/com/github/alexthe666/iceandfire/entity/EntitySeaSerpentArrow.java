@@ -33,7 +33,7 @@ public class EntitySeaSerpentArrow extends AbstractArrow {
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide() && !this.inGround) {
+        if (level().isClientSide() && !this.isInGround()) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;

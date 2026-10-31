@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.core.component.DataComponents;
 import dev.vladeezyy.rampart.server.item.CustomToolMaterial;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -39,7 +40,7 @@ public class ItemModSword extends Item implements DragonSteelOverrides<ItemModSw
     @Override
     @Deprecated
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
-        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : super.getDefaultAttributeModifiers();
+        return isDragonsteel(getTier()) ? this.bakeDragonsteel() : this.components().getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
     }
 
     @Override

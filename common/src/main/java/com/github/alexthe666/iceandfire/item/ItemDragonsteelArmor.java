@@ -64,7 +64,6 @@ public class ItemDragonsteelArmor extends IafArmorItem implements IProtectAgains
         tooltip.accept(Component.translatable("item.dragonscales_armor.desc").withStyle(ChatFormatting.GRAY));
     }
 
-    @Override
     public int getDefense() {
         return this.material.getDefenseForType(this.getType());
     }

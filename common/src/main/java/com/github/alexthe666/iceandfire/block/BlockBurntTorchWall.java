@@ -19,8 +19,8 @@ public class BlockBurntTorchWall extends WallTorchBlock implements IDreadBlock {
                     .ignitedByLava()
                     .lightLevel((state) -> 0)
                     .sound(SoundType.WOOD).noOcclusion().dynamicShape()
-                    .dropsLike(IafBlockRegistry.BURNT_TORCH.get())
-                    .noCollission());
+                    .overrideLootTable(IafBlockRegistry.BURNT_TORCH.get().getLootTable())
+                    .noCollision());
     }
 
     @Override

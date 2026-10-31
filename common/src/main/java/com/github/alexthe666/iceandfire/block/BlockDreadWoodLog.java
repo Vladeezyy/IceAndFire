@@ -9,8 +9,7 @@ public class BlockDreadWoodLog extends RotatedPillarBlock implements IDragonProo
 
     public BlockDreadWoodLog() {
         super(
-    		Properties
-				.of()
+    		dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
 				.mapColor(MapColor.WOOD)
 				.instrument(NoteBlockInstrument.BASS)
 				.ignitedByLava()

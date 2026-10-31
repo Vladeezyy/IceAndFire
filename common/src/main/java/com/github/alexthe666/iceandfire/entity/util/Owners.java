@@ -16,4 +16,9 @@ public final class Owners {
         EntityReference<LivingEntity> owner = entity.getOwnerReference();
         return owner == null ? null : owner.getUUID();
     }
+
+    /** 1.21.1's {@code setOwnerUUID(uuid)} */
+    public static void set(net.minecraft.world.entity.TamableAnimal entity, @Nullable UUID uuid) {
+        entity.setOwnerReference(uuid == null ? null : EntityReference.of(uuid));
+    }
 }

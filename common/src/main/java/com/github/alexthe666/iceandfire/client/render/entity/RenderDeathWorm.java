@@ -23,7 +23,7 @@ public class RenderDeathWorm extends MobRenderer<EntityDeathWorm, ModelDeathWorm
 
     @Override
     protected void scale(EntityDeathWorm entity, PoseStack matrixStackIn, float partialTickTime) {
-        // vanilla already scaled the model and the shadow by getScale() (the same size)
+        // vanilla already scaled the model and the shadow by getIafScale() (the same size)
         this.shadowRadius = 1F / 3;
     }
 

@@ -109,7 +109,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
             queen.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
             queen.setHive(hive);
             queen.setJungleVariant(jungle);
-            queen.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+            queen.absSnapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
             world.addFreshEntity(queen);
 
             for (int i = 0; i < 4 + rand.nextInt(3); i++) {
@@ -117,7 +117,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
                     world.getLevel());
                 myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
                 myrmex.setHive(hive);
-                myrmex.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+                myrmex.absSnapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
                 myrmex.setJungleVariant(jungle);
                 world.addFreshEntity(myrmex);
             }
@@ -126,7 +126,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
                     world.getLevel());
                 myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
                 myrmex.setHive(hive);
-                myrmex.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+                myrmex.absSnapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
                 myrmex.setJungleVariant(jungle);
                 world.addFreshEntity(myrmex);
             }
@@ -135,7 +135,7 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
                     world.getLevel());
                 myrmex.finalizeSpawn(world, world.getCurrentDifficultyAt(ground), EntitySpawnReason.CHUNK_GENERATION, null);
                 myrmex.setHive(hive);
-                myrmex.absMoveTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
+                myrmex.absSnapTo(ground.getX() + 0.5D, ground.getY() + 1D, ground.getZ() + 0.5D, 0, 0);
                 myrmex.setJungleVariant(jungle);
                 world.addFreshEntity(myrmex);
             }

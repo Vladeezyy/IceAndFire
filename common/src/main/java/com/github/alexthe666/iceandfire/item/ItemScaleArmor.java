@@ -38,7 +38,11 @@ public class ItemScaleArmor extends IafArmorItem implements IProtectAgainstDrago
     }
 
     @Override
-    public @NotNull String getDescriptionId() {
+    public @NotNull Component getName(@NotNull ItemStack iafStack) {
+        return Component.translatable(this.iafDescriptionId());
+    }
+
+    private String iafDescriptionId() {
         switch (this.type) {
             case HELMET:
                 return "item.iceandfire.dragon_helmet";

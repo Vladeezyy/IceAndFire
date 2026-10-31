@@ -230,8 +230,7 @@ public class MyrmexHive {
     private UUID findUUID(String name) {
         if (this.world == null || this.world.getServer() == null)
             return UUIDUtil.createOfflinePlayerUUID(name);
-        Optional<GameProfile> profile = this.world.getServer().getProfileCache().get(name);
-        return profile.isPresent() ? profile.get().getId() : UUIDUtil.createOfflinePlayerUUID(name);
+        return this.world.getServer().services().nameToIdCache().get(name).map(net.minecraft.server.players.NameAndId::id).orElseGet(() -> UUIDUtil.createOfflinePlayerUUID(name));
     }
 
     public int modifyPlayerReputation(UUID playerName, int reputation) {
@@ -293,12 +292,12 @@ public class MyrmexHive {
         this.numMyrmex = compound.getIntOr("PopSize", 0);
         this.reproduces = compound.getBooleanOr("Reproduces", false);
         this.hasOwner = compound.getBooleanOr("HasOwner", false);
-        if (compound.hasUUID("OwnerUUID")) {
-            this.ownerUUID = compound.getUUID("OwnerUUID");
+        if (compound.read("OwnerUUID", UUIDUtil.CODEC).isPresent()) {
+            this.ownerUUID = compound.read("OwnerUUID", UUIDUtil.CODEC).orElse(null);
         }
         this.colonyName = compound.getStringOr("ColonyName", "");
         this.villageRadius = compound.getIntOr("Radius", 0);
-        if (compound.hasUUID("WanderRadius")) {
+        if (compound.read("WanderRadius", UUIDUtil.CODEC).isPresent()) {
             this.wanderRadius = compound.getIntOr("WanderRadius", 0);
         }
         this.lastAddDoorTimestamp = compound.getIntOr("Stable", 0);
@@ -306,54 +305,54 @@ public class MyrmexHive {
         this.noBreedTicks = compound.getIntOr("MTick", 0);
         this.center = new BlockPos(compound.getIntOr("CX", 0), compound.getIntOr("CY", 0), compound.getIntOr("CZ", 0));
         this.centerHelper = new BlockPos(compound.getIntOr("ACX", 0), compound.getIntOr("ACY", 0), compound.getIntOr("ACZ", 0));
-        ListTag hiveMembers = compound.getList("HiveMembers", 10);
+        ListTag hiveMembers = compound.getListOrEmpty("HiveMembers");
         this.myrmexList.clear();
         for (int i = 0; i < hiveMembers.size(); ++i) {
             CompoundTag CompoundNBT = hiveMembers.getCompoundOrEmpty(i);
-            this.myrmexList.add(CompoundNBT.getUUID("MyrmexUUID"));
+            this.myrmexList.add(CompoundNBT.read("MyrmexUUID", UUIDUtil.CODEC).orElse(null));
         }
-        ListTag foodRoomList = compound.getList("FoodRooms", 10);
+        ListTag foodRoomList = compound.getListOrEmpty("FoodRooms");
         this.foodRooms.clear();
         for (int i = 0; i < foodRoomList.size(); ++i) {
             CompoundTag CompoundNBT = foodRoomList.getCompoundOrEmpty(i);
             this.foodRooms.add(new BlockPos(CompoundNBT.getIntOr("X", 0), CompoundNBT.getIntOr("Y", 0), CompoundNBT.getIntOr("Z", 0)));
         }
-        ListTag babyRoomList = compound.getList("BabyRooms", 10);
+        ListTag babyRoomList = compound.getListOrEmpty("BabyRooms");
         this.babyRooms.clear();
         for (int i = 0; i < babyRoomList.size(); ++i) {
             CompoundTag CompoundNBT = babyRoomList.getCompoundOrEmpty(i);
             this.babyRooms.add(new BlockPos(CompoundNBT.getIntOr("X", 0), CompoundNBT.getIntOr("Y", 0), CompoundNBT.getIntOr("Z", 0)));
         }
-        ListTag miscRoomList = compound.getList("MiscRooms", 10);
+        ListTag miscRoomList = compound.getListOrEmpty("MiscRooms");
         this.miscRooms.clear();
         for (int i = 0; i < miscRoomList.size(); ++i) {
             CompoundTag CompoundNBT = miscRoomList.getCompoundOrEmpty(i);
             this.miscRooms.add(new BlockPos(CompoundNBT.getIntOr("X", 0), CompoundNBT.getIntOr("Y", 0), CompoundNBT.getIntOr("Z", 0)));
         }
-        ListTag entrancesList = compound.getList("Entrances", 10);
+        ListTag entrancesList = compound.getListOrEmpty("Entrances");
         this.entrances.clear();
         for (int i = 0; i < entrancesList.size(); ++i) {
             CompoundTag CompoundNBT = entrancesList.getCompoundOrEmpty(i);
             this.entrances.put(new BlockPos(CompoundNBT.getIntOr("X", 0), CompoundNBT.getIntOr("Y", 0), CompoundNBT.getIntOr("Z", 0)), Direction.from2DDataValue(CompoundNBT.getIntOr("Facing", 0)));
         }
 
-        ListTag entranceBottomsList = compound.getList("EntranceBottoms", 10);
+        ListTag entranceBottomsList = compound.getListOrEmpty("EntranceBottoms");
         this.entranceBottoms.clear();
         for (int i = 0; i < entranceBottomsList.size(); ++i) {
             CompoundTag CompoundNBT = entranceBottomsList.getCompoundOrEmpty(i);
             this.entranceBottoms.put(new BlockPos(CompoundNBT.getIntOr("X", 0), CompoundNBT.getIntOr("Y", 0), CompoundNBT.getIntOr("Z", 0)), Direction.from2DDataValue(CompoundNBT.getIntOr("Facing", 0)));
         }
-        hiveUUID = compound.getUUID("HiveUUID");
-        ListTag nbttaglist1 = compound.getList("Players", 10);
+        hiveUUID = compound.read("HiveUUID", UUIDUtil.CODEC).orElse(null);
+        ListTag nbttaglist1 = compound.getListOrEmpty("Players");
         this.playerReputation.clear();
         for (int j = 0; j < nbttaglist1.size(); ++j) {
             CompoundTag CompoundNBT1 = nbttaglist1.getCompoundOrEmpty(j);
 
-            if (CompoundNBT1.hasUUID("UUID")) {
-                this.playerReputation.put(CompoundNBT1.getUUID("UUID"), CompoundNBT1.getInt("S"));
+            if (CompoundNBT1.read("UUID", UUIDUtil.CODEC).isPresent()) {
+                this.playerReputation.put(CompoundNBT1.read("UUID", UUIDUtil.CODEC).orElse(null), CompoundNBT1.getIntOr("S", 0));
             } else {
                 //World is never set here, so this will always be offline UUIDs, sadly there is no way to convert this.
-                this.playerReputation.put(findUUID(CompoundNBT1.getStringOr("Name", "")), CompoundNBT1.getInt("S"));
+                this.playerReputation.put(findUUID(CompoundNBT1.getStringOr("Name", "")), CompoundNBT1.getIntOr("S", 0));
             }
         }
     }
@@ -366,7 +365,7 @@ public class MyrmexHive {
         compound.putBoolean("Reproduces", this.reproduces);
         compound.putBoolean("HasOwner", this.hasOwner);
         if (this.ownerUUID != null) {
-            compound.putUUID("OwnerUUID", this.ownerUUID);
+            compound.store("OwnerUUID", UUIDUtil.CODEC, this.ownerUUID);
         }
         compound.putString("ColonyName", this.colonyName);
         compound.putInt("Radius", this.villageRadius);
@@ -383,7 +382,7 @@ public class MyrmexHive {
         ListTag hiveMembers = new ListTag();
         for (UUID memberUUID : this.myrmexList) {
             CompoundTag CompoundNBT = new CompoundTag();
-            CompoundNBT.putUUID("MyrmexUUID", memberUUID);
+            CompoundNBT.store("MyrmexUUID", UUIDUtil.CODEC, memberUUID);
             hiveMembers.add(CompoundNBT);
         }
         compound.put("HiveMembers", hiveMembers);
@@ -435,7 +434,7 @@ public class MyrmexHive {
             entranceBottomsList.add(CompoundNBT);
         }
         compound.put("EntranceBottoms", entranceBottomsList);
-        compound.putUUID("HiveUUID", this.hiveUUID);
+        compound.store("HiveUUID", UUIDUtil.CODEC, this.hiveUUID);
         ListTag nbttaglist1 = new ListTag();
 
         for (UUID s : this.playerReputation.keySet()) {
@@ -443,7 +442,7 @@ public class MyrmexHive {
 
             try {
                 {
-                    CompoundNBT1.putUUID("UUID", s);
+                    CompoundNBT1.store("UUID", UUIDUtil.CODEC, s);
                     CompoundNBT1.putInt("S", this.playerReputation.get(s).intValue());
                     nbttaglist1.add(CompoundNBT1);
                 }

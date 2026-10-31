@@ -30,7 +30,7 @@ public class NoLakesInStructuresMixin {
         if(!(context.level() instanceof WorldGenRegion)) {
             return;
         }
-        Registry<Structure> configuredStructureFeatureRegistry = context.level().registryAccess().registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> configuredStructureFeatureRegistry = context.level().registryAccess().lookupOrThrow(Registries.STRUCTURE);
         StructureManager structureManager = (context.level()).getLevel().structureManager();
         var availableStructures  = List.of(configuredStructureFeatureRegistry.getOptional(IafStructures.MAUSOLEUM),configuredStructureFeatureRegistry.getOptional(IafStructures.GRAVEYARD),configuredStructureFeatureRegistry.getOptional(IafStructures.GORGON_TEMPLE));
         for (var structure : availableStructures) {

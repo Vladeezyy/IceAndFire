@@ -13,8 +13,7 @@ public class BlockDragonBone extends RotatedPillarBlock implements IDragonProof 
 
     public BlockDragonBone() {
         super(
-            BlockBehaviour.Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .pushReaction(PushReaction.BLOCK)
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)

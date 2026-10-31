@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.item;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.server.level.ServerLevel;
 import javax.annotation.Nullable;
 
@@ -17,12 +18,12 @@ import net.minecraft.world.level.Level;
 public class ItemBlindfold extends IafArmorItem implements IafArmorTextureItem {
 
     public ItemBlindfold() {
-        super(IafItemRegistry.BLINDFOLD_ARMOR_MATERIAL, Type.HELMET);
+        super(IafItemRegistry.BLINDFOLD_ARMOR_MATERIAL, ArmorType.HELMET);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
-        super.inventoryTick(stack, world, entity, slot, (slot == EquipmentSlot.MAINHAND));
+        super.inventoryTick(stack, world, entity, slot);
         if (!(entity instanceof Player player) || player.getItemBySlot(this.getEquipmentSlot()) != stack) {
             return;
         }

@@ -1,18 +1,10 @@
 package com.github.alexthe666.iceandfire.datagen.tags;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
-import com.github.alexthe666.iceandfire.item.IafItemRegistry;
-import com.github.alexthe666.iceandfire.item.ItemMobSkull;
-import com.github.alexthe666.iceandfire.item.ItemSeaSerpentScales;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
-import java.util.concurrent.CompletableFuture;
 
 /** The tags of the data provider IafItemTagsProvider (NeoForge module), for the game code of both loaders */
 public final class IafItemTags {

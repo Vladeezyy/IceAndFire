@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.IafScaled;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 
@@ -60,7 +62,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultipartEntity, IVillagerFear, IAnimalFear, IHasCustomizableAttributes {
+public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultipartEntity, IVillagerFear, IAnimalFear, IHasCustomizableAttributes, IafScaled {
 
     @Override
     public boolean isFood(@NotNull ItemStack stack) {
@@ -115,7 +117,6 @@ public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultip
     public EntitySeaSerpent(EntityType<EntitySeaSerpent> t, Level worldIn) {
         super(t, worldIn);
         switchNavigator(false);
-        this.noCulling = true;
         resetParts(1.0F);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
     }
@@ -254,12 +255,16 @@ public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultip
 
     @Override
     protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose poseIn) {
-        // LivingEntity.getDimensions scales these by getScale() since 1.20.5 (1.20.1 did it here): once only
-        return this.getType().getDimensions();
+        // 26.x: LivingEntity.getDimensions scales these by the scale attribute only, the creature's size is applied here
+        return this.getType().getDimensions().scale(this.getIafScale());
     }
 
+    /**
+     * The creature's size (1.20.1's {@code getIafScale()} override). 26.x {@code LivingEntity.getIafScale()} is final and only
+     * the scale attribute: the hitbox is scaled in {@code getDefaultDimensions}, the model by the renderer.
+     */
     @Override
-    public float getScale() {
+    public float getIafScale() {
         return this.getSeaSerpentScale();
     }
 
@@ -356,7 +361,7 @@ public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultip
                 double extraY = 0.8F;
                 double extraZ = radius * Mth.cos(angle);
                 if (level().isClientSide()) {
-                    level().addParticle(type, true, this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ, motionX, motionY, motionZ);
+                    level().addParticle(type, true, false, this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ, motionX, motionY, motionZ);
                 }
             }
         }
@@ -587,13 +592,18 @@ public class EntitySeaSerpent extends Animal implements IAnimatedEntity, IMultip
 
     }
 
+    /** 1.21.1's boat variant planks: 26.x boats are one entity type per wood (oak_boat, bamboo_raft, oak_chest_boat) */
+    private static net.minecraft.world.item.Item planksOf(net.minecraft.world.entity.vehicle.boat.AbstractBoat boat) {
+        String path = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(boat.getType()).getPath().replace("_chest_boat", "").replace("_chest_raft", "").replace("_boat", "").replace("_raft", "");
+        return net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(net.minecraft.resources.Identifier.withDefaultNamespace(path + "_planks")).orElse(Items.OAK_PLANKS);
+    }
+
     public void destroyBoat(Entity sailor) {
-        if (sailor.getVehicle() != null && sailor.getVehicle() instanceof Boat && !level().isClientSide()) {
-            Boat boat = (Boat) sailor.getVehicle();
+        if (sailor.getVehicle() instanceof net.minecraft.world.entity.vehicle.boat.AbstractBoat boat && !level().isClientSide()) {
             boat.remove(RemovalReason.KILLED);
-            if (((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+            if (((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.ENTITY_DROPS)) {
                 for (int i = 0; i < 3; ++i) {
-                    boat.spawnAtLocation((net.minecraft.server.level.ServerLevel) boat.level(), new ItemStack(boat.getVariant().getPlanks().asItem()), 0.0F);
+                    boat.spawnAtLocation((net.minecraft.server.level.ServerLevel) boat.level(), new ItemStack(planksOf(boat)), 0.0F);
                 }
                 for (int j = 0; j < 2; ++j) {
                     boat.spawnAtLocation((net.minecraft.server.level.ServerLevel) boat.level(), new ItemStack(Items.STICK));

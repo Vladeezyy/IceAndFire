@@ -81,7 +81,7 @@ public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> impleme
                             worldIn.setBlock(blockpos.above(), Blocks.SHORT_GRASS.defaultBlockState(), 2);
                         }
                         if (rand.nextInt(9) == 0) {
-                            Holder<ConfiguredFeature<?, ?>> holder = context.level().registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE).getHolder(TreeFeatures.SWAMP_OAK).orElse((Holder.Reference<ConfiguredFeature<?, ?>>)null);
+                            Holder<ConfiguredFeature<?, ?>> holder = context.level().registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).get(TreeFeatures.SWAMP_OAK).orElse((Holder.Reference<ConfiguredFeature<?, ?>>)null);
                             if (holder != null)
                                 holder.value().place(worldIn, generator, rand, blockpos.above());
                         }
@@ -152,7 +152,7 @@ public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> impleme
         EntityHydra hydra = new EntityHydra(IafEntityRegistry.HYDRA.get(), worldIn.getLevel());
         hydra.setVariant(rand.nextInt(3));
         hydra.setHomeTo(position, 15);
-        hydra.absMoveTo(position.getX() + 0.5, position.getY() + 1.5, position.getZ() + 0.5, rand.nextFloat() * 360, 0);
+        hydra.absSnapTo(position.getX() + 0.5, position.getY() + 1.5, position.getZ() + 0.5, rand.nextFloat() * 360, 0);
         worldIn.addFreshEntity(hydra);
         return true;
     }

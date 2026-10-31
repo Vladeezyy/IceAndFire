@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.event;
+import com.github.alexthe666.iceandfire.entity.util.Values;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import dev.vladeezyy.iceandfire.bus.FinalizeSpawnEvent;
 import dev.vladeezyy.iceandfire.bus.LivingIncomingDamageEvent;
@@ -135,7 +137,7 @@ public class ServerEvents {
     }
 
     private static boolean isInEntityTag(Identifier loc, EntityType<?> type) {
-        return type.is(TagKey.create(Registries.ENTITY_TYPE, loc));
+        return type.builtInRegistryHolder().is(TagKey.create(Registries.ENTITY_TYPE, loc));
     }
 
     public static boolean isLivestock(Entity entity) {
@@ -204,8 +206,8 @@ public class ServerEvents {
     @SubscribeEvent
     public void addNewVillageBuilding(final ServerAboutToStartEvent event) {
         if (IafConfig.villagerHouseWeight > 0) {
-            Registry<StructureTemplatePool> templatePoolRegistry = event.getServer().registryAccess().registry(Registries.TEMPLATE_POOL).orElseThrow();
-            Registry<StructureProcessorList> processorListRegistry = event.getServer().registryAccess().registry(Registries.PROCESSOR_LIST).orElseThrow();
+            Registry<StructureTemplatePool> templatePoolRegistry = event.getServer().registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL);
+            Registry<StructureProcessorList> processorListRegistry = event.getServer().registryAccess().lookupOrThrow(Registries.PROCESSOR_LIST);
             for (String type : VILLAGE_TYPES) {
                 IafVillagerRegistry.addBuildingToPool(templatePoolRegistry, processorListRegistry, Identifier.parse("village/" + type + "/houses"), "iceandfire:village/" + type + "_scriber_1", IafConfig.villagerHouseWeight);
             }
@@ -380,8 +382,7 @@ public class ServerEvents {
                     statue.setCrackAmount(statue.getCrackAmount() + 1);
 
                     if (statue.getCrackAmount() > 9) {
-                        CompoundTag writtenTag = new CompoundTag();
-                        event.getTarget().saveWithoutId(writtenTag);
+                        CompoundTag writtenTag = Values.save(event.getTarget());
                         event.getTarget().playSound(SoundEvents.STONE_BREAK, 2, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 0.5F);
                         event.getTarget().remove(Entity.RemovalReason.KILLED);
 
@@ -391,7 +392,7 @@ public class ServerEvents {
                             tag.putBoolean("IAFStoneStatuePlayerEntity", statue.getTrappedEntityTypeString().equalsIgnoreCase("minecraft:player"));
                             tag.putString("IAFStoneStatueEntityID", statue.getTrappedEntityTypeString());
                             tag.put("IAFStoneStatueNBT", writtenTag);
-                            statue.addAdditionalSaveData(tag);
+                            tag.merge(Values.write(statue.registryAccess(), statue::addAdditionalSaveData));
                             ItemNbt.setTag(statuette, tag);
 
                             if (!statue.level().isClientSide()) {
@@ -399,7 +400,7 @@ public class ServerEvents {
                             }
                         } else {
                             if (!statue.level().isClientSide()) {
-                                statue.spawnAtLocation((net.minecraft.server.level.ServerLevel) statue.level(), Blocks.COBBLESTONE.asItem(), 2 + event.getEntity().getRandom().nextInt(4));
+                                statue.spawnAtLocation((net.minecraft.server.level.ServerLevel) statue.level(), new net.minecraft.world.item.ItemStack(Blocks.COBBLESTONE.asItem()), 2 + event.getEntity().getRandom().nextInt(4));
                             }
                         }
 
@@ -494,7 +495,7 @@ public class ServerEvents {
                     data.chainData.removeChain(event.getEntity());
 
                     if (!event.getLevel().isClientSide()) {
-                        event.getTarget().spawnAtLocation((net.minecraft.server.level.ServerLevel) event.getTarget().level(), IafItemRegistry.CHAIN.get(), 1);
+                        event.getTarget().spawnAtLocation((net.minecraft.server.level.ServerLevel) event.getTarget().level(), new net.minecraft.world.item.ItemStack(IafItemRegistry.CHAIN.get()), 1);
                     }
 
                     event.setCanceled(true);

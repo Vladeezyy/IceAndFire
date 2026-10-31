@@ -134,7 +134,7 @@ public class ChainBuffer {
     }
 
     private float getPartialTicks() {
-        return Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+        return Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
     }
 
     /**

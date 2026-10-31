@@ -23,8 +23,7 @@ public class BlockSeaSerpentScales extends Block {
 
     public BlockSeaSerpentScales(String name, ChatFormatting color) {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.STONE)
                 .strength(30F, 500F)
                 .sound(SoundType.STONE)
@@ -35,7 +34,7 @@ public class BlockSeaSerpentScales extends Block {
         this.name = name;
     }
 
-    @Override
+    // 26.x: blocks have no tooltips (kept for the item)
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.accept(Component.translatable("sea_serpent." + name).withStyle(color));
     }

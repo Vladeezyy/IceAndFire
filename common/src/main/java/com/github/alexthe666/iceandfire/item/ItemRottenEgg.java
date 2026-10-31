@@ -35,6 +35,6 @@ public class ItemRottenEgg extends Item {
             worldIn.addFreshEntity(entityegg);
         }
 
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
+        return InteractionResult.SUCCESS;
     }
 }

@@ -23,7 +23,7 @@ public class IafMobSpawnBiomeModifier implements BiomeModifier {
     @Override
     public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == Phase.ADD) {
-            IafEntityRegistry.addSpawners(biome, (category, spawner) -> builder.getMobSpawnSettings().getSpawner(category).add(spawner));
+            IafEntityRegistry.addSpawners(biome, (category, spawner, weight) -> builder.getMobSpawnSettings().addSpawn(category, weight, spawner));
         }
     }
 

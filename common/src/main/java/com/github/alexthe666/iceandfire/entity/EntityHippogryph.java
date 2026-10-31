@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import com.github.alexthe666.iceandfire.entity.util.Owners;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -169,7 +171,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
         this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(4, new HippogryphAIMate(this, 1.0D));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0D, Ingredient.of(IafItemTags.TEMPT_HIPPOGRYPH), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.0D, stack -> stack.is(IafItemTags.TEMPT_HIPPOGRYPH), false));
         //TODO: This doesn't gurantee the hippogryph will fly, it can still and is likely to path on the ground
         this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1D));
         this.goalSelector.addGoal(7, new HippogryphAIWander(this, 1.0D));
@@ -465,7 +467,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
                 if (!itemstack.isEmpty()) {
                     CompoundTag CompoundNBT = new CompoundTag();
                     CompoundNBT.putByte("Slot", (byte) i);
-                    CompoundNBT = (CompoundTag) itemstack.save(this.registryAccess(), CompoundNBT);
+                    CompoundNBT = (CompoundTag) Values.saveItem(this.registryAccess(), itemstack, CompoundNBT);
                     nbttaglist.add(CompoundNBT);
                 }
             }
@@ -499,17 +501,17 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
             this.initHippogryphInv();
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
-                int j = CompoundNBT.getByte("Slot") & 255;
-                this.hippogryphInventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
+                int j = CompoundNBT.getByteOr("Slot", (byte) 0) & 255;
+                this.hippogryphInventory.setItem(j, Values.parseItem(this.registryAccess(), CompoundNBT));
             }
         } else {
             ListTag nbttaglist = Values.list(compound, "Items");
             this.initHippogryphInv();
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
-                int j = CompoundNBT.getByte("Slot") & 255;
+                int j = CompoundNBT.getByteOr("Slot", (byte) 0) & 255;
                 this.initHippogryphInv();
-                this.hippogryphInventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
+                this.hippogryphInventory.setItem(j, Values.parseItem(this.registryAccess(), CompoundNBT));
                 //this.setArmorInSlot(j, this.getIntFromArmor(ItemStack.loadItemStackFromNBT(CompoundNBT)));
                 ItemStack saddle = hippogryphInventory.getItem(0);
                 ItemStack chest = hippogryphInventory.getItem(1);
@@ -1106,7 +1108,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
     }
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entityIn) {
+    protected boolean considersEntityAsAlly(@NotNull Entity entityIn) {
         if (this.isTame()) {
             LivingEntity livingentity = this.getOwner();
             if (entityIn == livingentity) {
@@ -1120,7 +1122,7 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
             }
         }
 
-        return super.isAlliedTo(entityIn);
+        return super.considersEntityAsAlly(entityIn);
     }
 
     @Override

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import net.minecraft.core.HolderLookup;
 import com.github.alexthe666.iceandfire.IceAndFire;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class MyrmexWorldData extends SavedData {
 
     private static final String IDENTIFIER = "iceandfire_myrmex";
+    private static final SavedDataType<MyrmexWorldData> TYPE = IafSavedData.type("myrmex", MyrmexWorldData::new, MyrmexWorldData::new, (data, tag) -> data.save(tag, null));
     private final List<BlockPos> villagerPositionsList = Lists.newArrayList();
     private final List<MyrmexHive> hiveList = Lists.newArrayList();
     private Level world;
@@ -41,8 +43,7 @@ public class MyrmexWorldData extends SavedData {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
-            SavedDataStorage storage = overworld.getDataStorage();
-            MyrmexWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag), null), IDENTIFIER);
+            MyrmexWorldData data = IafSavedData.get(overworld, TYPE, IDENTIFIER);
             if (data != null) {
                 data.world = world;
                 data.setDirty();
@@ -128,7 +129,7 @@ public class MyrmexWorldData extends SavedData {
 
     public void load(CompoundTag nbt) {
         this.tickCounter = nbt.getIntOr("Tick", 0);
-        ListTag nbttaglist = nbt.getList("Hives", 10);
+        ListTag nbttaglist = nbt.getListOrEmpty("Hives");
 
         for (int i = 0; i < nbttaglist.size(); ++i) {
             CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
@@ -138,7 +139,7 @@ public class MyrmexWorldData extends SavedData {
         }
     }
 
-    @Override
+    // 26.x: through IafSavedData (the 1.21.1 NBT)
     public @NotNull CompoundTag save(CompoundTag compound, @NotNull HolderLookup.Provider registries) {
         compound.putInt("Tick", this.tickCounter);
         ListTag nbttaglist = new ListTag();

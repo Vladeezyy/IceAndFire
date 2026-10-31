@@ -1,8 +1,10 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.ListenedContainer;
+import com.github.alexthe666.iceandfire.entity.util.Values;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.inventory.ContainerListener;
 
 import dev.vladeezyy.iceandfire.platform.transfer.ItemHandler;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -64,7 +66,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAnimatedEntity, ICustomMoveController, ContainerListener, Saddleable {
+public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAnimatedEntity, ICustomMoveController {
 
     public static final int INV_SLOT_SADDLE = 0;
     public static final int INV_SLOT_CHEST = 1;
@@ -142,7 +144,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     }
 
     protected void addBehaviourGoals() {
-        this.goalSelector.addGoal(0, new TemptGoal(this, 1.0D, Ingredient.of(IafItemTags.TEMPT_HIPPOCAMPUS), false));
+        this.goalSelector.addGoal(0, new TemptGoal(this, 1.0D, stack -> stack.is(IafItemTags.TEMPT_HIPPOCAMPUS), false));
     }
 
     @Override
@@ -161,7 +163,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     }
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entityIn) {
+    protected boolean considersEntityAsAlly(@NotNull Entity entityIn) {
         if (this.isTame()) {
             LivingEntity livingentity = this.getOwner();
             if (entityIn == livingentity) {
@@ -175,7 +177,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             }
         }
 
-        return super.isAlliedTo(entityIn);
+        return super.considersEntityAsAlly(entityIn);
     }
 
     @Override
@@ -388,7 +390,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             if (!itemstack.isEmpty()) {
                 CompoundTag CompoundNBT = new CompoundTag();
                 CompoundNBT.putByte("Slot", (byte) i);
-                CompoundNBT = (CompoundTag) itemstack.save(this.registryAccess(), CompoundNBT);
+                CompoundNBT = (CompoundTag) Values.saveItem(this.registryAccess(), itemstack, CompoundNBT);
                 nbttaglist.add(CompoundNBT);
             }
         }
@@ -407,8 +409,8 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             this.createInventory();
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
-                int j = CompoundNBT.getByte("Slot") & 255;
-                this.inventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
+                int j = CompoundNBT.getByteOr("Slot", (byte) 0) & 255;
+                this.inventory.setItem(j, Values.parseItem(this.registryAccess(), CompoundNBT));
             }
         }
     }
@@ -419,9 +421,11 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
 
     protected void createInventory() {
         SimpleContainer simplecontainer = this.inventory;
-        this.inventory = new SimpleContainer(this.getInventorySize());
+        this.inventory = new ListenedContainer(this.getInventorySize(), this::containerChanged);
         if (simplecontainer != null) {
-            simplecontainer.removeListener(this);
+            if (simplecontainer instanceof ListenedContainer listened) {
+                listened.stopListening();
+            }
             int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
 
             for (int j = 0; j < i; ++j) {
@@ -432,7 +436,7 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             }
         }
 
-        this.inventory.addListener(this);
+        ((ListenedContainer) this.inventory).listen();
         this.updateContainerEquipment();
         this.itemHandler = new InvWrapper(this.inventory);
     }
@@ -455,17 +459,15 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
         return this.inventory != pInventory;
     }
 
-    @Override
+    // 1.21.1's Saddleable (26.x saddles are equipment): the saddle click is handled in mobInteract
     public boolean isSaddleable() {
         return this.isAlive() && !this.isBaby() && this.isTame();
     }
 
-    @Override
     public void equipSaddle(@NotNull ItemStack stack, @Nullable SoundSource pSource) {
         this.inventory.setItem(0, new ItemStack(Items.SADDLE));
     }
 
-    @Override
     public boolean isSaddled() {
         return this.entityData.get(SADDLE);
     }
@@ -586,6 +588,14 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
+        // 1.21.1: vanilla's saddle item called equipSaddle on a Saddleable mob
+        if (itemstack.is(Items.SADDLE) && this.isSaddleable() && !this.isSaddled()) {
+            if (!this.level().isClientSide()) {
+                this.equipSaddle(itemstack, SoundSource.NEUTRAL);
+                itemstack.consume(1, player);
+            }
+            return InteractionResult.SUCCESS;
+        }
         // Breed item
         if (itemstack.is(IafItemTags.BREED_HIPPOCAMPUS) && this.getAge() == 0 && !isInLove()) {
             this.setOrderedToSit(false);
@@ -712,8 +722,6 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     public int getInventoryColumns() {
         return 5; // TODO :: Introduce upgrade item?
     }
-
-    @Override
     public void containerChanged(@NotNull Container pInvBasic) {
         boolean flag = this.isSaddled();
         this.updateContainerEquipment();

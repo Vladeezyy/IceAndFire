@@ -52,10 +52,10 @@ public class ItemCyclopsEye extends Item {
                         }
                     }
                     if (inflictedDamage) {
-                        ItemNbt.update(stack, tag -> tag.putInt("HurtingTicks", ItemNbt.view(stack).getInt("HurtingTicks") + 1));
+                        ItemNbt.update(stack, tag -> tag.putInt("HurtingTicks", ItemNbt.view(stack).getIntOr("HurtingTicks", 0) + 1));
                     }
                 }
-                if (ItemNbt.view(stack).getInt("HurtingTicks") > 120) {
+                if (ItemNbt.view(stack).getIntOr("HurtingTicks", 0) > 120) {
                     if (world instanceof ServerLevel serverLevel) {
                         stack.hurtAndBreak(1, serverLevel, entity instanceof net.minecraft.server.level.ServerPlayer player ? player : null, item -> {
                         });

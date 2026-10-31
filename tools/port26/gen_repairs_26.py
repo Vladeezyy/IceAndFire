@@ -30,6 +30,8 @@ REPAIRS = {
     'dreadsword': [I + 'dread_shard'], 'dreadknightsword': [I + 'dread_shard'],
     # materials the original never gave a repair ingredient
     'copper': [], 'ghostsword': [],
+    # ItemLichStaff.isValidRepairItem
+    'lich_staff': [I + 'dread_shard'],
 }
 for i, color in enumerate(SCALES):
     REPAIRS['armor_dragon_scales' + str(i + 1)] = [I + 'dragonscales_' + color]

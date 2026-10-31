@@ -23,12 +23,12 @@ public class EntityCockatriceEgg extends ThrowableItemProjectile {
     }
 
     public EntityCockatriceEgg(EntityType<? extends ThrowableItemProjectile> type, Level worldIn, LivingEntity throwerIn) {
-        super(type, throwerIn, worldIn);
+        super(type, throwerIn, worldIn, new net.minecraft.world.item.ItemStack(IafItemRegistry.ROTTEN_EGG.get()));
     }
 
     public EntityCockatriceEgg(EntityType<? extends ThrowableItemProjectile> type, double x, double y, double z,
                                Level worldIn) {
-        super(type, x, y, z, worldIn);
+        super(type, x, y, z, worldIn, new net.minecraft.world.item.ItemStack(IafItemRegistry.ROTTEN_EGG.get()));
     }
 
 
@@ -36,7 +36,7 @@ public class EntityCockatriceEgg extends ThrowableItemProjectile {
     public void handleEntityEvent(byte id) {
         if (id == 3) {
             for (int i = 0; i < 8; ++i) {
-                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem()), this.getX(), this.getY(), this.getZ(), (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D);
+                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem().getItem()), this.getX(), this.getY(), this.getZ(), (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D, (this.random.nextFloat() - 0.5D) * 0.08D);
             }
         }
 

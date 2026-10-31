@@ -1,16 +1,12 @@
 package com.github.alexthe666.iceandfire.datagen;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
-import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
+/** 26.x: the keys only, the data is in the generated JSON (the bootstraps of the 1.21.1 datagen were removed) */
 public class IafStructureSets {
 
     public static final ResourceKey<StructureSet> GRAVEYARD = registerKey("graveyard");
@@ -22,10 +18,4 @@ public class IafStructureSets {
         return ResourceKey.create(Registries.STRUCTURE_SET, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
-    public static void bootstrap(BootstrapContext<StructureSet> context) {
-        HolderGetter<Structure> structures = context.lookup(Registries.STRUCTURE);
-        context.register(GRAVEYARD, new StructureSet(structures.getOrThrow(IafStructures.GRAVEYARD), new RandomSpreadStructurePlacement(28, 8, RandomSpreadType.LINEAR, 44712661)));
-        context.register(MAUSOLEUM, new StructureSet(structures.getOrThrow(IafStructures.MAUSOLEUM), new RandomSpreadStructurePlacement(32, 12, RandomSpreadType.LINEAR, 14200531)));
-        context.register(GORGON_TEMPLE, new StructureSet(structures.getOrThrow(IafStructures.GORGON_TEMPLE), new RandomSpreadStructurePlacement(32, 12, RandomSpreadType.LINEAR, 76489509)));
-    }
 }

@@ -1,4 +1,7 @@
 package com.github.alexthe666.iceandfire.item;
+import com.github.alexthe666.iceandfire.entity.util.Values;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.core.UUIDUtil;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -93,7 +96,7 @@ public class ItemDragonHorn extends Item {
             return InteractionResult.FAIL;
         ItemStack stack = context.getItemInHand();
         CompoundTag stackTag = ItemNbt.getOrEmpty(stack);
-        if (!stackTag.getString("DragonHornEntityID").isEmpty()) {
+        if (!stackTag.getStringOr("DragonHornEntityID", "").isEmpty()) {
             Level world = context.getLevel();
             String id = stackTag.getStringOr("DragonHornEntityID", "");
             EntityType type = EntityType.byString(id).orElse(null);
@@ -101,13 +104,13 @@ public class ItemDragonHorn extends Item {
                 Entity entity = type.create(world, EntitySpawnReason.MOB_SUMMONED);
                 if (entity instanceof EntityDragonBase) {
                     EntityDragonBase dragon = (EntityDragonBase) entity;
-                    dragon.load(getEntityTag(stack));
+                    Values.load(dragon, getEntityTag(stack));
                 }
                 //Still needed to allow for intercompatibility
                 if (stackTag.contains("EntityUUID"))
-                    entity.setUUID(stackTag.getUUID("EntityUUID"));
+                    entity.setUUID(stackTag.read("EntityUUID", UUIDUtil.CODEC).orElse(null));
 
-                entity.absMoveTo(context.getClickedPos().getX() + 0.5D, (context.getClickedPos().getY() + 1), context.getClickedPos().getZ() + 0.5D, 180 + (context.getHorizontalDirection()).toYRot(), 0.0F);
+                entity.absSnapTo(context.getClickedPos().getX() + 0.5D, (context.getClickedPos().getY() + 1), context.getClickedPos().getZ() + 0.5D, 180 + (context.getHorizontalDirection()).toYRot(), 0.0F);
                 if (world.addFreshEntity(entity)) {
                     stackTag.remove("DragonHornEntityID");
                     stackTag.remove("EntityTag");
@@ -130,8 +133,9 @@ public class ItemDragonHorn extends Item {
                     EntityType type = EntityType.byString(id).get();
                     tooltip.accept((Component.translatable(type.getDescriptionId())).withStyle(getTextColorForEntityType(type)));
                     String name = (Component.translatable("dragon.unnamed")).getString();
-                    if (!entityTag.getString("CustomName").isEmpty() && worldIn.registries() != null) {
-                        MutableComponent component = Component.Serializer.fromJson(entityTag.getString("CustomName"), worldIn.registries());
+                    if (worldIn.registries() != null) {
+                        // 26.x saves the name as a component (1.21.1: a JSON string)
+                        Component component = entityTag.read("CustomName", net.minecraft.network.chat.ComponentSerialization.CODEC, worldIn.registries().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE)).orElse(null);
                         if (component != null)
                             name = component.getString();
                     }
@@ -139,7 +143,7 @@ public class ItemDragonHorn extends Item {
                     tooltip.accept((Component.literal(name)).withStyle(ChatFormatting.GRAY));
                     String gender = (Component.translatable("dragon.gender")).getString() + " " + (Component.translatable(entityTag.getBooleanOr("Gender", false) ? "dragon.gender.male" : "dragon.gender.female")).getString();
                     tooltip.accept((Component.literal(gender)).withStyle(ChatFormatting.GRAY));
-                    int stagenumber = entityTag.getInt("AgeTicks") / 24000;
+                    int stagenumber = entityTag.getIntOr("AgeTicks", 0) / 24000;
                     int stage1 = 0;
                     if (stagenumber >= 100) {
                         stage1 = 5;
@@ -166,9 +170,9 @@ public class ItemDragonHorn extends Item {
     private static CompoundTag getEntityTag(ItemStack stack) {
         CompoundTag tag = ItemNbt.view(stack).getCompoundOrEmpty("EntityTag");
         if (tag.isEmpty()) {
-            CustomData entityData = stack.get(DataComponents.ENTITY_DATA);
+            net.minecraft.world.item.component.TypedEntityData<EntityType<?>> entityData = stack.get(DataComponents.ENTITY_DATA);
             if (entityData != null) {
-                return entityData.copyTag();
+                return entityData.copyTagWithoutId();
             }
         }
         return tag.copy();

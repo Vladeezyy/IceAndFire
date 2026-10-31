@@ -32,14 +32,14 @@ public class SpawnWanderingCyclops extends Feature<NoneFeatureConfiguration> {
 
         if (IafWorldRegistry.isFarEnoughFromSpawn(worldIn, position)) {
             if (rand.nextInt(IafConfig.spawnWanderingCyclopsChance + 1) == 0 && rand.nextInt(12) == 0) {
-                EntityCyclops cyclops = IafEntityRegistry.CYCLOPS.get().create(worldIn.getLevel());
+                EntityCyclops cyclops = IafEntityRegistry.CYCLOPS.get().create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                 cyclops.setPos(position.getX() + 0.5F, position.getY() + 1, position.getZ() + 0.5F);
                 cyclops.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(position), EntitySpawnReason.SPAWNER, null);
                 worldIn.addFreshEntity(cyclops);
                 for (int i = 0; i < 3 + rand.nextInt(3); i++) {
-                    Sheep sheep = EntityType.SHEEP.create(worldIn.getLevel());
+                    Sheep sheep = EntityType.SHEEP.create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                     sheep.setPos(position.getX() + 0.5F, position.getY() + 1, position.getZ() + 0.5F);
-                    sheep.setColor(Sheep.getRandomSheepColor(rand));
+                    sheep.setColor(Sheep.getRandomSheepColor(worldIn, sheep.blockPosition()));
                     worldIn.addFreshEntity(sheep);
                 }
             }

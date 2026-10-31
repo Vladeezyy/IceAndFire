@@ -22,8 +22,7 @@ public class BlockDragonScales extends Block implements IDragonProof {
 
     public BlockDragonScales(EnumDragonEgg type) {
         super(
-            Properties
-                .of()
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.STONE)
                 .instrument(NoteBlockInstrument.BASEDRUM)
                 .dynamicShape()
@@ -36,7 +35,7 @@ public class BlockDragonScales extends Block implements IDragonProof {
     }
 
 
-    @Override
+    // 26.x: blocks have no tooltips (kept for the item)
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext worldIn, TooltipDisplay display, Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.accept(Component.translatable("dragon." + type.toString().toLowerCase()).withStyle(type.color));
     }

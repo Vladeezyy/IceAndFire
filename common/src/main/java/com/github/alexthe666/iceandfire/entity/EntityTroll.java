@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -227,8 +228,8 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
         return super.hurtServer(level, source, damage);
     }
 
-    @Override
-    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
+    protected Optional<ResourceKey<LootTable>> getIafLootTable() {
         switch (this.getTrollType()) {
             case MOUNTAIN:
                 return Optional.of(MOUNTAIN_LOOT);
@@ -239,6 +240,11 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
         }
         // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
         return Optional.empty();
+    }
+
+    @Override
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Override
@@ -341,7 +347,7 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
                 this.stoneProgress = 20;
                 EntityStoneStatue statue = EntityStoneStatue.buildStatueEntity(this);
                 statue.getTrappedTag().putFloat("StoneProgress", 20);
-                statue.absMoveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+                statue.absSnapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
                 if (!level().isClientSide()) {
                     level().addFreshEntity(statue);
                 }
@@ -391,7 +397,7 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
             // float f8 = f3 * f6 + f2 * f5;
             target.setDeltaMovement(f5, f6, 0.4F);
         }
-        if (this.getNavigation().isDone() && this.getTarget() != null && this.distanceToSqr(this.getTarget()) > 3 && this.distanceToSqr(this.getTarget()) < 30 && ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (this.getNavigation().isDone() && this.getTarget() != null && this.distanceToSqr(this.getTarget()) > 3 && this.distanceToSqr(this.getTarget()) < 30 && ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.MOB_GRIEFING)) {
             this.lookAt(this.getTarget(), 30, 30);
             if (this.getAnimation() == NO_ANIMATION && this.random.nextInt(15) == 0) {
                 this.setAnimation(ANIMATION_STRIKE_VERTICAL);
@@ -400,10 +406,9 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
                 float weaponX = (float) (getX() + 1.9F * Mth.cos((float) ((yBodyRot + 90) * Math.PI / 180)));
                 float weaponZ = (float) (getZ() + 1.9F * Mth.sin((float) ((yBodyRot + 90) * Math.PI / 180)));
                 float weaponY = (float) (getY() + (this.getEyeHeight() / 2));
-                Explosion explosion = new Explosion(level(), this, weaponX, weaponY, weaponZ, 1F + this.getRandom().nextFloat(), false, Explosion.BlockInteraction.DESTROY_WITH_DECAY, new ArrayList<>());
-                if (!dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, weaponX, weaponY, weaponZ))) {
-                    explosion.explode();
-                    explosion.finalizeExplosion(true);
+                // 26.x: the server explosion breaks the blocks (1.21.1: explode + finalizeExplosion of a new Explosion)
+                if (this.level() instanceof net.minecraft.server.level.ServerLevel serverLevel && !dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, weaponX, weaponY, weaponZ))) {
+                    new net.minecraft.world.level.ServerExplosion(serverLevel, this, null, null, new net.minecraft.world.phys.Vec3(weaponX, weaponY, weaponZ), 1F + this.getRandom().nextFloat(), false, Explosion.BlockInteraction.DESTROY_WITH_DECAY).explode();
                 }
 
                 this.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1, 1);

@@ -29,7 +29,7 @@ public class ItemStymphalianFeatherBundle extends Item {
     public @NotNull InteractionResult use(@NotNull Level worldIn, Player player, @NotNull InteractionHand hand) {
         ItemStack itemStackIn = player.getItemInHand(hand);
         player.startUsingItem(hand);
-        player.getCooldowns().addCooldown(this, 15);
+        player.getCooldowns().addCooldown(itemStackIn, 15);
         player.playSound(SoundEvents.EGG_THROW, 1, 1);
         float rotation = player.yHeadRot;
         for (int i = 0; i < 8; i++) {
@@ -44,7 +44,7 @@ public class ItemStymphalianFeatherBundle extends Item {
         if (!player.isCreative()) {
             itemStackIn.shrink(1);
         }
-        return new InteractionResult(InteractionResult.PASS, itemStackIn);
+        return InteractionResult.PASS;
     }
 
 

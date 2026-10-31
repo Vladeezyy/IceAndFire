@@ -1,4 +1,8 @@
 package com.github.alexthe666.iceandfire.entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.alexthe666.iceandfire.entity.util.IafScaled;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.EntityDimensions;
 import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -69,7 +73,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICustomCollisions, IBlacklistedFromStatues, IAnimatedEntity, IVillagerFear, IAnimalFear, IGroundMount, IHasCustomizableAttributes, ICustomMoveController {
+public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICustomCollisions, IBlacklistedFromStatues, IAnimatedEntity, IVillagerFear, IAnimalFear, IGroundMount, IHasCustomizableAttributes, ICustomMoveController, IafScaled {
 
     @Override
     public boolean isFood(@NotNull ItemStack stack) {
@@ -113,7 +117,6 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         setPathfindingMalus(PathType.WATER, 4.0f);
         setPathfindingMalus(PathType.WATER_BORDER, 4.0f);
         this.lookHelper = new IAFLookHelper(this);
-        this.noCulling = true;
         if (worldIn.isClientSide()) {
             tail_buffer = new ChainBuffer();
         }
@@ -215,7 +218,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
 
     @Override
     protected int getBaseExperienceReward(ServerLevel level) {
-        return this.getScale() > 3 ? 20 : 10;
+        return this.getIafScale() > 3 ? 20 : 10;
     }
 
     public void initSegments(float scale) {
@@ -233,14 +236,16 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             present &= EntityUtil.updatePart(entity, this);
         }
         if (!present) {
-            initSegments(this.getScale());
+            initSegments(this.getIafScale());
         }
     }
 
     private void clearSegments() {
         for (Entity entity : segments) {
             if (entity != null) {
-                entity.kill();
+                if (entity.level() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+                    entity.kill(serverLevel);
+                }
                 entity.remove(RemovalReason.KILLED);
             }
         }
@@ -256,13 +261,11 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     public boolean doHurtTarget(ServerLevel level, Entity entityIn) {
         if (this.getAnimation() != ANIMATION_BITE) {
             this.setAnimation(ANIMATION_BITE);
-            this.playSound(this.getScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_ATTACK : IafSoundRegistry.DEATHWORM_ATTACK, 1, 1);
+            this.playSound(this.getIafScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_ATTACK : IafSoundRegistry.DEATHWORM_ATTACK, 1, 1);
         }
-        if (this.getRandom().nextInt(3) == 0 && this.getScale() > 1 && ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (this.getRandom().nextInt(3) == 0 && this.getIafScale() > 1 && ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.MOB_GRIEFING)) {
             if (!dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, entityIn.getX(), entityIn.getY(), entityIn.getZ()))) {
-                BlockLaunchExplosion explosion = new BlockLaunchExplosion(level(), this, entityIn.getX(), entityIn.getY(), entityIn.getZ(), this.getScale());
-                explosion.explode();
-                explosion.finalizeExplosion(true);
+                BlockLaunchExplosion.explode(level(), this, entityIn.getX(), entityIn.getY(), entityIn.getZ(), this.getIafScale());
             }
         }
         return false;
@@ -278,18 +281,23 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     protected void checkFallDamage(double y, boolean onGroundIn, @NotNull BlockState state, @NotNull BlockPos pos) {
     }
 
-    @Override
-    protected Optional<ResourceKey<LootTable>> getDefaultLootTable() {
+    /** The mob\'s loot table (1.21.1 getDefaultLootTable override; 26.x Mob.getLootTable is final) */
+    protected Optional<ResourceKey<LootTable>> getIafLootTable() {
         switch (this.getVariant()) {
             case 0:
-                return Optional.of(this.getScale() > 3 ? TAN_GIANT_LOOT : TAN_LOOT);
+                return Optional.of(this.getIafScale() > 3 ? TAN_GIANT_LOOT : TAN_LOOT);
             case 1:
-                return Optional.of(this.getScale() > 3 ? RED_GIANT_LOOT : RED_LOOT);
+                return Optional.of(this.getIafScale() > 3 ? RED_GIANT_LOOT : RED_LOOT);
             case 2:
-                return Optional.of(this.getScale() > 3 ? WHITE_GIANT_LOOT : WHITE_LOOT);
+                return Optional.of(this.getIafScale() > 3 ? WHITE_GIANT_LOOT : WHITE_LOOT);
         }
         // 1.21: a null loot table is a crash when the creature dies (dropFromLootTable)
         return Optional.empty();
+    }
+
+    @Override
+    protected void dropFromLootTable(@NotNull ServerLevel level, @NotNull DamageSource source, boolean playerKilled) {
+        this.getIafLootTable().ifPresent(table -> this.dropFromLootTable(level, source, playerKilled, table));
     }
 
     @Nullable
@@ -385,9 +393,18 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         this.entityData.set(WORM_AGE, age);
     }
 
+    /**
+     * The creature's size (1.20.1's {@code getIafScale()} override). 26.x {@code LivingEntity.getIafScale()} is final and only
+     * the scale attribute: the hitbox is scaled in {@code getDefaultDimensions}, the model by the renderer.
+     */
     @Override
-    public float getScale() {
+    public float getIafScale() {
         return Math.min(this.getDeathwormScale() * (this.getWormAge() / 5F), 7F);
+    }
+
+    @Override
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pose) {
+        return super.getDefaultDimensions(pose).scale(this.getIafScale());
     }
 
     public float getDeathwormScale() {
@@ -419,7 +436,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         super.positionRider(passenger, callback);
         if (this.hasPassenger(passenger)) {
             this.setYBodyRot(passenger.getYRot());
-            float radius = -0.5F * this.getScale();
+            float radius = -0.5F * this.getIafScale();
             float angle = (0.01745329251F * this.yBodyRot);
             double extraX = radius * Mth.sin((float) (Math.PI + angle));
             double extraZ = radius * Mth.cos(angle);
@@ -527,9 +544,9 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     }
 
     private void updateAttributes() {
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(Math.min(0.2D, 0.15D * this.getScale()));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(Math.max(1, IafConfig.deathWormAttackStrength * this.getScale()));
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Math.max(6, IafConfig.deathWormMaxHealth * this.getScale()));
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(Math.min(0.2D, 0.15D * this.getIafScale()));
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(Math.max(1, IafConfig.deathWormAttackStrength * this.getIafScale()));
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(Math.max(6, IafConfig.deathWormMaxHealth * this.getIafScale()));
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(IafConfig.deathWormTargetSearchLength);
         this.setHealth((float) this.getAttribute(Attributes.MAX_HEALTH).getBaseValue());
     }
@@ -544,7 +561,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     }
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entityIn) {
+    protected boolean considersEntityAsAlly(@NotNull Entity entityIn) {
         if (this.isTame()) {
             LivingEntity livingentity = this.getOwner();
             if (entityIn == livingentity) {
@@ -558,7 +575,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             }
         }
 
-        return super.isAlliedTo(entityIn);
+        return super.considersEntityAsAlly(entityIn);
     }
 
     @Override
@@ -591,7 +608,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             if (this.ticksTillExplosion == 0) {
                 boolean b = !dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this, this.getX(), this.getY(), this.getZ()));
                 if (b) {
-                    level().explode(this.thrower, this.getX(), this.getY(), this.getZ(), 2.5F * this.getScale(), false, Level.ExplosionInteraction.MOB);
+                    level().explode(this.thrower, this.getX(), this.getY(), this.getZ(), 2.5F * this.getIafScale(), false, Level.ExplosionInteraction.MOB);
                 }
                 this.thrower = null;
             } else {
@@ -599,7 +616,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             }
         }
         if (this.tickCount == 1) {
-            initSegments(this.getScale());
+            initSegments(this.getIafScale());
         }
         if (isInSandStrict()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.08D, 0));
@@ -611,7 +628,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             this.heal(15);
             this.setDeathWormScale(this.getDeathwormScale());
             if (level().isClientSide()) {
-                for (int i = 0; i < 10 * this.getScale(); i++) {
+                for (int i = 0; i < 10 * this.getIafScale(); i++) {
                     this.level().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getX() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), this.getSurface((int) Math.floor(this.getX()), (int) Math.floor(this.getY()), (int) Math.floor(this.getZ())) + 0.5F, this.getZ() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), this.random.nextGaussian() * 0.02D, this.random.nextGaussian() * 0.02D, this.random.nextGaussian() * 0.02D);
                     /*
                     for (int j = 0; j < segments.length; j++) {
@@ -639,7 +656,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
                 }
                 this.setAnimation(ANIMATION_BITE);
             }*/
-        if (this.getTarget() != null && this.distanceTo(this.getTarget()) < Math.min(4, 4D * getScale()) && this.getAnimation() == ANIMATION_BITE && this.getAnimationTick() == 5) {
+        if (this.getTarget() != null && this.distanceTo(this.getTarget()) < Math.min(4, 4D * getIafScale()) && this.getAnimation() == ANIMATION_BITE && this.getAnimationTick() == 5) {
             float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
             this.getTarget().hurt(this.level().damageSources().mobAttack(this), f);
             this.setDeltaMovement(this.getDeltaMovement().add(0, -0.4F, 0));
@@ -668,20 +685,20 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return this.getScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_IDLE : IafSoundRegistry.DEATHWORM_IDLE;
+        return this.getIafScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_IDLE : IafSoundRegistry.DEATHWORM_IDLE;
     }
 
 
     @Override
     @Nullable
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return this.getScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_HURT : IafSoundRegistry.DEATHWORM_HURT;
+        return this.getIafScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_HURT : IafSoundRegistry.DEATHWORM_HURT;
     }
 
     @Override
     @Nullable
     protected SoundEvent getDeathSound() {
-        return this.getScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_DIE : IafSoundRegistry.DEATHWORM_DIE;
+        return this.getIafScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_DIE : IafSoundRegistry.DEATHWORM_DIE;
     }
 
     @Override
@@ -693,15 +710,13 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
             LivingEntity target = DragonUtils.riderLookingAtEntity(this, this.getControllingPassenger(), 3);
             if (this.getAnimation() != ANIMATION_BITE) {
                 this.setAnimation(ANIMATION_BITE);
-                this.playSound(this.getScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_ATTACK : IafSoundRegistry.DEATHWORM_ATTACK, 1, 1);
-                if (this.getRandom().nextInt(3) == 0 && this.getScale() > 1) {
-                    float radius = 1.5F * this.getScale();
+                this.playSound(this.getIafScale() > 3 ? IafSoundRegistry.DEATHWORM_GIANT_ATTACK : IafSoundRegistry.DEATHWORM_ATTACK, 1, 1);
+                if (this.getRandom().nextInt(3) == 0 && this.getIafScale() > 1) {
+                    float radius = 1.5F * this.getIafScale();
                     float angle = (0.01745329251F * this.yBodyRot);
                     double extraX = radius * Mth.sin((float) (Math.PI + angle));
                     double extraZ = radius * Mth.cos(angle);
-                    BlockLaunchExplosion explosion = new BlockLaunchExplosion(level(), this, this.getX() + extraX, this.getY() - this.getEyeHeight(), this.getZ() + extraZ, this.getScale() * 0.75F);
-                    explosion.explode();
-                    explosion.finalizeExplosion(true);
+                    BlockLaunchExplosion.explode(level(), this, this.getX() + extraX, this.getY() - this.getEyeHeight(), this.getZ() + extraZ, this.getIafScale() * 0.75F);
                 }
             }
             if (target != null) {
@@ -711,7 +726,7 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         if (this.isInSand()) {
             BlockPos pos = new BlockPos(this.getBlockX(), this.getSurface(this.getBlockX(), this.getBlockY(), this.getBlockZ()), this.getBlockZ()).below();
             BlockState state = level().getBlockState(pos);
-            if (state.isSolidRender(level(), pos)) {
+            if (state.isSolidRender()) {
                 if (level().isClientSide()) {
                     this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, state), this.getX() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), this.getSurface((int) Math.floor(this.getX()), (int) Math.floor(this.getY()), (int) Math.floor(this.getZ())) + 0.5F, this.getZ() + (double) (this.random.nextFloat() * this.getBbWidth() * 2.0F) - (double) this.getBbWidth(), this.random.nextGaussian() * 0.02D, this.random.nextGaussian() * 0.02D, this.random.nextGaussian() * 0.02D);
                 }

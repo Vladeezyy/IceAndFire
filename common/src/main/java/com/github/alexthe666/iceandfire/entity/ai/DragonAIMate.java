@@ -115,7 +115,7 @@ public class DragonAIMate extends Goal {
             int nestY = (int) (this.dragon.isMale() ? this.targetMate.getY() : this.dragon.getY()) - 1;
             int nestZ = (int) (this.dragon.isMale() ? this.targetMate.getZ() : this.dragon.getZ());
 
-            egg.moveTo(nestX - 0.5F, nestY + 1F, nestZ - 0.5F, 0.0F, 0.0F);
+            egg.snapTo(nestX - 0.5F, nestY + 1F, nestZ - 0.5F, 0.0F, 0.0F);
             this.theWorld.addFreshEntity(egg);
             RandomSource random = this.dragon.getRandom();
 
@@ -143,7 +143,7 @@ public class DragonAIMate extends Goal {
             if (theWorld.getBlockState(dirtPos).canBeReplaced() || theWorld.getBlockState(dirtPos) == NEST) {
                 theWorld.setBlockAndUpdate(dirtPos, Blocks.DIRT_PATH.defaultBlockState());
             }
-            if (this.theWorld.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            if (this.theWorld instanceof net.minecraft.server.level.ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.MOB_DROPS)) {
                 this.theWorld.addFreshEntity(new ExperienceOrb(this.theWorld, this.dragon.getX(), this.dragon.getY(), this.dragon.getZ(), random.nextInt(15) + 10));
             }
         }

@@ -1,4 +1,5 @@
 package com.github.alexthe666.iceandfire.world.feature;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.entity.EntityStymphalianBird;
@@ -32,8 +33,8 @@ public class SpawnStymphalianBird extends Feature<NoneFeatureConfiguration> {
                 BlockPos pos = position.offset(rand.nextInt(10) - 5, 0, rand.nextInt(10) - 5);
                 pos = worldIn.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, pos);
                 if (worldIn.getBlockState(pos.below()).canOcclude()) {
-                    EntityStymphalianBird bird = IafEntityRegistry.STYMPHALIAN_BIRD.get().create(worldIn.getLevel());
-                    bird.moveTo(pos.getX() + 0.5F, pos.getY() + 1.5F, pos.getZ() + 0.5F, 0, 0);
+                    EntityStymphalianBird bird = IafEntityRegistry.STYMPHALIAN_BIRD.get().create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
+                    bird.snapTo(pos.getX() + 0.5F, pos.getY() + 1.5F, pos.getZ() + 0.5F, 0, 0);
                     worldIn.addFreshEntity(bird);
 
                 }

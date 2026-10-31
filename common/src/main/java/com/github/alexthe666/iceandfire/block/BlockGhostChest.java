@@ -22,14 +22,13 @@ public class BlockGhostChest extends ChestBlock {
 
     public BlockGhostChest() {
         super(
-            Properties
-                .of()
+            IafTileEntityRegistry.GHOST_CHEST::get, net.minecraft.sounds.SoundEvents.CHEST_OPEN, net.minecraft.sounds.SoundEvents.CHEST_CLOSE,
+            dev.vladeezyy.iceandfire.platform.Registrar.blockProps()
                 .mapColor(MapColor.WOOD)
                 .instrument(NoteBlockInstrument.BASS)
                 .ignitedByLava()
                 .strength(2.5F)
-                .sound(SoundType.WOOD),
-                IafTileEntityRegistry.GHOST_CHEST::get
+                .sound(SoundType.WOOD)
         );
     }
 

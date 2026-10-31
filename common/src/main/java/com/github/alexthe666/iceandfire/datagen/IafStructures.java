@@ -1,15 +1,12 @@
 package com.github.alexthe666.iceandfire.datagen;
 
 import com.github.alexthe666.iceandfire.IceAndFire;
-import com.github.alexthe666.iceandfire.world.structure.GorgonTempleStructure;
-import com.github.alexthe666.iceandfire.world.structure.GraveyardStructure;
-import com.github.alexthe666.iceandfire.world.structure.MausoleumStructure;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
+/** 26.x: the keys only, the data is in the generated JSON (the bootstraps of the 1.21.1 datagen were removed) */
 public class IafStructures {
 
     public static final ResourceKey<Structure> GRAVEYARD = registerKey("graveyard");
@@ -20,9 +17,4 @@ public class IafStructures {
         return ResourceKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath(IceAndFire.MODID, name));
     }
 
-    public static void bootstrap(BootstrapContext<Structure> context) {
-        context.register(GRAVEYARD, GraveyardStructure.buildStructureConfig(context));
-        context.register(MAUSOLEUM, MausoleumStructure.buildStructureConfig(context));
-        context.register(GORGON_TEMPLE, GorgonTempleStructure.buildStructureConfig(context));
-    }
 }

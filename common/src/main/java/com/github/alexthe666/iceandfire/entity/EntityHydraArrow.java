@@ -41,7 +41,7 @@ public class EntityHydraArrow extends AbstractArrow {
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide() && !this.inGround) {
+        if (level().isClientSide() && !this.isInGround()) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;
@@ -69,7 +69,7 @@ public class EntityHydraArrow extends AbstractArrow {
                     player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
                 }
                 player.stopUsingItem();
-                this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
+                this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
             }
         }
     }
@@ -77,12 +77,12 @@ public class EntityHydraArrow extends AbstractArrow {
     @Override
     protected void doPostHurtEffects(@NotNull LivingEntity living) {
         if (living instanceof Player) {
-            this.damageShield((Player) living, (float) this.getBaseDamage());
+            this.damageShield((Player) living, (float) this.baseDamage);
         }
         living.addEffect(new MobEffectInstance(MobEffects.POISON, 300, 0));
         Entity shootingEntity = this.getOwner();
         if (shootingEntity instanceof LivingEntity) {
-            ((LivingEntity) shootingEntity).heal((float) this.getBaseDamage());
+            ((LivingEntity) shootingEntity).heal((float) this.baseDamage);
         }
     }
 
