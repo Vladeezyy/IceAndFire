@@ -14,13 +14,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class VillageHouseProcessor extends StructureProcessor {
+public class VillageHouseProcessor implements StructureProcessor {
 
     public static final ResourceKey<LootTable> LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "chest/village_scribe"));
     public static final VillageHouseProcessor INSTANCE = new VillageHouseProcessor();
@@ -30,7 +29,9 @@ public class VillageHouseProcessor extends StructureProcessor {
     }
 
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, StructureTemplate.@NotNull StructureBlockInfo infoIn1, StructureTemplate.StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull BlockPos templateRelativePos, StructureTemplate.@NotNull StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+        // 26.2: no original info any more; the processed one is the template's block (no processor runs before these)
+        StructureTemplate.StructureBlockInfo infoIn1 = infoIn2;
         RandomSource random = settings.getRandom(infoIn2.pos());
         if (infoIn2.state().getBlock() == Blocks.CHEST) {
             CompoundTag tag = new CompoundTag();
@@ -43,8 +44,8 @@ public class VillageHouseProcessor extends StructureProcessor {
 
 
     @Override
-    protected @NotNull StructureProcessorType getType() {
-        return IafProcessors.VILLAGEHOUSEPROCESSOR.get();
+    public @NotNull MapCodec<? extends StructureProcessor> codec() {
+        return CODEC;
     }
 
 }

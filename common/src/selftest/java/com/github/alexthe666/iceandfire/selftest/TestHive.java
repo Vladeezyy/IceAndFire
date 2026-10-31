@@ -73,7 +73,7 @@ public class TestHive {
     }
 
     public double distance() {
-        return Math.sqrt(queen.distanceToSqr(hive.getCenter().getCenter()));
+        return Math.sqrt(queen.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(hive.getCenter())));
     }
 
     public boolean queenAtHome(ServerLevel level) {

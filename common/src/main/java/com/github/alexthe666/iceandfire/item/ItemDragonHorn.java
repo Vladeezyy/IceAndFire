@@ -44,8 +44,8 @@ public class ItemDragonHorn extends Item {
     public static int getDragonType(ItemStack stack) {
         if (ItemNbt.hasTag(stack)) {
             String id = ItemNbt.view(stack).getStringOr("DragonHornEntityID", "");
-            if (EntityType.byString(id).isPresent()) {
-                EntityType entityType = EntityType.byString(id).get();
+            if (net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).isPresent()) {
+                EntityType entityType = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).get();
                 if (entityType == IafEntityRegistry.FIRE_DRAGON.get())
                     return 1;
 
@@ -98,7 +98,7 @@ public class ItemDragonHorn extends Item {
         if (!stackTag.getStringOr("DragonHornEntityID", "").isEmpty()) {
             Level world = context.getLevel();
             String id = stackTag.getStringOr("DragonHornEntityID", "");
-            EntityType type = EntityType.byString(id).orElse(null);
+            EntityType type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).orElse(null);
             if (type != null) {
                 Entity entity = type.create(world, EntitySpawnReason.MOB_SUMMONED);
                 if (entity instanceof EntityDragonBase) {
@@ -128,8 +128,8 @@ public class ItemDragonHorn extends Item {
             CompoundTag entityTag = getEntityTag(stack);
             if (!entityTag.isEmpty()) {
                 String id = ItemNbt.view(stack).getStringOr("DragonHornEntityID", "");
-                if (EntityType.byString(id).isPresent()) {
-                    EntityType type = EntityType.byString(id).get();
+                if (net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).isPresent()) {
+                    EntityType type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).get();
                     tooltip.accept((Component.translatable(type.getDescriptionId())).withStyle(getTextColorForEntityType(type)));
                     String name = (Component.translatable("dragon.unnamed")).getString();
                     if (worldIn.registries() != null) {

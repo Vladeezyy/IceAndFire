@@ -2,7 +2,7 @@ package com.github.alexthe666.iceandfire.client.render.entity;
 
 import net.minecraft.util.ARGB;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.alexthe666.iceandfire.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

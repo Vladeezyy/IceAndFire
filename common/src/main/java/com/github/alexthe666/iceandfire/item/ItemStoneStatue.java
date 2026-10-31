@@ -36,8 +36,8 @@ public class ItemStoneStatue extends Item {
         if (ItemNbt.hasTag(stack)) {
             boolean isPlayer = ItemNbt.view(stack).getBooleanOr("IAFStoneStatuePlayerEntity", false);
             String id = ItemNbt.view(stack).getStringOr("IAFStoneStatueEntityID", "");
-            if (EntityType.byString(id).orElse(null) != null) {
-                EntityType type = EntityType.byString(id).orElse(null);
+            if (net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).orElse(null) != null) {
+                EntityType type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(id)).orElse(null);
                 MutableComponent untranslated = isPlayer ? Component.translatable("entity.minecraft.player") : Component.translatable(type.getDescriptionId());
                 tooltip.accept(untranslated.withStyle(ChatFormatting.GRAY));
             }

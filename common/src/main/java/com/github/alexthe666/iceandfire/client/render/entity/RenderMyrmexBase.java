@@ -9,7 +9,7 @@ import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerMyrmexIt
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.alexthe666.iceandfire.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;

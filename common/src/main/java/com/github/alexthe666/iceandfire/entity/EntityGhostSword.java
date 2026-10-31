@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -192,7 +193,7 @@ public class EntityGhostSword extends AbstractArrow {
             }
         }
 
-        boolean flag = entity.getType() == EntityType.ENDERMAN;
+        boolean flag = entity.getType() == EntityTypes.ENDERMAN;
         int j = entity.getRemainingFireTicks();
         if (this.isOnFire() && !flag) {
             entity.igniteForSeconds(5);

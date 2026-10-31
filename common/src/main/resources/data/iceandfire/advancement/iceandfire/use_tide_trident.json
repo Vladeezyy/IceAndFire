@@ -18,7 +18,7 @@
         "damage": {
           "type": {
             "direct_entity": {
-              "type": "iceandfire:tide_trident"
+              "minecraft:entity_type": "iceandfire:tide_trident"
             },
             "tags": [
               {

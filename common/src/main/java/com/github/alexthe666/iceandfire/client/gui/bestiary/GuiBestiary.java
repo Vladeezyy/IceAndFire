@@ -460,11 +460,11 @@ public class GuiBestiary extends Screen {
                     ms.pose().popMatrix();
 
                     drawItemStack(ms, new ItemStack(Items.LEATHER_HELMET), 180, 76, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 160, 76, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 199, 76, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 160, 57, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 180, 57, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 199, 57, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 160, 76, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 199, 76, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 160, 57, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 180, 57, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 199, 57, 1.35F);
                     drawItemStack(ms, new ItemStack(IafItemRegistry.SHEEP_HELMET.get()), 165, 45, 2F);
 
                     ms.pose().pushMatrix();
@@ -472,13 +472,13 @@ public class GuiBestiary extends Screen {
                     drawImage(ms, DRAWINGS_0, 144, 95, 389, 1, 50, 50, 512F);
                     ms.pose().popMatrix();
                     drawItemStack(ms, new ItemStack(Items.LEATHER_CHESTPLATE), 180, 126, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 160, 126, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 199, 126, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 160, 107, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 199, 107, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 160, 145, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 180, 145, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 199, 145, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 160, 126, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 199, 126, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 160, 107, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 199, 107, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 160, 145, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 180, 145, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 199, 145, 1.35F);
                     drawItemStack(ms, new ItemStack(IafItemRegistry.SHEEP_CHESTPLATE.get()), 165, 95, 2F);
                 }
                 if (bookPages == 2) {
@@ -492,13 +492,13 @@ public class GuiBestiary extends Screen {
                     drawImage(ms, DRAWINGS_0, 13, 24, 389, 1, 50, 50, 512F);
                     ms.pose().popMatrix();
                     drawItemStack(ms, new ItemStack(Items.LEATHER_LEGGINGS), 34, 46, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 14, 46, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 53, 46, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 14, 27, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 34, 27, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 53, 27, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 14, 65, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 53, 65, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 14, 46, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 53, 46, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 14, 27, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 34, 27, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 53, 27, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 14, 65, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 53, 65, 1.35F);
 
                     drawItemStack(ms, new ItemStack(IafItemRegistry.SHEEP_LEGGINGS.get()), 64, 27, 2F);
                     ms.pose().pushMatrix();
@@ -506,10 +506,10 @@ public class GuiBestiary extends Screen {
                     drawImage(ms, DRAWINGS_0, 13, 84, 389, 1, 50, 50, 512F);
                     ms.pose().popMatrix();
                     drawItemStack(ms, new ItemStack(Items.LEATHER_BOOTS), 34, 94, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 14, 113, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 53, 113, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 14, 94, 1.35F);
-                    drawItemStack(ms, new ItemStack(Blocks.WHITE_WOOL), 53, 94, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 14, 113, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 53, 113, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 14, 94, 1.35F);
+                    drawItemStack(ms, new ItemStack(Blocks.WOOL.white()), 53, 94, 1.35F);
                     drawItemStack(ms, new ItemStack(IafItemRegistry.SHEEP_BOOTS.get()), 64, 73, 2F);
                 }
                 break;

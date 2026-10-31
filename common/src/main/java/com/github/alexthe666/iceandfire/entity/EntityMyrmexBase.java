@@ -169,9 +169,18 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         return this.getGrowthStage() > 1;
     }
 
-    @Override
-    public boolean isBaby() {
-        return this.getGrowthStage() < 2;
+    /**
+     * 1.21.1 overrode isBaby() by growth stage; 26.2 made it final (age < 0). The vanilla age follows the stage instead,
+     * so isBaby() (the mod's checks, vanilla's, the client's synced flag) means what it meant. Called every tick.
+     */
+    private void syncBabyAge() {
+        boolean baby = this.getGrowthStage() < 2;
+        if (!this.level().isClientSide() && baby != this.isBaby()) {
+            this.setAge(baby ? -24000 : 0);
+        } else if (baby && !this.level().isClientSide() && this.getAge() > -1000) {
+            // vanilla ageing counts up towards adult: keep it far from 0 while the stage says baby
+            this.setAge(-24000);
+        }
     }
 
     @Override
@@ -246,6 +255,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     @Override
     public void tick() {
+        this.syncBabyAge();
         super.tick();
         this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1);
         if (level().getDifficulty() == Difficulty.PEACEFUL && this.getTarget() instanceof Player) {

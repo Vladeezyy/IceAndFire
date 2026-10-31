@@ -150,11 +150,11 @@ public class NetTest {
             clientTicks++;
             if (mc.player == null || mc.level == null || mc.getConnection() == null) {
                 // --quickPlayMultiplayer does not always join (seen on macOS): after 10 s on the title screen join from here
-                if (!joinTried && clientTicks > 200 && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen) {
+                if (!joinTried && clientTicks > 200 && mc.gui.screen() instanceof net.minecraft.client.gui.screens.TitleScreen) {
                     joinTried = true;
                     IceAndFire.LOGGER.info("[nettest] quick play did not join, connecting from the title screen");
                     String address = "localhost:25570";
-                    net.minecraft.client.gui.screens.ConnectScreen.startConnecting(mc.screen, mc, net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
+                    net.minecraft.client.gui.screens.ConnectScreen.startConnecting(mc.gui.screen(), mc, net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
                         new net.minecraft.client.multiplayer.ServerData("nettest", address, net.minecraft.client.multiplayer.ServerData.Type.OTHER), false, null);
                 }
                 return;
@@ -193,7 +193,7 @@ public class NetTest {
             mc.options.keyJump.setDown(up);
             mc.options.keyUp.setDown(forward);
             if (riddenTicks == 450) {
-                Screenshot.grab(new File("."), "nettest_flying.png", mc.getMainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
+                Screenshot.grab(new File("."), "nettest_flying.png", mc.gameRenderer.mainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
             }
             // Where the rider is: feet and eyes against the dragon and its saddle point, and how it looks from behind
             if (riddenTicks % 100 == 50 && mc.player.getVehicle() instanceof EntityDragonBase dragon) {
@@ -206,7 +206,7 @@ public class NetTest {
                 mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
             }
             if (riddenTicks == 490) {
-                Screenshot.grab(new File("."), "nettest_flying_third.png", mc.getMainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
+                Screenshot.grab(new File("."), "nettest_flying_third.png", mc.gameRenderer.mainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
             }
             if (riddenTicks == 500) {
                 mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);

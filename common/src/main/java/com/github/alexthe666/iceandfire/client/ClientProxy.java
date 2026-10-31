@@ -134,19 +134,19 @@ public class ClientProxy extends CommonProxy {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openBestiaryGui(ItemStack book) {
-        Minecraft.getInstance().setScreen(new GuiBestiary(book));
+        Minecraft.getInstance().gui.setScreen(new GuiBestiary(book));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openMyrmexStaffGui(ItemStack staff) {
-        Minecraft.getInstance().setScreen(new GuiMyrmexStaff(staff));
+        Minecraft.getInstance().gui.setScreen(new GuiMyrmexStaff(staff));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void openMyrmexAddRoomGui(ItemStack staff, BlockPos pos, Direction facing) {
-        Minecraft.getInstance().setScreen(new GuiMyrmexAddRoom(staff, pos, facing));
+        Minecraft.getInstance().gui.setScreen(new GuiMyrmexAddRoom(staff, pos, facing));
     }
 
     @OnlyIn(Dist.CLIENT)

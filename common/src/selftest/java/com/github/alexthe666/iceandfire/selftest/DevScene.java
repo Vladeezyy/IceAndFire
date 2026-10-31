@@ -69,7 +69,7 @@ public final class DevScene {
 
     static {
         at(40, mc -> server(mc, DevScene::setup));
-        at(45, mc -> mc.options.hideGui = true);
+        at(45, mc -> setHudHidden(mc, true));
         at(60, mc -> server(mc, DevScene::buildStage));
         at(120, mc -> server(mc, DevScene::dragons));
         at(130, mc -> server(mc, p -> look(p, stage.offset(0, 8, 38), stage.offset(0, 3, 20))));
@@ -99,14 +99,14 @@ public final class DevScene {
         at(535, mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
         // Creative tabs
         at(540, mc -> {
-            mc.options.hideGui = false;
-            mc.setScreen(new CreativeModeInventoryScreen(mc.player, mc.player.connection.enabledFeatures(), true));
+            setHudHidden(mc, false);
+            mc.gui.setScreen(new CreativeModeInventoryScreen(mc.player, mc.player.connection.enabledFeatures(), true));
         });
         at(550, mc -> selectTab(mc, IafTabRegistry.TAB_ITEMS.get()));
         at(570, mc -> shot(mc, "tab_items"));
         at(575, mc -> selectTab(mc, IafTabRegistry.TAB_BLOCKS.get()));
         at(595, mc -> shot(mc, "tab_blocks"));
-        at(600, mc -> mc.setScreen(null));
+        at(600, mc -> mc.gui.setScreen(null));
         // Bestiary with every page
         at(610, mc -> {
             ItemStack book = new ItemStack(IafItemRegistry.BESTIARY.get());
@@ -114,7 +114,7 @@ public final class DevScene {
             for (com.github.alexthe666.iceandfire.enums.EnumBestiaryPages page : com.github.alexthe666.iceandfire.enums.EnumBestiaryPages.values()) {
                 com.github.alexthe666.iceandfire.enums.EnumBestiaryPages.addPage(page, book);
             }
-            mc.setScreen(new GuiBestiary(book));
+            mc.gui.setScreen(new GuiBestiary(book));
         });
         at(640, mc -> shot(mc, "bestiary"));
         // Pages with text (the translations must fit the page): SCENE_LANG=ru_ru tools/scenetest.sh
@@ -124,23 +124,23 @@ public final class DevScene {
         at(670, mc -> shot(mc, "bestiary_tameddragons_1"));
         at(675, mc -> bestiaryPage(mc, "MYRMEX", 3));
         at(685, mc -> shot(mc, "bestiary_myrmex_3"));
-        at(690, mc -> mc.setScreen(null));
+        at(690, mc -> mc.gui.setScreen(null));
         // Screens with labels: the dragon (name, health, stage, gender, hunger), the lectern, the dragon forge
         at(700, mc -> server(mc, DevScene::dragonScreen));
         at(725, mc -> shot(mc, "gui_dragon"));
         at(730, mc -> {
-            mc.setScreen(null);
+            mc.gui.setScreen(null);
             server(mc, p -> level(p).getEntitiesOfClass(EntityDragonBase.class, p.getBoundingBox().inflate(40)).forEach(Entity::discard));
         });
-        at(740, mc -> mc.setScreen(new com.github.alexthe666.iceandfire.client.gui.GuiLectern(
+        at(740, mc -> mc.gui.setScreen(new com.github.alexthe666.iceandfire.client.gui.GuiLectern(
             new com.github.alexthe666.iceandfire.inventory.ContainerLectern(0, mc.player.getInventory()), mc.player.getInventory(),
             net.minecraft.network.chat.Component.translatable("block.iceandfire.lectern"))));
         at(750, mc -> shot(mc, "gui_lectern"));
-        at(755, mc -> mc.setScreen(new com.github.alexthe666.iceandfire.client.gui.GuiDragonForge(
+        at(755, mc -> mc.gui.setScreen(new com.github.alexthe666.iceandfire.client.gui.GuiDragonForge(
             new com.github.alexthe666.iceandfire.inventory.ContainerDragonForge(0, mc.player.getInventory()), mc.player.getInventory(),
             net.minecraft.network.chat.Component.translatable("iceandfire.fire_dragon_forge"))));
         at(765, mc -> shot(mc, "gui_dragonforge"));
-        at(770, mc -> mc.setScreen(null));
+        at(770, mc -> mc.gui.setScreen(null));
         at(END + 20, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
@@ -189,7 +189,7 @@ public final class DevScene {
     }
 
     private static void bestiaryPage(Minecraft mc, String page, int number) {
-        if (mc.screen instanceof GuiBestiary gui) {
+        if (mc.gui.screen() instanceof GuiBestiary gui) {
             gui.pageType = com.github.alexthe666.iceandfire.enums.EnumBestiaryPages.valueOf(page);
             gui.bookPages = number;
             try {
@@ -200,7 +200,7 @@ public final class DevScene {
                 check("bestiary page " + page, false, e);
             }
         } else {
-            check("bestiary open for " + page, false, mc.screen);
+            check("bestiary open for " + page, false, mc.gui.screen());
         }
     }
 
@@ -255,16 +255,16 @@ public final class DevScene {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        if (!opened && mc.screen instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen) {
+        if (!opened && mc.gui.screen() instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen) {
             mc.options.onboardAccessibility = false;
             mc.options.save();
-            mc.setScreen(new TitleScreen());
+            mc.gui.setScreen(new TitleScreen());
             return;
         }
-        if (!opened && mc.screen instanceof TitleScreen) {
+        if (!opened && mc.gui.screen() instanceof TitleScreen) {
             opened = true;
             if (mc.getLevelSource().levelExists(WORLD)) {
-                mc.createWorldOpenFlows().openWorld(WORLD, () -> mc.setScreen(new TitleScreen()));
+                mc.createWorldOpenFlows().openWorld(WORLD, () -> mc.gui.setScreen(new TitleScreen()));
             } else {
                 LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, new LevelSettings.DifficultySettings(Difficulty.NORMAL, false, false), true, WorldDataConfiguration.DEFAULT);
                 mc.createWorldOpenFlows().createFreshLevel(WORLD, settings, new WorldOptions(1234L, false, false), WorldPresets::createNormalWorldDimensions, new TitleScreen());
@@ -276,9 +276,9 @@ public final class DevScene {
         }
         mc.options.pauseOnLostFocus = false;
         mc.getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
-        mc.getToastManager().clear();
-        if (mc.screen instanceof PauseScreen) {
-            mc.setScreen(null);
+        mc.gui.toastManager().clear();
+        if (mc.gui.screen() instanceof PauseScreen) {
+            mc.gui.setScreen(null);
         }
         tick++;
         if (tick == 1) {
@@ -317,12 +317,12 @@ public final class DevScene {
     }
 
     private static void shot(Minecraft mc, String name) {
-        mc.getToastManager().clear();
-        Screenshot.grab(mc.gameDirectory, "scene_" + name + ".png", mc.getMainRenderTarget(), 1, message -> IceAndFire.LOGGER.info("[scene] screenshot {}", name));
+        mc.gui.toastManager().clear();
+        Screenshot.grab(mc.gameDirectory, "scene_" + name + ".png", mc.gameRenderer.mainRenderTarget(), 1, message -> IceAndFire.LOGGER.info("[scene] screenshot {}", name));
     }
 
     private static void selectTab(Minecraft mc, CreativeModeTab tab) {
-        if (mc.screen instanceof CreativeModeInventoryScreen screen) {
+        if (mc.gui.screen() instanceof CreativeModeInventoryScreen screen) {
             try {
                 var select = CreativeModeInventoryScreen.class.getDeclaredMethod("selectTab", CreativeModeTab.class);
                 select.setAccessible(true);
@@ -454,4 +454,11 @@ public final class DevScene {
     private static void setTime(ServerLevel level, int time) {
         level.getServer().getCommands().performPrefixedCommand(level.getServer().createCommandSourceStack().withSuppressedOutput(), "time set " + time);
     }
+
+	/** 26.2: the HUD is hidden through Minecraft.gui.hud, which only toggles */
+	private static void setHudHidden(net.minecraft.client.Minecraft mc, boolean hidden)
+	{
+		if(mc.gui.hud.isHidden() != hidden)
+			mc.gui.hud.toggle();
+	}
 }

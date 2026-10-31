@@ -16,7 +16,7 @@
       "trigger": "minecraft:tame_animal",
       "conditions": {
         "entity": {
-          "type": "iceandfire:pixie"
+          "minecraft:entity_type": "iceandfire:pixie"
         }
       }
     }

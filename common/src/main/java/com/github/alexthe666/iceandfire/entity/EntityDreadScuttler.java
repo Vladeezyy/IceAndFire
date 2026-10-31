@@ -163,7 +163,7 @@ public class EntityDreadScuttler extends EntityDreadMob implements IAnimatedEnti
             this.lookAt(attackTarget, 360, 80);
             if (this.getAnimation() == ANIMATION_BITE && this.getAnimationTick() == 6) {
                 attackTarget.hurt(level().damageSources().mobAttack(this), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-                attackTarget.knockback(0.25F, this.getX() - attackTarget.getX(), this.getZ() - attackTarget.getZ());
+                attackTarget.knockback(0.25F, this.getX() - attackTarget.getX(), this.getZ() - attackTarget.getZ(), this.damageSources().mobAttack(this), 0.0F);
             }
         }
 

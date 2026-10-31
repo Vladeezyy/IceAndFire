@@ -71,7 +71,7 @@ public class BlockIceSpikes extends Block {
         if (!(entityIn instanceof EntityIceDragon)) {
             entityIn.hurt(worldIn.damageSources().cactus(), 1);
             if (entityIn instanceof LivingEntity && entityIn.getDeltaMovement().x != 0 && entityIn.getDeltaMovement().z != 0) {
-                ((LivingEntity) entityIn).knockback(0.5F, entityIn.getDeltaMovement().x, entityIn.getDeltaMovement().z);
+                ((LivingEntity) entityIn).knockback(0.5F, entityIn.getDeltaMovement().x, entityIn.getDeltaMovement().z, entityIn.damageSources().generic(), 0.0F);
             }
         }
     }

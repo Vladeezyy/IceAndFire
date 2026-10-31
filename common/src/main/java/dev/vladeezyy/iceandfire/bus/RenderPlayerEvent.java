@@ -1,7 +1,7 @@
 package dev.vladeezyy.iceandfire.bus;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.alexthe666.iceandfire.client.render.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
 
 public abstract class RenderPlayerEvent extends PlayerEvent {

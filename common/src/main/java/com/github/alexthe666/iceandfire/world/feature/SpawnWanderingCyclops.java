@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.level.WorldGenLevel;
@@ -37,7 +38,7 @@ public class SpawnWanderingCyclops extends Feature<NoneFeatureConfiguration> {
                 cyclops.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(position), EntitySpawnReason.SPAWNER, null);
                 worldIn.addFreshEntity(cyclops);
                 for (int i = 0; i < 3 + rand.nextInt(3); i++) {
-                    Sheep sheep = EntityType.SHEEP.create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
+                    Sheep sheep = EntityTypes.SHEEP.create(worldIn.getLevel(), EntitySpawnReason.STRUCTURE);
                     sheep.setPos(position.getX() + 0.5F, position.getY() + 1, position.getZ() + 0.5F);
                     sheep.setColor(Sheep.getRandomSheepColor(worldIn, sheep.blockPosition()));
                     worldIn.addFreshEntity(sheep);

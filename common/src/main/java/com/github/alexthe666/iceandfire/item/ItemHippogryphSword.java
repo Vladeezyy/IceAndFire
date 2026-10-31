@@ -37,7 +37,7 @@ public class ItemHippogryphSword extends Item implements IafTieredItem {
             Player player = (Player) attacker;
             for (LivingEntity LivingEntity : attacker.level().getEntitiesOfClass(LivingEntity.class, targetEntity.getBoundingBox().inflate(1.0D, 0.25D, 1.0D))) {
                 if (LivingEntity != player && LivingEntity != targetEntity && !attacker.isAlliedTo(LivingEntity) && attacker.distanceToSqr(LivingEntity) < 9.0D) {
-                    LivingEntity.knockback(0.4F, Mth.sin(attacker.getYRot() * 0.017453292F), -Mth.cos(attacker.getYRot() * 0.017453292F));
+                    LivingEntity.knockback(0.4F, Mth.sin(attacker.getYRot() * 0.017453292F), -Mth.cos(attacker.getYRot() * 0.017453292F), attacker.damageSources().mobAttack(attacker), 0.0F);
                     LivingEntity.hurt(attacker.level().damageSources().playerAttack(player), f3);
                 }
             }

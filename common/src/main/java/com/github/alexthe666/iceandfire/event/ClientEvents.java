@@ -57,7 +57,7 @@ public class ClientEvents {
     {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS) {
             // 26.x: vanilla's debug gizmos (shown with the next frame)
-            try (net.minecraft.gizmos.Gizmos.TemporaryCollection ignored = net.minecraft.client.Minecraft.getInstance().levelRenderer.collectPerFrameGizmos()) {
+            try (net.minecraft.gizmos.Gizmos.TemporaryCollection ignored = net.minecraft.client.Minecraft.getInstance().levelRenderer.collectPerFrameRenderThreadGizmos()) {
                 com.github.alexthe666.iceandfire.client.render.pathfinding.PathfindingDebugRenderer.render();
             }
         }

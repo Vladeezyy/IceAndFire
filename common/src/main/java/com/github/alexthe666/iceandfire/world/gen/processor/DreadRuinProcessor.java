@@ -14,14 +14,13 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class DreadRuinProcessor extends StructureProcessor {
+public class DreadRuinProcessor implements StructureProcessor {
 
     public static final DreadRuinProcessor INSTANCE = new DreadRuinProcessor();
     public static final MapCodec<DreadRuinProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
@@ -41,7 +40,9 @@ public class DreadRuinProcessor extends StructureProcessor {
     }
 
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, StructureTemplate.@NotNull StructureBlockInfo infoIn1, StructureTemplate.StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull BlockPos templateRelativePos, StructureTemplate.@NotNull StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+        // 26.2: no original info any more; the processed one is the template's block (no processor runs before these)
+        StructureTemplate.StructureBlockInfo infoIn1 = infoIn2;
         RandomSource random = settings.getRandom(infoIn2.pos());
 
         if (infoIn2.state().getBlock() == IafBlockRegistry.DREAD_STONE_BRICKS.get()) {
@@ -68,8 +69,8 @@ public class DreadRuinProcessor extends StructureProcessor {
     }
 
     @Override
-    protected @NotNull StructureProcessorType getType() {
-        return IafProcessors.DREADRUINPROCESSOR.get();
+    public @NotNull MapCodec<? extends StructureProcessor> codec() {
+        return CODEC;
     }
 
     private EntityType getRandomMobForMobSpawner(RandomSource random) {

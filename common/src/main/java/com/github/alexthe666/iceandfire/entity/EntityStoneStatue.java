@@ -1,4 +1,6 @@
 package com.github.alexthe666.iceandfire.entity;
+
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.alexthe666.iceandfire.entity.util.IafScaled;
 import com.github.alexthe666.iceandfire.entity.util.Values;
@@ -88,7 +90,7 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
 
     public EntityType getTrappedEntityType() {
         String str = getTrappedEntityTypeString();
-        return EntityType.byString(str).orElse(EntityType.PIG);
+        return net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(str)).orElse(EntityTypes.PIG);
     }
 
     public String getTrappedEntityTypeString() {

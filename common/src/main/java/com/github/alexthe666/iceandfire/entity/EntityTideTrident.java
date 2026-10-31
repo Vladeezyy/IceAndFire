@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +54,7 @@ public class EntityTideTrident extends ThrownTrident {
         if (entitiesHit >= getMaxPiercing())
             this.dealtDamage = true;
         if (entity.hurtOrSimulate(damagesource, f)) {
-            if (entity.getType() == EntityType.ENDERMAN) {
+            if (entity.getType() == EntityTypes.ENDERMAN) {
                 return;
             }
 

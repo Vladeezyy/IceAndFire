@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LevelAccessor;
@@ -164,7 +165,7 @@ public class WorldGenCyclopsCave extends Feature<NoneFeatureConfiguration> imple
                     if (level.isEmptyBlock(relativePosition.relative(direction.getClockWise())) && sheepAmount > 0) {
                         BlockPos sheepPos = relativePosition.relative(direction.getClockWise());
 
-                        Sheep sheep = new Sheep(EntityType.SHEEP, level.getLevel());
+                        Sheep sheep = new Sheep(EntityTypes.SHEEP, level.getLevel());
                         sheep.setPos(sheepPos.getX() + 0.5F, sheepPos.getY() + 0.5F, sheepPos.getZ() + 0.5F);
                         sheep.setColor(random.nextInt(4) == 0 ? DyeColor.YELLOW : DyeColor.WHITE);
                         level.addFreshEntity(sheep);

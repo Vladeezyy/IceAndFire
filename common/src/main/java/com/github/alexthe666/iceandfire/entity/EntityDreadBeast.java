@@ -157,7 +157,7 @@ public class EntityDreadBeast extends EntityDreadMob implements IAnimatedEntity,
             if (this.getAnimation() == ANIMATION_BITE && this.getAnimationTick() == 6) {
                 this.getTarget().hurt(level().damageSources().mobAttack(this), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
                 if (this.getTarget() != null)
-                    this.getTarget().knockback(0.25F, this.getX() - this.getTarget().getX(), this.getZ() - this.getTarget().getZ());
+                    this.getTarget().knockback(0.25F, this.getX() - this.getTarget().getX(), this.getZ() - this.getTarget().getZ(), this.damageSources().mobAttack(this), 0.0F);
             }
         }
 

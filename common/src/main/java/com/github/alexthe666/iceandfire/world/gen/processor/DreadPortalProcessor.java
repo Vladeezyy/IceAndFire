@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.world.gen.processor;
 
+import com.mojang.serialization.MapCodec;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -9,13 +10,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class DreadPortalProcessor extends StructureProcessor {
+public class DreadPortalProcessor implements StructureProcessor {
 
     private final float integrity = 1.0F;
 
@@ -35,7 +35,9 @@ public class DreadPortalProcessor extends StructureProcessor {
 
     @Nullable
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull BlockPos p_230386_3_, StructureTemplate.@NotNull StructureBlockInfo blockInfoIn, StructureTemplate.@NotNull StructureBlockInfo p_230386_5_, StructurePlaceSettings settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull BlockPos p_230386_3_, @NotNull BlockPos templateRelativePos, StructureTemplate.@NotNull StructureBlockInfo p_230386_5_, StructurePlaceSettings settings) {
+        // 26.2: no original info any more; the processed one is the template's block (no processor runs before these)
+        StructureTemplate.StructureBlockInfo blockInfoIn = p_230386_5_;
         RandomSource random = settings.getRandom(pos);
         if (random.nextFloat() <= integrity) {
             if (blockInfoIn.state().getBlock() == Blocks.DIAMOND_BLOCK) {
@@ -52,8 +54,8 @@ public class DreadPortalProcessor extends StructureProcessor {
     }
 
     @Override
-    protected @NotNull StructureProcessorType getType() {
-        return StructureProcessorType.BLOCK_ROT;
+    public @NotNull MapCodec<? extends StructureProcessor> codec() {
+        return MapCodec.unit(this);
     }
 
 }

@@ -21,6 +21,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -183,11 +184,11 @@ public class SelfTest {
         check("dragons alive", dragons == 3, dragons);
 
         // Entity data attachment survives saving (frozen state)
-        Zombie zombie = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+        Zombie zombie = EntityTypes.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
         zombie.snapTo(0, 100, 0);
         EntityDataProvider.getCapability(zombie).ifPresent(data -> data.frozenData.setFrozen(zombie, 120));
         CompoundTag saved = com.github.alexthe666.iceandfire.entity.util.Values.save(zombie);
-        Zombie loaded = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+        Zombie loaded = EntityTypes.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
         com.github.alexthe666.iceandfire.entity.util.Values.load(loaded, saved);
         int frozen = EntityDataProvider.getCapability(loaded).map(data -> data.frozenData.frozenTicks).orElse(-1);
         check("entity data saved", frozen == 120, frozen);
@@ -409,13 +410,13 @@ public class SelfTest {
             return "no queen";
         }
         var data = com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level);
-        return "alive " + queen.isAlive() + ", own hive " + (queen.getHive() == hive) + ", " + String.format("%.1f", Math.sqrt(queen.distanceToSqr(hive.getCenter().getCenter())))
+        return "alive " + queen.isAlive() + ", own hive " + (queen.getHive() == hive) + ", " + String.format("%.1f", Math.sqrt(queen.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(hive.getCenter()))))
             + " blocks from the center, hives " + hivesBefore + " -> " + data.getHivelist().size() + ", sees the sky " + queen.canSeeSky();
     }
 
     private static void hiveSettled(ServerLevel level) {
         queen = findQueen(level);
-        check("myrmex queen in her hive", queen != null && queen.getHive() == hive && queen.distanceToSqr(hive.getCenter().getCenter()) < 20 * 20, queenState(level));
+        check("myrmex queen in her hive", queen != null && queen.getHive() == hive && queen.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(hive.getCenter())) < 20 * 20, queenState(level));
     }
 
     /** A water entrance: a shaft from the queen up, water to the sea level, open sky above. */
@@ -438,7 +439,7 @@ public class SelfTest {
 
     private static void hiveAfterFlood(ServerLevel level) {
         check("myrmex queen stays in her hive under a water entrance (#5197)", queen != null && queen.isAlive() && queen.getHive() == hive
-            && queen.distanceToSqr(hive.getCenter().getCenter()) < 20 * 20 && com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level).getHivelist().size() == hivesBefore, queenState(level));
+            && queen.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(hive.getCenter())) < 20 * 20 && com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level).getHivelist().size() == hivesBefore, queenState(level));
         hiveArea(level, false);
     }
 

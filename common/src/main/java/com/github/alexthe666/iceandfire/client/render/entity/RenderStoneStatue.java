@@ -24,7 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.alexthe666.iceandfire.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -35,6 +35,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -75,7 +76,7 @@ public class RenderStoneStatue extends IafEntityRenderer<EntityStoneStatue> {
 
             if (renderer instanceof RenderLayerParent) {
                 model = ((RenderLayerParent<?, ?>) renderer).getModel();
-            } else if (entityIn.getTrappedEntityType() == EntityType.PLAYER) {
+            } else if (entityIn.getTrappedEntityType() == EntityTypes.PLAYER) {
                 model = new ModelStonePlayer(context.bakeLayer(ModelLayers.PLAYER));
             }
             modelMap.put(entityIn.getTrappedEntityTypeString(), model);

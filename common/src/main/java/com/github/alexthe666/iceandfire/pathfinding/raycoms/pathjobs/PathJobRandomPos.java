@@ -8,7 +8,7 @@ import com.github.alexthe666.iceandfire.pathfinding.raycoms.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Tuple;
+import com.github.alexthe666.iceandfire.pathfinding.raycoms.Tuple;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;

@@ -10,13 +10,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class GraveyardProcessor extends StructureProcessor {
+public class GraveyardProcessor implements StructureProcessor {
 
     private final float integrity = 1.0F;
     public static final GraveyardProcessor INSTANCE = new GraveyardProcessor();
@@ -48,7 +47,9 @@ public class GraveyardProcessor extends StructureProcessor {
     }
 
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, StructureTemplate.@NotNull StructureBlockInfo infoIn1, StructureTemplate.StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull BlockPos templateRelativePos, StructureTemplate.@NotNull StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+        // 26.2: no original info any more; the processed one is the template's block (no processor runs before these)
+        StructureTemplate.StructureBlockInfo infoIn1 = infoIn2;
         RandomSource random = settings.getRandom(infoIn2.pos());
         if (infoIn2.state().getBlock() == Blocks.STONE_BRICKS) {
             BlockState state = getRandomCrackedBlock(null, random);
@@ -63,8 +64,8 @@ public class GraveyardProcessor extends StructureProcessor {
 
 
     @Override
-    protected @NotNull StructureProcessorType getType() {
-        return IafProcessors.GRAVEYARDPROCESSOR.get();
+    public @NotNull MapCodec<? extends StructureProcessor> codec() {
+        return CODEC;
     }
 
 }

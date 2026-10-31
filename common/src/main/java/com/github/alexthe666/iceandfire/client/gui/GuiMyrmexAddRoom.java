@@ -54,7 +54,7 @@ public class GuiMyrmexAddRoom extends Screen {
                             Component.translatable("myrmex.message.establishroom_food"), (p_214132_1_) -> {
                                 ClientProxy.getReferedClientHive().addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.FOOD);
                                 onGuiClosed();
-                                Minecraft.getInstance().setScreen(null);
+                                Minecraft.getInstance().gui.setScreen(null);
                                 })
                             .pos(i + 50, j + 35)
                             .size(150, 20)
@@ -64,7 +64,7 @@ public class GuiMyrmexAddRoom extends Screen {
                             Component.translatable("myrmex.message.establishroom_nursery"), (p_214132_1_) -> {
                                 ClientProxy.getReferedClientHive().addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.NURSERY);
                                 onGuiClosed();
-                                Minecraft.getInstance().setScreen(null);
+                                Minecraft.getInstance().gui.setScreen(null);
                             })
                             .pos(i + 50, j + 60)
                             .size(150, 20)
@@ -75,7 +75,7 @@ public class GuiMyrmexAddRoom extends Screen {
                             Component.translatable("myrmex.message.establishroom_enterance_surface"), (p_214132_1_) -> {
                                 ClientProxy.getReferedClientHive().addEnteranceWithMessage(player, false, interactPos, facing);
                                 onGuiClosed();
-                                Minecraft.getInstance().setScreen(null);
+                                Minecraft.getInstance().gui.setScreen(null);
                             })
                             .pos(i + 50, j + 85)
                             .size(150, 20)
@@ -85,7 +85,7 @@ public class GuiMyrmexAddRoom extends Screen {
                             Component.translatable("myrmex.message.establishroom_enterance_bottom"), (p_214132_1_) -> {
                                 ClientProxy.getReferedClientHive().addEnteranceWithMessage(player, true, interactPos, facing);
                                 onGuiClosed();
-                                Minecraft.getInstance().setScreen(null);
+                                Minecraft.getInstance().gui.setScreen(null);
                             })
                             .pos(i + 50, j + 110)
                             .size(150, 20)
@@ -94,7 +94,7 @@ public class GuiMyrmexAddRoom extends Screen {
                     Button.builder(Component.translatable("myrmex.message.establishroom_misc"), (p_214132_1_) -> {
                         ClientProxy.getReferedClientHive().addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.EMPTY);
                         onGuiClosed();
-                        Minecraft.getInstance().setScreen(null);
+                        Minecraft.getInstance().gui.setScreen(null);
                     })
                             .pos(i + 50, j + 135)
                             .size(150, 20)

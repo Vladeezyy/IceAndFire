@@ -1,7 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.alexthe666.iceandfire.client.render.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -41,6 +41,18 @@ public final class IafLegacyRender {
     /** 1.21.1's ItemRenderer.getFoilBuffer(Direct): the glint is a render type of its own on 26.x, drawn with the same vertices */
     public static com.mojang.blaze3d.vertex.VertexConsumer foilBuffer(MultiBufferSource buffers, net.minecraft.client.renderer.rendertype.RenderType type, boolean foil) {
         com.mojang.blaze3d.vertex.VertexConsumer base = buffers.getBuffer(type);
-        return foil ? com.mojang.blaze3d.vertex.VertexMultiConsumer.create(buffers.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityGlint()), base) : base;
+        return foil ? new Both(buffers.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityGlint()), base) : base;
+    }
+
+    /** Every vertex to both consumers (26.2 removed VertexMultiConsumer) */
+    private record Both(com.mojang.blaze3d.vertex.VertexConsumer a, com.mojang.blaze3d.vertex.VertexConsumer b) implements com.mojang.blaze3d.vertex.VertexConsumer {
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer addVertex(float x, float y, float z) { a.addVertex(x, y, z); b.addVertex(x, y, z); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setColor(int r, int g, int bl, int al) { a.setColor(r, g, bl, al); b.setColor(r, g, bl, al); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setColor(int color) { a.setColor(color); b.setColor(color); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setUv(float u, float v) { a.setUv(u, v); b.setUv(u, v); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setUv1(int u, int v) { a.setUv1(u, v); b.setUv1(u, v); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setUv2(int u, int v) { a.setUv2(u, v); b.setUv2(u, v); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setNormal(float x, float y, float z) { a.setNormal(x, y, z); b.setNormal(x, y, z); return this; }
+        @Override public com.mojang.blaze3d.vertex.VertexConsumer setLineWidth(float width) { a.setLineWidth(width); b.setLineWidth(width); return this; }
     }
 }

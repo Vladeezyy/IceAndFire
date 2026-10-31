@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.tags.EntityTypeTags;
@@ -80,12 +81,12 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
         }
         if (isDragonsteelFire(item.getTier()) && IafConfig.dragonWeaponFireAbility) {
             target.igniteForSeconds(15);
-            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ(), attacker.damageSources().mobAttack(attacker), 0.0F);
         }
         if (isDragonsteelIce(item.getTier()) && IafConfig.dragonWeaponIceAbility) {
             EntityDataProvider.getCapability(target).ifPresent(data -> data.frozenData.setFrozen(target, 300));
             target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 300, 2));
-            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ(), attacker.damageSources().mobAttack(attacker), 0.0F);
         }
         if (isDragonsteelLightning(item.getTier()) && IafConfig.dragonWeaponLightningAbility) {
             boolean flag = true;
@@ -95,7 +96,7 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
                 }
             }
             if (!attacker.level().isClientSide() && flag) {
-                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
+                LightningBolt lightningboltentity = EntityTypes.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
                 lightningboltentity.entityTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
                 lightningboltentity.entityTags().add(attacker.getStringUUID());
                 lightningboltentity.snapTo(target.position());
@@ -103,7 +104,7 @@ public interface DragonSteelOverrides<T extends Item & IafTieredItem> {
                     target.level().addFreshEntity(lightningboltentity);
                 }
             }
-            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ(), attacker.damageSources().mobAttack(attacker), 0.0F);
         }
 
     }

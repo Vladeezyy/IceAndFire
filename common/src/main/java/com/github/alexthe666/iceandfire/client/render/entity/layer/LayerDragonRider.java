@@ -22,7 +22,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.animal.equine.HorseModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.QuadrupedModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.alexthe666.iceandfire.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -149,7 +149,7 @@ public class LayerDragonRider extends IafEntityLayer<EntityDragonBase, IafMobRen
         try {
             EntityRenderState state = manager.extractEntity(entityIn, partialTicks);
             state.shadowPieces.clear();
-            manager.submit(state, Minecraft.getInstance().gameRenderer.getGameRenderState().levelRenderState.cameraRenderState, 0, 0, 0, matrixStack, collector);
+            manager.submit(state, Minecraft.getInstance().gameRenderer.gameRenderState().levelRenderState.cameraRenderState, 0, 0, 0, matrixStack, collector);
         } catch (Throwable throwable3) {
             CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
             CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being rendered");

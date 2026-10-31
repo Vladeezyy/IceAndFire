@@ -11,13 +11,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class GorgonTempleProcessor extends StructureProcessor {
+public class GorgonTempleProcessor implements StructureProcessor {
 
     public static final GorgonTempleProcessor INSTANCE = new GorgonTempleProcessor();
     public static final MapCodec<GorgonTempleProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
@@ -26,7 +25,9 @@ public class GorgonTempleProcessor extends StructureProcessor {
     }
 
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, StructureTemplate.@NotNull StructureBlockInfo infoIn1, StructureTemplate.StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader worldReader, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull BlockPos templateRelativePos, StructureTemplate.@NotNull StructureBlockInfo infoIn2, StructurePlaceSettings settings) {
+        // 26.2: no original info any more; the processed one is the template's block (no processor runs before these)
+        StructureTemplate.StructureBlockInfo infoIn1 = infoIn2;
 
         // Workaround for https://bugs.mojang.com/browse/MC-130584
         // Due to a hardcoded field in Templates, any waterloggable blocks in structures replacing water in the world will become waterlogged.
@@ -42,7 +43,7 @@ public class GorgonTempleProcessor extends StructureProcessor {
     }
 
     @Override
-    protected @NotNull StructureProcessorType getType() {
-        return IafProcessors.GORGONTEMPLEPROCESSOR.get();
+    public @NotNull MapCodec<? extends StructureProcessor> codec() {
+        return CODEC;
     }
 }

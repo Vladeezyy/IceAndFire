@@ -11,6 +11,7 @@
   ],
   "client": [
     "client.CameraMixin",
+    "client.GuiMixin",
     "client.MinecraftMixin"
   ],
   "injectors": {

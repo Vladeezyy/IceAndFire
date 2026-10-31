@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +42,7 @@ public class ItemAlchemySword extends Item implements IafTieredItem {
                 target.hurt(attacker.level().damageSources().inFire(), 13.5F);
             }
             target.igniteForSeconds(5);
-            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ(), attacker.damageSources().mobAttack(attacker), 0.0F);
         }
         if (this == IafItemRegistry.DRAGONBONE_SWORD_ICE.get() && IafConfig.dragonWeaponIceAbility) {
             if (target instanceof EntityFireDragon) {
@@ -51,7 +52,7 @@ public class ItemAlchemySword extends Item implements IafTieredItem {
             EntityDataProvider.getCapability(target).ifPresent(data -> data.frozenData.setFrozen(target, 200));
             target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 2));
             target.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 100, 2));
-            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ(), attacker.damageSources().mobAttack(attacker), 0.0F);
         }
         if (this == IafItemRegistry.DRAGONBONE_SWORD_LIGHTNING.get() && IafConfig.dragonWeaponLightningAbility) {
             boolean flag = true;
@@ -61,7 +62,7 @@ public class ItemAlchemySword extends Item implements IafTieredItem {
                 }
             }
             if (!attacker.level().isClientSide() && flag) {
-                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
+                LightningBolt lightningboltentity = EntityTypes.LIGHTNING_BOLT.create(target.level(), EntitySpawnReason.MOB_SUMMONED);
                 lightningboltentity.entityTags().add(ServerEvents.BOLT_DONT_DESTROY_LOOT);
                 lightningboltentity.entityTags().add(attacker.getStringUUID());
                 lightningboltentity.snapTo(target.position());
@@ -72,7 +73,7 @@ public class ItemAlchemySword extends Item implements IafTieredItem {
             if (target instanceof EntityFireDragon || target instanceof EntityIceDragon) {
                 target.hurt(attacker.level().damageSources().lightningBolt(), 9.5F);
             }
-            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+            target.knockback(1F, attacker.getX() - target.getX(), attacker.getZ() - target.getZ(), attacker.damageSources().mobAttack(attacker), 0.0F);
         }
         super.hurtEnemy(stack, target, attacker);
     }

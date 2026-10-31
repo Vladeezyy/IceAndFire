@@ -261,7 +261,7 @@ public class IafDragonDestructionManager {
         } else if (dragon.dragonType == DragonType.LIGHTNING) {
             double x = dragon.getX() - target.getX();
             double y = dragon.getZ() - target.getZ();
-            target.knockback((double) statusDuration / 10, x, y);
+            target.knockback((double) statusDuration / 10, x, y, target.damageSources().generic(), 0.0F);
         }
     }
 

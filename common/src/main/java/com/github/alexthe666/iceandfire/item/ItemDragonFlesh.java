@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ public class ItemDragonFlesh extends ItemGenericFood {
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 2));
             } else {
                 if (!livingEntity.level().isClientSide()) {
-                    LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(livingEntity.level(), EntitySpawnReason.MOB_SUMMONED);
+                    LightningBolt lightningboltentity = EntityTypes.LIGHTNING_BOLT.create(livingEntity.level(), EntitySpawnReason.MOB_SUMMONED);
                     lightningboltentity.snapTo(livingEntity.position());
                     if (!livingEntity.level().isClientSide()) {
                         livingEntity.level().addFreshEntity(lightningboltentity);

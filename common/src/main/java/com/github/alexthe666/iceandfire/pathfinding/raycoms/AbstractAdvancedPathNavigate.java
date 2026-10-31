@@ -119,7 +119,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation 
      * @param corners the corners they can't leave.
      * @return the result of the pathing.
      */
-    public abstract PathResult moveToRandomPos(final int range, final double speed, final net.minecraft.util.Tuple<BlockPos, BlockPos> corners, final RestrictionType restrictionType);
+    public abstract PathResult moveToRandomPos(final int range, final double speed, final com.github.alexthe666.iceandfire.pathfinding.raycoms.Tuple<BlockPos, BlockPos> corners, final RestrictionType restrictionType);
 
     /**
      * Used to move a living ourEntity with a speed.
