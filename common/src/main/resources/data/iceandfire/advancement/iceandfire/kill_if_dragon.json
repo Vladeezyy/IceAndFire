@@ -16,7 +16,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "minecraft:entity_type": "iceandfire:fire_dragon"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "iceandfire:fire_dragon"
+          }
         }
       }
     },
@@ -24,7 +28,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "minecraft:entity_type": "iceandfire:ice_dragon"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "iceandfire:ice_dragon"
+          }
         }
       }
     },
@@ -32,7 +40,11 @@
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
-          "minecraft:entity_type": "iceandfire:lightning_dragon"
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "iceandfire:lightning_dragon"
+          }
         }
       }
     }

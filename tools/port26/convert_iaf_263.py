@@ -335,6 +335,11 @@ def loot(node):
     if "functions" in node:
         functions = node.pop("functions")
         node["modifier"] = functions[0] if len(functions) == 1 else functions
+    # 1.20's {"min": a, "max": b} shorthand of a number provider is not read any more ("No key type")
+    for key in ("count", "rolls", "bonus_rolls", "levels", "value"):
+        v = node.get(key)
+        if isinstance(v, dict) and v and set(v) <= {"min", "max"} and all(isinstance(x, (int, float)) for x in v.values()):
+            node[key] = {"type": "minecraft:uniform", **whole(v)}
     if isinstance(node.get("rolls"), float) and node["rolls"].is_integer():
         node["rolls"] = int(node["rolls"])
     if node.get("bonus_rolls") in (0, 0.0):
@@ -379,6 +384,10 @@ def item_predicates(node):
     return out
 
 
+ENTITY_KEYS = ("player", "entity", "victim", "killer", "source_entity", "direct_entity", "parent", "partner", "child",
+               "zombie", "villager", "projectile", "shooter", "lightning", "bystander")
+
+
 def advancement(obj):
     for criterion in obj.get("criteria", {}).values():
         c = criterion.get("conditions")
@@ -391,6 +400,10 @@ def advancement(obj):
                 c[new] = c.pop(old)
         for key, value in list(c.items()):
             c[key] = item_predicates(condition_list(value))
+        # an entity predicate (1.21's shorthand) where 26.3 takes one condition
+        for key in ENTITY_KEYS:
+            if isinstance(c.get(key), dict) and c[key] and "type" not in c[key] and "condition" not in c[key]:
+                c[key] = {"type": "minecraft:entity_properties", "entity": "this", "predicate": c[key]}
         if "damage" in c or "killing_blow" in c:
             for key in ("damage", "killing_blow"):
                 if key in c:
