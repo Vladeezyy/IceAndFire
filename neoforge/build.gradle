@@ -98,6 +98,16 @@ dependencies {
     implementation "dev.vladeezyy.rampart:rampart-neoforge:${rampart_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    // tools/scenetest.sh -Pwith_compat: the client and performance mods this one is played with (dev runs only)
+    if (project.hasProperty('with_compat')) {
+        project.properties.findAll { it.key.startsWith('compat_neo_') }.each { k, v ->
+            localRuntime "maven.modrinth:${k.substring('compat_neo_'.length()).replace('_', '-')}:${v}"
+        }
+        // AttributeFix with its libraries (1.21.1)
+        localRuntime "maven.modrinth:attributefix:TyNITLDY"
+        localRuntime "maven.modrinth:bookshelf-lib:1sdJl7J1"
+        localRuntime "maven.modrinth:prickle:EE1FHDyD"
+    }
 
 }
 
