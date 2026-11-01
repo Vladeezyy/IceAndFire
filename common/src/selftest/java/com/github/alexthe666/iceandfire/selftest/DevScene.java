@@ -141,6 +141,19 @@ public final class DevScene {
             net.minecraft.network.chat.Component.translatable("iceandfire.fire_dragon_forge"))));
         at(765, mc -> shot(mc, "gui_dragonforge"));
         at(770, mc -> mc.setScreen(null));
+        // Stone statues of every living creature (CurseForge report 2026-11-01: a statue crashed the game and the world
+        // would not load again), then a gorgon turning live mobs to stone the way it does in its temple
+        at(END - 380, mc -> {
+            mc.options.hideGui = true;
+            server(mc, DevScene::statues);
+        });
+        at(END - 340, mc -> checkStatues(mc, "statues of every creature", 50, 60));
+        at(END - 336, mc -> check("statues posed", com.github.alexthe666.iceandfire.client.render.entity.RenderStoneStatue.UNPOSED.isEmpty(),
+            com.github.alexthe666.iceandfire.client.render.entity.RenderStoneStatue.UNPOSED));
+        at(END - 335, mc -> shot(mc, "statues"));
+        at(END - 330, mc -> server(mc, DevScene::gorgonVictims));
+        at(END - 10, mc -> checkStatues(mc, "statues made by the gorgon", 1, 7));
+        at(END - 5, mc -> shot(mc, "statues_gorgon"));
         at(END + 20, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
@@ -445,6 +458,104 @@ public final class DevScene {
             }
         }
         check("creatures placed", count > 25, count + ", not mobs: " + skipped);
+    }
+
+    private static BlockPos statueField() {
+        return stage.offset(0, 0, -30);
+    }
+
+    /** A statue of every living entity type (the player's own too) in rows, the creatures themselves removed. */
+    private static void statues(ServerPlayer player) {
+        ServerLevel level = player.level();
+        level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(64, 30, 64), e -> !(e instanceof ServerPlayer)).forEach(Entity::discard);
+        setTime(level, 6000);
+        List<net.minecraft.world.entity.LivingEntity> sources = new ArrayList<>();
+        for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+            if (type == IafEntityRegistry.STONE_STATUE.get() || type == EntityType.ENDER_DRAGON) {
+                continue;
+            }
+            if (type.create(level, EntitySpawnReason.COMMAND) instanceof net.minecraft.world.entity.LivingEntity living) {
+                if (living instanceof Mob mob) {
+                    mob.finalizeSpawn(level, level.getCurrentDifficultyAt(statueField()), EntitySpawnReason.COMMAND, null);
+                }
+                sources.add(living);
+            }
+        }
+        sources.add(player);
+        int x = -40;
+        int z = 0;
+        int count = 0;
+        for (net.minecraft.world.entity.LivingEntity source : sources) {
+            BlockPos pos = statueField().offset(x, 0, z);
+            source.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 180, 0);
+            com.github.alexthe666.iceandfire.entity.EntityStoneStatue statue = com.github.alexthe666.iceandfire.entity.EntityStoneStatue.buildStatueEntity(source);
+            statue.absSnapTo(source.getX(), source.getY(), source.getZ(), 180, 0);
+            statue.yBodyRot = 180;
+            statue.yHeadRot = 180;
+            if (level.addFreshEntity(statue)) {
+                count++;
+            }
+            x += 4;
+            if (x > 40) {
+                x = -40;
+                z -= 5;
+            }
+        }
+        check("statues placed", count == sources.size(), count + " of " + sources.size());
+        hover(player);
+        look(player, statueField().offset(0, 14, 16), statueField().offset(0, 0, -12));
+    }
+
+    /** Flying, so that the camera stays where look() put it. */
+    private static void hover(ServerPlayer player) {
+        player.getAbilities().flying = true;
+        player.onUpdateAbilities();
+    }
+
+    private static void checkStatues(Minecraft mc, String name, int min, double radius) {
+        int statues = 0;
+        BlockPos center = statueField();
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (e instanceof com.github.alexthe666.iceandfire.entity.EntityStoneStatue && Math.abs(e.getX() - center.getX()) <= radius && Math.abs(e.getZ() - center.getZ()) <= radius) {
+                statues++;
+            }
+        }
+        check(name + " on the client", statues >= min, statues);
+    }
+
+    /** A gorgon with its AI among a few mobs it turns to stone (blind mobs and the player in creative are not targets). */
+    private static void gorgonVictims(ServerPlayer player) {
+        ServerLevel level = player.level();
+        level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(64, 30, 64), e -> !(e instanceof ServerPlayer)).forEach(Entity::discard);
+        BlockPos center = statueField();
+        // At night: the gorgon flees the sun and the undead burn
+        setTime(level, 18000);
+        // A glass pen keeps them in front of the camera (and in the checked square)
+        for (int dx = -7; dx <= 7; dx++) {
+            for (int dz = -7; dz <= 7; dz++) {
+                if (Math.abs(dx) == 7 || Math.abs(dz) == 7) {
+                    level.setBlock(center.offset(dx, 0, dz), Blocks.GLASS.defaultBlockState(), 2);
+                    level.setBlock(center.offset(dx, 1, dz), Blocks.GLASS.defaultBlockState(), 2);
+                }
+            }
+        }
+        Entity gorgon = place(level, IafEntityRegistry.GORGON.get(), center, 0);
+        int i = 0;
+        Entity first = null;
+        for (EntityType<?> type : List.of(EntityType.ZOMBIE, EntityType.VILLAGER, EntityType.PIG, EntityType.SKELETON, EntityType.COW, EntityType.SHEEP)) {
+            double angle = Math.PI * 2 * i++ / 6;
+            Entity victim = place(level, type, center.offset((int) Math.round(Math.sin(angle) * 5), 0, (int) Math.round(Math.cos(angle) * 5)), 0);
+            if (victim instanceof Mob mob) {
+                mob.setNoAi(false);
+            }
+            first = first == null ? victim : first;
+        }
+        if (gorgon instanceof Mob mob) {
+            mob.setNoAi(false);
+            mob.setTarget((net.minecraft.world.entity.LivingEntity) first);
+        }
+        hover(player);
+        look(player, center.offset(0, 8, 12), center);
     }
 
     private static void armor(ServerPlayer player) {
