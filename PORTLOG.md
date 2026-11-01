@@ -67,6 +67,7 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | Every right click with a myrmex staff added an empty hive to the world data (cleanup was commented out) | Removed; hive data goes to the player using the staff, not to everybody |
 | "Fell into the void" checks at y < -1 made hippogryphs and amphitheres take off in caves below 0, path starts stopped at y 0 | World floor (`getMinBuildHeight`) |
 | Helmets showed the hat layer of the skin ([#5112](https://github.com/AlexModGuy/Ice_and_Fire/issues/5112)) | Helmets get their own layer (0.55) above the hat layer (0.5) |
+| The stone statue renderer baked a pig model every frame for every statue | Baked once (CurseForge report 2026-11-01: the client scene shows a statue of every living creature and a gorgon turning mobs to stone; the self-test saves statues with a chunk and loads them again) |
 
 ## Port notes
 
