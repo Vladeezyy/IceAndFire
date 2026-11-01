@@ -67,6 +67,7 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 | Every right click with a myrmex staff added an empty hive to the world data (cleanup was commented out) | Removed; hive data goes to the player using the staff, not to everybody |
 | "Fell into the void" checks at y < -1 made hippogryphs and amphitheres take off in caves below 0, path starts stopped at y 0 | World floor (`getMinBuildHeight`) |
 | Helmets showed the hat layer of the skin ([#5112](https://github.com/AlexModGuy/Ice_and_Fire/issues/5112)) | Helmets get their own layer (0.55) above the hat layer (0.5) |
+| CurseForge report 2026-11-01: a stone statue (gorgon victim, troll in daylight) crashed the client on 1.21.11 and 26.x, and again on every load of the world: the model of the trapped creature was posed with a render state of another renderer (fallback pig model, `ClassCastException`), on 26.2+ the hollow copy had no entity id (`Tried to access entity ID before ID assignment`) | Only a model of the same renderer is posed, the copy gets a negative id, a creature of another mod whose render state fails is drawn in its rest pose; the pig model is baked once instead of every frame. Scene: statue of every living creature, a gorgon in a pen; self-test: statues saved with a chunk and loaded again |
 
 ## Port notes
 
