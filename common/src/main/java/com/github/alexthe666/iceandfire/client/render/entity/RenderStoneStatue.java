@@ -39,6 +39,7 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
     protected static final ResourceLocation[] DESTROY_STAGES = new ResourceLocation[]{ResourceLocation.parse("textures/block/destroy_stage_0.png"), ResourceLocation.parse("textures/block/destroy_stage_1.png"), ResourceLocation.parse("textures/block/destroy_stage_2.png"), ResourceLocation.parse("textures/block/destroy_stage_3.png"), ResourceLocation.parse("textures/block/destroy_stage_4.png"), ResourceLocation.parse("textures/block/destroy_stage_5.png"), ResourceLocation.parse("textures/block/destroy_stage_6.png"), ResourceLocation.parse("textures/block/destroy_stage_7.png"), ResourceLocation.parse("textures/block/destroy_stage_8.png"), ResourceLocation.parse("textures/block/destroy_stage_9.png")};
     private final Map<String, EntityModel> modelMap = new HashMap();
     private final Map<String, Entity> hollowEntityMap = new HashMap();
+    private PigModel pigModel;
     private final EntityRendererProvider.Context context;
 
     public RenderStoneStatue(EntityRendererProvider.Context context) {
@@ -58,18 +59,22 @@ public class RenderStoneStatue extends EntityRenderer<EntityStoneStatue> {
 
     @Override
     public void render(EntityStoneStatue entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        EntityModel model = new PigModel(context.bakeLayer(ModelLayers.PIG));
+        EntityModel model = modelMap.get(entityIn.getTrappedEntityTypeString());
 
         // Get the correct model
-        if (modelMap.get(entityIn.getTrappedEntityTypeString()) != null) {
-            model = modelMap.get(entityIn.getTrappedEntityTypeString());
-        } else {
+        if (model == null) {
             EntityRenderer renderer = Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(entityIn.getTrappedEntityType());
 
             if (renderer instanceof RenderLayerParent) {
                 model = ((RenderLayerParent<?, ?>) renderer).getModel();
             } else if (entityIn.getTrappedEntityType() == EntityType.PLAYER) {
                 model = new ModelStonePlayer(context.bakeLayer(ModelLayers.PLAYER));
+            } else {
+                // baked once: 1.20.1 baked a pig model every frame for every statue
+                if (pigModel == null) {
+                    pigModel = new PigModel(context.bakeLayer(ModelLayers.PIG));
+                }
+                model = pigModel;
             }
             modelMap.put(entityIn.getTrappedEntityTypeString(), model);
         }
