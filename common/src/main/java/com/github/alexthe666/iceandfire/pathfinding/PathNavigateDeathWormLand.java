@@ -213,18 +213,20 @@ public class PathNavigateDeathWormLand extends PathNavigation {
         if (!this.isPositionClear(i, y, j, sizeX, sizeY, sizeZ, vec31, p_179683_8_, p_179683_10_)) {
             return false;
         } else {
+            // getPathType, not getPathTypeOfMob: that one reads the evaluator's mob, null outside a path search (1.20.5+)
+            PathfindingContext context = new PathfindingContext(this.level, this.mob);
             for (int k = i; k < i + sizeX; ++k) {
                 for (int l = j; l < j + sizeZ; ++l) {
                     double d0 = (double) k + 0.5D - vec31.x;
                     double d1 = (double) l + 0.5D - vec31.z;
 
                     if (d0 * p_179683_8_ + d1 * p_179683_10_ >= 0.0D) {
-                        PathType pathnodetype = this.nodeEvaluator.getPathTypeOfMob(new PathfindingContext(this.level, this.mob), k, y - 1, l, this.mob);
+                        PathType pathnodetype = this.nodeEvaluator.getPathType(context, k, y - 1, l);
                         if (pathnodetype == PathType.LAVA) {
                             return false;
                         }
 
-                        pathnodetype = this.nodeEvaluator.getPathTypeOfMob(new PathfindingContext(this.level, this.mob), k, y, l, this.mob);
+                        pathnodetype = this.nodeEvaluator.getPathType(context, k, y, l);
                         float f = this.mob.getPathfindingMalus(pathnodetype);
 
                         if (f < 0.0F || f >= 8.0F) {

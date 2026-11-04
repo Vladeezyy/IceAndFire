@@ -48,7 +48,6 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
     public TagKey<Block> dragonTypeOreTag;
     public BlockState TREASURE_PILE;
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-    public boolean isMale;
 
     protected WorldGenDragonCave() {
     }
@@ -61,7 +60,8 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         if (rand.nextInt(IafConfig.generateDragonDenChance) != 0 || !IafWorldRegistry.isFarEnoughFromSpawn(worldIn, position) || !IafWorldRegistry.isFarEnoughFromDangerousGen(worldIn, position, getId(), getFeatureType())) {
             return false;
         }
-        isMale = rand.nextBoolean();
+        // Not a field: the feature is one object for all the worldgen threads
+        boolean isMale = rand.nextBoolean();
         ChunkPos chunkPos = worldIn.getChunk(position).getPos();
 
 
@@ -85,13 +85,13 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         position = new BlockPos((chunkPos.x() << 4) + 8, j, (chunkPos.z() << 4) + 8);
         int dragonAge = 75 + rand.nextInt(50);
         int radius = (int) (dragonAge * 0.2F) + rand.nextInt(4);
-        generateCave(worldIn, radius, 3, position, rand);
-        EntityDragonBase dragon = createDragon(worldIn, rand, position, dragonAge);
+        generateCave(worldIn, radius, 3, position, rand, isMale);
+        EntityDragonBase dragon = createDragon(worldIn, rand, position, dragonAge, isMale);
         worldIn.addFreshEntity(dragon);
         return true;
     }
 
-    public void generateCave(LevelAccessor worldIn, int radius, int amount, BlockPos center, RandomSource rand) {
+    public void generateCave(LevelAccessor worldIn, int radius, int amount, BlockPos center, RandomSource rand, boolean isMale) {
         List<SphereInfo> sphereList = new ArrayList<>();
         sphereList.add(new SphereInfo(radius, center.immutable()));
         Stream<BlockPos> sphereBlocks = ShapeBuilder.start().getAllInCutOffSphereMutable(radius, radius / 2, center).toStream(false);
@@ -115,7 +115,7 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         //removeBlocks
         hollowOut(worldIn, hollowBlocksSet);
         //decorate
-        decorateCave(worldIn, rand, hollowBlocksSet, sphereList, center);
+        decorateCave(worldIn, rand, hollowBlocksSet, sphereList, center, isMale);
         sphereList.clear();
     }
 
@@ -176,7 +176,7 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         });
     }
 
-    public void decorateCave(LevelAccessor worldIn, RandomSource rand, Set<BlockPos> positions, List<SphereInfo> spheres, BlockPos center) {
+    public void decorateCave(LevelAccessor worldIn, RandomSource rand, Set<BlockPos> positions, List<SphereInfo> spheres, BlockPos center, boolean isMale) {
         for (SphereInfo sphere : spheres) {
             BlockPos pos = sphere.pos;
             int radius = sphere.radius;
@@ -191,13 +191,13 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
                 BlockState stateBelow = worldIn.getBlockState(blockPos.below());
 
                 if ((stateBelow.is(BlockTags.BASE_STONE_OVERWORLD) || stateBelow.is(IafBlockTags.DRAGON_ENVIRONMENT_BLOCKS)) && worldIn.getBlockState(blockPos).isAir()) {
-                    setGoldPile(worldIn, blockPos, rand);
+                    setGoldPile(worldIn, blockPos, rand, isMale);
                 }
             }
         });
     }
 
-    public void setGoldPile(LevelAccessor world, BlockPos pos, RandomSource rand) {
+    public void setGoldPile(LevelAccessor world, BlockPos pos, RandomSource rand, boolean isMale) {
         if (!(world.getBlockState(pos).getBlock() instanceof BaseEntityBlock)) {
             int chance = rand.nextInt(99) + 1;
             if (chance < 60) {
@@ -218,7 +218,7 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         }
     }
 
-    private EntityDragonBase createDragon(final WorldGenLevel worldGen, final RandomSource random, final BlockPos position, int dragonAge) {
+    private EntityDragonBase createDragon(final WorldGenLevel worldGen, final RandomSource random, final BlockPos position, int dragonAge, boolean isMale) {
         EntityDragonBase dragon = getDragonType().create(worldGen.getLevel(), EntitySpawnReason.STRUCTURE);
         dragon.setGender(isMale);
         dragon.growDragon(dragonAge);
