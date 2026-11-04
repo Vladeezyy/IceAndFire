@@ -117,7 +117,7 @@ public class MyrmexHive {
             List<? extends EntityMyrmexQueen> allQueens = serverWorld.getEntities(IafEntityRegistry.MYRMEX_QUEEN.get(),
                 EntitySelector.NO_SPECTATORS);
             for (Entity queen : allQueens) {
-                if (queen instanceof EntityMyrmexQueen && ((EntityMyrmexQueen) queen).getHive().equals(this)) {
+                if (queen instanceof EntityMyrmexQueen && ((EntityMyrmexQueen) queen).getHive() != null && ((EntityMyrmexQueen) queen).getHive().equals(this)) {
                     ourQueens.add(((EntityMyrmexQueen) queen));
                 }
             }
