@@ -53,6 +53,11 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
     }
 
     public boolean placeSmallGen(WorldGenLevel worldIn, RandomSource rand, BlockPos pos) {
+        generate(worldIn, rand, pos);
+        return false;
+    }
+
+    private void generate(WorldGenLevel worldIn, RandomSource rand, BlockPos pos) {
         hasFoodRoom = false;
         hasNursery = false;
         totalRooms = 0;
@@ -60,7 +65,6 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
         centerOfHive = pos;
         generateMainRoom(worldIn, rand, pos);
         this.small = false;
-        return false;
     }
 
     @Override
@@ -79,21 +83,15 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
         if (!small && !worldIn.getFluidState(pos.below()).isEmpty()) {
             return false;
         }
-        hasFoodRoom = false;
-        hasNursery = false;
-        totalRooms = 0;
         int down = Math.max(15, pos.getY() - 20 + rand.nextInt(10));
         BlockPos undergroundPos = new BlockPos(pos.getX(), down, pos.getZ());
-        entrances = 0;
-        centerOfHive = undergroundPos;
-        generateMainRoom(worldIn, rand, undergroundPos);
-        this.small = false;
+        // The registered feature is one object for all the worldgen threads: a generator of its own keeps the state of this hive
+        new WorldGenMyrmexHive(small, jungle, NoneFeatureConfiguration.CODEC).generate(worldIn, rand, undergroundPos);
         return true;
     }
 
     private void generateMainRoom(ServerLevelAccessor world, RandomSource rand, BlockPos position) {
         hive = new MyrmexHive(world.getLevel(), position, 100);
-        MyrmexWorldData.addHive(world.getLevel(), hive);
         BlockState resin = jungle ? JUNGLE_RESIN : DESERT_RESIN;
         BlockState sticky_resin = jungle ? STICKY_JUNGLE_RESIN : STICKY_DESERT_RESIN;
         generateSphere(world, rand, position, 14, 7, resin, sticky_resin);
@@ -140,6 +138,8 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
                 world.addFreshEntity(myrmex);
             }
         }
+        // Only now the server thread may see it, with its rooms and entrances
+        MyrmexWorldData.addHive(world.getLevel(), hive);
     }
 
     private void generatePath(LevelAccessor world, RandomSource rand, BlockPos offset, int length, Direction direction, int roomChance) {
