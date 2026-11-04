@@ -2902,7 +2902,12 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
             if (this.isBoundToCrystal()) {
                 DragonPosWorldData data = DragonPosWorldData.get(level());
                 if (data != null) {
-                    data.addDragon(this.getUUID(), this.blockPosition());
+                    // Gone for good: the crystal has nothing to load
+                    if (this.getRemovalReason() != null && this.getRemovalReason().shouldDestroy()) {
+                        data.removeDragon(this.getUUID());
+                    } else {
+                        data.addDragon(this.getUUID(), this.blockPosition());
+                    }
                 }
             }
         }

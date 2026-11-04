@@ -60,6 +60,13 @@ public class IafWorldData extends SavedData {
     }
 
     public boolean check(final FeatureType type, final BlockPos position, final String id) {
+        // Called by the worldgen threads at the same time, saved by the server thread
+        synchronized (LAST_GENERATED) {
+            return checkLocked(type, position, id);
+        }
+    }
+
+    private boolean checkLocked(final FeatureType type, final BlockPos position, final String id) {
         ArrayList<Map.Entry<String, BlockPos>> entries = LAST_GENERATED.get(type);
 
         boolean canGenerate = true;
@@ -99,7 +106,9 @@ public class IafWorldData extends SavedData {
                 CompoundTag entry = list.getCompoundOrEmpty(i);
                 String id = entry.getStringOr("id", "");
                 BlockPos position = readPosition(entry);
-                LAST_GENERATED.get(type).add(Map.entry(id, position));
+                synchronized (LAST_GENERATED) {
+                    LAST_GENERATED.get(type).add(Map.entry(id, position));
+                }
             }
         }
 
@@ -108,18 +117,20 @@ public class IafWorldData extends SavedData {
 
     // 26.x: through IafSavedData (the 1.21.1 NBT)
     public @NotNull CompoundTag save(@NotNull final CompoundTag tag, @NotNull HolderLookup.Provider registries) {
-        for (var e : LAST_GENERATED.entrySet()) {
-            ListTag listTag = new ListTag();
+        synchronized (LAST_GENERATED) {
+            for (var e : LAST_GENERATED.entrySet()) {
+                ListTag listTag = new ListTag();
 
-            for (Map.Entry<String, BlockPos> entry : e.getValue()) {
-                CompoundTag subTag = new CompoundTag();
-                subTag.putString("id", entry.getKey());
-                subTag.store("position", BlockPos.CODEC, entry.getValue());
+                for (Map.Entry<String, BlockPos> entry : e.getValue()) {
+                    CompoundTag subTag = new CompoundTag();
+                    subTag.putString("id", entry.getKey());
+                    subTag.store("position", BlockPos.CODEC, entry.getValue());
 
-                listTag.add(subTag);
+                    listTag.add(subTag);
+                }
+
+                tag.put(e.getKey().toString(), listTag);
             }
-
-            tag.put(e.getKey().toString(), listTag);
         }
 
         return tag;

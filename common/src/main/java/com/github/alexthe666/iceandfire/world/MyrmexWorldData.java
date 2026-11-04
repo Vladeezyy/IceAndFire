@@ -23,7 +23,8 @@ public class MyrmexWorldData extends SavedData {
     private static final String IDENTIFIER = "iceandfire_myrmex";
     private static final SavedDataType<MyrmexWorldData> TYPE = IafSavedData.type("myrmex", MyrmexWorldData::new, MyrmexWorldData::new, (data, tag) -> data.save(tag, null));
     private final List<BlockPos> villagerPositionsList = Lists.newArrayList();
-    private final List<MyrmexHive> hiveList = Lists.newArrayList();
+    // Worldgen threads add hives while the server thread goes through them (myrmex AI); hives are added rarely
+    private final List<MyrmexHive> hiveList = new java.util.concurrent.CopyOnWriteArrayList<>();
     private Level world;
     private int tickCounter;
 
@@ -75,15 +76,8 @@ public class MyrmexWorldData extends SavedData {
     }
 
     private void removeAnnihilatedHives() {
-        Iterator<MyrmexHive> iterator = this.hiveList.iterator();
-
-        while (iterator.hasNext()) {
-            MyrmexHive village = iterator.next();
-
-            if (village.isAnnihilated()) {
-                iterator.remove();
-                this.setDirty();
-            }
+        if (this.hiveList.removeIf(MyrmexHive::isAnnihilated)) {
+            this.setDirty();
         }
     }
 

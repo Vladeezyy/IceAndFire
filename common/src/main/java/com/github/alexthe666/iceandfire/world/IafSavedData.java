@@ -34,7 +34,8 @@ public final class IafSavedData {
                 CompoundTag.CODEC.xmap(load, data -> save.apply(data, new CompoundTag())), DataFixTypes.SAVED_DATA_WANDERING_TRADER);
     }
 
-    public static <T extends SavedData> T get(ServerLevel level, SavedDataType<T> type, String legacyName) {
+    /** Also called by the worldgen threads: not two instances of the data, one of them lost */
+    public static synchronized <T extends SavedData> T get(ServerLevel level, SavedDataType<T> type, String legacyName) {
         SavedDataStorage storage = level.getDataStorage();
         Path legacy = storage.dataFolder.resolve(legacyName + ".dat");
         if (MIGRATED.add(legacy) && Files.exists(legacy)) {
