@@ -33,8 +33,11 @@ import java.util.UUID;
 
 public class ItemSummoningCrystal extends Item {
     // Chunk tickets of the summons that wait for an unloaded dragon; registered in IafItemRegistry
+    /** Ticks a summon waits for its dragon: it may be gone from the last known position */
+    private static final int SUMMON_TIMEOUT = 2_000;
+
     /** Keeps the chunk of a summoned dragon loaded until it arrived (NeoForge's TicketController before; a vanilla ticket as forced chunks use) */
-    public static final net.minecraft.server.level.TicketType<ChunkPos> CHUNK_TICKETS = net.minecraft.server.level.TicketType.create(IceAndFire.MODID + ":summoning_crystal", java.util.Comparator.comparingLong(ChunkPos::toLong));
+    public static final net.minecraft.server.level.TicketType<ChunkPos> CHUNK_TICKETS = net.minecraft.server.level.TicketType.create(IceAndFire.MODID + ":summoning_crystal", java.util.Comparator.comparingLong(ChunkPos::toLong), SUMMON_TIMEOUT);
     /**
      * Summons waiting for their dragon to load, by dragon UUID. The original kept the state of a summon in fields
      * of the item, which exists once for the whole game: two players summoning at the same time overwrote each other.
@@ -163,6 +166,8 @@ public class ItemSummoningCrystal extends Item {
 
         // try to load the chunk, and mark the entity to be summoned as soon as it gets added to the world
         serverWorld.getChunkSource().addRegionTicket(CHUNK_TICKETS, pos, 2, pos);
+        // A dragon that never arrived leaves its summon here (its ticket expires by itself)
+        DELAYED_SUMMONS.values().removeIf(ItemSummoningCrystal::isExpired);
         DELAYED_SUMMONS.put(dragonUuid, new PendingSummon(this, dragonUuid, dragonTargetPosition, dragonTargetYaw, summoningPlayer, summoningHand, serverWorld, dragonOriginPosition, stack, serverWorld.getGameTime()));
 
         return InteractionResult.PASS;
@@ -186,6 +191,10 @@ public class ItemSummoningCrystal extends Item {
         ItemNbt.setTag(stack, new CompoundTag());
     }
 
+    private static boolean isExpired(PendingSummon summon) {
+        return summon.serverWorld().getGameTime() - SUMMON_TIMEOUT > summon.summoningTime();
+    }
+
     /** Called when the dragon of a pending summon was added to the level. */
     public static void delayedSummon(PendingSummon summon) {
         DELAYED_SUMMONS.remove(summon.dragonUuid());
@@ -193,8 +202,7 @@ public class ItemSummoningCrystal extends Item {
 
         // make delayed summons expire if for some reason the chunk loading, or entity loading takes too long
         // wouldn't want the dragon to summon minutes later at the original position
-        final long SUMMON_DELAY_TOLERANCE = 2_000;
-        if (summon.serverWorld().getGameTime() - SUMMON_DELAY_TOLERANCE > summon.summoningTime()) {
+        if (isExpired(summon)) {
             IceAndFire.LOGGER.info("Dragon summon timed out for dragon {}; unloading chunk {}", summon.dragonUuid(), pos);
         } else {
             Entity entity = summon.serverWorld().getEntity(summon.dragonUuid());

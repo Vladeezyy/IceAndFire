@@ -80,11 +80,18 @@ public class SelfTest {
                 tick--;
                 return;
             }
+            if (tick == 4700 && level.hasChunk(CRYSTAL_CHUNK.x, CRYSTAL_CHUNK.z) && crystalWait++ < 400) {
+                // the unloading of the chunk takes a few more ticks
+                tick--;
+                return;
+            }
             switch (tick) {
                 case 20 -> registries(server);
                 case 40 -> spawnAll(level);
                 case 240 -> checkSpawned(level);
                 case 260 -> items(level);
+                case 270 -> wormLandPath(level);
+                case 275 -> worldDataThreads(level);
                 case 280 -> features(server, level);
                 case 480 -> structures(server, level);
                 case 500 -> partsLoadChunk(level, true);
@@ -96,9 +103,14 @@ public class SelfTest {
                 case 780 -> partsReloaded(level);
                 case 790 -> hivePlace(level);
                 case 900 -> hiveSettled(level);
+                case 901 -> hiveQueenLookup(level);
+                case 902 -> crystalDragonGone(level);
                 case 905 -> hiveFlood(level);
                 case 1205 -> hiveAfterFlood(level);
-                case 1220 -> finish(server);
+                case 1210 -> crystalTicketAdd(level);
+                case 1220 -> sprint(server);
+                case 4700 -> crystalTicketExpired(level);
+                case 4710 -> finish(server);
                 default -> {
                 }
             }
@@ -172,6 +184,130 @@ public class SelfTest {
             x += 24;
         }
         check("spawn every entity", failed.isEmpty(), spawned + " spawned, failed " + failed);
+    }
+
+    /**
+     * CurseForge report 2026-11-04: a worm follows a path on its land navigation (its first tick, or with a rider) and the
+     * server crashes, as the node evaluator has no mob outside a path search. A free platform high up, the worm is not added.
+     */
+    private static void wormLandPath(ServerLevel level) {
+        BlockPos origin = new BlockPos(0, level.getMaxBuildHeight() - 21, -160);
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-4, 0, -4), origin.offset(24, 0, 4))) {
+            level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        }
+        var worm = IafEntityRegistry.DEATH_WORM.get().create(level);
+        worm.setDeathWormScale(1F);
+        worm.refreshDimensions();
+        worm.moveTo(origin.getX() + 0.5, origin.getY() + 1, origin.getZ() + 0.5, 0, 0);
+        worm.setOnGround(true);
+        // A real search first: only after one the evaluator has a size (and no mob any more), as in the crash.
+        // Its result is not used: it gives a worm this tall nothing here (OPEN costs more than WALKABLE for it), so a path by hand
+        worm.getNavigation().createPath(origin.offset(5, 1, 0), 0);
+        List<net.minecraft.world.level.pathfinder.Node> nodes = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            nodes.add(new net.minecraft.world.level.pathfinder.Node(origin.getX() + i, origin.getY() + 1, origin.getZ()));
+        }
+        var path = new net.minecraft.world.level.pathfinder.Path(nodes, origin.offset(5, 1, 0), true);
+        boolean moved = worm.getNavigation().moveTo(path, 1.0D);
+        String detail = "height " + worm.getBbHeight() + ", path " + path;
+        try {
+            for (int i = 0; moved && i < 5; i++) {
+                worm.getNavigation().tick();
+            }
+            // past the second node: the direct move check ran and let it through
+            check("death worm follows a path on land", moved && path.getNextNodeIndex() >= 2, detail + ", next node " + path.getNextNodeIndex());
+        } catch (RuntimeException e) {
+            check("death worm follows a path on land", false, detail + ": " + e);
+        }
+    }
+
+    /** Hives and the separation of dangerous structures are written by the worldgen threads, read and saved by the server thread. */
+    private static void worldDataThreads(ServerLevel level) {
+        var data = com.github.alexthe666.iceandfire.world.IafWorldData.get(level);
+        var hives = com.github.alexthe666.iceandfire.world.MyrmexWorldData.get(level);
+        int before = hives.getHivelist().size();
+        List<Throwable> errors = java.util.Collections.synchronizedList(new ArrayList<>());
+        List<com.github.alexthe666.iceandfire.entity.util.MyrmexHive> added = java.util.Collections.synchronizedList(new ArrayList<>());
+        var pool = java.util.concurrent.Executors.newFixedThreadPool(4);
+        for (int t = 0; t < 4; t++) {
+            final int thread = t;
+            pool.execute(() -> {
+                try {
+                    for (int i = 0; i < 1500; i++) {
+                        // far away: the structures of this world do not depend on these entries
+                        data.check(com.github.alexthe666.iceandfire.world.IafWorldData.FeatureType.OCEAN, new BlockPos(29_000_000, 0, 29_000_000), "selftest_" + thread + "_" + i);
+                        if (i % 15 == 0) {
+                            var hive = new com.github.alexthe666.iceandfire.entity.util.MyrmexHive(level, new BlockPos(29_000_000, 0, i), 100);
+                            added.add(hive);
+                            com.github.alexthe666.iceandfire.world.MyrmexWorldData.addHive(level, hive);
+                        }
+                    }
+                } catch (Throwable e) {
+                    errors.add(e);
+                }
+            });
+        }
+        pool.shutdown();
+        long deadline = System.nanoTime() + 30_000_000_000L;
+        while (!pool.isTerminated() && System.nanoTime() < deadline) {
+            try {
+                data.save(new CompoundTag(), level.registryAccess());
+                hives.getNearestHive(BlockPos.ZERO, 1);
+                // as often as an autosave would dare: a save in a loop keeps the lock from the threads
+                Thread.sleep(2);
+            } catch (Throwable e) {
+                errors.add(e);
+            }
+        }
+        int count = hives.getHivelist().size();
+        hives.getHivelist().removeAll(added);
+        check("world data from worldgen threads", pool.isTerminated() && errors.isEmpty() && count == before + 400, "finished " + pool.isTerminated() + ", hives " + before + " + 400 -> " + count + ", errors " + errors.size() + (errors.isEmpty() ? "" : " first " + errors.get(0)));
+    }
+
+    /** Right-click with a myrmex staff: a queen without a hive (a spawn egg far from any hive) anywhere in the dimension threw. */
+    private static void hiveQueenLookup(ServerLevel level) {
+        var lone = IafEntityRegistry.MYRMEX_QUEEN.get().create(level);
+        lone.moveTo(hive.getCenter().getX() + 0.5D, hive.getCenter().getY(), hive.getCenter().getZ() + 0.5D, 0, 0);
+        level.addFreshEntity(lone);
+        try {
+            var found = hive.getQueen();
+            check("hive finds its queen next to one without a hive", found == queen, found);
+        } catch (RuntimeException e) {
+            check("hive finds its queen next to one without a hive", false, e);
+        } finally {
+            lone.discard();
+        }
+    }
+
+    /** A dragon that is gone for good has no last position: its crystal says so at once instead of loading that chunk for nothing. */
+    private static void crystalDragonGone(ServerLevel level) {
+        BlockPos top = HIVE_CHUNK.getMiddleBlockPosition(0);
+        EntityDragonBase dragon = IafEntityRegistry.FIRE_DRAGON.get().create(level);
+        dragon.moveTo(top.getX() + 0.5D, level.getHeight(Heightmap.Types.MOTION_BLOCKING, top.getX(), top.getZ()) + 2, top.getZ() + 0.5D, 0, 0);
+        dragon.setCrystalBound(true);
+        dragon.setNoAi(true);
+        level.addFreshEntity(dragon);
+        dragon.discard();
+        BlockPos last = com.github.alexthe666.iceandfire.world.DragonPosWorldData.get(level).getDragonPos(dragon.getUUID());
+        check("crystal forgets a dragon that is gone", last == null, last);
+    }
+
+    private static int crystalWait;
+    private static final ChunkPos CRYSTAL_CHUNK = new ChunkPos(510, 510); // inside the generated area (a ticket counts only once the work on the chunk is over), far from the forced chunks
+
+    /** A summon whose dragon never arrives (it moved, or a stale position): the chunk must not stay loaded until the restart. */
+    private static void crystalTicketAdd(ServerLevel level) {
+        level.getChunk(CRYSTAL_CHUNK.x, CRYSTAL_CHUNK.z);
+        level.getChunkSource().addRegionTicket(com.github.alexthe666.iceandfire.item.ItemSummoningCrystal.CHUNK_TICKETS, CRYSTAL_CHUNK, 2, CRYSTAL_CHUNK);
+        check("crystal ticket loads the chunk", level.hasChunk(CRYSTAL_CHUNK.x, CRYSTAL_CHUNK.z), CRYSTAL_CHUNK);
+    }
+
+    private static void sprint(MinecraftServer server) {
+        server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput(), "tick sprint 3500");
+    }
+
+    private static void crystalTicketExpired(ServerLevel level) {
+        check("crystal ticket expires", !level.hasChunk(CRYSTAL_CHUNK.x, CRYSTAL_CHUNK.z), CRYSTAL_CHUNK);
     }
 
     private static void checkSpawned(ServerLevel level) {
@@ -324,6 +460,7 @@ public class SelfTest {
         dragon.setNoAi(true);
         dragon.setPersistenceRequired();
         level.addFreshEntity(dragon);
+        dragon.setCrystalBound(true);
         partsDragon = dragon.getUUID();
 
         // A part saved with the chunk by 1.20.1: loaded without its owner
@@ -365,6 +502,7 @@ public class SelfTest {
 
     private static void partsUnloaded(ServerLevel level) {
         check("dragon chunk unloaded", level.getEntity(partsDragon) == null, PARTS_CHUNK);
+        check("crystal remembers an unloaded dragon", com.github.alexthe666.iceandfire.world.DragonPosWorldData.get(level).getDragonPos(partsDragon) != null, partsDragon);
         check("statues unloaded", STATUES.keySet().stream().allMatch(id -> level.getEntity(id) == null), STATUES.values());
         level.setChunkForced(PARTS_CHUNK.x, PARTS_CHUNK.z, true);
     }

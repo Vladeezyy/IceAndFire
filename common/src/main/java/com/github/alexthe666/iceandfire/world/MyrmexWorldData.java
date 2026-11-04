@@ -21,7 +21,8 @@ public class MyrmexWorldData extends SavedData {
 
     private static final String IDENTIFIER = "iceandfire_myrmex";
     private final List<BlockPos> villagerPositionsList = Lists.newArrayList();
-    private final List<MyrmexHive> hiveList = Lists.newArrayList();
+    // Worldgen threads add hives while the server thread goes through them (myrmex AI); hives are added rarely
+    private final List<MyrmexHive> hiveList = new java.util.concurrent.CopyOnWriteArrayList<>();
     private Level world;
     private int tickCounter;
 
@@ -42,7 +43,11 @@ public class MyrmexWorldData extends SavedData {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
 
             DimensionDataStorage storage = overworld.getDataStorage();
-            MyrmexWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag), null), IDENTIFIER);
+            MyrmexWorldData data;
+            // Also called by the worldgen threads: not two instances of the data, one of them lost
+            synchronized (storage) {
+                data = storage.computeIfAbsent(new SavedData.Factory<>(MyrmexWorldData::new, (tag, registries) -> new MyrmexWorldData(tag), null), IDENTIFIER);
+            }
             if (data != null) {
                 data.world = world;
                 data.setDirty();
@@ -74,15 +79,8 @@ public class MyrmexWorldData extends SavedData {
     }
 
     private void removeAnnihilatedHives() {
-        Iterator<MyrmexHive> iterator = this.hiveList.iterator();
-
-        while (iterator.hasNext()) {
-            MyrmexHive village = iterator.next();
-
-            if (village.isAnnihilated()) {
-                iterator.remove();
-                this.setDirty();
-            }
+        if (this.hiveList.removeIf(MyrmexHive::isAnnihilated)) {
+            this.setDirty();
         }
     }
 
