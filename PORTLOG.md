@@ -81,6 +81,20 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
+## 2.1.13-beta.7 (2026-11-05)
+
+- CurseForge report 2026-11-04: server crash on Fabric 1.21.11, `this.mob` is null from `PathNavigateDeathWormLand.isSafeToStandAt`.
+  A worm without a rider uses its land navigation only on its first tick; `getPathTypeOfMob` reads the evaluator's mob, null outside
+  a path search since 1.20.5. Now `getPathType`. Audit of the same class of bugs, on every version: the separation list of dangerous
+  structures, the hive list and the shared hive and cave features were used by the worldgen threads without protection;
+  `MyrmexHive.getQueen` threw on a queen without a hive; the ticket of the summoning crystal never expired.
+- Self-test 38 checks (39 on 26.3) on both loaders, every version. Stress, Fabric 1.21.11, one seed (20261104): old code 10.4 and
+  8.0 ms average tick, new code 7.9 and 6.7 ms, so no change beyond the spread. Without `SEED=` the same code gave 6.3 to 16.6 ms.
+- Not fixed, found by the same audit: `IafWorldData.check` compares with the last entry only (`canGenerate` overwritten, as in the
+  original; a fix means fewer structures in new chunks), `Dragon Pathfinding Threads` has no effect (unbounded queue, one thread),
+  `PathNavigateDeathWormLand.isPositionClear` checks one cell (a list of one mutable `BlockPos`), `EntityMyrmexEgg` throws without
+  `HiveUUID`, `EntityMyrmexQueen.setCustomName(null)` throws with a hive.
+
 ## Current state (2026-10-19, resume here)
 
 - 2.1.13-beta.3: double scaling of 1.21 (`LivingEntityRenderer` and `LivingEntity.getDimensions` apply
