@@ -45,7 +45,11 @@ public class IafWorldData extends SavedData {
         if (world instanceof ServerLevel) {
             ServerLevel overworld = world.getServer().getLevel(world.dimension());
             DimensionDataStorage storage = overworld.getDataStorage();
-            IafWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(IafWorldData::new, (tag, registries) -> new IafWorldData(tag), null), IDENTIFIER);
+            IafWorldData data;
+            // Also called by the worldgen threads: not two instances of the data, one of them lost
+            synchronized (storage) {
+                data = storage.computeIfAbsent(new SavedData.Factory<>(IafWorldData::new, (tag, registries) -> new IafWorldData(tag), null), IDENTIFIER);
+            }
             data.setDirty();
 
             return data;
@@ -59,6 +63,13 @@ public class IafWorldData extends SavedData {
     }
 
     public boolean check(final FeatureType type, final BlockPos position, final String id) {
+        // Called by the worldgen threads at the same time, saved by the server thread
+        synchronized (LAST_GENERATED) {
+            return checkLocked(type, position, id);
+        }
+    }
+
+    private boolean checkLocked(final FeatureType type, final BlockPos position, final String id) {
         ArrayList<Map.Entry<String, BlockPos>> entries = LAST_GENERATED.get(type);
 
         boolean canGenerate = true;
@@ -98,7 +109,9 @@ public class IafWorldData extends SavedData {
                 CompoundTag entry = list.getCompound(i);
                 String id = entry.getString("id");
                 BlockPos position = readPosition(entry);
-                LAST_GENERATED.get(type).add(Map.entry(id, position));
+                synchronized (LAST_GENERATED) {
+                    LAST_GENERATED.get(type).add(Map.entry(id, position));
+                }
             }
         }
 
@@ -107,18 +120,20 @@ public class IafWorldData extends SavedData {
 
     @Override
     public @NotNull CompoundTag save(@NotNull final CompoundTag tag, @NotNull HolderLookup.Provider registries) {
-        for (var e : LAST_GENERATED.entrySet()) {
-            ListTag listTag = new ListTag();
+        synchronized (LAST_GENERATED) {
+            for (var e : LAST_GENERATED.entrySet()) {
+                ListTag listTag = new ListTag();
 
-            for (Map.Entry<String, BlockPos> entry : e.getValue()) {
-                CompoundTag subTag = new CompoundTag();
-                subTag.putString("id", entry.getKey());
-                subTag.put("position", NbtUtils.writeBlockPos(entry.getValue()));
+                for (Map.Entry<String, BlockPos> entry : e.getValue()) {
+                    CompoundTag subTag = new CompoundTag();
+                    subTag.putString("id", entry.getKey());
+                    subTag.put("position", NbtUtils.writeBlockPos(entry.getValue()));
 
-                listTag.add(subTag);
+                    listTag.add(subTag);
+                }
+
+                tag.put(e.getKey().toString(), listTag);
             }
-
-            tag.put(e.getKey().toString(), listTag);
         }
 
         return tag;
