@@ -81,6 +81,21 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
+## 2.1.13-beta.8 (2026-11-06)
+
+- CurseForge report 2026-11-05: the bite of a death worm crashed the server with Lithium (`this.cachedResistances` is null):
+  `BlockLaunchExplosion` called `explode()` and then `calculateExplodedPositions()` on one `ServerExplosion` (1.21.11 and 26.x; 1.21.1
+  has its own `Explosion`). The steps of `explode()` one by one now. The same report says TPS under 15 with the mod, 20 without: NOT
+  reproduced. On 1369 ticking chunks at the default settings a tick took about 5 ms, the mod 12% of it (no other mods, no hive in that
+  world). Waiting for a spark report of the reporter (spark is in their pack).
+- `tools/fuzztest.sh` (Fuzz, Fabric, with Lithium, on CI): every creature, item and block through bites, damage, animations, clicks,
+  riding and breath, plus new chunks with every chance of the mod at 1. It found the queen spawn egg near a hive
+  (`setCustomName(null)`), and with the old explosion it finds the crash of the report by itself. 0 exceptions on all 5 versions now.
+  `FUZZ_RADIUS=15` locally: 961 chunks, 2543 dragons, no exception.
+- From a JFR profile of the stress test (server thread samples, same seed): `DreadAIRideHorse` 50 -> 10 (a path search every tick),
+  parts of dragons 60 -> 22 (a water check every tick), statues 99 -> 38. Tick 7.3 -> 6.6 ms, one run each: within the spread.
+- Still open: `IafWorldData.check` (only the last entry), `Dragon Pathfinding Threads` has no effect, `isPositionClear` checks one cell.
+
 ## 2.1.13-beta.7 (2026-11-05)
 
 - CurseForge report 2026-11-04: server crash on Fabric 1.21.11, `this.mob` is null from `PathNavigateDeathWormLand.isSafeToStandAt`.

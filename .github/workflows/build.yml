@@ -18,7 +18,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -66,12 +66,22 @@ jobs:
           mv build-selftest.log selftest-fabric.log
           grep -qE '\[selftest\] DONE ok=[0-9]+ fail=0' selftest-fabric.log
 
+      # tools/fuzztest.sh: every creature, item and block through bites, damage, clicks and riding, with Lithium
+      - name: Bug hunt (Fabric, with Lithium)
+        run: |
+          status=0
+          MAX_TICK_TIME=600000 bash tools/fuzztest.sh || status=$?
+          mv build-selftest.log fuzz-fabric.log
+          exit $status
+
       - name: Upload test logs
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-logs
-          path: selftest-*.log
+          path: |
+            selftest-*.log
+            fuzz-*.log
           if-no-files-found: ignore
 
       - name: Upload jars

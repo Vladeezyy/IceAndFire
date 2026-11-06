@@ -63,7 +63,8 @@ public class EntityMyrmexEgg extends LivingEntity implements IBlacklistedFromSta
         this.setJungle(tag.getBoolean("Jungle"));
         this.setMyrmexAge(tag.getInt("MyrmexAge"));
         this.setMyrmexCaste(tag.getInt("MyrmexCaste"));
-        hiveUUID = tag.getUUID("HiveUUID");
+        // Absent in /summon and spawn egg data: the egg looks for the nearest hive when it hatches
+        hiveUUID = tag.hasUUID("HiveUUID") ? tag.getUUID("HiveUUID") : null;
     }
 
     @Override

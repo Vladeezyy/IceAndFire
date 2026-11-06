@@ -132,6 +132,12 @@ public abstract class EntityMutlipartPart extends Entity {
         this.entityData.set(PART_YAW, yaw % 360);
     }
 
+    /** A hitbox has no use for water: this was a block scan for every part of every dragon, every tick */
+    @Override
+    protected boolean updateInWaterStateAndDoFluidPushing() {
+        return false;
+    }
+
     @Override
     public void tick() {
         if (!this.addedByParent && !this.level().isClientSide) {
