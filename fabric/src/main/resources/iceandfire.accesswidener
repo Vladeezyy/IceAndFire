@@ -35,6 +35,7 @@ accessible method net/minecraft/world/entity/SpawnPlacements register (Lnet/mine
 accessible field net/minecraft/world/entity/LivingEntity useItemRemaining I
 # Dragon and death worm ground blast (BlockLaunchExplosion): the blocks a vanilla explosion would break
 accessible method net/minecraft/world/level/ServerExplosion calculateExplodedPositions ()Ljava/util/List;
+accessible method net/minecraft/world/level/ServerExplosion hurtEntities ()V
 # Saved data of 1.21.1 worlds is moved to its 26.x path (IafSavedData)
 # Dread lich skull and other arrows read the damage (1.21.1 had getBaseDamage())
 accessible field net/minecraft/world/entity/projectile/arrow/AbstractArrow baseDamage D

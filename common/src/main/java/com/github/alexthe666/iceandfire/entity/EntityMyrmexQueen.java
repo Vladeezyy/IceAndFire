@@ -105,10 +105,9 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
 
     @Override
     public void setCustomName(Component name) {
-        if (this.getHive() != null) {
-            if (!this.getHive().colonyName.equals(name.getContents())) {
-                this.getHive().colonyName = name.getString();
-            }
+        // null on every load of an entity since 1.21.5: a spawn egg loads the data of a queen that already found her hive
+        if (this.getHive() != null && name != null) {
+            this.getHive().colonyName = name.getString();
         }
         super.setCustomName(name);
     }
