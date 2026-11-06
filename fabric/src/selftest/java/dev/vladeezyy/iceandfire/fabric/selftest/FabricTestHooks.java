@@ -20,6 +20,10 @@ public final class FabricTestHooks implements ModInitializer {
         });
         ServerTickEvents.START_SERVER_TICK.register(StressTest::onTickStart);
         ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (Fuzz.ENABLED) {
+                Fuzz.onTick(server);
+                return;
+            }
             SelfTest.onTick(server);
             StressTest.onTick(server);
             NetTest.onServerTick(server);

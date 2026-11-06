@@ -68,6 +68,14 @@ public class EntityStoneStatue extends LivingEntity implements IBlacklistedFromS
         return statue;
     }
 
+    /** At rest a statue only checks now and then that it still has ground under it: no physics for a stone every tick */
+    @Override
+    public void aiStep() {
+        if (!this.onGround() || this.tickCount % 10 == 0 || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D) {
+            super.aiStep();
+        }
+    }
+
     @Override
     public void push(@NotNull Entity entityIn) {
     }
