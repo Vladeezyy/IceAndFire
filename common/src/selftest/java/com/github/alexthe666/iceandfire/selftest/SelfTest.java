@@ -91,6 +91,7 @@ public class SelfTest {
                 case 240 -> checkSpawned(level);
                 case 260 -> items(level);
                 case 270 -> wormLandPath(level);
+                case 272 -> groundBlast(level);
                 case 275 -> worldDataThreads(level);
                 case 280 -> features(server, level);
                 case 480 -> structures(server, level);
@@ -218,6 +219,30 @@ public class SelfTest {
             check("death worm follows a path on land", moved && path.getNextNodeIndex() >= 2, detail + ", next node " + path.getNextNodeIndex());
         } catch (RuntimeException e) {
             check("death worm follows a path on land", false, detail + ": " + e);
+        }
+    }
+
+    /** CurseForge report 2026-11-05: the bite of a death worm. A ServerExplosion computes its blocks once: with Lithium a second call throws. */
+    private static void groundBlast(ServerLevel level) {
+        BlockPos center = new BlockPos(0, level.getMaxBuildHeight() - 41, -160);
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, -2, -2), center.offset(2, 2, 2))) {
+            level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState());
+        }
+        var worm = IafEntityRegistry.DEATH_WORM.get().create(level);
+        worm.moveTo(center.getX() + 0.5, center.getY() + 5, center.getZ() + 0.5, 0, 0);
+        try {
+            var explosion = new com.github.alexthe666.iceandfire.entity.util.BlockLaunchExplosion(level, worm, center.getX() + 0.5, center.getY() + 0.5, center.getZ() + 0.5, 3F);
+            explosion.explode();
+            explosion.finalizeExplosion(true);
+            int left = 0;
+            for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, -2, -2), center.offset(2, 2, 2))) {
+                if (level.getBlockState(pos).is(net.minecraft.world.level.block.Blocks.DIRT)) {
+                    left++;
+                }
+            }
+            check("ground blast breaks blocks", left < 125, left + " of 125 blocks left");
+        } catch (RuntimeException e) {
+            check("ground blast breaks blocks", false, e);
         }
     }
 
