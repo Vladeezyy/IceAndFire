@@ -15,6 +15,7 @@ public class DreadAIRideHorse extends Goal {
 
     @Nonnull
     private List<AbstractHorse> list = IAFMath.emptyAbstractHorseEntityList;
+    private int pathDelay;
 
     public DreadAIRideHorse(EntityDreadKnight knight) {
         this.knight = knight;
@@ -43,11 +44,12 @@ public class DreadAIRideHorse extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !this.knight.isPassenger() && this.horse != null && !this.horse.isVehicle();
+        return !this.knight.isPassenger() && this.horse != null && this.horse.isAlive() && !this.horse.isVehicle();
     }
 
     @Override
     public void start() {
+        this.pathDelay = 0;
         this.horse.getNavigation().stop();
     }
 
@@ -61,7 +63,11 @@ public class DreadAIRideHorse extends Goal {
     public void tick() {
         this.knight.getLookControl().setLookAt(this.horse, 30.0F, 30.0F);
 
-        this.knight.getNavigation().moveTo(this.horse, 1.2D);
+        // Not every tick: a vanilla navigation does a whole path search for every call
+        if (--this.pathDelay <= 0) {
+            this.pathDelay = this.adjustedTickDelay(10);
+            this.knight.getNavigation().moveTo(this.horse, 1.2D);
+        }
 
         if (this.knight.distanceToSqr(this.horse) < 4.0D) {
             this.horse.setTamed(true);

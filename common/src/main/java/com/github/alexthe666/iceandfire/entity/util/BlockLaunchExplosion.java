@@ -21,7 +21,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * entities, {@code finalizeExplosion} removed the blocks through the loader's {@code onBlockExploded} without drops
  * (it also built falling blocks it never spawned, and its sound and particles only ran on the client, where the blast
  * never happens). 26.x {@code Explosion} is an interface: a vanilla {@link ServerExplosion} that keeps the blocks does
- * the entity part, the blocks it would break go the same way as before.
+ * the entity part, the blocks it would break go the same way as before. The steps of {@code explode()} one by one: an
+ * explosion computes its blocks once (a second call does all the rays again, and with Lithium, which drops its cache of
+ * block resistances at the end of the first one, throws).
  */
 public final class BlockLaunchExplosion {
     private BlockLaunchExplosion() {}
@@ -35,11 +37,13 @@ public final class BlockLaunchExplosion {
             return;
         }
         ServerExplosion explosion = new ServerExplosion(level, entity, source, null, new Vec3(x, y, z), size, false, Explosion.BlockInteraction.KEEP);
-        explosion.explode();
+        level.gameEvent(entity, net.minecraft.world.level.gameevent.GameEvent.EXPLODE, new Vec3(x, y, z));
         if (mode == Explosion.BlockInteraction.KEEP) {
+            explosion.hurtEntities();
             return;
         }
         List<BlockPos> toBlow = new ArrayList<>(explosion.calculateExplodedPositions());
+        explosion.hurtEntities();
         Collections.shuffle(toBlow, ThreadLocalRandom.current());
         for (BlockPos blockpos : toBlow) {
             BlockState blockstate = level.getBlockState(blockpos);
