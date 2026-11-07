@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class EntityMutlipartPart extends Entity {
 
@@ -39,6 +40,8 @@ public abstract class EntityMutlipartPart extends Entity {
     private static final EntityDataAccessor<Float> SCALE_WIDTH = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> SCALE_HEIGHT = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> PART_YAW = SynchedEntityData.defineId(EntityMutlipartPart.class, EntityDataSerializers.FLOAT);
+    /** Ids of the parts made on the client (see the constructor); far from the statues' copies (RenderStoneStatue, -1 - n) */
+    private static final AtomicInteger CLIENT_IDS = new AtomicInteger(-1_000_000);
     public EntityDimensions multipartSize;
     protected float radius;
     protected float angleYaw;
@@ -72,6 +75,14 @@ public abstract class EntityMutlipartPart extends Entity {
     public EntityMutlipartPart(EntityType<?> t, Entity parent, float radius, float angleYaw, float offsetY, float sizeX,
         float sizeY, float damageMultiplier) {
         super(t, parent.level());
+        if (parent.level().isClientSide()) {
+            // The parent makes its parts on the client as well (resetParts in its constructor, again on its first tick and when
+            // it grows), but those are never added to the client level: the server's parts come in their own spawn packets.
+            // From 26.2 an entity takes its id from the level, and the client level gives 0, so getId(), equals() and hashCode()
+            // threw: mods that hook Entity.remove and look the entity up (LambDynLights) crashed the client on the first tick of
+            // a dragon (CurseForge report 2026-11-08). The server never sends a negative id.
+            this.setId(CLIENT_IDS.getAndDecrement());
+        }
         this.setParent(parent);
         this.setScaleX(sizeX);
         this.setScaleY(sizeY);

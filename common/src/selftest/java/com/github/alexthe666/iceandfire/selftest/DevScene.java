@@ -73,6 +73,25 @@ public final class DevScene {
         at(60, mc -> server(mc, DevScene::buildStage));
         at(120, mc -> server(mc, DevScene::dragons));
         at(130, mc -> server(mc, p -> look(p, stage.offset(0, 8, 38), stage.offset(0, 3, 20))));
+        // The parts a dragon makes on the client are never in its level: from 26.2 they had no id, and a mod that compares
+        // entities in Entity.remove (LambDynLights) crashed the client on the first tick of a dragon (CurseForge report 2026-11-08)
+        at(215, mc -> {
+            int dragons = 0;
+            Object failure = null;
+            for (Entity e : mc.level.entitiesForRendering()) {
+                if (e instanceof EntityDragonBase dragon) {
+                    dragons++;
+                    try {
+                        Entity part = new com.github.alexthe666.iceandfire.entity.EntityDragonPart(dragon, 1F, 0, 0, 1F, 1F, 1F);
+                        part.hashCode();
+                        part.discard();
+                    } catch (RuntimeException ex) {
+                        failure = ex;
+                    }
+                }
+            }
+            check("parts made on the client have ids", dragons > 0 && failure == null, dragons + " dragons, " + failure);
+        });
         at(220, mc -> shot(mc, "dragons"));
         at(230, mc -> server(mc, p -> level(p).getEntitiesOfClass(EntityDragonBase.class, p.getBoundingBox().inflate(80)).forEach(Entity::discard)));
         // Helmets close up, front (#5112: the hat layer of the skin through the helmet); first without a helmet
