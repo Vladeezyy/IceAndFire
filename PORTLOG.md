@@ -81,6 +81,24 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
+## 2.1.13-beta.9 (2026-11-08, 26.2 and 26.3 only)
+
+- CurseForge report 2026-11-08 (Fabric 26.3, LambDynLights): the client crashed with "Ticking entity" as soon as a dragon came
+  into view: `Tried to access entity ID before ID assignment` in `Entity.getId` ← `Entity.equals` ← LambDynLights
+  `removeLightSource` ← `Entity.remove` ← `EntityMutlipartPart.remove` ← `EntityDragonBase.removeParts`. Reproduced on the
+  unchanged 26.3 Fabric code with `tools/scenetest.sh -Pwith_compat` and LambDynLights.
+- Cause: from 26.2 an entity takes its id from the level, and the client level gives 0. Dragon, hydra, death worm, sea serpent
+  and cyclops also build their multipart parts on the client; those parts are never added to the client level, but LambDynLights
+  hooks `Entity.remove` and compares entities with `equals`, which calls `getId()`.
+- Fix: parts made on the client take negative ids in the `EntityMutlipartPart` constructor (from -1 000 000 down). The server never
+  sends negative ids. New scene check "parts made on the client have ids"; LambDynLights in the compatibility runs
+  (`compat_neo_lambdynamiclights`, `compat_fabric_lambdynamiclights`).
+- Tests: the dragon scene on 26.3 and 26.2, Fabric and NeoForge: 33/33 checks each, no crash.
+- Elytxtreme's report of 2026-11-05 (death worm bite, Lithium, `cachedResistances` null) is from beta.7 and is fixed in beta.8;
+  the CI fuzz test with the same Lithium passes. Nothing new in beta.9 for it.
+- 1.21.1, 1.21.11 and 26.1.2 stay on beta.8: their entities take ids from a static counter in the constructor, so the client
+  parts are not affected.
+
 ## 2.1.13-beta.8 (2026-11-06)
 
 - CurseForge report 2026-11-05: the bite of a death worm crashed the server with Lithium (`this.cachedResistances` is null):
