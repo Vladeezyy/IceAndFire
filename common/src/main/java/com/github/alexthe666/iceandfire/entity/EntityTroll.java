@@ -162,7 +162,8 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     private void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+        // a variant from NBT or a command stays within the enum
+        this.entityData.set(VARIANT, Math.clamp(variant, 0, EnumTroll.values().length - 1));
     }
 
     public EnumTroll getTrollType() {
@@ -178,7 +179,7 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     private void setWeapon(int variant) {
-        this.entityData.set(WEAPON, variant);
+        this.entityData.set(WEAPON, Math.clamp(variant, 0, EnumTroll.Weapon.values().length - 1));
     }
 
     public EnumTroll.Weapon getWeaponType() {

@@ -536,7 +536,8 @@ public class EntityHippogryph extends TamableAnimal implements ISyncMount, IAnim
     }
 
     public void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+        // a variant from NBT or an egg's EggOrdinal stays within the enum
+        this.entityData.set(VARIANT, Math.clamp(variant, 0, EnumHippogryphTypes.values().length - 1));
     }
 
     public EnumHippogryphTypes getEnumVariant() {

@@ -105,7 +105,7 @@ public class TileEntityPixieHouse extends BlockEntity {
     protected void loadAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         houseType = compound.getInt("HouseType");
         hasPixie = compound.getBoolean("HasPixie");
-        pixieType = compound.getInt("PixieType");
+        pixieType = Math.clamp(compound.getInt("PixieType"), 0, EntityPixie.PARTICLE_RGB.length - 1);
         tamedPixie = compound.getBoolean("TamedPixie");
         if (compound.hasUUID("PixieOwnerUUID")) {
             pixieOwnerUUID = compound.getUUID("PixieOwnerUUID");

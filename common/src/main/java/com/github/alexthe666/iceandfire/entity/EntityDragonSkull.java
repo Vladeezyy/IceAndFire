@@ -219,7 +219,8 @@ public class EntityDragonSkull extends Animal implements IBlacklistedFromStatues
     }
 
     public int getDragonStage() {
-        return Math.max(getStage(), 1);
+        // the renderer has five growth stages
+        return Math.clamp(getStage(), 1, 5);
     }
 
     @Override

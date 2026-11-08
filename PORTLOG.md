@@ -81,6 +81,16 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
+## 2.1.13-beta.10 (2026-11-08): crash fixes after the CurseForge report and a code audit (1.21.1)
+
+- CurseForge report (2.1.13-beta.9, Fabric 26.3): client crashes in the projectiles, `ClassCastException: ClientLevel cannot be cast to ServerLevel`. Not on 1.21.1: `getGameRules()` and `spawnAtLocation(ServerLevel, …)` are not ServerLevel-only there. Only the feather item now drops on the server.
+- Right-click on a wall with a chained mob: the knot was created on the client too. On 1.21.1 its id comes from the constructor, so no crash; only a ghost knot in the chain list and a double placement sound. Fix: entities made in the interaction handler on the server only (`if (level.isClientSide()) return;` first).
+- First chain lost at once, no error: fresh chain data started with `isInitialized = false`, and its first tick rebuilt the list from the empty saved ids. Fix: fresh data starts initialized (`private boolean isInitialized = true;`); only deserialization sets it to false. The first-chain check passes on 1.21.1 with the fix.
+- Code audit (no report, not reproduced one by one): NBT indices clamped (troll variant and weapon, hippogryph variant and `EggOrdinal`, dragon egg `Color`, ice egg `Color` byte, pixie jar and house `PixieType`, dragon skull stage 1..5); dragon horn: `type.create` may return null, and `read("EntityUUID").orElse(null)` gave `setUUID(null)` and a server crash; myrmex staff screens rebuilt their widgets every frame (`renderables.clear()` + `addWidget`, `children` grew, old buttons answered clicks), now `clearWidgets()`, and the hive-null message runs through `enqueueWork`; cockatrice egg chance `nextInt(max + 1)` overflowed at `Integer.MAX_VALUE`. Covered by compiling and by the scenes not crashing.
+- Scene, new steps: projectiles with late feathers (the server sets `tickCount = -1000`, so the client removes them by its own age) and a chain to a wall (right-click on the wall with a chained mob).
+- Results: the scene caught the old feather, bubbles and hydra breath crashes and the old right-click chain crash on 26.3 Fabric. With the fixes it passes with 0 failed checks on 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, Fabric and NeoForge.
+- Server selftest: Fabric and NeoForge pass on this branch (39 checks, 0 failed, no slow chunks); all five versions × both loaders pass (10 runs, 2026-11-08). Only log noise in the errors: the Yggdrasil key fetch without network, and on 1.21.1 Fabric "No data fixer registered" for the mod's entities.
+
 ## 2.1.13-beta.9 (2026-11-08, 26.2 and 26.3 only)
 
 - CurseForge report 2026-11-08 (Fabric 26.3, LambDynLights): the client crashed with "Ticking entity" as soon as a dragon came
