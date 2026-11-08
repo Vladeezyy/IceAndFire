@@ -84,7 +84,7 @@ public class TileEntityJar extends BlockEntity {
     @Override
     protected void loadAdditional(ValueInput compound) {
         hasPixie = compound.getBooleanOr("HasPixie", false);
-        pixieType = compound.getIntOr("PixieType", 0);
+        pixieType = Math.clamp(compound.getIntOr("PixieType", 0), 0, EntityPixie.PARTICLE_RGB.length - 1);
         hasProduced = compound.getBooleanOr("HasProduced", false);
         ticksExisted = compound.getIntOr("TicksExisted", 0);
         tamedPixie = compound.getBooleanOr("TamedPixie", false);

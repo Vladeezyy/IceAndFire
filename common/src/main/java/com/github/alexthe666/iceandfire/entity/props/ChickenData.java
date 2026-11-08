@@ -22,7 +22,7 @@ public class ChickenData {
         }
 
         if (timeUntilNextEgg == 0) {
-            if (entity.tickCount > 30 && entity.getRandom().nextInt(IafConfig.cockatriceEggChance + 1) == 0) {
+            if (entity.tickCount > 30 && entity.getRandom().nextInt(Math.min(IafConfig.cockatriceEggChance, Integer.MAX_VALUE - 1) + 1) == 0) {
                 entity.playSound(SoundEvents.CHICKEN_HURT, 2.0F, (entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.2F + 1.0F);
                 entity.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.2F + 1.0F);
                 entity.spawnAtLocation((net.minecraft.server.level.ServerLevel) entity.level(), new net.minecraft.world.item.ItemStack(IafItemRegistry.ROTTEN_EGG.get()), 1);

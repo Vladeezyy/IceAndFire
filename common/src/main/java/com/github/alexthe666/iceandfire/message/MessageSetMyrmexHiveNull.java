@@ -34,10 +34,13 @@ public class MessageSetMyrmexHiveNull implements CustomPacketPayload {
         }
 
         public static void handle(MessageSetMyrmexHiveNull message, PacketContext context) {
-            Player player = context.player();
-            if (player != null) {
-                IceAndFire.PROXY.setReferencedHive(null);
-            }
+            // on the client thread, as MessageGetMyrmexHive: the staff screens read the hive while they draw
+            context.enqueueWork(() -> {
+                Player player = context.player();
+                if (player != null) {
+                    IceAndFire.PROXY.setReferencedHive(null);
+                }
+            });
         }
     }
 }

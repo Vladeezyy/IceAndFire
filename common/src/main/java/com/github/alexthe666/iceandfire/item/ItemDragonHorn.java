@@ -93,6 +93,10 @@ public class ItemDragonHorn extends Item {
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (context.getClickedFace() != Direction.UP)
             return InteractionResult.FAIL;
+        // the server releases the dragon: the client would only build a whole dragon to throw it away
+        if (context.getLevel().isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
         ItemStack stack = context.getItemInHand();
         CompoundTag stackTag = ItemNbt.getOrEmpty(stack);
         if (!stackTag.getStringOr("DragonHornEntityID", "").isEmpty()) {
@@ -101,13 +105,16 @@ public class ItemDragonHorn extends Item {
             EntityType type = EntityType.byString(id).orElse(null);
             if (type != null) {
                 Entity entity = type.create(world, EntitySpawnReason.MOB_SUMMONED);
+                // null when the type cannot be made here (a disabled feature, a type from another mod)
+                if (entity == null) {
+                    return InteractionResult.FAIL;
+                }
                 if (entity instanceof EntityDragonBase) {
                     EntityDragonBase dragon = (EntityDragonBase) entity;
                     Values.load(dragon, getEntityTag(stack));
                 }
                 //Still needed to allow for intercompatibility
-                if (stackTag.contains("EntityUUID"))
-                    entity.setUUID(stackTag.read("EntityUUID", UUIDUtil.CODEC).orElse(null));
+                stackTag.read("EntityUUID", UUIDUtil.CODEC).ifPresent(entity::setUUID);
 
                 entity.absSnapTo(context.getClickedPos().getX() + 0.5D, (context.getClickedPos().getY() + 1), context.getClickedPos().getZ() + 0.5D, 180 + (context.getHorizontalDirection()).toYRot(), 0.0F);
                 if (world.addFreshEntity(entity)) {
