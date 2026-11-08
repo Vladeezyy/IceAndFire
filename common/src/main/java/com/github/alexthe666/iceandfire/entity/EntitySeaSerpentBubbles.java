@@ -146,7 +146,8 @@ public class EntitySeaSerpentBubbles extends Fireball implements IDragonProjecti
 
     @Override
     protected void onHit(@NotNull HitResult movingObject) {
-        boolean flag = ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.MOB_GRIEFING);
+        // onHit runs on the client too (tick): only a server has the game rules
+        boolean flag = this.level() instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.MOB_GRIEFING);
         if (!this.level().isClientSide()) {
             if (movingObject.getType() == HitResult.Type.ENTITY) {
                 Entity entity = ((EntityHitResult) movingObject).getEntity();

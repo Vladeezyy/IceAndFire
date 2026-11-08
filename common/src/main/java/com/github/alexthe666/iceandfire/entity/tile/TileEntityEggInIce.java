@@ -77,7 +77,7 @@ public class TileEntityEggInIce extends BlockEntity {
     @Override
     protected void loadAdditional(ValueInput tag) {
         super.loadAdditional(tag);
-        type = EnumDragonEgg.values()[tag.getByteOr("Color", (byte) 0)];
+        type = EnumDragonEgg.values()[Math.clamp(tag.getByteOr("Color", (byte) 0), 0, EnumDragonEgg.values().length - 1)];
         age = tag.getIntOr("Age", 0);
         UUID s = null;
 

@@ -154,7 +154,17 @@ public final class DevScene {
         at(END - 330, mc -> server(mc, DevScene::gorgonVictims));
         at(END - 10, mc -> checkStatues(mc, "statues made by the gorgon", 1, 7));
         at(END - 5, mc -> shot(mc, "statues_gorgon"));
-        at(END + 20, mc -> {
+        // Projectiles whose hits and ends run on the client too (CurseForge report 2026-11-08: a stymphalian feather
+        // crashed the client, "ClientLevel cannot be cast to ServerLevel"; the hydra breath and the sea serpent bubbles
+        // the same way on 1.21.11 and newer)
+        at(END + 20, mc -> server(mc, DevScene::projectiles));
+        at(END + 150, mc -> server(mc, DevScene::checkProjectiles));
+        // A mob on a chain tied to a wall by a click with an empty hand (crash audit 2026-11-08): the click fires on the client
+        // too, which made a knot of its own, without an entity id on 26.2 and newer, and crashed on it at the second hand
+        at(END + 160, mc -> server(mc, DevScene::chainSetup));
+        at(END + 185, DevScene::chainClick);
+        at(END + 205, mc -> server(mc, DevScene::checkChain));
+        at(END + 225, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
         });
@@ -228,6 +238,96 @@ public final class DevScene {
             dragon.tame(player);
             dragon.openInventory(player);
         }
+    }
+
+    private static int featherDropChance;
+
+    /** Three blocks above the ground at this column. */
+    private static BlockPos top(ServerLevel level, BlockPos pos) {
+        return new BlockPos(pos.getX(), level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) + 3, pos.getZ());
+    }
+
+    /** Feathers that fall and go after 100 ticks, each dropping its item, and a hydra breath and sea serpent bubbles inside a pig. */
+    private static void projectiles(ServerPlayer player) {
+        ServerLevel level = level(player);
+        featherDropChance = com.github.alexthe666.iceandfire.IafConfig.stymphalianBirdFeatherDropChance;
+        com.github.alexthe666.iceandfire.IafConfig.stymphalianBirdFeatherDropChance = 1;
+        BlockPos at = player.blockPosition();
+        for (int i = 0; i < 4; i++) {
+            // near the player, ticked by the server: each drops its item when it goes
+            place(level, IafEntityRegistry.STYMPHALIAN_FEATHER.get(), top(level, at.offset(-6 + 4 * i, 0, -8)), 0).setDeltaMovement(0, -0.5, 0);
+            // the client counts its own 100 ticks first and removes these itself, as with a lagging server or beyond the
+            // server's simulation distance (the age is not synced)
+            Entity late = place(level, IafEntityRegistry.STYMPHALIAN_FEATHER.get(), top(level, at.offset(-6 + 4 * i, 0, -4)), 0);
+            late.setDeltaMovement(0, -0.5, 0);
+            late.tickCount = -1000;
+        }
+        int x = -4;
+        for (EntityType<?> type : List.<EntityType<?>>of(IafEntityRegistry.HYDRA_BREATH.get(), IafEntityRegistry.SEA_SERPENT_BUBBLES.get())) {
+            BlockPos pos = top(level, at.offset(x, 0, -12)).below(3);
+            x += 8;
+            place(level, EntityType.PIG, pos, 0);
+            // inside the pig: both sides find the hit, whatever motion the client was sent
+            Entity shot = place(level, type, pos, 0);
+            shot.setPos(pos.getX() + 0.5, pos.getY() + 0.4, pos.getZ() + 0.5);
+            shot.setDeltaMovement(0, -0.1, 0);
+        }
+    }
+
+    private static void checkProjectiles(ServerPlayer player) {
+        ServerLevel level = level(player);
+        com.github.alexthe666.iceandfire.IafConfig.stymphalianBirdFeatherDropChance = featherDropChance;
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(player.blockPosition()).inflate(30);
+        List<net.minecraft.world.entity.item.ItemEntity> items = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, box,
+                e -> e.getItem().is(IafItemRegistry.STYMPHALIAN_BIRD_FEATHER.get()));
+        check("stymphalian feathers dropped on the server", items.size() >= 4, items.size());
+        items.forEach(Entity::discard);
+        level.getEntities(IafEntityRegistry.STYMPHALIAN_FEATHER.get(), new net.minecraft.world.phys.AABB(player.blockPosition()).inflate(100), e -> true).forEach(Entity::discard);
+        level.getEntities(EntityType.PIG, box, e -> true).forEach(Entity::discard);
+    }
+
+    private static BlockPos chainWall;
+    private static Entity chainedPig;
+
+    /** A pig on a chain the player holds, a wall within reach and empty hands. */
+    private static void chainSetup(ServerPlayer player) {
+        ServerLevel level = level(player);
+        BlockPos at = player.blockPosition();
+        chainWall = at.offset(2, 0, 0);
+        level.setBlock(chainWall, Blocks.COBBLESTONE_WALL.defaultBlockState(), 3);
+        BlockPos pigAt = at.offset(-3, 0, 0);
+        level.setBlock(pigAt.below(), Blocks.STONE.defaultBlockState(), 3);
+        chainedPig = place(level, EntityType.PIG, pigAt, 0);
+        // the first use of the pig's data, as with a player's first chain on a mob: the first tick of fresh data dropped
+        // the chain (scene run 2026-11-08, all versions)
+        com.github.alexthe666.iceandfire.entity.props.EntityDataProvider.getCapability(chainedPig).ifPresent(data -> data.chainData.attachChain(player));
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, ItemStack.EMPTY);
+    }
+
+    /** The click as Minecraft#startUseItem makes it: the main hand passes on a wall, then the off hand gets it. */
+    private static void chainClick(Minecraft mc) {
+        Entity pig = mc.level.getEntity(chainedPig.getId());
+        boolean chained = pig != null && com.github.alexthe666.iceandfire.entity.props.EntityDataProvider.getCapability(pig)
+                .map(data -> data.chainData.isChainedTo(mc.player)).orElse(false);
+        check("chained pig synced to the client", chained, pig);
+        net.minecraft.world.phys.BlockHitResult hit = new net.minecraft.world.phys.BlockHitResult(
+                net.minecraft.world.phys.Vec3.atCenterOf(chainWall), net.minecraft.core.Direction.UP, chainWall, false);
+        for (net.minecraft.world.InteractionHand hand : net.minecraft.world.InteractionHand.values()) {
+            mc.gameMode.useItemOn(mc.player, hand, hit);
+        }
+    }
+
+    private static void checkChain(ServerPlayer player) {
+        ServerLevel level = level(player);
+        List<Entity> chains = com.github.alexthe666.iceandfire.entity.props.EntityDataProvider.getCapability(chainedPig)
+                .map(data -> data.chainData.getChainedTo()).orElse(List.of());
+        check("chain tied to the wall on the server", chains.size() == 1 && chains.get(0) instanceof com.github.alexthe666.iceandfire.entity.EntityChainTie, chains);
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(chainWall).inflate(4);
+        List<? extends Entity> knots = level.getEntities(IafEntityRegistry.CHAIN_TIE.get(), box, e -> true);
+        check("one knot on the wall", knots.size() == 1, knots.size());
+        knots.forEach(Entity::discard);
+        chainedPig.discard();
     }
 
     private static ServerLevel level(ServerPlayer player) {

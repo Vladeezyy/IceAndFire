@@ -127,7 +127,6 @@ public class EntityHydraBreath extends Fireball implements IDragonProjectile {
 
     @Override
     protected void onHit(@NotNull HitResult movingObject) {
-        ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.MOB_GRIEFING);
         Entity shootingEntity = this.getOwner();
         if (!this.level().isClientSide()) {
             if (movingObject.getType() == HitResult.Type.ENTITY) {

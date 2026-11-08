@@ -80,7 +80,7 @@ public class EntityDragonEgg extends LivingEntity implements IBlacklistedFromSta
     @Override
     public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.setEggType(EnumDragonEgg.values()[tag.getIntOr("Color", 0)]);
+        this.setEggType(EnumDragonEgg.values()[Math.clamp(tag.getIntOr("Color", 0), 0, EnumDragonEgg.values().length - 1)]);
         this.setDragonAge(tag.getIntOr("DragonAge", 0));
         String s;
 
