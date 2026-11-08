@@ -257,7 +257,9 @@ public class EntityGhost extends Monster implements IAnimatedEntity, IVillagerFe
         if (this.getAnimation() == ANIMATION_HIT && this.getTarget() != null) {
             if (this.distanceTo(this.getTarget()) < 1.4D && this.getAnimationTick() >= 4 && this.getAnimationTick() < 6) {
                 this.playSound(IafSoundRegistry.GHOST_ATTACK, this.getSoundVolume(), this.getVoicePitch());
-                this.doHurtTarget((net.minecraft.server.level.ServerLevel) this.level(), this.getTarget());
+                if (this.level() instanceof ServerLevel serverLevel) {
+                    this.doHurtTarget(serverLevel, this.getTarget());
+                }
             }
         }
         AnimationHandler.INSTANCE.updateAnimations(this);
