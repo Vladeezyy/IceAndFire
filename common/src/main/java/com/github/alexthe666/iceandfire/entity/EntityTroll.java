@@ -167,7 +167,8 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     private void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+        // a variant from NBT or a command stays within the enum
+        this.entityData.set(VARIANT, Math.clamp(variant, 0, EnumTroll.values().length - 1));
     }
 
     public EnumTroll getTrollType() {
@@ -183,7 +184,7 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
     }
 
     private void setWeapon(int variant) {
-        this.entityData.set(WEAPON, variant);
+        this.entityData.set(WEAPON, Math.clamp(variant, 0, EnumTroll.Weapon.values().length - 1));
     }
 
     public EnumTroll.Weapon getWeaponType() {
@@ -397,7 +398,7 @@ public class EntityTroll extends Monster implements IAnimatedEntity, IVillagerFe
             // float f8 = f3 * f6 + f2 * f5;
             target.setDeltaMovement(f5, f6, 0.4F);
         }
-        if (this.getNavigation().isDone() && this.getTarget() != null && this.distanceToSqr(this.getTarget()) > 3 && this.distanceToSqr(this.getTarget()) < 30 && ((net.minecraft.server.level.ServerLevel) this.level()).getGameRules().get(GameRules.MOB_GRIEFING)) {
+        if (this.getNavigation().isDone() && this.getTarget() != null && this.distanceToSqr(this.getTarget()) > 3 && this.distanceToSqr(this.getTarget()) < 30 && this.level() instanceof ServerLevel griefLevel && griefLevel.getGameRules().get(GameRules.MOB_GRIEFING)) {
             this.lookAt(this.getTarget(), 30, 30);
             if (this.getAnimation() == NO_ANIMATION && this.random.nextInt(15) == 0) {
                 this.setAnimation(ANIMATION_STRIKE_VERTICAL);

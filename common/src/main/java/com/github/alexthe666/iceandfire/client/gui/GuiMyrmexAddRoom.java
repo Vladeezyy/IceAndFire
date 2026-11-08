@@ -38,13 +38,15 @@ public class GuiMyrmexAddRoom extends Screen {
     }
 
     public static void onGuiClosed() {
-        IceAndFire.sendMSGToServer(new MessageGetMyrmexHive(ClientProxy.getReferedClientHive().toNBT()));
+        ClientProxy.withReferedClientHive(hive -> IceAndFire.sendMSGToServer(new MessageGetMyrmexHive(hive.toNBT())));
     }
 
     @Override
     protected void init() {
         super.init();
-        this.renderables.clear();
+        // init runs every frame: drop the last frame's buttons too (addWidget keeps them in children, which grew without
+        // end)
+        this.clearWidgets();
         int i = (this.width - 248) / 2;
         int j = (this.height - 166) / 2;
         if (ClientProxy.getReferedClientHive() != null) {
@@ -52,7 +54,7 @@ public class GuiMyrmexAddRoom extends Screen {
             this.addWidget(
                     Button.builder (
                             Component.translatable("myrmex.message.establishroom_food"), (p_214132_1_) -> {
-                                ClientProxy.getReferedClientHive().addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.FOOD);
+                                ClientProxy.withReferedClientHive(hive -> hive.addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.FOOD));
                                 onGuiClosed();
                                 Minecraft.getInstance().gui.setScreen(null);
                                 })
@@ -62,7 +64,7 @@ public class GuiMyrmexAddRoom extends Screen {
             this.addWidget(
                     Button.builder(
                             Component.translatable("myrmex.message.establishroom_nursery"), (p_214132_1_) -> {
-                                ClientProxy.getReferedClientHive().addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.NURSERY);
+                                ClientProxy.withReferedClientHive(hive -> hive.addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.NURSERY));
                                 onGuiClosed();
                                 Minecraft.getInstance().gui.setScreen(null);
                             })
@@ -73,7 +75,7 @@ public class GuiMyrmexAddRoom extends Screen {
             this.addWidget(
                     Button.builder(
                             Component.translatable("myrmex.message.establishroom_enterance_surface"), (p_214132_1_) -> {
-                                ClientProxy.getReferedClientHive().addEnteranceWithMessage(player, false, interactPos, facing);
+                                ClientProxy.withReferedClientHive(hive -> hive.addEnteranceWithMessage(player, false, interactPos, facing));
                                 onGuiClosed();
                                 Minecraft.getInstance().gui.setScreen(null);
                             })
@@ -83,7 +85,7 @@ public class GuiMyrmexAddRoom extends Screen {
             this.addWidget(
                     Button.builder(
                             Component.translatable("myrmex.message.establishroom_enterance_bottom"), (p_214132_1_) -> {
-                                ClientProxy.getReferedClientHive().addEnteranceWithMessage(player, true, interactPos, facing);
+                                ClientProxy.withReferedClientHive(hive -> hive.addEnteranceWithMessage(player, true, interactPos, facing));
                                 onGuiClosed();
                                 Minecraft.getInstance().gui.setScreen(null);
                             })
@@ -92,7 +94,7 @@ public class GuiMyrmexAddRoom extends Screen {
                             .build());
             this.addWidget(
                     Button.builder(Component.translatable("myrmex.message.establishroom_misc"), (p_214132_1_) -> {
-                        ClientProxy.getReferedClientHive().addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.EMPTY);
+                        ClientProxy.withReferedClientHive(hive -> hive.addRoomWithMessage(player, interactPos, WorldGenMyrmexHive.RoomType.EMPTY));
                         onGuiClosed();
                         Minecraft.getInstance().gui.setScreen(null);
                     })

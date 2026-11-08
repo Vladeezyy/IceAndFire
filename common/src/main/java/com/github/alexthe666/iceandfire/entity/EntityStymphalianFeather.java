@@ -4,6 +4,7 @@ import com.github.alexthe666.iceandfire.IafConfig;
 import com.github.alexthe666.iceandfire.item.IafItemRegistry;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -33,8 +34,10 @@ public class EntityStymphalianFeather extends AbstractArrow {
     public void remove(@NotNull RemovalReason reason) {
         super.remove(reason);
         if (IafConfig.stymphalianBirdFeatherDropChance > 0) {
-            if (this.level().isClientSide() && this.random.nextInt(IafConfig.stymphalianBirdFeatherDropChance) == 0) {
-                this.spawnAtLocation((net.minecraft.server.level.ServerLevel) this.level(), getPickupItem(), 0.1F);
+            // the server drops the item: the original asked for the client, where nothing dropped, and the cast for
+            // spawnAtLocation crashed the client (1.21.11 and newer)
+            if (this.level() instanceof ServerLevel serverLevel && this.random.nextInt(IafConfig.stymphalianBirdFeatherDropChance) == 0) {
+                this.spawnAtLocation(serverLevel, getPickupItem(), 0.1F);
             }
         }
 

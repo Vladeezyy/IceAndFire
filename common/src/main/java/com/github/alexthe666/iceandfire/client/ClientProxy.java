@@ -42,6 +42,14 @@ public class ClientProxy extends CommonProxy {
         return referedClientHive;
     }
 
+    /** Runs the action on the hive the server sent last, unless it has cleared it since (MessageSetMyrmexHiveNull). */
+    public static void withReferedClientHive(java.util.function.Consumer<MyrmexHive> action) {
+        MyrmexHive hive = referedClientHive;
+        if (hive != null) {
+            action.accept(hive);
+        }
+    }
+
     @Override
     public void setReferencedHive(MyrmexHive hive) {
         referedClientHive = hive;
