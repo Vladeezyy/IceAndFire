@@ -45,7 +45,9 @@ public class GuiMyrmexStaff extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.renderables.clear();
+        // init runs every frame: drop the last frame's buttons too (addWidget keeps them in children, which grew without
+        // end and kept answering clicks with old rooms and pages)
+        this.clearWidgets();
         this.allRoomButtonPos.clear();
         int i = (this.width - 248) / 2;
         int j = (this.height - 166) / 2;
@@ -58,8 +60,7 @@ public class GuiMyrmexStaff extends Screen {
         this.addWidget(
                 Button.builder(
                         ClientProxy.getReferedClientHive().reproduces ? Component.translatable("myrmex.message.disablebreeding") : Component.translatable("myrmex.message.enablebreeding"), (p_214132_1_) -> {
-                            boolean opposite = !ClientProxy.getReferedClientHive().reproduces;
-                            ClientProxy.getReferedClientHive().reproduces = opposite;
+                            ClientProxy.withReferedClientHive(hive -> hive.reproduces = !hive.reproduces);
                     })
                         .pos(i + 124, j + 15)
                         .size(120, 20)
@@ -83,7 +84,7 @@ public class GuiMyrmexStaff extends Screen {
             //IndexPageButton button = new IndexPageButton(2 + i, centerX + 15 + (xIndex * 200), centerY + 10 + (yIndex * 20) - (xIndex == 1 ? 20 : 0), StatCollector.translateToLocal("bestiary." + EnumBestiaryPages.values()[allPageTypes.get(i).ordinal()].toString().toLowerCase()));
             MyrmexDeleteButton button = new MyrmexDeleteButton(i + x_translate, j + y_translate + (yIndex) * 22, pos, Component.translatable("myrmex.message.delete"), (p_214132_1_) -> {
                 if (ticksSinceDeleted <= 0) {
-                    ClientProxy.getReferedClientHive().removeRoom(pos);
+                    ClientProxy.withReferedClientHive(hive -> hive.removeRoom(pos));
                     ticksSinceDeleted = 5;
                 }
             });

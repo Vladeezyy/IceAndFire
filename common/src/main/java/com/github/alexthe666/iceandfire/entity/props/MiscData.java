@@ -23,7 +23,10 @@ public class MiscData {
     public @Nullable List<LivingEntity> targetedByScepter;
     private @Nullable List<Integer> targetedByScepterIds;
 
-    private boolean isInitialized;
+    // Fresh data has nothing saved to look up: only deserialize (a save or a sync) leaves ids for the first tick. The port
+    // makes the data on first use, so a chain, charm or target set on fresh data was dropped by that first tick (the
+    // original gave every mob its data at spawn, long before)
+    private boolean isInitialized = true;
     private boolean triggerClientUpdate;
 
     public void tickMisc(final LivingEntity entity) {

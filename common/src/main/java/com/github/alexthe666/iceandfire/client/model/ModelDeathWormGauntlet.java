@@ -110,7 +110,8 @@ public class ModelDeathWormGauntlet extends ModelDragonBase {
     public void animate(ItemStack stack, float partialTick) {
         this.resetToDefaultPose();
         CompoundTag tag = ItemNbt.view(stack);
-        Entity holder = Minecraft.getInstance().level.getEntity(tag.getInt("HolderID"));
+        // items also render without a world (menus, screens of other mods)
+        Entity holder = Minecraft.getInstance().level == null ? null : Minecraft.getInstance().level.getEntity(tag.getInt("HolderID"));
 
         if (!(holder instanceof LivingEntity)) {
             return;

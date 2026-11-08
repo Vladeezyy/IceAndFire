@@ -87,7 +87,7 @@ public class TileEntityJar extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         hasPixie = compound.getBoolean("HasPixie");
-        pixieType = compound.getInt("PixieType");
+        pixieType = Math.clamp(compound.getInt("PixieType"), 0, EntityPixie.PARTICLE_RGB.length - 1);
         hasProduced = compound.getBoolean("HasProduced");
         ticksExisted = compound.getInt("TicksExisted");
         tamedPixie = compound.getBoolean("TamedPixie");

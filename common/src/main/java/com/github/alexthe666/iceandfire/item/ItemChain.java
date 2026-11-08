@@ -33,6 +33,11 @@ public class ItemChain extends Item {
     }
 
     public static void attachToFence(Player player, Level worldIn, BlockPos fence) {
+        // the server ties the knot: the wall click also fires on the client, where a knot made there has no entity id
+        // (26.2 and newer crash on it) and only plays the placement sound a second time
+        if (worldIn.isClientSide()) {
+            return;
+        }
         double d0 = 30.0D;
         int i = fence.getX();
         int j = fence.getY();
