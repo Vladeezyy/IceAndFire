@@ -223,25 +223,45 @@ public class SelfTest {
         }
     }
 
-    /** CurseForge report 2026-11-05: the bite of a death worm. A ServerExplosion computes its blocks once: with Lithium a second call throws. */
+    /**
+     * CurseForge reports 2026-11-05 and 2026-11-11: the bite of a death worm. A ServerExplosion computes its blocks once (with
+     * Lithium a second call throws), and its explode() runs whole (PuzzlesLib's Fabric detonate event threw on a bare
+     * hurtEntities()). Both cases: a blast that breaks the blocks and one that keeps them (a dragon without mob griefing),
+     * each hurts the pig next to it. With -Pwith_compat (CI bug hunt) Lithium and PuzzlesLib are loaded.
+     */
     private static void groundBlast(ServerLevel level) {
-        BlockPos center = new BlockPos(0, level.getMaxY() - 40, -160);
-        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, -2, -2), center.offset(2, 2, 2))) {
+        groundBlast(level, new BlockPos(0, level.getMaxY() - 40, -160), net.minecraft.world.level.Explosion.BlockInteraction.DESTROY);
+        groundBlast(level, new BlockPos(16, level.getMaxY() - 40, -160), net.minecraft.world.level.Explosion.BlockInteraction.KEEP);
+    }
+
+    private static void groundBlast(ServerLevel level, BlockPos center, net.minecraft.world.level.Explosion.BlockInteraction mode) {
+        boolean destroy = mode == net.minecraft.world.level.Explosion.BlockInteraction.DESTROY;
+        String name = destroy ? "ground blast" : "ground blast that keeps the blocks";
+        // the ground under the blast (5 x 5 x 5 dirt), the blast itself in the air above it, as on a worm's target
+        Iterable<BlockPos> ground = BlockPos.betweenClosed(center.offset(-2, -5, -2), center.offset(2, -1, 2));
+        for (BlockPos pos : ground) {
             level.setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState());
         }
         var worm = IafEntityRegistry.DEATH_WORM.get().create(level, EntitySpawnReason.COMMAND);
         worm.snapTo(center.getX() + 0.5, center.getY() + 5, center.getZ() + 0.5, 0, 0);
+        // from the registry: the vanilla constants are EntityType.PIG on 26.1 and EntityTypes.PIG from 26.2
+        var pig = (net.minecraft.world.entity.LivingEntity) BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("pig")).create(level, EntitySpawnReason.COMMAND);
+        pig.snapTo(center.getX() + 2.0, center.getY(), center.getZ() + 0.5, 0, 0);
+        level.addFreshEntity(pig);
         try {
-            com.github.alexthe666.iceandfire.entity.util.BlockLaunchExplosion.explode(level, worm, center.getX() + 0.5, center.getY() + 0.5, center.getZ() + 0.5, 3F);
+            com.github.alexthe666.iceandfire.entity.util.BlockLaunchExplosion.explode(level, worm, null, center.getX() + 0.5, center.getY() + 0.5, center.getZ() + 0.5, 3F, mode);
             int left = 0;
-            for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, -2, -2), center.offset(2, 2, 2))) {
+            for (BlockPos pos : ground) {
                 if (level.getBlockState(pos).is(net.minecraft.world.level.block.Blocks.DIRT)) {
                     left++;
                 }
             }
-            check("ground blast breaks blocks", left < 125, left + " of 125 blocks left");
+            check(name + (destroy ? " breaks blocks" : " leaves them"), destroy ? left < 125 : left == 125, left + " of 125 blocks left");
+            check(name + " hurts a mob next to it", pig.isRemoved() || pig.getHealth() < pig.getMaxHealth(), "pig health " + pig.getHealth() + " of " + pig.getMaxHealth());
         } catch (RuntimeException e) {
-            check("ground blast breaks blocks", false, e);
+            check(name + " runs", false, e);
+        } finally {
+            pig.discard();
         }
     }
 
