@@ -202,3 +202,12 @@ the rest by hand. Build from the 1.21.1 branch (Loom with Mojang mappings, Java 
 - Scene, new steps: projectiles with late feathers (the server sets `tickCount = -1000`, so the client removes them by its own age) and a chain to a wall (right-click on the wall with a chained mob).
 - Results: the scene caught the old feather, bubbles and hydra breath crashes and the old right-click chain crash on 26.3 Fabric. With the fixes it passes with 0 failed checks on 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, Fabric and NeoForge.
 - Server selftest: Fabric and NeoForge pass on this branch (39 checks, 0 failed, no slow chunks); all five versions × both loaders pass (10 runs, 2026-11-08). Only log noise in the errors: the Yggdrasil key fetch without network, and on 1.21.1 Fabric "No data fixer registered" for the mod's entities.
+
+## Unreleased (2026-11-14): code audit, batches 1 and 2
+
+Branch `mc/1.21.11`. This branch has batch 2: a86b16c (fixes), 6f9940f (breath strip fix), 0a663f2 (self-test). Batch 1 (b30a67f, b39840d) is on `mc/26.1.2` and is not merged here. The batch 2 fixes are the same as in the 26.1.2 log (multiplayer and PvP, `isChained()`, dragon breath, crystal summon on the next tick, pathfinding and server performance, client pose cache).
+
+- Fabric: `ServerWorldEvents` (LOAD/UNLOAD with `(MinecraftServer, ServerLevel)`) instead of `ServerLevelEvents`, which is the 26.x name.
+- Self-test: 72/72 on both loaders.
+- Measurements: see the 26.1.2 log.
+
