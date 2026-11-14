@@ -81,6 +81,26 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
+## Next release (2026-11-14, 1.21.11 and 26.x): death worm blast with PuzzlesLib
+
+- CurseForge report 2026-11-11 (2.1.13-beta.10, Fabric 26.3, PuzzlesLib 26.3.17): the server crashed whenever a death worm
+  bit, `NullPointerException: exploded positions is null` at `puzzleslib$hurtEntities` ← `BlockLaunchExplosion.explode` ←
+  `EntityDeathWorm.doHurtTarget`.
+- Cause: on 1.21.11 and 26.x the ground blast (worm bite and burrowing, dragon ground blast) ran the steps of
+  `ServerExplosion.explode()` by hand: `calculateExplodedPositions()`, then `hurtEntities()`. PuzzlesLib's Fabric mixin keeps the
+  blocks only from `explode()` and requires them in `hurtEntities()`. On NeoForge the same path handed the Detonate event an empty
+  fixed list (the deprecated `hurtEntities()`), so protection mods could not take their blocks out of the blast.
+  1.21.1 is not affected: its `BlockLaunchExplosion` extends `Explosion` and keeps the vanilla `explode()`.
+- Fix: a vanilla `ServerExplosion` with `BlockInteraction.KEEP` runs its whole `explode()`; mixin `ServerExplosionBlocksMixin`
+  (`@ModifyVariable` on the STORE of the block list in `explode`, `require = 0`) remembers the list, and the blast removes those
+  blocks through `onBlockExploded` as before. The access wideners for `calculateExplodedPositions` and `hurtEntities` are gone.
+- Tests: self-test `groundBlast` now runs a DESTROY and a KEEP blast with a pig next to each (blocks broken / kept, pig hurt);
+  its chunks are forced from tick 30 (a blast finds no entities in a chunk loaded by `setBlock` alone). PuzzlesLib is in the
+  compat runs (`compat_*_puzzles_lib`, on Fabric with Forge Config API Port; 26.3 uses 26.3.17, as 26.3.18 needs Fabric Loader
+  0.20). Negative control on the old 26.3 code, Fabric + compat: both blasts fail with `exploded positions is null`. With the
+  fix: CI green on mc/1.21.11, mc/26.1.2, mc/26.2, mc/26.3 (self-test NeoForge and Fabric, bug hunt with Lithium and
+  PuzzlesLib); 26.3 self-test 43/43 on both loaders.
+
 ## 2.1.13-beta.10 (2026-11-08): crash fixes after the CurseForge report and a code audit (1.21.1)
 
 - CurseForge report (2.1.13-beta.9, Fabric 26.3): client crashes in the projectiles, `ClassCastException: ClientLevel cannot be cast to ServerLevel`. Not on 1.21.1: `getGameRules()` and `spawnAtLocation(ServerLevel, …)` are not ServerLevel-only there. Only the feather item now drops on the server.
