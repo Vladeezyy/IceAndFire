@@ -243,7 +243,8 @@ public class SelfTest {
         }
         var worm = IafEntityRegistry.DEATH_WORM.get().create(level, EntitySpawnReason.COMMAND);
         worm.snapTo(center.getX() + 0.5, center.getY() + 5, center.getZ() + 0.5, 0, 0);
-        var pig = EntityType.PIG.create(level, EntitySpawnReason.COMMAND);
+        // from the registry: the vanilla constants are EntityType.PIG on 26.1 and EntityTypes.PIG from 26.2
+        var pig = (net.minecraft.world.entity.LivingEntity) BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("pig")).create(level, EntitySpawnReason.COMMAND);
         pig.snapTo(center.getX() + 2.0, center.getY(), center.getZ() + 0.5, 0, 0);
         level.addFreshEntity(pig);
         try {
