@@ -3,13 +3,13 @@ package com.github.alexthe666.iceandfire.pathfinding.raycoms;
     All of this code is used with permission from Raycoms, one of the developers of the minecolonies project.
  */
 
-import com.github.alexthe666.iceandfire.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.ChunkPos;
@@ -68,12 +68,18 @@ public class ChunkCache implements LevelReader {
         this.chunkArray = new LevelChunk[i - this.chunkX + 1][j - this.chunkZ + 1];
         this.empty = true;
 
-        for (int k = this.chunkX; k <= i; ++k) {
-            for (int l = this.chunkZ; l <= j; ++l) {
-                if (WorldUtil.isEntityChunkLoaded(world, new ChunkPos(k, l)) && worldIn.getChunkSource() instanceof ServerChunkCache serverChunkCache) {
+        // Built on the server thread for every path: one holder lookup per chunk (WorldUtil.isEntityChunkLoaded
+        // looked it up a second time); still only full chunks where entities tick
+        if (worldIn.getChunkSource() instanceof ServerChunkCache serverChunkCache && worldIn instanceof ServerLevel serverLevel) {
+            for (int k = this.chunkX; k <= i; ++k) {
+                for (int l = this.chunkZ; l <= j; ++l) {
                     final ChunkHolder holder = serverChunkCache.chunkMap.getVisibleChunkIfPresent(ChunkPos.pack(k, l));
-                    if (holder != null) {
-                        this.chunkArray[k - this.chunkX][l - this.chunkZ] = holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).orElse(null);
+                    if (holder == null) {
+                        continue;
+                    }
+                    final LevelChunk chunk = holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).orElse(null);
+                    if (chunk != null && serverLevel.isPositionEntityTicking(new BlockPos(k << 4, 0, l << 4))) {
+                        this.chunkArray[k - this.chunkX][l - this.chunkZ] = chunk;
                     }
                 }
             }

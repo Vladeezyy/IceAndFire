@@ -172,6 +172,18 @@ public final class IceAndFireNeoForge {
         bus.addListener((ServerAboutToStartEvent event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.ServerAboutToStartEvent(event.getServer())));
         bus.addListener((ServerStartedEvent event) -> IceAndFire.onServerStarted());
         bus.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> IceAndFire.onServerStopped());
+        // saved data taken on the server thread before the level generates (the worldgen threads read IafSavedData's cache);
+        // first, as another listener may already generate chunks
+        bus.addListener(EventPriority.HIGHEST, (net.neoforged.neoforge.event.level.LevelEvent.Load event) -> {
+            if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel level) {
+                com.github.alexthe666.iceandfire.world.IafSavedData.onLevelLoad(level);
+            }
+        });
+        bus.addListener((net.neoforged.neoforge.event.level.LevelEvent.Unload event) -> {
+            if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel level) {
+                com.github.alexthe666.iceandfire.world.IafSavedData.onLevelUnload(level);
+            }
+        });
         // config-dependent attributes (dragonsteel): 26.x items carry their modifiers as a component, so NeoForge never asks
         // getDefaultAttributeModifiers(stack); the stack's own modifiers (commands) stay
         bus.addListener((net.neoforged.neoforge.event.ItemAttributeModifierEvent event) -> {

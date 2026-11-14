@@ -15,6 +15,11 @@ import net.minecraft.world.entity.player.Player;
 public class MessageDragonSyncFire implements CustomPacketPayload {
     public static final Type<MessageDragonSyncFire> TYPE = new Type<>(Identifier.fromNamespaceAndPath(IceAndFire.MODID, "dragon_sync_fire"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MessageDragonSyncFire> CODEC = StreamCodec.of((buf, message) -> write(message, buf), MessageDragonSyncFire::read);
+    /**
+     * syncType that ends a breath on the clients. The breath is synced only when it starts, moves or every 10
+     * ticks, and the clients draw the flame in between, so they must hear when it stops.
+     */
+    public static final int BREATH_STOPPED = 6;
 
     @Override
     public Type<MessageDragonSyncFire> type() {

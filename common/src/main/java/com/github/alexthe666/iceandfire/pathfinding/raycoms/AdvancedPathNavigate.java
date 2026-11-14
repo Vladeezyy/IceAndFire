@@ -84,6 +84,25 @@ public class AdvancedPathNavigate extends AbstractAdvancedPathNavigate {
 
     private float height = 1;
 
+    /**
+     * Melee goals ask for a path to their target every tick, and each new job fills a chunk cache on the server
+     * thread. A path to an entity is started again only when the target moved more than 2 blocks from where the
+     * last one went, or 10 ticks after it.
+     */
+    private static final int ENTITY_REPATH_TICKS = 10;
+    private static final int ENTITY_REPATH_DIST_SQR = 4;
+
+    /** The last path started to an entity; reused only while it is still the one being computed or followed. */
+    @Nullable
+    private PathResult<AbstractPathJob> entityPathResult;
+
+    @Nullable
+    private BlockPos entityPathTarget;
+
+    private long entityPathTime;
+
+    private double entityPathSpeed;
+
     public enum MovementType {
         WALKING,
         FLYING,
@@ -334,7 +353,8 @@ public class AdvancedPathNavigate extends AbstractAdvancedPathNavigate {
             if (((TamableAnimal) this.mob).isTame())
                 return;
             if (this.mob instanceof EntityDragonBase) {
-                if (((EntityDragonBase) this.mob).isChained())
+                // EntityDragonBase.WILD_DRAGONS_HANDLE_STUCK: the original never got here for a wild dragon
+                if (((EntityDragonBase) this.mob).isChained() || !EntityDragonBase.WILD_DRAGONS_HANDLE_STUCK)
                     return;
                 if (((EntityDragonBase) this.mob).isInSittingPose())
                     return;
@@ -479,7 +499,40 @@ public class AdvancedPathNavigate extends AbstractAdvancedPathNavigate {
 
     @Override
     public boolean moveTo(final Entity entityIn, final double speedFactor) {
-        return tryMoveToBlockPos(entityIn.blockPosition(), speedFactor);
+        final BlockPos pos = entityIn.blockPosition();
+        moveToEntityPos(pos.getX(), pos.getY(), pos.getZ(), speedFactor);
+        return true;
+    }
+
+    /** {@link #moveToXYZ} for a moving target, see {@link #ENTITY_REPATH_TICKS}. */
+    @Nullable
+    private PathResult moveToEntityPos(final double x, final double y, final double z, final double speedFactor) {
+        // The block moveToXYZ paths to
+        final int targetX = Mth.floor(x);
+        final int targetY = (int) y;
+        final int targetZ = Mth.floor(z);
+        // Only the path still in use: after stop() (pathResult cleared), a cancelled job, a path already walked or a new
+        // speed, a new path is made at once, as before (a goal that stopped the mob must not wait up to 10 ticks)
+        if (entityPathResult != null && entityPathTarget != null && pathResult == entityPathResult
+            && !entityPathResult.isCancelled() && !this.isDone() && speedFactor == entityPathSpeed) {
+            final long age = level.getGameTime() - entityPathTime;
+            final int dx = targetX - entityPathTarget.getX();
+            final int dy = targetY - entityPathTarget.getY();
+            final int dz = targetZ - entityPathTarget.getZ();
+            if (age >= 0 && age < ENTITY_REPATH_TICKS && dx * dx + dy * dy + dz * dz <= ENTITY_REPATH_DIST_SQR) {
+                return entityPathResult;
+            }
+        }
+
+        final PathResult<AbstractPathJob> before = pathResult;
+        final PathResult result = moveToXYZ(x, y, z, speedFactor);
+        if (result != null && result != before && result == pathResult) {
+            entityPathResult = pathResult;
+            entityPathTarget = new BlockPos(targetX, targetY, targetZ);
+            entityPathTime = level.getGameTime();
+            entityPathSpeed = speedFactor;
+        }
+        return result;
     }
 
     // Removes stupid vanilla stuff, causing our pathpoints to occasionally be replaced by vanilla ones.
@@ -859,7 +912,7 @@ public class AdvancedPathNavigate extends AbstractAdvancedPathNavigate {
     @Nullable
     @Override
     public PathResult moveToLivingEntity(final Entity e, final double speed) {
-        return moveToXYZ(e.getX(), e.getY(), e.getZ(), speed);
+        return moveToEntityPos(e.getX(), e.getY(), e.getZ(), speed);
     }
 
     @Nullable

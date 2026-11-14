@@ -33,11 +33,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.core.registries.BuiltInRegistries;
 
+import net.minecraft.server.level.WorldGenRegion;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public abstract class WorldGenDragonCave extends IafFeature implements TypedFeature {
     public ResourceKey<LootTable> DRAGON_CHEST;
@@ -94,32 +94,36 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
     public void generateCave(LevelAccessor worldIn, int radius, int amount, BlockPos center, RandomSource rand, boolean isMale) {
         List<SphereInfo> sphereList = new ArrayList<>();
         sphereList.add(new SphereInfo(radius, center.immutable()));
-        Stream<BlockPos> sphereBlocks = ShapeBuilder.start().getAllInCutOffSphereMutable(radius, radius / 2, center).toStream(false);
-        Stream<BlockPos> hollowBlocks = ShapeBuilder.start().getAllInRandomlyDistributedRangeYCutOffSphereMutable(radius - 2, (int) ((radius - 2) * 0.75), (radius - 2) / 2, rand, center).toStream(false);
-        //Get shells
-        //Get hollows
         for (int i = 0; i < amount + rand.nextInt(2); i++) {
             Direction direction = HORIZONTALS[rand.nextInt(HORIZONTALS.length - 1)];
             int r = 2 * (int) (radius / 3F) + rand.nextInt(8);
             BlockPos centerOffset = center.relative(direction, radius - 2);
-            sphereBlocks = Stream.concat(sphereBlocks, ShapeBuilder.start().getAllInCutOffSphereMutable(r, r, centerOffset).toStream(false));
-            hollowBlocks = Stream.concat(hollowBlocks, ShapeBuilder.start().getAllInRandomlyDistributedRangeYCutOffSphereMutable(r - 2, (int) ((r - 2) * 0.75), (r - 2) / 2, rand, centerOffset).toStream(false));
             sphereList.add(new SphereInfo(r, centerOffset));
         }
-        Set<BlockPos> shellBlocksSet = sphereBlocks.map(BlockPos::immutable).collect(Collectors.toSet());
-        Set<BlockPos> hollowBlocksSet = hollowBlocks.map(BlockPos::immutable).collect(Collectors.toSet());
-        shellBlocksSet.removeAll(hollowBlocksSet);
+        // A bit per block instead of HashSets of ~150,000 BlockPos. The shapes are walked in the original's order (all the
+        // shells, then the hollows, first sphere first), so the random hollows take the same random numbers
+        CaveMask shell = CaveMask.around(worldIn, sphereList);
+        CaveMask hollow = shell.emptyCopy();
+        for (int i = 0; i < sphereList.size(); i++) {
+            SphereInfo sphere = sphereList.get(i);
+            // the main sphere is cut off at half its radius
+            shell.addAll(ShapeBuilder.start().getAllInCutOffSphereMutable(sphere.radius, i == 0 ? sphere.radius / 2 : sphere.radius, sphere.pos).toIterable());
+        }
+        for (SphereInfo sphere : sphereList) {
+            int r = sphere.radius - 2;
+            hollow.addAll(ShapeBuilder.start().getAllInRandomlyDistributedRangeYCutOffSphereMutable(r, (int) (r * 0.75), r / 2, rand, sphere.pos).toIterable());
+        }
+        shell.removeAll(hollow);
 
         //setBlocks
-        createShell(worldIn, rand, shellBlocksSet);
+        createShell(worldIn, rand, shell);
         //removeBlocks
-        hollowOut(worldIn, hollowBlocksSet);
+        hollowOut(worldIn, hollow);
         //decorate
-        decorateCave(worldIn, rand, hollowBlocksSet, sphereList, center, isMale);
-        sphereList.clear();
+        decorateCave(worldIn, rand, hollow, sphereList, center, isMale);
     }
 
-    public void createShell(LevelAccessor worldIn, RandomSource rand, Set<BlockPos> positions) {
+    private void createShell(LevelAccessor worldIn, RandomSource rand, CaveMask positions) {
         Registry<Block> tagManager = BuiltInRegistries.BLOCK;
 
         List<Block> rareOres = getBlockList(tagManager, IafBlockTags.DRAGON_CAVE_RARE_ORES);
@@ -128,7 +132,8 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         List<Block> dragonTypeOres = getBlockList(tagManager, dragonTypeOreTag);
 
         positions.forEach(blockPos -> {
-            if (!(worldIn.getBlockState(blockPos).getBlock() instanceof BaseEntityBlock) && worldIn.getBlockState(blockPos).getDestroySpeed(worldIn, blockPos) >= 0) {
+            BlockState state = worldIn.getBlockState(blockPos);
+            if (!(state.getBlock() instanceof BaseEntityBlock) && state.getDestroySpeed(worldIn, blockPos) >= 0) {
                 boolean doOres = rand.nextInt(IafConfig.oreToStoneRatioForDragonCaves + 1) == 0;
 
                 if (doOres) {
@@ -168,15 +173,16 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         return tagManager.get(tagKey).map(set -> set.stream().map(Holder::value).toList()).orElse(List.of());
     }
 
-    public void hollowOut(LevelAccessor worldIn, Set<BlockPos> positions) {
+    private void hollowOut(LevelAccessor worldIn, CaveMask positions) {
+        BlockState air = Blocks.AIR.defaultBlockState();
         positions.forEach(blockPos -> {
             if (!(worldIn.getBlockState(blockPos).getBlock() instanceof BaseEntityBlock)) {
-                worldIn.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                worldIn.setBlock(blockPos, air, Block.UPDATE_ALL);
             }
         });
     }
 
-    public void decorateCave(LevelAccessor worldIn, RandomSource rand, Set<BlockPos> positions, List<SphereInfo> spheres, BlockPos center, boolean isMale) {
+    private void decorateCave(LevelAccessor worldIn, RandomSource rand, CaveMask positions, List<SphereInfo> spheres, BlockPos center, boolean isMale) {
         for (SphereInfo sphere : spheres) {
             BlockPos pos = sphere.pos;
             int radius = sphere.radius;
@@ -186,12 +192,13 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
             }
         }
 
+        BlockPos.MutableBlockPos below = new BlockPos.MutableBlockPos();
         positions.forEach(blockPos -> {
             if (blockPos.getY() < center.getY()) {
-                BlockState stateBelow = worldIn.getBlockState(blockPos.below());
+                BlockState stateBelow = worldIn.getBlockState(below.setWithOffset(blockPos, Direction.DOWN));
 
                 if ((stateBelow.is(BlockTags.BASE_STONE_OVERWORLD) || stateBelow.is(IafBlockTags.DRAGON_ENVIRONMENT_BLOCKS)) && worldIn.getBlockState(blockPos).isAir()) {
-                    setGoldPile(worldIn, blockPos, rand, isMale);
+                    setGoldPile(worldIn, blockPos.immutable(), rand, isMale);
                 }
             }
         });
@@ -241,6 +248,81 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
         private SphereInfo(int radius, BlockPos pos) {
             this.radius = radius;
             this.pos = pos;
+        }
+    }
+
+    /** Blocks of one cave: a bit per block of a box around its spheres, local to one cave (not shared by threads). */
+    private static final class CaveMask {
+        private final int minX, minY, minZ, sizeX, sizeY, sizeZ;
+        private final long[] bits;
+
+        private CaveMask(int minX, int minY, int minZ, int sizeX, int sizeY, int sizeZ) {
+            this.minX = minX;
+            this.minY = minY;
+            this.minZ = minZ;
+            this.sizeX = Math.max(0, sizeX);
+            this.sizeY = Math.max(0, sizeY);
+            this.sizeZ = Math.max(0, sizeZ);
+            this.bits = new long[(this.sizeX * this.sizeY * this.sizeZ + 63) >>> 6];
+        }
+
+        static CaveMask around(LevelAccessor level, List<SphereInfo> spheres) {
+            int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+            for (SphereInfo sphere : spheres) {
+                minX = Math.min(minX, sphere.pos.getX() - sphere.radius);
+                minY = Math.min(minY, sphere.pos.getY() - sphere.radius);
+                minZ = Math.min(minZ, sphere.pos.getZ() - sphere.radius);
+                maxX = Math.max(maxX, sphere.pos.getX() + sphere.radius);
+                maxY = Math.max(maxY, sphere.pos.getY() + sphere.radius);
+                maxZ = Math.max(maxZ, sphere.pos.getZ() + sphere.radius);
+            }
+            if (level instanceof WorldGenRegion region) {
+                // A feature may write only its chunk and the 8 around it (blockStateWriteRadius 1 of the features step):
+                // the region refused the rest of the cave one block at a time, building a log line for each
+                ChunkPos chunk = region.getCenter();
+                minX = Math.max(minX, (chunk.x() - 1) << 4);
+                minZ = Math.max(minZ, (chunk.z() - 1) << 4);
+                maxX = Math.min(maxX, ((chunk.x() + 1) << 4) + 15);
+                maxZ = Math.min(maxZ, ((chunk.z() + 1) << 4) + 15);
+            }
+            return new CaveMask(minX, minY, minZ, maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+        }
+
+        CaveMask emptyCopy() {
+            return new CaveMask(minX, minY, minZ, sizeX, sizeY, sizeZ);
+        }
+
+        void addAll(Iterable<BlockPos> positions) {
+            for (BlockPos pos : positions) {
+                int x = pos.getX() - minX, y = pos.getY() - minY, z = pos.getZ() - minZ;
+                if (x >= 0 && x < sizeX && y >= 0 && y < sizeY && z >= 0 && z < sizeZ) {
+                    int index = (y * sizeX + x) * sizeZ + z;
+                    bits[index >>> 6] |= 1L << index;
+                }
+            }
+        }
+
+        /** Same box (emptyCopy) */
+        void removeAll(CaveMask other) {
+            for (int i = 0; i < bits.length; i++) {
+                bits[i] &= ~other.bits[i];
+            }
+        }
+
+        /** The position is reused: immutable() to keep it */
+        void forEach(Consumer<BlockPos> action) {
+            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+            int index = 0;
+            for (int y = 0; y < sizeY; y++) {
+                for (int x = 0; x < sizeX; x++) {
+                    for (int z = 0; z < sizeZ; z++, index++) {
+                        if ((bits[index >>> 6] & (1L << index)) != 0) {
+                            action.accept(pos.set(minX + x, minY + y, minZ + z));
+                        }
+                    }
+                }
+            }
         }
     }
 

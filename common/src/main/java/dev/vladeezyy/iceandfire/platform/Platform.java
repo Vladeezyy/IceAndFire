@@ -60,6 +60,12 @@ public interface Platform {
     /** Whether a mob may change blocks (the mobGriefing rule, NeoForge: EntityMobGriefingEvent) */
     boolean canEntityGrief(net.minecraft.world.level.Level level, @javax.annotation.Nullable Entity entity);
 
+    /**
+     * Whether a player may attack the target, asked through the loader's attack event (NeoForge: AttackEntityEvent, Fabric:
+     * AttackEntityCallback) so claim and PvP mods can refuse the gorgon head and the cockatrice scepter
+     */
+    boolean canPlayerAttack(net.minecraft.world.entity.player.Player player, Entity target);
+
     /** A player's item broke while used */
     void onPlayerDestroyItem(net.minecraft.world.entity.player.Player player, net.minecraft.world.item.ItemStack stack, @javax.annotation.Nullable net.minecraft.world.InteractionHand hand);
 

@@ -442,7 +442,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     protected void updateBurnTarget() {
         if (burningTarget != null && !this.isSleeping() && !this.isModelDead() && !this.isBaby()) {
             float maxDist = 115 * this.getDragonStage();
-            if (level().getBlockEntity(burningTarget) instanceof TileEntityDragonforgeInput forge && forge.isAssembled() && this.distanceToSqr(burningTarget.getX() + 0.5D, burningTarget.getY() + 0.5D, burningTarget.getZ() + 0.5D) < maxDist && canPositionBeSeen(burningTarget.getX() + 0.5D, burningTarget.getY() + 0.5D, burningTarget.getZ() + 0.5D)) {
+            // the distance first: isAssembled() looks the forge recipe up
+            if (this.distanceToSqr(burningTarget.getX() + 0.5D, burningTarget.getY() + 0.5D, burningTarget.getZ() + 0.5D) < maxDist && level().getBlockEntity(burningTarget) instanceof TileEntityDragonforgeInput forge && forge.isAssembled() && canPositionBeSeen(burningTarget.getX() + 0.5D, burningTarget.getY() + 0.5D, burningTarget.getZ() + 0.5D)) {
                 this.getLookControl().setLookAt(burningTarget.getX() + 0.5D, burningTarget.getY() + 0.5D, burningTarget.getZ() + 0.5D, 180F, 180F);
                 this.breathFireAtPos(burningTarget);
                 this.setBreathingFire(true);
@@ -1387,8 +1388,15 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
         return this.level().isBrightOutside() || this.getCommand() == 2;
     }
 
+    /**
+     * The original's isChained() was inverted (true for a dragon without a chain), so a wild dragon never counted as
+     * stuck: it never dug (dragonDigWhenStuck) nor teleported out (the navigator's stuck handler). Kept so with the fixed
+     * isChained(): a chained dragon does neither either, it would break off its chain.
+     */
+    public static final boolean WILD_DRAGONS_HANDLE_STUCK = false;
+
     private boolean isStuck() {
-        boolean skip = isChained() || isTame();
+        boolean skip = isChained() || isTame() || !WILD_DRAGONS_HANDLE_STUCK;
 
         if (skip) {
             return false;
@@ -2570,9 +2578,8 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
     }
 
     public boolean isChained() {
-        AtomicBoolean isChained = new AtomicBoolean(false);
-        EntityDataProvider.getCapability(this).ifPresent(data -> isChained.set(data.chainData.getChainedTo().isEmpty()));
-        return isChained.get();
+        // Was isEmpty() through getCapability: every unchained dragon counted as chained and got mod data
+        return EntityDataProvider.getExisting(this).map(data -> !data.chainData.getChainedTo().isEmpty()).orElse(false);
     }
 
     @Override
@@ -2928,9 +2935,12 @@ public abstract class EntityDragonBase extends TamableAnimal implements IPassabi
 
         // Client and integrated server share the map in single player: only the server summons
         if (!this.level().isClientSide()) {
-            ItemSummoningCrystal.PendingSummon summon = ItemSummoningCrystal.DELAYED_SUMMONS.get(this.getUUID());
+            ItemSummoningCrystal.PendingSummon summon = ItemSummoningCrystal.DELAYED_SUMMONS.remove(this.getUUID());
             if (summon != null) {
-                ItemSummoningCrystal.delayedSummon(summon);
+                // Not here: onTrackingStart can run while the level walks an entity section, and moving the dragon then
+                // throws a CME. server.execute would run it at once on the server thread; schedule queues it.
+                net.minecraft.server.MinecraftServer server = summon.serverWorld().getServer();
+                server.schedule(server.wrapRunnable(() -> ItemSummoningCrystal.delayedSummon(summon)));
             }
         }
     }
