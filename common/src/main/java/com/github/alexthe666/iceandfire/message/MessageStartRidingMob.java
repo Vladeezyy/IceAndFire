@@ -67,7 +67,9 @@ public class MessageStartRidingMob implements CustomPacketPayload {
                     Entity entity = player.level().getEntity(message.dragonId);
 
                     if (entity instanceof ISyncMount && entity instanceof TamableAnimal tamable) {
-                        if (tamable.isOwnedBy(player) && tamable.distanceTo(player) < 14) {
+                        // by UUID: on 1.21.1 isOwnedBy looks the owner up in the level's player list (the mob is in the
+                        // player's level, so a real owner is the same answer)
+                        if (player.getUUID().equals(tamable.getOwnerUUID()) && tamable.distanceTo(player) < 14) {
                             if (message.ride) {
                                 if (message.baby) {
                                     tamable.startRiding(player, true);
