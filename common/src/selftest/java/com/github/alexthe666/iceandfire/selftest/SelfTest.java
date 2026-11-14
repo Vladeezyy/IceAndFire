@@ -88,6 +88,7 @@ public class SelfTest {
             }
             switch (tick) {
                 case 20 -> registries(server);
+                case 30 -> groundBlastChunks(level, true);
                 case 40 -> spawnAll(level);
                 case 240 -> checkSpawned(level);
                 case 260 -> items(level);
@@ -232,6 +233,19 @@ public class SelfTest {
     private static void groundBlast(ServerLevel level) {
         groundBlast(level, new BlockPos(0, level.getMaxY() - 40, -160), net.minecraft.world.level.Explosion.BlockInteraction.DESTROY);
         groundBlast(level, new BlockPos(16, level.getMaxY() - 40, -160), net.minecraft.world.level.Explosion.BlockInteraction.KEEP);
+        groundBlastChunks(level, false);
+    }
+
+    /**
+     * No player on the server: a blast finds the entities of entity-ticking chunks only (a chunk loaded by setBlock alone
+     * hides its entities). Forced long before the blasts, so the tickets are through on a slow CI machine.
+     */
+    private static void groundBlastChunks(ServerLevel level, boolean load) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -11; z <= -10; z++) {
+                level.setChunkForced(x, z, load);
+            }
+        }
     }
 
     private static void groundBlast(ServerLevel level, BlockPos center, net.minecraft.world.level.Explosion.BlockInteraction mode) {
