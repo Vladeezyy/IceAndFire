@@ -609,10 +609,334 @@ public class SelfTest {
             int threads = com.github.alexthe666.iceandfire.pathfinding.raycoms.Pathfinding.getExecutor().getCorePoolSize();
             int expected = Math.max(1, Math.min(com.github.alexthe666.iceandfire.IafConfig.dragonPathfindingThreads, Runtime.getRuntime().availableProcessors()));
             check("pathfinding threads", threads == expected, threads + " of " + expected);
+
+            auditSecond(level, player, base, y, made);
         } finally {
             made.forEach(Entity::discard);
             level.removeBlock(base.offset(3, 1, 0), false);
         }
+    }
+
+    /**
+     * The second part of the audit: riders, chains and other players' pets, the hive packet, the fear of animals, chained
+     * dragons, the crystal summon and the world data. Each check failed on the code before its fix.
+     */
+    private static void auditSecond(ServerLevel level, net.minecraft.server.level.ServerPlayer player, BlockPos base, int y, List<Entity> made) {
+        MinecraftServer server = level.getServer();
+        var other = new net.minecraft.server.level.ServerPlayer(server, level, new com.mojang.authlib.GameProfile(UUID.randomUUID(), "iaf_selftest_other"),
+            net.minecraft.server.level.ClientInformation.createDefault());
+        player.setPos(base.getX() + 0.5, y, base.getZ() + 0.5);
+        other.setPos(base.getX() + 2.5, y, base.getZ() + 0.5);
+
+        // chained dragons: only a dragon with a chain is chained, and asking makes no mod data (isEmpty() was inverted)
+        EntityDragonBase dragon = IafEntityRegistry.FIRE_DRAGON.get().create(level, EntitySpawnReason.COMMAND);
+        dragon.setPos(base.getX() + 0.5, y, base.getZ() - 5.5);
+        level.addFreshEntity(dragon);
+        made.add(dragon);
+        boolean hadData = EntityDataProvider.getExisting(dragon).isPresent();
+        boolean freeChained = dragon.isChained();
+        boolean askingMadeData = !hadData && EntityDataProvider.getExisting(dragon).isPresent();
+        EntityDataProvider.getCapability(dragon).orElseThrow().chainData.attachChain(player);
+        boolean tiedChained = dragon.isChained();
+        EntityDataProvider.getCapability(dragon).orElseThrow().chainData.clearChains();
+        check("only a chained dragon is chained", !freeChained && tiedChained && !askingMadeData, "free " + freeChained + ", chained " + tiedChained + ", data made by asking " + askingMadeData);
+
+        // a baby dragon rides its owner's shoulder on the server too (since 1.21.11 the server refuses players as vehicles,
+        // only the clients seated it); other mobs still may not ride a player
+        dragon.setTame(true, false);
+        dragon.setOwner(player);
+        boolean seated = dragon.startRiding(player, true, true) && dragon.getVehicle() == player;
+        var pig = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+        pig.setPos(base.getX() + 1.5, y, base.getZ() + 0.5);
+        boolean pigSeated = pig.startRiding(player, true, true);
+        pig.stopRiding();
+        check("a baby dragon rides its owner's shoulder", seated && !pigSeated, "dragon " + seated + ", pig " + pigSeated);
+
+        // a client may get off but not mount (a forced mount went past saddles, the passenger limit and walls)
+        dev.vladeezyy.iceandfire.platform.PacketContext fromClient = new dev.vladeezyy.iceandfire.platform.PacketContext() {
+            @Override
+            public net.minecraft.world.entity.player.Player player() {
+                return player;
+            }
+
+            @Override
+            public void enqueueWork(Runnable work) {
+                work.run();
+            }
+
+            @Override
+            public net.minecraft.network.protocol.PacketFlow flow() {
+                return net.minecraft.network.protocol.PacketFlow.SERVERBOUND;
+            }
+        };
+        com.github.alexthe666.iceandfire.message.MessageStartRidingMob.Handler.handle(new com.github.alexthe666.iceandfire.message.MessageStartRidingMob(dragon.getId(), false, true), fromClient);
+        boolean gotOff = dragon.getVehicle() == null;
+        dragon.stopRiding();
+        com.github.alexthe666.iceandfire.message.MessageStartRidingMob.Handler.handle(new com.github.alexthe666.iceandfire.message.MessageStartRidingMob(dragon.getId(), true, false), fromClient);
+        boolean mounted = player.getVehicle() != null;
+        player.stopRiding();
+        check("a client may get off but not mount", gotOff && !mounted, "got off " + gotOff + ", mounted " + mounted);
+
+        // the rider's position from a client: once a tick, a short step, no walls (10 blocks a packet with no rate limit
+        // walked riders through walls); the death worm still passes through sand
+        BlockPos stand = base.offset(12, 0, -5);
+        var rider = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+        rider.setPos(stand.getX() + 0.5, y, stand.getZ() + 0.5);
+        boolean far = control(rider, 3).isNear(rider);
+        boolean near = control(rider, 0.5).isNear(rider);
+        boolean twice = control(rider, 0.4).isNear(rider);
+        var walled = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+        walled.setPos(stand.getX() + 0.5, y, stand.getZ() + 3.5);
+        level.setBlock(stand.offset(1, 0, 3), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+        boolean intoWall = control(walled, 0.8).isNear(walled);
+        level.removeBlock(stand.offset(1, 0, 3), false);
+        var worm = IafEntityRegistry.DEATH_WORM.get().create(level, EntitySpawnReason.COMMAND);
+        worm.setPos(stand.getX() + 0.5, y, stand.getZ() + 6.5);
+        level.setBlock(stand.offset(1, 0, 6), net.minecraft.world.level.block.Blocks.SAND.defaultBlockState(), 2);
+        boolean intoSand = control(worm, 0.8).isNear(worm);
+        level.removeBlock(stand.offset(1, 0, 6), false);
+        check("rider position from a client", !far && near && !twice && !intoWall && intoSand,
+            "3 blocks " + far + ", half a block " + near + ", again this tick " + twice + ", into a wall " + intoWall + ", worm into sand " + intoSand);
+
+        // chains: not on players nor on other players' pets; a click at a wall gives the mobs around no mod data
+        var foreignPet = (net.minecraft.world.entity.TamableAnimal) vanilla(level, "wolf");
+        foreignPet.setTame(true, false);
+        foreignPet.setOwnerReference(net.minecraft.world.entity.EntityReference.of(UUID.randomUUID()));
+        foreignPet.setPos(base.getX() + 6.5, y + 1, base.getZ() + 0.5);
+        level.addFreshEntity(foreignPet);
+        made.add(foreignPet);
+        var ownPet = (net.minecraft.world.entity.TamableAnimal) vanilla(level, "wolf");
+        ownPet.setTame(true, false);
+        ownPet.setOwner(player);
+        ownPet.setPos(base.getX() + 0.5, y, base.getZ() + 3.5);
+        var chain = IafItemRegistry.CHAIN.get();
+        boolean onPlayer = chain.interactLivingEntity(new ItemStack(chain), player, other, net.minecraft.world.InteractionHand.MAIN_HAND) != net.minecraft.world.InteractionResult.PASS
+            || chainedTo(other, player);
+        boolean onForeignPet = chain.interactLivingEntity(new ItemStack(chain), player, foreignPet, net.minecraft.world.InteractionHand.MAIN_HAND) != net.minecraft.world.InteractionResult.PASS
+            || chainedTo(foreignPet, player);
+        chain.interactLivingEntity(new ItemStack(chain), player, ownPet, net.minecraft.world.InteractionHand.MAIN_HAND);
+        boolean onOwnPet = chainedTo(ownPet, player);
+        EntityDataProvider.getExisting(ownPet).ifPresent(data -> data.chainData.clearChains());
+        var bystander = (net.minecraft.world.entity.LivingEntity) vanilla(level, "cow");
+        bystander.setPos(base.getX() - 3.5, y, base.getZ() + 0.5);
+        level.addFreshEntity(bystander);
+        made.add(bystander);
+        com.github.alexthe666.iceandfire.item.ItemChain.attachToFence(player, level, base.offset(-1, 0, 0));
+        boolean bystanderData = EntityDataProvider.getExisting(bystander).isPresent();
+        check("chains not on players or others' pets", !onPlayer && !onForeignPet && onOwnPet && !bystanderData,
+            "player " + onPlayer + ", other's pet " + onForeignPet + ", own pet " + onOwnPet + ", wall click made data " + bystanderData);
+
+        // gorgon head and cockatrice scepter leave other players' pets alone (no damage, so no PvP or claim rule saw them)
+        player.setPos(base.getX() + 0.5, y, base.getZ() + 0.5);
+        player.setYRot(-90);
+        player.setYHeadRot(-90);
+        player.setXRot(0);
+        IafItemRegistry.GORGON_HEAD.get().releaseUsing(new ItemStack(IafItemRegistry.GORGON_HEAD.get()), level, player, 0);
+        List<com.github.alexthe666.iceandfire.entity.EntityStoneStatue> statues = level.getEntitiesOfClass(com.github.alexthe666.iceandfire.entity.EntityStoneStatue.class,
+            new net.minecraft.world.phys.AABB(base).inflate(10));
+        made.addAll(statues);
+        boolean petStone = foreignPet.isRemoved() || !statues.isEmpty();
+        boolean scepterPet = com.github.alexthe666.iceandfire.entity.util.IafAttackRules.mayHarm(player, foreignPet);
+        boolean scepterCow = com.github.alexthe666.iceandfire.entity.util.IafAttackRules.mayHarm(player, bystander);
+        check("gorgon head and scepter spare others' pets", !petStone && !scepterPet && scepterCow, "pet to stone " + petStone + ", scepter on the pet " + scepterPet + ", on a cow " + scepterCow);
+
+        // the deathworm gauntlet and the cockatrice scepter keep no use state in the item (shared by all players)
+        List<String> shared = new ArrayList<>();
+        for (Class<?> item : List.of(com.github.alexthe666.iceandfire.item.ItemDeathwormGauntlet.class, com.github.alexthe666.iceandfire.item.ItemCockatriceScepter.class)) {
+            for (java.lang.reflect.Field field : item.getDeclaredFields()) {
+                if (!java.lang.reflect.Modifier.isStatic(field.getModifiers()) && !java.lang.reflect.Modifier.isFinal(field.getModifiers())) {
+                    shared.add(item.getSimpleName() + "." + field.getName());
+                }
+            }
+        }
+        check("gauntlet and scepter keep no use state in the item", shared.isEmpty(), shared);
+
+        // hive packet: past the quota the server sends nothing and a client's tag fails the decode (2 MiB were parsed and
+        // merged on the main thread)
+        CompoundTag huge = new CompoundTag();
+        net.minecraft.nbt.ListTag rooms = new net.minecraft.nbt.ListTag();
+        for (int i = 0; i < 3000; i++) {
+            CompoundTag room = new CompoundTag();
+            room.putInt("X", i);
+            room.putInt("Y", 0);
+            room.putInt("Z", 0);
+            rooms.add(room);
+        }
+        huge.put("FoodRooms", rooms);
+        int hugeSize = huge.sizeInBytes();
+        var sent = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+        com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive.write(new com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive(huge), sent);
+        boolean dropped = com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive.read(sent).hive == null;
+        var forged = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+        forged.writeNbt(huge);
+        boolean refused;
+        try {
+            com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive.read(forged);
+            refused = false;
+        } catch (RuntimeException e) {
+            refused = true;
+        }
+        var normal = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+        com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive.write(new com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive(new com.github.alexthe666.iceandfire.entity.util.MyrmexHive().toNBT()), normal);
+        boolean passed = com.github.alexthe666.iceandfire.message.MessageGetMyrmexHive.read(normal).hive != null;
+        // between the quota and vanilla's 2 MiB: the old code took it
+        boolean sized = hugeSize > 256 * 1024 && hugeSize < 2 * 1024 * 1024;
+        check("hive packet quota", sized && dropped && refused && passed, "tag " + hugeSize + " bytes, not sent " + dropped + ", refused " + refused + ", normal hive passed " + passed);
+
+        // animals look for feared mobs about once a second (every other tick they walked all living entities of 60x6x60).
+        // The search is counted by the feared-mob filter it runs (the flight after it needs a random spot: not tested here)
+        var cow = (net.minecraft.world.entity.PathfinderMob) vanilla(level, "cow");
+        cow.setPos(8.5, y, -164.5);
+        level.addFreshEntity(cow);
+        made.add(cow);
+        var feared = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+        feared.setPos(11.5, y, -164.5);
+        level.addFreshEntity(feared);
+        made.add(feared);
+        int[] asked = {0};
+        var fear = new com.github.alexthe666.iceandfire.entity.ai.VillagerAIFearUntamed(cow, net.minecraft.world.entity.LivingEntity.class, 30, 1.0D, 0.5D, e -> {
+            asked[0]++;
+            return e == feared;
+        });
+        fear.canUse();
+        int first = asked[0];
+        fear.canUse();
+        int again = asked[0] - first;
+        check("animals look for feared mobs once a second", first > 0 && again == 0, "searched " + first + ", again in the same tick " + again);
+
+        // crystal summon: queued for after the tick, not run inside onTrackingStart (moving the dragon there threw a CME
+        // while the level walked an entity section)
+        EntityDragonBase summoned = IafEntityRegistry.FIRE_DRAGON.get().create(level, EntitySpawnReason.COMMAND);
+        summoned.setPos(base.getX() + 0.5, y, base.getZ() - 10.5);
+        level.addFreshEntity(summoned);
+        made.add(summoned);
+        // a dead summoner: the queued summon then only logs (a test player has no connection for the messages)
+        other.setHealth(0);
+        var crystal = (com.github.alexthe666.iceandfire.item.ItemSummoningCrystal) IafItemRegistry.SUMMONING_CRYSTAL_FIRE.get();
+        com.github.alexthe666.iceandfire.item.ItemSummoningCrystal.DELAYED_SUMMONS.put(summoned.getUUID(), new com.github.alexthe666.iceandfire.item.ItemSummoningCrystal.PendingSummon(crystal,
+            summoned.getUUID(), base.offset(4, 0, -10), 0, other, net.minecraft.world.InteractionHand.MAIN_HAND, level, summoned.blockPosition(), new ItemStack(crystal), level.getGameTime()));
+        int queued = server.getPendingTasksCount();
+        summoned.onAddedToServerLevel();
+        boolean waiting = server.getPendingTasksCount() == queued + 1 && !com.github.alexthe666.iceandfire.item.ItemSummoningCrystal.DELAYED_SUMMONS.containsKey(summoned.getUUID());
+        com.github.alexthe666.iceandfire.item.ItemSummoningCrystal.DELAYED_SUMMONS.remove(summoned.getUUID());
+        check("a crystal summon waits for the next tick", waiting, "tasks " + queued + " -> " + server.getPendingTasksCount());
+
+        // world data: each dimension keeps its own structures (a static list carried world A's into world B), and a check
+        // that adds nothing leaves the data clean (every autosave rewrote all entries)
+        ServerLevel nether = server.getLevel(net.minecraft.world.level.Level.NETHER);
+        var overworldData = com.github.alexthe666.iceandfire.world.IafWorldData.get(level);
+        var netherData = nether == null ? null : com.github.alexthe666.iceandfire.world.IafWorldData.get(nether);
+        boolean separate = netherData != null && netherData != overworldData;
+        if (separate) {
+            netherData.check(com.github.alexthe666.iceandfire.world.IafWorldData.FeatureType.OCEAN, new BlockPos(900_000, 64, 900_000), "selftest_dim");
+        }
+        // as the autosave: encode, then mark clean
+        separate &= !overworldData.save(new CompoundTag(), level.registryAccess()).toString().contains("selftest_dim");
+        overworldData.setDirty(false);
+        com.github.alexthe666.iceandfire.world.IafWorldData.get(level);
+        boolean clean = !overworldData.isDirty();
+        check("world data per dimension, clean after a read", separate && clean, "own nether data " + separate + ", clean after get " + clean);
+
+        auditThird(level, y, made);
+    }
+
+    /** Searches that read fewer blocks and entities: worms, wild dragons, myrmex goals and the hive aggressors. */
+    private static void auditThird(ServerLevel level, int y, List<Entity> made) {
+        // in the forced chunks x 0..31, z -176..-145, away from the other checks
+        BlockPos at = new BlockPos(20, y, -170);
+
+        // death worm: random probes find the sand, and a tame worm's far home loads no chunk (the cube around it did)
+        BlockPos sandFloor = at.below(2);
+        for (int dx = -8; dx <= 8; dx++) {
+            for (int dz = -8; dz <= 8; dz++) {
+                level.setBlock(sandFloor.offset(dx, 0, dz), net.minecraft.world.level.block.Blocks.SAND.defaultBlockState(), 2);
+            }
+        }
+        try {
+            var worm = IafEntityRegistry.DEATH_WORM.get().create(level, EntitySpawnReason.COMMAND);
+            worm.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+            var find = new com.github.alexthe666.iceandfire.entity.ai.DeathWormAIFindSandTarget(worm, 8);
+            int hits = 0;
+            boolean allSand = true;
+            for (int i = 0; i < 10; i++) {
+                BlockPos sand = find.findSandTarget();
+                if (sand != null) {
+                    hits++;
+                    allSand &= level.getBlockState(sand).is(net.minecraft.tags.BlockTags.SAND) && sand.distManhattan(at) <= 24;
+                }
+            }
+            var tame = IafEntityRegistry.DEATH_WORM.get().create(level, EntitySpawnReason.COMMAND);
+            tame.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+            tame.setTame(true, false);
+            BlockPos farHome = new BlockPos(300_000, 64, 300_000);
+            tame.setWormHome(farHome);
+            BlockPos farSand = new com.github.alexthe666.iceandfire.entity.ai.DeathWormAIFindSandTarget(tame, 8).findSandTarget();
+            boolean farLoaded = level.getChunkSource().getChunkNow(farHome.getX() >> 4, farHome.getZ() >> 4) != null;
+            check("death worm finds sand by probes, loads no chunk", hits > 0 && allSand && farSand == null && !farLoaded,
+                hits + " of 10 found, all sand " + allSand + ", far home " + farSand + ", far chunk loaded " + farLoaded);
+        } finally {
+            for (int dx = -8; dx <= 8; dx++) {
+                for (int dz = -8; dz <= 8; dz++) {
+                    level.setBlock(sandFloor.offset(dx, 0, dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+        }
+
+        // wild dragon on the ground: a mob 50 blocks below is not searched (the box was the whole follow range high), a
+        // mob nearby still is
+        EntityDragonBase dragon = IafEntityRegistry.FIRE_DRAGON.get().create(level, EntitySpawnReason.COMMAND);
+        dragon.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        level.addFreshEntity(dragon);
+        made.add(dragon);
+        var below = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+        below.setPos(at.getX() + 2.5, at.getY() - 50, at.getZ() + 0.5);
+        level.addFreshEntity(below);
+        made.add(below);
+        var near = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+        var goal = new com.github.alexthe666.iceandfire.entity.ai.DragonAITargetNonTamed<net.minecraft.world.entity.LivingEntity>(dragon, net.minecraft.world.entity.LivingEntity.class, false, e -> e == below || e == near) {
+            net.minecraft.world.entity.LivingEntity search() {
+                this.target = null;
+                this.findTarget();
+                return this.target;
+            }
+        };
+        var deep = goal.search();
+        near.setPos(at.getX() + 4.5, at.getY() - 6, at.getZ() + 0.5);
+        level.addFreshEntity(near);
+        made.add(near);
+        var close = goal.search();
+        check("wild dragon searches mobs 32 blocks up and down", deep == null && close == near, "below " + deep + ", near " + close);
+
+        // myrmex: a target in an unloaded chunk is used as it is (grounding it loaded the chunk on the server thread)
+        var worker = IafEntityRegistry.MYRMEX_WORKER.get().create(level, EntitySpawnReason.COMMAND);
+        worker.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        BlockPos farRoom = new BlockPos(-300_000, 40, 300_000);
+        boolean asIs = worker.groundedPos(farRoom).equals(farRoom);
+        boolean roomLoaded = level.getChunkSource().getChunkNow(farRoom.getX() >> 4, farRoom.getZ() >> 4) != null;
+        check("myrmex goals load no chunk for a far room", asIs && !roomLoaded, "kept " + asIs + ", chunk loaded " + roomLoaded);
+
+        // hive aggressors: distinct attackers are capped (every member reads the list every other tick)
+        var hive = new com.github.alexthe666.iceandfire.entity.util.MyrmexHive();
+        for (int i = 0; i < 100; i++) {
+            hive.addOrRenewAgressor((net.minecraft.world.entity.LivingEntity) vanilla(level, "pig"), 1);
+        }
+        int aggressors;
+        try {
+            var field = com.github.alexthe666.iceandfire.entity.util.MyrmexHive.class.getDeclaredField("villageAgressors");
+            field.setAccessible(true);
+            aggressors = ((List<?>) field.get(hive)).size();
+        } catch (ReflectiveOperationException e) {
+            aggressors = -1;
+        }
+        check("hive aggressors capped", aggressors > 0 && aggressors <= 64, aggressors + " of 100 remembered");
+    }
+
+    private static com.github.alexthe666.iceandfire.message.MessageDragonControl control(Entity rider, double dx) {
+        return new com.github.alexthe666.iceandfire.message.MessageDragonControl(rider.getId(), (byte) 0, rider.getX() + dx, rider.getY(), rider.getZ());
+    }
+
+    private static boolean chainedTo(Entity mob, Entity holder) {
+        return EntityDataProvider.getExisting(mob).map(data -> data.chainData.isChainedTo(holder)).orElse(false);
     }
 
     private static boolean saves(Runnable save) {

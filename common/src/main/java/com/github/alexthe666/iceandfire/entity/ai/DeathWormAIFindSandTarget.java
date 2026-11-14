@@ -3,17 +3,22 @@ package com.github.alexthe666.iceandfire.entity.ai;
 import com.github.alexthe666.iceandfire.entity.EntityDeathWorm;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DeathWormAIFindSandTarget extends Goal {
+    private static final int TAME_RANGE = 25;
+    // Random probes per try instead of the whole cube (8,000 blocks wild, 125,000 tame, every ~4 ticks). The first sand
+    // hit is uniform over the sand in the cube, as the old random pick from the full list; a miss retries next try.
+    private static final int WILD_PROBES = 16;
+    private static final int TAME_PROBES = 20;
     private final EntityDeathWorm mob;
-    private int range;
+    private final int range;
 
     public DeathWormAIFindSandTarget(EntityDeathWorm mob, int range) {
         this.mob = mob;
@@ -55,38 +60,40 @@ public class DeathWormAIFindSandTarget extends Goal {
     }
 
     public BlockPos findSandTarget() {
-        if (this.mob.getTarget() == null || !this.mob.getTarget().isAlive()) {
-            List<BlockPos> sand = new ArrayList<>();
-            if (this.mob.isTame() && this.mob.getWormHome() != null) {
-                range = 25;
-                for (int x = this.mob.getWormHome().getX() - range; x < this.mob.getWormHome().getX() + range; x++) {
-                    for (int y = this.mob.getWormHome().getY() - range; y < this.mob.getWormHome().getY() + range; y++) {
-                        for (int z = this.mob.getWormHome().getZ() - range; z < this.mob.getWormHome().getZ() + range; z++) {
-                            if (this.mob.level().getBlockState(new BlockPos(x, y, z)).is(BlockTags.SAND) && isDirectPathBetweenPoints(this.mob, this.mob.position(), new Vec3(x, y, z))) {
-                                sand.add(new BlockPos(x, y, z));
-                            }
-                        }
-                    }
-                }
-            } else {
-                for (int x = (int) this.mob.getX() - range; x < (int) this.mob.getX() + range; x++) {
-                    for (int y = (int) this.mob.getY() - range; y < (int) this.mob.getY() + range; y++) {
-                        for (int z = (int) this.mob.getZ() - range; z < (int) this.mob.getZ() + range; z++) {
-                            if (this.mob.level().getBlockState(new BlockPos(x, y, z)).is(BlockTags.SAND) && isDirectPathBetweenPoints(this.mob, this.mob.position(), new Vec3(x, y, z))) {
-                                sand.add(new BlockPos(x, y, z));
-                            }
-
-                        }
-                    }
-                }
-            }
-
-            if (!sand.isEmpty()) {
-                return sand.get(this.mob.getRandom().nextInt(sand.size()));
-            }
+        LivingEntity target = this.mob.getTarget();
+        if (target != null && target.isAlive()) {
+            return target.blockPosition().below();
+        }
+        final int r;
+        final int cx, cy, cz;
+        final int probes;
+        BlockPos home = this.mob.getWormHome();
+        if (this.mob.isTame() && home != null) {
+            r = TAME_RANGE;
+            cx = home.getX();
+            cy = home.getY();
+            cz = home.getZ();
+            probes = TAME_PROBES;
         } else {
-            BlockPos blockpos1 = this.mob.getTarget().blockPosition();
-            return new BlockPos(blockpos1.getX(), blockpos1.getY() - 1, blockpos1.getZ());
+            r = this.range;
+            cx = (int) this.mob.getX();
+            cy = (int) this.mob.getY();
+            cz = (int) this.mob.getZ();
+            probes = WILD_PROBES;
+        }
+        if (r <= 0) {
+            return null;
+        }
+        Level level = this.mob.level();
+        RandomSource random = this.mob.getRandom();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        int size = r * 2;
+        for (int i = 0; i < probes; i++) {
+            pos.set(cx - r + random.nextInt(size), cy - r + random.nextInt(size), cz - r + random.nextInt(size));
+            // The home may be far from the worm: never load a chunk for a probe
+            if (level.hasChunkAt(pos) && level.getBlockState(pos).is(BlockTags.SAND)) {
+                return pos.immutable();
+            }
         }
         return null;
     }

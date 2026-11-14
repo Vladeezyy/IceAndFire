@@ -6,6 +6,7 @@ import com.github.alexthe666.iceandfire.entity.EntityMyrmexBase;
 import com.github.alexthe666.iceandfire.entity.EntityMyrmexWorker;
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.AdvancedPathNavigate;
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.PathResult;
+import dev.vladeezyy.iceandfire.bus.IafBus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -13,22 +14,31 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 public class MyrmexAIForage extends Goal {
 
     private static final int RADIUS = 16;
+    private static final Predicate<BlockState> EDIBLE = EntityMyrmexBase::isEdibleBlock;
+    // pause after a scan that found nothing: this many ticks plus up to as many again
+    private static final int EMPTY_SCAN_PAUSE = 100;
+    // a worker that moved farther than this (squared) from an empty scan scans again
+    private static final int MOVED_FOR_RESCAN_SQ = 4 * 4;
     private final EntityMyrmexWorker myrmex;
-    private final BlockSorter targetSorter;
     private BlockPos targetBlock = null;
+    private BlockPos emptyScanPos = null;
+    private long emptyScanUntil;
     private int wanderRadius;
     private final int chance;
     private PathResult path;
@@ -37,7 +47,6 @@ public class MyrmexAIForage extends Goal {
     public MyrmexAIForage(EntityMyrmexWorker myrmex, int chanceIn) {
         super();
         this.myrmex = myrmex;
-        this.targetSorter = new BlockSorter();
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.chance = chanceIn;
     }
@@ -55,15 +64,13 @@ public class MyrmexAIForage extends Goal {
             return false;
         }
 
-        // Get nearby edible blocks
-        List<BlockPos> edibleBlocks = getEdibleBlocks();
+        // Closest edible block nearby
+        BlockPos edible = findEdibleBlock(false);
         // If there are no edible blocks nearby
-        if (edibleBlocks.isEmpty()) {
+        if (edible == null) {
             return myrmex.getRandom().nextInt(chance) == 0 && increaseRadiusAndWander();
         }
-        // Set closest block as target
-        edibleBlocks.sort(this.targetSorter);
-        this.targetBlock = edibleBlocks.get(0);
+        this.targetBlock = edible;
         this.path = ((AdvancedPathNavigate) this.myrmex.getNavigation()).moveToXYZ(targetBlock.getX(),
             targetBlock.getY(), targetBlock.getZ(), 1D);
         return myrmex.getRandom().nextInt(chance) == 0;
@@ -88,12 +95,11 @@ public class MyrmexAIForage extends Goal {
             if (this.myrmex.isCloseEnoughToTarget(targetBlock, 12)
                 || !this.myrmex.pathReachesTarget(path, targetBlock, 12)) {
                 failedToFindPath = 0;
-                List<BlockPos> edibleBlocks = getEdibleBlocks();
+                BlockPos edible = findEdibleBlock(false);
                 // If we found an edible block nearby
-                if (!edibleBlocks.isEmpty()) {
+                if (edible != null) {
                     this.myrmex.keepSearching = false;
-                    edibleBlocks.sort(this.targetSorter);
-                    this.targetBlock = edibleBlocks.get(0);
+                    this.targetBlock = edible;
                     this.path = ((AdvancedPathNavigate) this.myrmex.getNavigation()).moveToXYZ(targetBlock.getX(),
                         targetBlock.getY(), targetBlock.getZ(), 1D);
                 }
@@ -140,12 +146,12 @@ public class MyrmexAIForage extends Goal {
                 // If the myrmex reached the end of the path but is still not close enough to
                 // the target
                 else if (!this.myrmex.pathReachesTarget(path, targetBlock, 12)) {
-                    List<BlockPos> edibleBlocks = getEdibleBlocks();
+                    BlockPos edible = findEdibleBlock(true);
                     // If we found an edible block nearby
-                    if (!edibleBlocks.isEmpty()) {
+                    if (edible != null) {
                         this.myrmex.keepSearching = false;
                         // This time choose a different random edible block
-                        this.targetBlock = edibleBlocks.get(this.myrmex.getRandom().nextInt(edibleBlocks.size()));
+                        this.targetBlock = edible;
                         this.path = ((AdvancedPathNavigate) this.myrmex.getNavigation()).moveToXYZ(targetBlock.getX(),
                             targetBlock.getY(), targetBlock.getZ(), 1D);
                     } else {
@@ -164,34 +170,102 @@ public class MyrmexAIForage extends Goal {
     }
 
     private double getDistanceSq(BlockPos pos) {
-        final double deltaX = this.myrmex.getX() - (pos.getX() + 0.5);
-        final double deltaY = this.myrmex.getY() + this.myrmex.getEyeHeight() - (pos.getY() + 0.5);
-        final double deltaZ = this.myrmex.getZ() - (pos.getZ() + 0.5);
+        return getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    private double getDistanceSq(int x, int y, int z) {
+        final double deltaX = this.myrmex.getX() - (x + 0.5);
+        final double deltaY = this.myrmex.getY() + this.myrmex.getEyeHeight() - (y + 0.5);
+        final double deltaZ = this.myrmex.getZ() - (z + 0.5);
         return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
     }
 
-    public class BlockSorter implements Comparator<BlockPos> {
-
-        @Override
-        public int compare(BlockPos pos1, BlockPos pos2) {
-            double distance1 = MyrmexAIForage.this.getDistanceSq(pos1);
-            double distance2 = MyrmexAIForage.this.getDistanceSq(pos2);
-            return Double.compare(distance1, distance2);
+    /**
+     * An edible block in the 33x17x33 box around the worker (18,513 blocks): the closest one, or a random one. Null if
+     * there is none.
+     * <p>
+     * Read section by section in loaded chunks only (getBlockState of an unloaded chunk loads it on the server
+     * thread); a section of air only or without an edible state in its palette is skipped whole. After a scan that
+     * found nothing the same spot is not read again for 100..200 ticks (random per worker, so a hive does not scan in
+     * step): it counts as empty. A worker that walked away scans its new spot at once.
+     */
+    @Nullable
+    private BlockPos findEdibleBlock(boolean random) {
+        Level level = this.myrmex.level();
+        BlockPos center = this.myrmex.blockPosition();
+        long now = level.getGameTime();
+        if (this.emptyScanPos != null && now < this.emptyScanUntil && center.distSqr(this.emptyScanPos) <= MOVED_FOR_RESCAN_SQ) {
+            return null;
         }
-    }
-
-    private List<BlockPos> getEdibleBlocks() {
-        List<BlockPos> allBlocks = new ArrayList<>();
-        BlockPos.betweenClosedStream(this.myrmex.blockPosition().offset(-RADIUS, -RADIUS / 2, -RADIUS),
-            this.myrmex.blockPosition().offset(RADIUS, RADIUS / 2, RADIUS)).map(BlockPos::immutable).forEach(pos -> {
-            if (EntityMyrmexBase.isEdibleBlock(this.myrmex.level().getBlockState(pos))) {
-                if (!dev.vladeezyy.iceandfire.bus.IafBus.post(new GenericGriefEvent(this.myrmex, pos.getX(), pos.getY(), pos.getZ()))) {
-                    allBlocks.add(pos);
-                    this.myrmex.keepSearching = false;
+        int minX = center.getX() - RADIUS, maxX = center.getX() + RADIUS;
+        int minZ = center.getZ() - RADIUS, maxZ = center.getZ() + RADIUS;
+        int minY = Math.max(center.getY() - RADIUS / 2, level.getMinY());
+        int maxY = Math.min(center.getY() + RADIUS / 2, level.getMaxY());
+        // without a listener nothing can cancel the event: no event object per block
+        boolean griefListeners = IafBus.hasListeners(GenericGriefEvent.class);
+        long found = 0L;
+        int count = 0;
+        double bestDistance = Double.MAX_VALUE;
+        BlockState lastState = null;
+        boolean lastEdible = false;
+        for (int cx = minX >> 4; cx <= maxX >> 4; cx++) {
+            for (int cz = minZ >> 4; cz <= maxZ >> 4; cz++) {
+                LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+                if (chunk == null) {
+                    continue;
+                }
+                LevelChunkSection[] sections = chunk.getSections();
+                int x0 = Math.max(minX, cx << 4), x1 = Math.min(maxX, (cx << 4) + 15);
+                int z0 = Math.max(minZ, cz << 4), z1 = Math.min(maxZ, (cz << 4) + 15);
+                for (int sy = minY >> 4; sy <= maxY >> 4; sy++) {
+                    int index = chunk.getSectionIndexFromSectionY(sy);
+                    if (index < 0 || index >= sections.length) {
+                        continue;
+                    }
+                    LevelChunkSection section = sections[index];
+                    if (section.hasOnlyAir() || !section.maybeHas(EDIBLE)) {
+                        continue;
+                    }
+                    int y0 = Math.max(minY, sy << 4), y1 = Math.min(maxY, (sy << 4) + 15);
+                    for (int z = z0; z <= z1; z++) {
+                        for (int y = y0; y <= y1; y++) {
+                            for (int x = x0; x <= x1; x++) {
+                                BlockState state = section.getBlockState(x & 15, y & 15, z & 15);
+                                // runs of the same state are common: the tag is looked up once per run
+                                if (state != lastState) {
+                                    lastState = state;
+                                    lastEdible = EntityMyrmexBase.isEdibleBlock(state);
+                                }
+                                if (!lastEdible || griefListeners && IafBus.post(new GenericGriefEvent(this.myrmex, x, y, z))) {
+                                    continue;
+                                }
+                                count++;
+                                if (random) {
+                                    // reservoir sampling: uniform over all candidates without a list of them
+                                    if (ThreadLocalRandom.current().nextInt(count) == 0) {
+                                        found = BlockPos.asLong(x, y, z);
+                                    }
+                                } else {
+                                    double distance = getDistanceSq(x, y, z);
+                                    if (distance < bestDistance) {
+                                        bestDistance = distance;
+                                        found = BlockPos.asLong(x, y, z);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        });
-        return allBlocks;
+        }
+        if (count == 0) {
+            this.emptyScanUntil = now + EMPTY_SCAN_PAUSE + this.myrmex.getRandom().nextInt(EMPTY_SCAN_PAUSE + 1);
+            this.emptyScanPos = center;
+            return null;
+        }
+        this.emptyScanPos = null;
+        this.myrmex.keepSearching = false;
+        return BlockPos.of(found);
     }
 
     private boolean increaseRadiusAndWander() {
@@ -214,7 +288,14 @@ public class MyrmexAIForage extends Goal {
                 this.myrmex.setWaitTicks(800 + ThreadLocalRandom.current().nextInt(40));
             }
         }
-        Vec3 vec = DefaultRandomPos.getPos(this.myrmex, wanderRadius, 7);
+        // DefaultRandomPos reads blocks up to the radius away with no loaded check: at the edge of the loaded area the
+        // radius is halved until its box is loaded (up to 32 around a ticking mob always is)
+        int radius = wanderRadius;
+        BlockPos at = this.myrmex.blockPosition();
+        while (radius > RADIUS && !EntityMyrmexBase.isAreaLoaded(this.myrmex.level(), at.getX() - radius, at.getZ() - radius, at.getX() + radius, at.getZ() + radius)) {
+            radius >>= 1;
+        }
+        Vec3 vec = DefaultRandomPos.getPos(this.myrmex, radius, 7);
         if (vec != null) {
             this.targetBlock = BlockPos.containing(vec);
         }

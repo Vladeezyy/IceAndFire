@@ -25,7 +25,11 @@ public abstract class ItemStackMixin {
     }
 
     // 26.x: items carry their modifiers as a component; the config-dependent ones (dragonsteel) replace the item's own
-    @ModifyVariable(method = "forEachModifier", at = @At("STORE"), ordinal = 0)
+    // Both overloads by descriptor: the name alone took only one of them
+    @ModifyVariable(method = {
+        "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Lorg/apache/commons/lang3/function/TriConsumer;)V",
+        "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V"
+    }, at = @At("STORE"), ordinal = 0)
     private ItemAttributeModifiers iceandfire$modifiers(ItemAttributeModifiers modifiers) {
         ItemStack self = (ItemStack) (Object) this;
         if (this.getItem() instanceof IafStackStatsItem stats && modifiers == this.getItem().components().get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS)) {

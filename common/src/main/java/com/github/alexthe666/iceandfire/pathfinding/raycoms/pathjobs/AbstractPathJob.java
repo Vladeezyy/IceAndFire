@@ -49,6 +49,11 @@ public abstract class AbstractPathJob implements Callable<Path> {
      */
     public static final Map<Player, UUID> trackingMap = new HashMap<>();
     /**
+     * Most blocks the chunk cache reaches past the box of start and end (or the restricted area). The cache is
+     * filled on the server thread; outside it every block reads as air, so walking paths cannot leave it.
+     */
+    private static final int MAX_CACHE_MARGIN = 48;
+    /**
      * Start position to path from.
      */
     protected final BlockPos start;
@@ -152,15 +157,18 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @see AbstractPathJob#AbstractPathJob(Level, BlockPos, BlockPos, int, LivingEntity)
      */
     public AbstractPathJob(final Level world, final BlockPos start, final BlockPos end, final int range, final PathResult result, final LivingEntity entity) {
-        final int minX = Math.min(start.getX(), end.getX()) - (range / 2);
-        final int minZ = Math.min(start.getZ(), end.getZ()) - (range / 2);
-        final int maxX = Math.max(start.getX(), end.getX()) + (range / 2);
-        final int maxZ = Math.max(start.getZ(), end.getZ()) + (range / 2);
+        // Was 1.5 x range around start and end (range is the follow range, 128 for dragons): over 600 chunks for
+        // every path, read on the server thread
+        final int cacheMargin = Math.min(MAX_CACHE_MARGIN, range + range / 2);
+        final int minX = Math.min(start.getX(), end.getX()) - cacheMargin;
+        final int minZ = Math.min(start.getZ(), end.getZ()) - cacheMargin;
+        final int maxX = Math.max(start.getX(), end.getX()) + cacheMargin;
+        final int maxZ = Math.max(start.getZ(), end.getZ()) + cacheMargin;
 
         this.restrictionType = AbstractAdvancedPathNavigate.RestrictionType.NONE;
         this.hardXzRestriction = false;
 
-        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinY(), minZ), new BlockPos(maxX, world.getMaxY(), maxZ), range, world.dimensionType());
+        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinY(), minZ), new BlockPos(maxX, world.getMaxY(), maxZ), 0, world.dimensionType());
 
         this.start = new BlockPos(start);
         this.end = end;
@@ -254,7 +262,12 @@ public abstract class AbstractPathJob implements Callable<Path> {
         this.restrictionType = restrictionType;
         this.hardXzRestriction = hardRestriction;
 
-        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinY(), minZ), new BlockPos(maxX, world.getMaxY(), maxZ), range, world.dimensionType());
+        // The restricted area and the start, plus at most MAX_CACHE_MARGIN (was the whole range)
+        final int cacheMargin = Math.min(MAX_CACHE_MARGIN, range);
+        this.world = new ChunkCache(world,
+            new BlockPos(Math.min(minX, start.getX()) - cacheMargin, world.getMinY(), Math.min(minZ, start.getZ()) - cacheMargin),
+            new BlockPos(Math.max(maxX, start.getX()) + cacheMargin, world.getMaxY(), Math.max(maxZ, start.getZ()) + cacheMargin),
+            0, world.dimensionType());
 
         this.start = start;
 

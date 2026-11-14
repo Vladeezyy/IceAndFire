@@ -95,6 +95,12 @@ public final class IceAndFireFabric implements ModInitializer {
             FabricPlatform.server = null;
             IceAndFire.onServerStopped();
         });
+        // saved data taken on the server thread before the level generates (the worldgen threads read IafSavedData's cache);
+        // in a phase before the default one, as another listener may already generate chunks
+        Identifier savedDataPhase = Identifier.fromNamespaceAndPath(IceAndFire.MODID, "saved_data");
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents.LOAD.addPhaseOrdering(savedDataPhase, net.fabricmc.fabric.api.event.Event.DEFAULT_PHASE);
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents.LOAD.register(savedDataPhase, (server, level) -> com.github.alexthe666.iceandfire.world.IafSavedData.onLevelLoad(level));
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents.UNLOAD.register((server, level) -> com.github.alexthe666.iceandfire.world.IafSavedData.onLevelUnload(level));
         registerGameEvents();
 
         IceAndFire.PROXY.setup();

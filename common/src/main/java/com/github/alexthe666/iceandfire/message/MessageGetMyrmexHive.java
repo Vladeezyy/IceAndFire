@@ -37,12 +37,20 @@ public class MessageGetMyrmexHive implements CustomPacketPayload {
     public MessageGetMyrmexHive() {
     }
 
+    /**
+     * Accounted NBT size of a hive (a big hive of several hundred rooms is well under it). The default 2 MiB let a staff
+     * holder send thousands of rooms parsed and merged on the main thread; a bigger tag now fails the decode.
+     */
+    public static final int QUOTA = 256 * 1024;
+
     public static MessageGetMyrmexHive read(FriendlyByteBuf buf) {
-        return new MessageGetMyrmexHive(buf.readNbt());
+        return new MessageGetMyrmexHive(buf.readNbt(net.minecraft.nbt.NbtAccounter.create(QUOTA)) instanceof CompoundTag tag ? tag : null);
     }
 
     public static void write(MessageGetMyrmexHive message, FriendlyByteBuf buf) {
-        buf.writeNbt(message.hive);
+        // a hive past the quota goes as nothing (read as null and dropped), not as a packet that disconnects the reader;
+        // with a margin, as sizeInBytes() counts the bytes otherwise than the reader's NbtAccounter
+        buf.writeNbt(message.hive != null && message.hive.sizeInBytes() > QUOTA * 3 / 4 ? null : message.hive);
     }
 
     public static class Handler {
