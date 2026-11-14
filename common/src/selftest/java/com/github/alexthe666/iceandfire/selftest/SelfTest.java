@@ -538,7 +538,9 @@ public class SelfTest {
                 level.addFreshEntity(mob);
                 made.add(mob);
                 player.setPos(base.getX() + 0.5, y, base.getZ() + 0.5);
+                // a living entity looks where its head points (getViewYRot is yHeadRot): the body yaw alone looked along +z
                 player.setYRot(-90);
+                player.setYHeadRot(-90);
                 player.setXRot(0);
                 IafItemRegistry.GORGON_HEAD.get().releaseUsing(new ItemStack(IafItemRegistry.GORGON_HEAD.get()), level, player, 0);
                 net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(base).inflate(10);
