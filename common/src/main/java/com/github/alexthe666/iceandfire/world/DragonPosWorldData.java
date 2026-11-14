@@ -80,7 +80,11 @@ public class DragonPosWorldData extends SavedData {
         this.lastDragonPositions.clear();
         for (int i = 0; i < nbttaglist.size(); ++i) {
             CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
+            // an entry without its dragon is dropped: a null key threw on every autosave
             UUID uuid = CompoundNBT.read("DragonUUID", UUIDUtil.CODEC).orElse(null);
+            if (uuid == null) {
+                continue;
+            }
             BlockPos pos = new BlockPos(CompoundNBT.getIntOr("DragonPosX", 0), CompoundNBT.getIntOr("DragonPosY", 0), CompoundNBT.getIntOr("DragonPosZ", 0));
             this.lastDragonPositions.put(uuid, pos);
         }
@@ -92,6 +96,9 @@ public class DragonPosWorldData extends SavedData {
         compound.putInt("Tick", this.tickCounter);
         ListTag nbttaglist = new ListTag();
         for (Map.Entry<UUID, BlockPos> pair : lastDragonPositions.entrySet()) {
+            if (pair.getKey() == null || pair.getValue() == null) {
+                continue;
+            }
             CompoundTag CompoundNBT = new CompoundTag();
             CompoundNBT.store("DragonUUID", UUIDUtil.CODEC, pair.getKey());
             CompoundNBT.putInt("DragonPosX", pair.getValue().getX());

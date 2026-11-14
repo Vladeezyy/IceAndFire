@@ -146,10 +146,8 @@ public class TileEntityPodium extends BaseContainerBlockEntity implements Worldl
         return 64;
     }
 
-    @Override
-    public boolean stillValid(@NotNull Player player) {
-        return true;
-    }
+    // stillValid of BaseContainerBlockEntity: this block entity, within reach (true always let an open menu take the
+    // item out of an unloaded podium while its chunk was saved with it)
 
     @Override
     public void clearContent() {
