@@ -171,6 +171,7 @@ public final class IceAndFireNeoForge {
     private static void registerGameEvents(IEventBus bus) {
         bus.addListener((ServerAboutToStartEvent event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.ServerAboutToStartEvent(event.getServer())));
         bus.addListener((ServerStartedEvent event) -> IceAndFire.onServerStarted());
+        bus.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> IceAndFire.onServerStopped());
         // config-dependent attributes (dragonsteel): 26.x items carry their modifiers as a component, so NeoForge never asks
         // getDefaultAttributeModifiers(stack); the stack's own modifiers (commands) stay
         bus.addListener((net.neoforged.neoforge.event.ItemAttributeModifierEvent event) -> {

@@ -34,7 +34,11 @@ public final class Pathfinding {
      */
     public static ThreadPoolExecutor getExecutor() {
         if (executor == null) {
-            executor = new ThreadPoolExecutor(1, IafConfig.dragonPathfindingThreads, 10, TimeUnit.SECONDS, jobQueue, new IafThreadFactory());
+            // A pool with an unbounded queue never grows past its core size: core 1 ran every path on one thread whatever
+            // the config said. Core = max, up to the cores of the machine; idle threads still end after 10 s
+            int threads = Math.max(1, Math.min(IafConfig.dragonPathfindingThreads, Runtime.getRuntime().availableProcessors()));
+            executor = new ThreadPoolExecutor(threads, threads, 10, TimeUnit.SECONDS, jobQueue, new IafThreadFactory());
+            executor.allowCoreThreadTimeOut(true);
         }
         return executor;
     }

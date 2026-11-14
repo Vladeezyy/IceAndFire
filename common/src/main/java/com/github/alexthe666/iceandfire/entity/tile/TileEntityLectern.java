@@ -228,10 +228,8 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
         return 64;
     }
 
-    @Override
-    public boolean stillValid(@NotNull Player player) {
-        return true;
-    }
+    // stillValid of BaseContainerBlockEntity: this block entity, within reach (an item dupe through an unloaded chunk as
+    // with the podium)
 
     @Override
     public void clearContent() {

@@ -28,6 +28,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * computed once (with Lithium a second time throws).
  */
 public final class BlockLaunchExplosion {
+    private static boolean warnedNoBlocks;
+
     private BlockLaunchExplosion() {}
 
     public static void explode(Level world, Mob entity, double x, double y, double z, float size) {
@@ -41,7 +43,16 @@ public final class BlockLaunchExplosion {
         ServerExplosion explosion = new ServerExplosion(level, entity, source, null, new Vec3(x, y, z), size, false, Explosion.BlockInteraction.KEEP);
         explosion.explode();
         List<BlockPos> blocks = ((ExplodedBlocks) explosion).iceandfire$explodedBlocks();
-        if (mode == Explosion.BlockInteraction.KEEP || blocks == null) {
+        if (mode == Explosion.BlockInteraction.KEEP) {
+            return;
+        }
+        if (blocks == null) {
+            // the capture is optional (require = 0): another mod that rewrote explode() left the blasts without blocks and
+            // without a word. A tiny blast returns before the blocks
+            if (!warnedNoBlocks && size >= 1.0E-5F) {
+                warnedNoBlocks = true;
+                com.github.alexthe666.iceandfire.IceAndFire.LOGGER.warn("Ground blasts break no blocks: the blocks of ServerExplosion.explode() were not captured (another mod changed it?)");
+            }
             return;
         }
         List<BlockPos> toBlow = new ArrayList<>(blocks);
