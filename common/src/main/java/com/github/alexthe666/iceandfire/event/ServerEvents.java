@@ -238,7 +238,7 @@ public class ServerEvents {
     @SubscribeEvent
     public void onEntityFall(final LivingFallEvent event) {
         if (event.getEntity() instanceof Player) {
-            EntityDataProvider.getCapability(event.getEntity()).ifPresent(data -> {
+            EntityDataProvider.getExisting(event.getEntity()).ifPresent(data -> {
                 if (data.miscData.hasDismounted) {
                     event.setDamageMultiplier(0);
                     data.miscData.setDismounted(false);
@@ -325,7 +325,7 @@ public class ServerEvents {
             Entity attacker = event.getSource().getEntity();
 
             if (attacker instanceof LivingEntity) {
-                EntityDataProvider.getCapability(attacker).ifPresent(data -> {
+                EntityDataProvider.getExisting(attacker).ifPresent(data -> {
                     if (data.miscData.loveTicks > 0) {
                         event.setCanceled(true);
                     }
@@ -413,7 +413,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void onEntityDie(LivingDeathEvent event) {
-        EntityDataProvider.getCapability(event.getEntity()).ifPresent(data -> {
+        EntityDataProvider.getExisting(event.getEntity()).ifPresent(data -> {
             if (event.getEntity().level().isClientSide()) {
                 return;
             }
@@ -490,7 +490,7 @@ public class ServerEvents {
     public void onEntityInteract(final PlayerInteractEvent.EntityInteract event) {
         // Handle chain removal
         if (event.getTarget() instanceof LivingEntity target) {
-            EntityDataProvider.getCapability(target).ifPresent(data -> {
+            EntityDataProvider.getExisting(target).ifPresent(data -> {
                 if (data.chainData.isChainedTo(event.getEntity())) {
                     data.chainData.removeChain(event.getEntity());
 

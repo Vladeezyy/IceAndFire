@@ -91,7 +91,10 @@ public final class IceAndFireFabric implements ModInitializer {
             IafBus.post(new dev.vladeezyy.iceandfire.bus.ServerAboutToStartEvent(server));
         });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> IceAndFire.onServerStarted());
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> FabricPlatform.server = null);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            FabricPlatform.server = null;
+            IceAndFire.onServerStopped();
+        });
         registerGameEvents();
 
         IceAndFire.PROXY.setup();

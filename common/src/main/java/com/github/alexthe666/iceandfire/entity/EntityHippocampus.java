@@ -411,7 +411,10 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompoundOrEmpty(i);
                 int j = CompoundNBT.getByteOr("Slot", (byte) 0) & 255;
-                this.inventory.setItem(j, Values.parseItem(this.registryAccess(), CompoundNBT));
+                // a slot past the storage (a chest item without the chest flag) threw and the mob was lost
+                if (j < this.inventory.getContainerSize()) {
+                    this.inventory.setItem(j, Values.parseItem(this.registryAccess(), CompoundNBT));
+                }
             }
         }
     }
@@ -726,6 +729,11 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     public void containerChanged(@NotNull Container pInvBasic) {
         boolean flag = this.isSaddled();
         this.updateContainerEquipment();
+        // A chest put in its slot: the storage at once (it stayed 3 slots until a reload). The open menu closes on the new
+        // container (stillValid), so no click reaches the old one
+        if (!this.level().isClientSide() && this.isChested() && this.inventory.getContainerSize() < 18) {
+            this.createInventory();
+        }
         if (this.tickCount > 20 && !flag && this.isSaddled()) {
             this.playSound(SoundEvents.HORSE_SADDLE.value(), 0.5F, 1.0F);
         }
