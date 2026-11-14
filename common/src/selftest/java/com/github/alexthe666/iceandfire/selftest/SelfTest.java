@@ -344,7 +344,27 @@ public class SelfTest {
                 boolean stone = mob.isRemoved() && !statues.isEmpty();
                 check(walled ? "gorgon head not through a wall" : "gorgon head turns a mob to stone", walled != stone, "removed " + mob.isRemoved() + ", statues " + statues.size());
                 statues.forEach(Entity::discard);
+                // the mob behind the wall stays: at the same spot the next round turned it to stone instead of its own mob
+                mob.discard();
             }
+
+            // gorgon temple: the water under its waterloggable blocks goes only inside the chunk being placed (a write into a
+            // neighbour that another thread was still generating crashed the server)
+            BlockPos wetIn = base.offset(0, -8, 0);
+            BlockPos wetOut = wetIn.offset(5, 0, 0);
+            level.setBlock(wetIn, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
+            level.setBlock(wetOut, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
+            var placing = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings()
+                .setBoundingBox(new net.minecraft.world.level.levelgen.structure.BoundingBox(wetIn).inflatedBy(1));
+            for (BlockPos wet : List.of(wetIn, wetOut)) {
+                com.github.alexthe666.iceandfire.world.gen.processor.GorgonTempleProcessor.clearWater(level,
+                    new net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo(wet, net.minecraft.world.level.block.Blocks.OAK_SLAB.defaultBlockState(), null), placing);
+            }
+            boolean clearedIn = level.getBlockState(wetIn).isAir();
+            boolean keptOut = level.getFluidState(wetOut).is(net.minecraft.tags.FluidTags.WATER);
+            level.setBlock(wetIn, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+            level.setBlock(wetOut, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+            check("gorgon temple clears water only in its chunk", clearedIn && keptOut, "inside cleared " + clearedIn + ", outside kept " + keptOut);
 
             // hippocampus: a chest put in through the menu opens the storage at once (its slots threw and ate the items)
             var hippo = IafEntityRegistry.HIPPOCAMPUS.get().create(level);
