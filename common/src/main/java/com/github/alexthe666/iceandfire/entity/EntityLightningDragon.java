@@ -32,7 +32,6 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -50,6 +49,7 @@ public class EntityLightningDragon extends EntityDragonBase {
     private static final EntityDataAccessor<Float> LIGHTNING_TARGET_X = SynchedEntityData.defineId(EntityLightningDragon.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LIGHTNING_TARGET_Y = SynchedEntityData.defineId(EntityLightningDragon.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LIGHTNING_TARGET_Z = SynchedEntityData.defineId(EntityLightningDragon.class, EntityDataSerializers.FLOAT);
+    private final IafDragonDestructionManager.BreathState breath = new IafDragonDestructionManager.BreathState();
 
     public EntityLightningDragon(Level worldIn) {
         this(IafEntityRegistry.LIGHTNING_DRAGON.get(), worldIn);
@@ -386,11 +386,21 @@ public class EntityLightningDragon extends EntityDragonBase {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        IafDragonDestructionManager.afterDragonTick(this, breath, null);
+    }
+
+    @Override
     public void stimulateFire(double burnX, double burnY, double burnZ, int syncType) {
+        if (syncType == MessageDragonSyncFire.BREATH_STOPPED) {
+            IafDragonDestructionManager.onBreathStopped(breath);
+            return;
+        }
         if (dev.vladeezyy.iceandfire.bus.IafBus.post(new DragonFireEvent(this, burnX, burnY, burnZ))) return;
-        if (syncType == 1 && !level().isClientSide) {
-            //sync with client
-            IceAndFire.sendMSGToTracking(this, new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
+        if (syncType == 1 && !level().isClientSide()) {
+            //sync with client, only when needed
+            IafDragonDestructionManager.syncBreath(this, breath, burnX, burnY, burnZ);
         }
         if (syncType == 2 && level().isClientSide) {
             //sync with server
@@ -431,43 +441,13 @@ public class EntityLightningDragon extends EntityDragonBase {
         this.burnParticleX = burnX;
         this.burnParticleY = burnY;
         this.burnParticleZ = burnZ;
-        Vec3 headPos = getHeadPosition();
-        double d2 = burnX - headPos.x;
-        double d3 = burnY - headPos.y;
-        double d4 = burnZ - headPos.z;
-        float particleScale = Mth.clamp(this.getRenderSize() * 0.08F, 0.55F, 3F);
-        double distance = Math.max(2.5F * this.distanceToSqr(burnX, burnY, burnZ), 0);
-        double conqueredDistance = burnProgress / 40D * distance;
-        int increment = (int) Math.ceil(conqueredDistance / 100);
-        for (int i = 0; i < conqueredDistance; i += increment) {
-            double progressX = headPos.x + d2 * (i / (float) distance);
-            double progressY = headPos.y + d3 * (i / (float) distance);
-            double progressZ = headPos.z + d4 * (i / (float) distance);
-            if (canPositionBeSeen(progressX, progressY, progressZ)) {
+        // The bolt is drawn from the synced target the server sets; the client no longer overwrites it locally
+        // (that drew the bolt through walls when the server's value had not changed)
+        if (!level().isClientSide()) {
+            final Vec3 boltEnd = IafDragonDestructionManager.breathServer(this, breath, burnX, burnY, burnZ);
+            if (boltEnd != null) {
                 setHasLightningTarget(true);
-                setLightningTargetVec((float)burnX, (float)burnY, (float)burnZ);
-            } else {
-                if (!level().isClientSide) {
-                    HitResult result = this.level().clip(new ClipContext(
-                        new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()),
-                        new Vec3(progressX, progressY, progressZ), ClipContext.Block.COLLIDER,
-                        ClipContext.Fluid.NONE, this));
-                    Vec3 vec3 = result.getLocation();
-                    BlockPos pos = BlockPos.containing(vec3);
-                    IafDragonDestructionManager.destroyAreaBreath(level(), pos, this);
-                    setHasLightningTarget(true);
-                    setLightningTargetVec((float) result.getLocation().x, (float) result.getLocation().y, (float) result.getLocation().z);
-                }
-            }
-        }
-        if (burnProgress >= 40D && canPositionBeSeen(burnX, burnY, burnZ)) {
-            double spawnX = burnX + (random.nextFloat() * 3.0) - 1.5;
-            double spawnY = burnY + (random.nextFloat() * 3.0) - 1.5;
-            double spawnZ = burnZ + (random.nextFloat() * 3.0) - 1.5;
-            setHasLightningTarget(true);
-            setLightningTargetVec((float) spawnX, (float) spawnY, (float) spawnZ);
-            if (!level().isClientSide) {
-                IafDragonDestructionManager.destroyAreaBreath(level(), BlockPos.containing(spawnX, spawnY, spawnZ), this);
+                setLightningTargetVec((float) boltEnd.x, (float) boltEnd.y, (float) boltEnd.z);
             }
         }
     }

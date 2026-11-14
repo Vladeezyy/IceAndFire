@@ -253,14 +253,8 @@ public class EntityMyrmexQueen extends EntityMyrmexBase {
     }
 
     @Override
-    public boolean isInHive() {
-        if (getHive() != null) {
-            for (BlockPos pos : getHive().getAllRooms()) {
-                if (isCloseEnoughToTarget(MyrmexHive.getGroundedPos(level(), pos), 300))
-                    return true;
-            }
-        }
-        return false;
+    protected double getInHiveDistanceSq() {
+        return 300;
     }
 
     @Override

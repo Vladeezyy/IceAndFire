@@ -38,7 +38,7 @@ public class MyrmexAIMoveThroughHive extends Goal {
         if (village == null) {
             return false;
         } else {
-            nextRoom = MyrmexHive.getGroundedPos(this.myrmex.level(), village.getRandomRoom(this.myrmex.getRandom(), this.myrmex.blockPosition()));
+            nextRoom = this.myrmex.groundedPos(village.getRandomRoom(this.myrmex.getRandom(), this.myrmex.blockPosition()));
             this.path = ((AdvancedPathNavigate) this.myrmex.getNavigation()).moveToXYZ(nextRoom.getX(), nextRoom.getY(), nextRoom.getZ(), movementSpeed);
             return this.path != null;
         }

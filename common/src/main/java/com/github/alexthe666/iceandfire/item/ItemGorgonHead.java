@@ -112,6 +112,12 @@ public class ItemGorgonHead extends Item {
             if (pointedEntity instanceof LivingEntity livingEntity) {
                 boolean wasSuccesful = true;
 
+                // Other players' pets, PvP off and claims: no stone, the head is kept
+                if (entity instanceof Player user && !com.github.alexthe666.iceandfire.entity.util.IafAttackRules.mayHarm(user, pointedEntity)) {
+                    ItemNbt.update(stack, tag -> tag.putBoolean("Active", false));
+                    return;
+                }
+
                 if (pointedEntity instanceof Player) {
                      wasSuccesful = pointedEntity.hurt(IafDamageRegistry.causeGorgonDamage(pointedEntity), Integer.MAX_VALUE);
                 } else {

@@ -59,6 +59,12 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     private static final Direction[] HORIZONTALS = new Direction[]{
         Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST
     };
+    /**
+     * Ticks between two reads of the 26 blocks of the shape. They were read four times per tick here and once more
+     * per tick by every input and every dragon breathing at the forge. A changed neighbour of an input reads them
+     * again at once.
+     */
+    private static final int ASSEMBLY_CHECK_INTERVAL = 10;
     public int fireType;
     public int cookTime;
     public int lastDragonFlameTimer = 0;
@@ -68,6 +74,10 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
     private NonNullList<ItemStack> forgeItemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     private boolean prevAssembled;
     private boolean canAddFlameAgain = true;
+    private boolean assembledCache;
+    private long nextAssemblyCheck = Long.MIN_VALUE;
+    private boolean grillsAssembled;
+    private int grillCheckCooldown;
 
     public TileEntityDragonforge(BlockPos pos, BlockState state) {
         super(IafTileEntityRegistry.DRAGONFORGE_CORE.get(), pos, state);
@@ -85,16 +95,23 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
         if (entityDragonforge.lastDragonFlameTimer > 0) {
             entityDragonforge.lastDragonFlameTimer--;
         }
-        entityDragonforge.updateGrills(entityDragonforge.assembled());
-        if (!level.isClientSide) {
-            if (entityDragonforge.prevAssembled != entityDragonforge.assembled()) {
+        final boolean assembled = entityDragonforge.assembled();
+        // The grills follow the shape, so they are set when it changes or is read again (were set every tick)
+        if (assembled != entityDragonforge.grillsAssembled || --entityDragonforge.grillCheckCooldown <= 0) {
+            entityDragonforge.grillCheckCooldown = ASSEMBLY_CHECK_INTERVAL;
+            entityDragonforge.grillsAssembled = assembled;
+            entityDragonforge.updateGrills(assembled);
+        }
+        if (!level.isClientSide()) {
+            if (entityDragonforge.prevAssembled != assembled) {
                 BlockDragonforgeCore.setState(entityDragonforge.fireType, entityDragonforge.prevAssembled, level, pos);
             }
-            entityDragonforge.prevAssembled = entityDragonforge.assembled();
-            if (!entityDragonforge.assembled())
+            entityDragonforge.prevAssembled = assembled;
+            if (!assembled)
                 return;
         }
-        if (entityDragonforge.cookTime > 0 && entityDragonforge.canSmelt() && entityDragonforge.lastDragonFlameTimer == 0) {
+        // The flame timer first: canSmelt() looks the recipe up
+        if (entityDragonforge.cookTime > 0 && entityDragonforge.lastDragonFlameTimer == 0 && entityDragonforge.canSmelt()) {
             entityDragonforge.cookTime--;
         }
         if (entityDragonforge.getItem(0).isEmpty() && !level.isClientSide) {
@@ -437,7 +454,25 @@ public class TileEntityDragonforge extends BaseContainerBlockEntity implements W
         return this.saveWithFullMetadata(registries);
     }
 
+    /** Whether the 3x3x3 shape around the core is complete, read again at most every {@link #ASSEMBLY_CHECK_INTERVAL} ticks. */
     public boolean assembled() {
+        if (level == null) {
+            return false;
+        }
+        final long now = level.getGameTime();
+        if (now >= nextAssemblyCheck || nextAssemblyCheck - now > ASSEMBLY_CHECK_INTERVAL) {
+            assembledCache = checkAssembled();
+            nextAssemblyCheck = now + ASSEMBLY_CHECK_INTERVAL;
+        }
+        return assembledCache;
+    }
+
+    /** A block of the shape may have changed: the next {@link #assembled()} reads it again. */
+    public void invalidateAssembly() {
+        nextAssemblyCheck = Long.MIN_VALUE;
+    }
+
+    private boolean checkAssembled() {
         return checkBoneCorners(worldPosition.below()) && checkBrickSlots(worldPosition.below()) && checkBrickCorners(worldPosition)
             && atleastThreeAreBricks(worldPosition) && checkY(worldPosition) && checkBoneCorners(worldPosition.above()) && checkBrickSlots(worldPosition.above());
     }

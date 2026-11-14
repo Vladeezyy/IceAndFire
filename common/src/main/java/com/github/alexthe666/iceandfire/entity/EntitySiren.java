@@ -372,9 +372,14 @@ public class EntitySiren extends Monster implements IAnimatedEntity, IVillagerFe
             singing = false;
         }
         this.entityData.set(SINGING, singing);
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
+            boolean changed = this.isSinging != singing;
             this.isSinging = singing;
-            IceAndFire.sendMSGToTracking(this, new MessageSirenSong(this.getId(), singing));
+            // aiStep calls this once or twice every tick: one packet per change, not 20-40 per second per watcher
+            // (players who start tracking later get SINGING with the entity data)
+            if (changed) {
+                IceAndFire.sendMSGToTracking(this, new MessageSirenSong(this.getId(), singing));
+            }
         }
     }
 

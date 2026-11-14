@@ -82,6 +82,8 @@ public class IafDragonFlightManager {
             }
 
         } else if (target == null || dragon.distanceToSqr(target.x, target.y, target.z) < 4
+                // a target 80+ blocks away may sit in an unloaded chunk: reading it there loaded the chunk on the main thread
+                || !dragon.level().hasChunkAt(BlockPos.containing(target.x, target.y, target.z))
                 || !dragon.level().isEmptyBlock(BlockPos.containing(target.x, target.y, target.z))
                         && (dragon.isHovering() || dragon.isFlying())
                 || dragon.getCommand() == 2 && dragon.shouldTPtoOwner()) {

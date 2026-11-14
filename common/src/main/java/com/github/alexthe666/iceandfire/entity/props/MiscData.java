@@ -21,6 +21,15 @@ public class MiscData {
 
     // Transient data
     public @Nullable List<LivingEntity> targetedByScepter;
+    // Use state of the deathworm gauntlet and the cockatrice scepter: item fields were shared by all players, so one
+    // player's lunge and wear went off for another (not saved, not synced)
+    public boolean gauntletReceded = true;
+    public boolean gauntletLaunched;
+    public int gauntletWear;
+    public int scepterWear;
+    /** Entity ids the scepter may not hit (other players' pets, PvP off, claims), asked again once a second */
+    public final it.unimi.dsi.fastutil.ints.IntSet scepterRefused = new it.unimi.dsi.fastutil.ints.IntOpenHashSet();
+    public long scepterRefusedAt;
     private @Nullable List<Integer> targetedByScepterIds;
 
     // Fresh data has nothing saved to look up: only deserialize (a save or a sync) leaves ids for the first tick. The port
@@ -83,8 +92,11 @@ public class MiscData {
     }
 
     public void setLungeTicks(int lungeTicks) {
-        this.lungeTicks = lungeTicks;
-        triggerClientUpdate = true;
+        // the gauntlet sets it every tick it is carried: a sync packet a tick for every holder otherwise
+        if (this.lungeTicks != lungeTicks) {
+            this.lungeTicks = lungeTicks;
+            triggerClientUpdate = true;
+        }
     }
 
     public void setDismounted(boolean hasDismounted) {

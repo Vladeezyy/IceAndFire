@@ -72,15 +72,17 @@ public abstract class LivingEntityMixin {
         }
     }
 
-    @Inject(method = "dropAllDeathLoot", at = @At("HEAD"))
-    private void iceandfire$captureDrops(ServerLevel level, DamageSource source, CallbackInfo ci) {
-        DropCapture.start((LivingEntity) (Object) this);
-    }
-
-    @Inject(method = "dropAllDeathLoot", at = @At("TAIL"))
-    private void iceandfire$dropDrops(ServerLevel level, DamageSource source, CallbackInfo ci) {
+    // Wrapped, not HEAD and TAIL: an exception in the loot left the capture open and swallowed every later drop
+    @WrapMethod(method = "dropAllDeathLoot")
+    private void iceandfire$captureDrops(ServerLevel level, DamageSource source, Operation<Void> original) {
         LivingEntity self = (LivingEntity) (Object) this;
-        List<ItemEntity> drops = DropCapture.stop(self);
+        DropCapture.start(self);
+        List<ItemEntity> drops;
+        try {
+            original.call(level, source);
+        } finally {
+            drops = DropCapture.stop(self);
+        }
         if (drops != null && !IafBus.post(new LivingDropsEvent(self, source, drops, this.lastHurtByPlayerTime > 0))) {
             drops.forEach(level::addFreshEntity);
         }

@@ -34,7 +34,7 @@ public class MyrmexAIWanderHiveCenter extends Goal {
         if (village == null) {
             return false;
         } else {
-            target = getNearPos(MyrmexHive.getGroundedPos(this.myrmex.level(), village.getCenter()));
+            target = getNearPos(this.myrmex.groundedPos(village.getCenter()));
 
             this.path = this.myrmex.getNavigation().createPath(target, 0);
             return this.path != null;

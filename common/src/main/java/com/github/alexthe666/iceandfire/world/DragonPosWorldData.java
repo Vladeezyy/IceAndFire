@@ -8,7 +8,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import java.util.UUID;
 public class DragonPosWorldData extends SavedData {
 
     private static final String IDENTIFIER = "iceandfire_dragonPositions";
+    private static final SavedData.Factory<DragonPosWorldData> FACTORY = new SavedData.Factory<>(DragonPosWorldData::new, (tag, registries) -> new DragonPosWorldData(tag), null);
     protected final Map<UUID, BlockPos> lastDragonPositions = new HashMap<>();
     private Level world;
     private int tickCounter;
@@ -35,15 +35,11 @@ public class DragonPosWorldData extends SavedData {
     }
 
     public static DragonPosWorldData get(Level world) {
-        if (world instanceof ServerLevel) {
-            ServerLevel overworld = world.getServer().getLevel(world.dimension());
-
-            DimensionDataStorage storage = overworld.getDataStorage();
-            DragonPosWorldData data = storage.computeIfAbsent(new SavedData.Factory<>(DragonPosWorldData::new, (tag, registries) -> new DragonPosWorldData(tag), null), IDENTIFIER);
-            if (data != null) {
-                data.world = world;
-                data.setDirty();
-            }
+        if (world instanceof ServerLevel level) {
+            // the level's cached data (IafSavedData)
+            DragonPosWorldData data = IafSavedData.get(level, FACTORY, IDENTIFIER);
+            data.world = world;
+            data.setDirty();
             return data;
         }
         return null;

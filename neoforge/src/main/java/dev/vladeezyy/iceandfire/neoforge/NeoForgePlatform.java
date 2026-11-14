@@ -145,6 +145,13 @@ public final class NeoForgePlatform implements Platform {
     }
 
     @Override
+    public boolean canPlayerAttack(Player player, Entity target) {
+        // The event alone: CommonHooks.onPlayerAttackTarget also runs the held weapon's onLeftClickEntity, a hit's side
+        // effect (and a refusal from a weapon that is only recharging)
+        return !net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.AttackEntityEvent(player, target)).isCanceled();
+    }
+
+    @Override
     public void onPlayerDestroyItem(Player player, ItemStack stack, @Nullable InteractionHand hand) {
         EventHooks.onPlayerDestroyItem(player, stack, hand);
     }

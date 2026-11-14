@@ -206,7 +206,8 @@ public class ItemSummoningCrystal extends Item {
 
     /** Called when the dragon of a pending summon was added to the level. */
     public static void delayedSummon(PendingSummon summon) {
-        DELAYED_SUMMONS.remove(summon.dragonUuid());
+        // Only this summon: a newer one for the same dragon may have been queued meanwhile
+        DELAYED_SUMMONS.remove(summon.dragonUuid(), summon);
         ChunkPos pos = new ChunkPos(summon.dragonOriginPosition());
 
         // make delayed summons expire if for some reason the chunk loading, or entity loading takes too long

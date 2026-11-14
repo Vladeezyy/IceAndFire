@@ -215,6 +215,13 @@ public final class FabricPlatform implements Platform {
     }
 
     @Override
+    public boolean canPlayerAttack(Player player, Entity target) {
+        // FAIL is a refusal and SUCCESS means another mod handled the hit itself: only PASS lets the attack go on
+        return net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.invoker()
+            .interact(player, player.level(), InteractionHand.MAIN_HAND, target, null) == net.minecraft.world.InteractionResult.PASS;
+    }
+
+    @Override
     public void onPlayerDestroyItem(Player player, ItemStack stack, @Nullable InteractionHand hand) {
     }
 

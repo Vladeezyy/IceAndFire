@@ -30,6 +30,10 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class MyrmexHive {
+    // ticks an aggressor is remembered after its last hit
+    private static final int AGRESSOR_MEMORY = 300;
+    // more distinct attackers within that time is a farm or a mass fight; read by every member every other tick
+    private static final int MAX_AGRESSORS = 64;
     private final List<BlockPos> foodRooms = Lists.newArrayList();
     private final List<BlockPos> babyRooms = Lists.newArrayList();
     private final List<BlockPos> miscRooms = Lists.newArrayList();
@@ -158,18 +162,44 @@ public class MyrmexHive {
     }
 
     public void addOrRenewAgressor(LivingEntity LivingEntityIn, int agressiveLevel) {
+        long gameTime = LivingEntityIn.level().getGameTime();
         for (HiveAggressor hive$villageaggressor : this.villageAgressors) {
             if (hive$villageaggressor.agressor == LivingEntityIn) {
                 hive$villageaggressor.agressionTime = this.tickCounter;
+                hive$villageaggressor.agressionGameTime = gameTime;
                 return;
             }
         }
+        pruneAgressors(gameTime);
+        if (this.villageAgressors.size() >= MAX_AGRESSORS) {
+            // the one that hit longest ago makes room
+            HiveAggressor oldest = this.villageAgressors.get(0);
+            for (HiveAggressor aggressor : this.villageAgressors) {
+                if (aggressor.agressionGameTime < oldest.agressionGameTime) {
+                    oldest = aggressor;
+                }
+            }
+            this.villageAgressors.remove(oldest);
+        }
+        this.villageAgressors.add(new HiveAggressor(LivingEntityIn, this.tickCounter, gameTime, agressiveLevel));
+    }
 
-        this.villageAgressors.add(new HiveAggressor(LivingEntityIn, this.tickCounter, agressiveLevel));
+    /**
+     * Drops dead (or unloaded) and expired aggressors. Only the queen ticks a hive ({@link #tick}): without one the hive
+     * counter stands still, so the game time expires them. With a ticking queen both clocks run alike and tick() has
+     * already dropped these.
+     */
+    private void pruneAgressors(long gameTime) {
+        if (!this.villageAgressors.isEmpty()) {
+            this.villageAgressors.removeIf(aggressor -> !aggressor.agressor.isAlive()
+                || Math.abs(this.tickCounter - aggressor.agressionTime) > AGRESSOR_MEMORY
+                || gameTime - aggressor.agressionGameTime > AGRESSOR_MEMORY);
+        }
     }
 
     @Nullable
     public LivingEntity findNearestVillageAggressor(LivingEntity LivingEntityIn) {
+        pruneAgressors(LivingEntityIn.level().getGameTime());
         double d0 = Double.MAX_VALUE;
         int previousAgressionLevel = 0;
         HiveAggressor hive$villageaggressor = null;
@@ -216,7 +246,7 @@ public class MyrmexHive {
         while (iterator.hasNext()) {
             HiveAggressor hive$villageaggressor = iterator.next();
 
-            if (!hive$villageaggressor.agressor.isAlive() || Math.abs(this.tickCounter - hive$villageaggressor.agressionTime) > 300) {
+            if (!hive$villageaggressor.agressor.isAlive() || Math.abs(this.tickCounter - hive$villageaggressor.agressionTime) > AGRESSOR_MEMORY) {
                 iterator.remove();
             }
         }
@@ -704,12 +734,16 @@ public class MyrmexHive {
 
     class HiveAggressor {
         public LivingEntity agressor;
+        // hive ticks (queen)
         public int agressionTime;
+        // game time of the last hit: expires it in a hive that is not ticked
+        public long agressionGameTime;
         public int agressionLevel;
 
-        HiveAggressor(LivingEntity agressorIn, int agressionTimeIn, int agressionLevel) {
+        HiveAggressor(LivingEntity agressorIn, int agressionTimeIn, long agressionGameTimeIn, int agressionLevel) {
             this.agressor = agressorIn;
             this.agressionTime = agressionTimeIn;
+            this.agressionGameTime = agressionGameTimeIn;
             this.agressionLevel = agressionLevel;
         }
     }
