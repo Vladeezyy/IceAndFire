@@ -99,7 +99,10 @@ public class SelfTest {
                 case 260 -> items(level);
                 case 270 -> wormLandPath(level);
                 case 272 -> groundBlast(level);
-                case 273 -> auditFixes(level);
+                case 273 -> {
+                    auditFixes(level);
+                    groundBlastChunks(level, false);
+                }
                 case 275 -> worldDataThreads(level);
                 case 280 -> features(server, level);
                 case 480 -> structures(server, level);
@@ -239,7 +242,7 @@ public class SelfTest {
     private static void groundBlast(ServerLevel level) {
         groundBlast(level, new BlockPos(0, level.getMaxY() - 40, -160), net.minecraft.world.level.Explosion.BlockInteraction.DESTROY);
         groundBlast(level, new BlockPos(16, level.getMaxY() - 40, -160), net.minecraft.world.level.Explosion.BlockInteraction.KEEP);
-        groundBlastChunks(level, false);
+        // released after the audit checks of the next tick (they need the entities of these chunks)
     }
 
     private static int blastWait;
@@ -463,7 +466,8 @@ public class SelfTest {
 
     /**
      * Fixes of the code audit of 2026-11-14 (beta.12): each check failed on the code before them. Runs in the forced
-     * chunks of the ground blasts (entity ticking since tick 272), 60 blocks below the top of the world.
+     * chunks of the ground blasts (entity ticking since tick 272, released right after), 60 blocks below the top of the
+     * world: in a chunk that is not entity ticking the gorgon head finds no mob at all.
      */
     private static void auditFixes(ServerLevel level) {
         MinecraftServer server = level.getServer();
