@@ -101,22 +101,22 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
   fix: CI green on mc/1.21.11, mc/26.1.2, mc/26.2, mc/26.3 (self-test NeoForge and Fabric, bug hunt with Lithium and
   PuzzlesLib); 26.3 self-test 43/43 on both loaders.
 
-## 2.1.13-beta.10 (2026-11-08): crash fixes after the CurseForge report and a code audit (1.21.1)
-
-- CurseForge report (2.1.13-beta.9, Fabric 26.3): client crashes in the projectiles, `ClassCastException: ClientLevel cannot be cast to ServerLevel`. Not on 1.21.1: `getGameRules()` and `spawnAtLocation(ServerLevel, …)` are not ServerLevel-only there. Only the feather item now drops on the server.
-- Right-click on a wall with a chained mob: the knot was created on the client too. On 1.21.1 its id comes from the constructor, so no crash; only a ghost knot in the chain list and a double placement sound. Fix: entities made in the interaction handler on the server only (`if (level.isClientSide()) return;` first).
-- First chain lost at once, no error: fresh chain data started with `isInitialized = false`, and its first tick rebuilt the list from the empty saved ids. Fix: fresh data starts initialized (`private boolean isInitialized = true;`); only deserialization sets it to false. The first-chain check passes on 1.21.1 with the fix.
-- Code audit (no report, not reproduced one by one): NBT indices clamped (troll variant and weapon, hippogryph variant and `EggOrdinal`, dragon egg `Color`, ice egg `Color` byte, pixie jar and house `PixieType`, dragon skull stage 1..5); dragon horn: `type.create` may return null, and `read("EntityUUID").orElse(null)` gave `setUUID(null)` and a server crash; myrmex staff screens rebuilt their widgets every frame (`renderables.clear()` + `addWidget`, `children` grew, old buttons answered clicks), now `clearWidgets()`, and the hive-null message runs through `enqueueWork`; cockatrice egg chance `nextInt(max + 1)` overflowed at `Integer.MAX_VALUE`. Covered by compiling and by the scenes not crashing.
-- Scene, new steps: projectiles with late feathers (the server sets `tickCount = -1000`, so the client removes them by its own age) and a chain to a wall (right-click on the wall with a chained mob).
-- Results: the scene caught the old feather, bubbles and hydra breath crashes and the old right-click chain crash on 26.3 Fabric. With the fixes it passes with 0 failed checks on 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, Fabric and NeoForge.
-- Server selftest: Fabric and NeoForge pass on this branch (39 checks, 0 failed, no slow chunks); all five versions × both loaders pass (10 runs, 2026-11-08). Only log noise in the errors: the Yggdrasil key fetch without network, and on 1.21.1 Fabric "No data fixer registered" for the mod's entities.
-
 ## Unreleased (2026-11-14): code audit, batches 1 and 2
 
-Branch `multiloader` (1.21.1). This branch has batch 2 only: 840f77a (fixes), 5f72302 (self-test), 8417eaf (breath strip fix),
-c11f693 (riding owner check by UUID). Batch 1 (b30a67f, b39840d) is on `mc/26.1.2` and is not merged here.
+Branch `multiloader` (1.21.1). Both batches are on this branch:
+- batch 1: 342702d (self-test), d336980 (fixes), 526ec4c and 3669c0a (self-test), dae1202 (gorgon temple worldgen fix);
+- batch 2: 840f77a (fixes), 5f72302 (self-test), 8417eaf (breath strip fix), c11f693 (riding owner check by UUID).
 
-Fixed (batch 2):
+Fixed, batch 1 (d336980; the gorgon temple fix is dae1202):
+- Podium and lectern menus check the block and the reach (an item dupe from far away or after the block was gone).
+- Siren data asks for a sync only when a charm ends; read-only uses of entity data no longer create it.
+- The gorgon head stops at the first block; a hippocampus gets its chest storage as soon as the chest is put in.
+- Dragon positions and hives save and load without a UUID; the hive wander radius loads. Staff edits of a hive add one room or entrance per message.
+- Scepter targets are written where they are read; pathfinding runs on the configured number of threads.
+- The summoning crystal only pulls a dragon bound to a crystal; pending summons and path tracking are cleared when the server stops; myrmex food and villager tag keys are made once.
+- The gorgon temple wrote into neighbouring chunks during world generation ("Accessing PalettedContainer from multiple threads"); it clears water only in the chunk being placed.
+
+Fixed, batch 2 (840f77a and co.):
 
 Multiplayer and PvP:
 - A client may get off a mob but no longer mount one by packet. The rider position a client sends is limited to one step per tick, in a loaded chunk, outside blocks.
@@ -193,6 +193,16 @@ Not done:
 - Stress scene "5 players and 30 villagers, packets per second".
 - Stress scene "flight over new chunks with lakes".
 - The rider position limit was not tested against "moved wrongly" of a death worm in sand with a real client.
+
+## 2.1.13-beta.10 (2026-11-08): crash fixes after the CurseForge report and a code audit (1.21.1)
+
+- CurseForge report (2.1.13-beta.9, Fabric 26.3): client crashes in the projectiles, `ClassCastException: ClientLevel cannot be cast to ServerLevel`. Not on 1.21.1: `getGameRules()` and `spawnAtLocation(ServerLevel, …)` are not ServerLevel-only there. Only the feather item now drops on the server.
+- Right-click on a wall with a chained mob: the knot was created on the client too. On 1.21.1 its id comes from the constructor, so no crash; only a ghost knot in the chain list and a double placement sound. Fix: entities made in the interaction handler on the server only (`if (level.isClientSide()) return;` first).
+- First chain lost at once, no error: fresh chain data started with `isInitialized = false`, and its first tick rebuilt the list from the empty saved ids. Fix: fresh data starts initialized (`private boolean isInitialized = true;`); only deserialization sets it to false. The first-chain check passes on 1.21.1 with the fix.
+- Code audit (no report, not reproduced one by one): NBT indices clamped (troll variant and weapon, hippogryph variant and `EggOrdinal`, dragon egg `Color`, ice egg `Color` byte, pixie jar and house `PixieType`, dragon skull stage 1..5); dragon horn: `type.create` may return null, and `read("EntityUUID").orElse(null)` gave `setUUID(null)` and a server crash; myrmex staff screens rebuilt their widgets every frame (`renderables.clear()` + `addWidget`, `children` grew, old buttons answered clicks), now `clearWidgets()`, and the hive-null message runs through `enqueueWork`; cockatrice egg chance `nextInt(max + 1)` overflowed at `Integer.MAX_VALUE`. Covered by compiling and by the scenes not crashing.
+- Scene, new steps: projectiles with late feathers (the server sets `tickCount = -1000`, so the client removes them by its own age) and a chain to a wall (right-click on the wall with a chained mob).
+- Results: the scene caught the old feather, bubbles and hydra breath crashes and the old right-click chain crash on 26.3 Fabric. With the fixes it passes with 0 failed checks on 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, Fabric and NeoForge.
+- Server selftest: Fabric and NeoForge pass on this branch (39 checks, 0 failed, no slow chunks); all five versions × both loaders pass (10 runs, 2026-11-08). Only log noise in the errors: the Yggdrasil key fetch without network, and on 1.21.1 Fabric "No data fixer registered" for the mod's entities.
 
 ## 2.1.13-beta.9 (2026-11-08, 26.2 and 26.3 only)
 
