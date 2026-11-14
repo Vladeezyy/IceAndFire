@@ -75,6 +75,11 @@ public class SelfTest {
                 tick--;
                 return;
             }
+            if (tick == 272 && !groundBlastReady(level) && blastWait++ < 400) {
+                // the forced chunks of the blasts reach entity ticking after their neighbours are loaded: slow on CI
+                tick--;
+                return;
+            }
             if (tick == 540 && !level.isPositionEntityTicking(PARTS_CHUNK.getMiddleBlockPosition(0)) && partsWait++ < 200) {
                 // the forced chunk reaches entity ticking a few ticks after its neighbours are loaded
                 tick--;
@@ -235,6 +240,13 @@ public class SelfTest {
         groundBlastChunks(level, false);
     }
 
+    private static int blastWait;
+
+    /** Both pigs' chunks (x 2 and 18 at z -160) are entity ticking. */
+    private static boolean groundBlastReady(ServerLevel level) {
+        return level.isPositionEntityTicking(new BlockPos(2, 64, -160)) && level.isPositionEntityTicking(new BlockPos(18, 64, -160));
+    }
+
     /**
      * No player on the server: a blast finds the entities of entity-ticking chunks only (a chunk loaded by setBlock alone
      * hides its entities). Forced long before the blasts, so the tickets are through on a slow CI machine.
@@ -270,7 +282,7 @@ public class SelfTest {
                 }
             }
             check(name + (destroy ? " breaks blocks" : " leaves them"), destroy ? left < 125 : left == 125, left + " of 125 blocks left");
-            check(name + " hurts a mob next to it", pig.isRemoved() || pig.getHealth() < pig.getMaxHealth(), "pig health " + pig.getHealth() + " of " + pig.getMaxHealth());
+            check(name + " hurts a mob next to it", pig.isRemoved() || pig.getHealth() < pig.getMaxHealth(), "pig health " + pig.getHealth() + " of " + pig.getMaxHealth() + ", entity ticking " + level.isPositionEntityTicking(pig.blockPosition()) + " after " + blastWait + " ticks of waiting");
         } catch (RuntimeException e) {
             check(name + " runs", false, e);
         } finally {
