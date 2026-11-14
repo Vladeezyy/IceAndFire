@@ -31,14 +31,24 @@ public class GorgonTempleProcessor extends StructureProcessor {
         // Workaround for https://bugs.mojang.com/browse/MC-130584
         // Due to a hardcoded field in Templates, any waterloggable blocks in structures replacing water in the world will become waterlogged.
         // Idea of workaround is detect if we are placing a waterloggable block and if so, remove the water in the world instead.
-        if (infoIn2.state().getBlock() instanceof SimpleWaterloggedBlock) {
-            if (worldReader.getFluidState(infoIn2.pos()).is(FluidTags.WATER)) {
-                ChunkPos currentChunk = new ChunkPos(infoIn2.pos());
-                worldReader.getChunk(currentChunk.x, currentChunk.z).setBlockState(infoIn2.pos(), Blocks.AIR.defaultBlockState(), false);
-            }
-        }
-
+        clearWater(worldReader, infoIn2, settings);
         return infoIn2;
+    }
+
+    /**
+     * Removes the water under a waterloggable block, only inside the chunk being placed (the box of the settings): the
+     * processor sees every block of the template, and the direct chunk write (past the checks of the world gen region)
+     * into a neighbour that another thread was still filling crashed the server with "Accessing PalettedContainer from
+     * multiple threads". Each block is cleared when its own chunk is placed.
+     */
+    public static void clearWater(LevelReader worldReader, StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings) {
+        if (!(info.state().getBlock() instanceof SimpleWaterloggedBlock)) {
+            return;
+        }
+        net.minecraft.world.level.levelgen.structure.BoundingBox box = settings.getBoundingBox();
+        if ((box == null || box.isInside(info.pos())) && worldReader.getFluidState(info.pos()).is(FluidTags.WATER)) {
+            worldReader.getChunk(info.pos()).setBlockState(info.pos(), Blocks.AIR.defaultBlockState(), false);
+        }
     }
 
     @Override
