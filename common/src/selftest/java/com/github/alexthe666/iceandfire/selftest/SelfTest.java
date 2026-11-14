@@ -75,6 +75,11 @@ public class SelfTest {
                 tick--;
                 return;
             }
+            if (tick == 273 && !level.isPositionEntityTicking(AUDIT_CHUNK.getMiddleBlockPosition(64)) && auditWait++ < 400) {
+                // the audit checks need the entities of their chunk: entity ticking, not only loaded
+                tick--;
+                return;
+            }
             if (tick == 540 && !level.isPositionEntityTicking(PARTS_CHUNK.getMiddleBlockPosition(0)) && partsWait++ < 200) {
                 // the forced chunk reaches entity ticking a few ticks after its neighbours are loaded
                 tick--;
@@ -89,10 +94,14 @@ public class SelfTest {
                 case 20 -> registries(server);
                 case 40 -> spawnAll(level);
                 case 240 -> checkSpawned(level);
+                case 250 -> level.setChunkForced(AUDIT_CHUNK.x, AUDIT_CHUNK.z, true);
                 case 260 -> items(level);
                 case 270 -> wormLandPath(level);
                 case 272 -> groundBlast(level);
-                case 273 -> auditFixes(level);
+                case 273 -> {
+                    auditFixes(level);
+                    level.setChunkForced(AUDIT_CHUNK.x, AUDIT_CHUNK.z, false);
+                }
                 case 275 -> worldDataThreads(level);
                 case 280 -> features(server, level);
                 case 480 -> structures(server, level);
@@ -247,16 +256,20 @@ public class SelfTest {
         }
     }
 
+    private static final ChunkPos AUDIT_CHUNK = new ChunkPos(-1, -10);
+    private static int auditWait;
+
     /**
-     * Fixes of the code audit of 2026-11-14 (beta.12): each check failed on the code before them. High above the chunks
-     * spawnAll keeps forced (z 64..79), away from its mobs.
+     * Fixes of the code audit of 2026-11-14 (beta.12): each check failed on the code before them. In its own forced chunk
+     * (forced at tick 250, released right after), 60 blocks below the top of the world: in a chunk that is not entity
+     * ticking the gorgon head finds no mob at all (the chunks of spawnAll are released at tick 240).
      */
     private static void auditFixes(ServerLevel level) {
         MinecraftServer server = level.getServer();
         net.minecraft.server.level.ServerPlayer player = new net.minecraft.server.level.ServerPlayer(server, level,
             new com.mojang.authlib.GameProfile(UUID.randomUUID(), "iaf_selftest"), net.minecraft.server.level.ClientInformation.createDefault());
         int y = level.getMaxBuildHeight() - 60;
-        BlockPos base = new BlockPos(2, y, 72);
+        BlockPos base = new BlockPos(-12, y, -150);
         List<Entity> made = new ArrayList<>();
         try {
             // podium and lectern: the menu is valid near its block entity only (an item came back with the chunk while
@@ -320,7 +333,9 @@ public class SelfTest {
                 level.addFreshEntity(mob);
                 made.add(mob);
                 player.setPos(base.getX() + 0.5, y, base.getZ() + 0.5);
+                // a living entity looks where its head points (getViewYRot is yHeadRot): the body yaw alone looked along +z
                 player.setYRot(-90);
+                player.setYHeadRot(-90);
                 player.setXRot(0);
                 IafItemRegistry.GORGON_HEAD.get().releaseUsing(new ItemStack(IafItemRegistry.GORGON_HEAD.get()), level, player, 0);
                 net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(base).inflate(10);
