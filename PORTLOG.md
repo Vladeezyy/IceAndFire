@@ -217,3 +217,92 @@ NeoForge 26.3.0.99, Fabric API 0.165.0, JEI 31.17, Rampart `1.1.0+26.3`. After `
 - Scene, new steps: projectiles with late feathers (the server sets `tickCount = -1000`, so the client removes them by its own age) and a chain to a wall (right-click on the wall with a chained mob).
 - Results: the scene caught the old feather, bubbles and hydra breath crashes and the old right-click chain crash on 26.3 Fabric. With the fixes it passes with 0 failed checks on 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, Fabric and NeoForge.
 - Server selftest: Fabric and NeoForge pass on this branch (40 checks, 0 failed, no slow chunks); all five versions × both loaders pass (10 runs, 2026-11-08). Only log noise in the errors: the Yggdrasil key fetch without network, and on 1.21.1 Fabric "No data fixer registered" for the mod's entities.
+
+## Unreleased (2026-11-14): code audit, batches 1 and 2
+
+Branch `mc/26.1.2`. Measurements and pregeneration below are from this branch (NeoForge 26.1.2 and Fabric 26.1.2).
+
+Fixed (both batches; batch 1: b30a67f, b39840d; batch 2: eba1e21, c681a97 self-test, 90f6d23 breath strip fix):
+
+Multiplayer and PvP:
+- A client may get off a mob but no longer mount one by packet. The rider position a client sends is limited to one step per tick, in a loaded chunk, outside blocks.
+- Chains go on no players and no other players' pets. The gorgon head and the cockatrice scepter spare other players' pets and respect PvP and claim mods (attack event); a refused target is asked again at most once a second.
+- The hive packet has an NBT quota of 256 KiB (see the deviations below).
+- Podium and lectern menus check the block and the reach (an item dupe from far away or after the block was gone).
+- The deathworm gauntlet and the scepter keep their use state per player, not in the item.
+- The right click handler runs on the server, main hand only.
+
+Fixes:
+- `isChained()` was inverted: wild dragons fly as long as meant; only chained or tame dragons go to a forge lure.
+- A crystal summon runs on the next tick, not inside the level's entity tracking callback.
+- Gorgon temple world generation wrote into neighbouring chunks ("Accessing PalettedContainer from multiple threads"); it clears water only in the chunk being placed.
+- The gorgon head stops at the first block (it turned mobs to stone through walls).
+- World data is kept per level (one static list was shared by all dimensions) and saved only when changed.
+- Read-only uses of entity data (attackers, falls, deaths, chains) no longer create it.
+- Dragon positions and hives save without a UUID (a null threw on every autosave); the hive wander radius loads.
+- A hippocampus gets its chest storage as soon as the chest is put in.
+- A baby dragon rides its owner's shoulder on the server too (since 1.21.11 the server refuses players as vehicles).
+- The scepter damage names its caster; scepter targets are written where they are read.
+- Pathfinding runs on the configured number of threads (the pool never grew past one).
+- Pending summons and path tracking are cleared when the server stops.
+- Siren data asks for a sync only when a charm ends.
+- Staff edits of a hive add one room or entrance per message; an empty hive message is ignored.
+- Fabric: nested drop captures; both `forEachModifier` overloads.
+
+Server performance:
+- Dragon breath: one ray per tick instead of about 100; blocks change every 5 ticks with the chances of all hits since; the fire is synced on a change and every 10 ticks, with a stop packet.
+- Dragonforge: the shape is read every 10 ticks, dragons are lured every 20.
+- Pathfinding: the chunk cache reaches at most 48 blocks past start and end (was 1.5 times the follow range); a path to a moving entity is not restarted every tick.
+- Myrmex: food is searched section by section with a pause after an empty search; cocoons through the block entities; far rooms load no chunks; at most 64 aggressors per hive.
+- Death worms and sirens sample their targets instead of reading whole cubes; the siren song packet only on a change.
+- Wild dragons look for mobs within 32 blocks of height (players: the whole range).
+- Animals look for feared mobs about once a second.
+- Dragon parts: the parent is cached, the size is refreshed only when it changes, pushes every other tick.
+- Flight targets of dragons, hippogryphs, birds and cockatrices load no chunks.
+- Dragon caves: a bit mask instead of hash sets, cut to the chunks a feature may write; the lake check reads the region's structure references.
+
+Client:
+- A dragon's pose is computed once per frame and replayed for its layers. Checked with `-Diceandfire.verifyPoseCache=true` (every replay also computed in full and compared): 4001 replays, 0 mismatches, on NeoForge and Fabric; the dragons screenshot shows whole dragons.
+
+Behaviour changes for players (release notes):
+- Wild dragons fly as long as meant (isChained was inverted); only chained or tame dragons go to a forge lure.
+- Wild dragons look for mobs only within 32 blocks above and below (players: the whole range).
+- Chains go on no players and no other players' pets; the gorgon head and the cockatrice scepter spare other players' pets and respect PvP and claim mods.
+- Animals react to feared mobs within about a second (were every other tick).
+- Breath: blocks change every 5 ticks with the chances of the hits since; the fire packet on a change and every 10 ticks.
+- Myrmex food search pauses after an empty search (food found up to 10 s later).
+- The scepter damage names its caster; the hive packet has an NBT quota of 256 KiB.
+
+Deviations from the audit plan:
+- Hive packet NBT quota: 256 KiB, not the 64 KiB of the plan (the packet had the default 2 MiB). A hive of several hundred rooms must pass; a hive over the quota is not sent (the writer drops it, the reader gets null).
+- Stuck digging of wild dragons stays off: `EntityDragonBase.WILD_DRAGONS_HANDLE_STUCK = false`, as in the original.
+
+Stress, NeoForge 26.1.2, seed 1234567, ms per tick (average, range over runs). "before" = stress base 0409e29; "after" = this batch.
+
+| Scene | before | after |
+|---|---|---|
+| idle (no mod entities, the vanilla base) | 0.86-1.18 | 1.04-1.38 |
+| breath (3 stage-5 fire dragons at a stone wall) | 8.47-9.98 | 1.99-2.40 |
+| hive-cold (40 myrmex workers, no food) | 2.48-3.47 | 2.02-2.41 |
+| hive | 2.06-3.61 | 1.92-2.42 |
+| farm (200 animals, a wild dragon 30 blocks away) | 5.59-7.31 | 5.74-7.30 (run noise 1.6 ms: no change) |
+| worms (2 death worms, 5 sirens) | 5.05-6.88 | 1.91-2.61 |
+| idle-end | 0.65-0.90 | 0.70-1.03 |
+
+p95: breath 12.4-13.8 -> 3.6-4.7; worms 14.8-18.8 -> 3.1-4.0; hive-cold 6.0-8.2 -> 3.7-3.9.
+
+Fabric 26.1.2, one run each. Before: idle 1.01, breath 8.34, hive-cold 2.90, hive 2.93, farm 6.81, worms 4.49, idle-end 0.76. After (fabA, before the breath strip fix): idle 1.17, breath 2.11, hive-cold 2.08, hive 2.39, farm 6.53, worms 2.40, idle-end 0.96.
+
+Behaviour evidence:
+- Breath wall blocks broken (39 checks): before 16058-16305; after 15528-15544. The throttled version before the strip fix broke 11283-11341; 90f6d23 fixed it.
+- Farm: 200/200 animals alive with the fear goal; the same flee counts by the end. Hive, worms and sirens: same as before.
+
+Pregeneration with C2ME (Fabric 26.1.2, C2ME 0.4.0-alpha.0.71+26.1.2, Chunky 1.5.66, radius 1000 = 16129 chunks): before (0409e29) 0:00:57, after 0:01:02, one run each, the same within run noise. No ERROR, "Caused by", ConcurrentModificationException, "Accessing PalettedContainer from multiple threads", "off the server thread" or saved-data warnings in either state; a restart of the same world is clean. Only noise: C2ME's mixin WARN `ca/spottedleaf/starlight/...` (ClassNotFoundException), the same in both states.
+
+Self-tests (server, both loaders):
+- 26.1.2 72/72; 26.2 72/72; 26.3 73/73; 1.21.11 72/72; 1.21.1 69/69 (68/69 before c11f693).
+
+Not done:
+- Stress scene "5 players and 30 villagers, packets per second".
+- Stress scene "flight over new chunks with lakes".
+- The rider position limit was not tested against "moved wrongly" of a death worm in sand with a real client.
