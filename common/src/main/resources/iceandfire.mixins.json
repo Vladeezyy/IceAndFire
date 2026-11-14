@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "LivingEntityFrictionMixin",
+    "ServerExplosionBlocksMixin",
     "ServerLevelEntityCallbacksMixin",
     "gen.NoLakesInStructuresMixin",
     "gen.WorldGenRegionMixin"
