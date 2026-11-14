@@ -98,6 +98,7 @@ public class SelfTest {
                 case 260 -> items(level);
                 case 270 -> wormLandPath(level);
                 case 272 -> groundBlast(level);
+                case 273 -> auditFixes(level);
                 case 275 -> worldDataThreads(level);
                 case 280 -> features(server, level);
                 case 480 -> structures(server, level);
@@ -452,6 +453,165 @@ public class SelfTest {
             }
         }
         check("repair ingredients not empty", noRepair.isEmpty(), noRepair);
+    }
+
+    private static Entity vanilla(ServerLevel level, String id) {
+        // 26.2+ moved the vanilla entity type constants: through the registry on every version
+        return BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace(id)).create(level, EntitySpawnReason.COMMAND);
+    }
+
+    /**
+     * Fixes of the code audit of 2026-11-14 (beta.12): each check failed on the code before them. Runs in the forced
+     * chunks of the ground blasts (entity ticking since tick 272), 60 blocks below the top of the world.
+     */
+    private static void auditFixes(ServerLevel level) {
+        MinecraftServer server = level.getServer();
+        net.minecraft.server.level.ServerPlayer player = new net.minecraft.server.level.ServerPlayer(server, level,
+            new com.mojang.authlib.GameProfile(UUID.randomUUID(), "iaf_selftest"), net.minecraft.server.level.ClientInformation.createDefault());
+        int y = level.getMaxY() - 60;
+        BlockPos base = new BlockPos(-12, y, -150);
+        List<Entity> made = new ArrayList<>();
+        try {
+            // podium and lectern: the menu is valid near its block entity only (an item came back with the chunk while
+            // the open menu took it out of the unloaded block entity)
+            for (net.minecraft.world.level.block.Block block : List.of(com.github.alexthe666.iceandfire.block.IafBlockRegistry.PODIUM_OAK.get(), com.github.alexthe666.iceandfire.block.IafBlockRegistry.LECTERN.get())) {
+                String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+                level.setBlockAndUpdate(base, block.defaultBlockState());
+                if (!(level.getBlockEntity(base) instanceof net.minecraft.world.Container container)) {
+                    check(name + " menu only near its block", false, level.getBlockEntity(base));
+                    continue;
+                }
+                player.setPos(base.getX() + 0.5, y, base.getZ() + 2.5);
+                boolean near = container.stillValid(player);
+                player.setPos(base.getX() + 0.5, y, base.getZ() + 40.5);
+                boolean far = container.stillValid(player);
+                level.removeBlock(base, false);
+                player.setPos(base.getX() + 0.5, y, base.getZ() + 2.5);
+                boolean gone = container.stillValid(player);
+                check(name + " menu only near its block", near && !far && !gone, "near " + near + ", 40 blocks away " + far + ", block removed " + gone);
+            }
+
+            // siren: data without a charm asks for no client sync (the whole entity data went to the player and everyone
+            // tracking it every tick)
+            var villager = (net.minecraft.world.entity.LivingEntity) vanilla(level, "villager");
+            var siren = EntityDataProvider.getCapability(villager).orElseThrow().sirenData;
+            siren.doesClientNeedUpdate();
+            siren.tickCharmed(villager);
+            boolean first = siren.doesClientNeedUpdate();
+            siren.tickCharmed(villager);
+            boolean second = siren.doesClientNeedUpdate();
+            check("siren data without a charm asks for no sync", !first && !second, "tick 1 " + first + ", tick 2 " + second);
+
+            // cockatrice scepter: its targets reach the client (written next to miscData, read from it)
+            var misc = EntityDataProvider.getCapability(villager).orElseThrow().miscData;
+            misc.addScepterTarget((net.minecraft.world.entity.LivingEntity) vanilla(level, "pig"));
+            CompoundTag miscTag = new CompoundTag();
+            misc.serialize(miscTag);
+            check("scepter targets in the synced data", miscTag.getCompoundOrEmpty("miscData").getIntArray("targetedByScepterIds").map(ids -> ids.length == 1).orElse(false), miscTag);
+
+            // a mob that attacks gets no entity data of the mod (it was made, saved and ticked for every attacker)
+            var attacked = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+            attacked.setPos(base.getX() + 0.5, y, base.getZ() - 3.5);
+            level.addFreshEntity(attacked);
+            made.add(attacked);
+            var attacker = (net.minecraft.world.entity.LivingEntity) vanilla(level, "zombie");
+            attacker.setPos(base.getX() + 1.5, y, base.getZ() - 3.5);
+            attacked.hurtServer(level, level.damageSources().mobAttack(attacker), 1);
+            check("an attacker gets no entity data", EntityDataProvider.getExisting(attacker).isEmpty() && attacked.getHealth() < attacked.getMaxHealth(), "attacker data " + EntityDataProvider.getExisting(attacker).isPresent() + ", health " + attacked.getHealth());
+
+            // gorgon head: no stone through a wall (it removed tamed dragons and pets behind walls); without the wall it
+            // still turns the mob to stone
+            BlockPos wall = base.offset(3, 1, 0);
+            for (boolean walled : new boolean[]{true, false}) {
+                if (walled) {
+                    level.setBlockAndUpdate(wall, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+                } else {
+                    level.removeBlock(wall, false);
+                }
+                var mob = (net.minecraft.world.entity.LivingEntity) vanilla(level, "pig");
+                mob.setPos(base.getX() + 6.5, y + 1, base.getZ() + 0.5);
+                level.addFreshEntity(mob);
+                made.add(mob);
+                player.setPos(base.getX() + 0.5, y, base.getZ() + 0.5);
+                player.setYRot(-90);
+                player.setXRot(0);
+                IafItemRegistry.GORGON_HEAD.get().releaseUsing(new ItemStack(IafItemRegistry.GORGON_HEAD.get()), level, player, 0);
+                net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(base).inflate(10);
+                List<com.github.alexthe666.iceandfire.entity.EntityStoneStatue> statues = level.getEntitiesOfClass(com.github.alexthe666.iceandfire.entity.EntityStoneStatue.class, box);
+                made.addAll(statues);
+                boolean stone = mob.isRemoved() && !statues.isEmpty();
+                check(walled ? "gorgon head not through a wall" : "gorgon head turns a mob to stone", walled != stone, "removed " + mob.isRemoved() + ", statues " + statues.size());
+                statues.forEach(Entity::discard);
+            }
+
+            // hippocampus: a chest put in through the menu opens the storage at once (its slots threw and ate the items)
+            var hippo = IafEntityRegistry.HIPPOCAMPUS.get().create(level, EntitySpawnReason.COMMAND);
+            hippo.inventory.setItem(com.github.alexthe666.iceandfire.entity.EntityHippocampus.INV_SLOT_CHEST, new ItemStack(net.minecraft.world.level.block.Blocks.CHEST));
+            check("hippocampus storage right after a chest", hippo.isChested() && hippo.inventory.getContainerSize() == 18, "chested " + hippo.isChested() + ", slots " + hippo.inventory.getContainerSize());
+
+            // world data with an entry without its UUID loads and saves (NPE on every autosave)
+            CompoundTag dragons = new CompoundTag();
+            net.minecraft.nbt.ListTag dragonMap = new net.minecraft.nbt.ListTag();
+            CompoundTag noUuid = new CompoundTag();
+            noUuid.putInt("DragonPosX", 1);
+            dragonMap.add(noUuid);
+            dragons.put("DragonMap", dragonMap);
+            check("dragon positions without a UUID save", saves(() -> new com.github.alexthe666.iceandfire.world.DragonPosWorldData().load(dragons).save(new CompoundTag(), level.registryAccess())), dragons);
+            CompoundTag hiveTag = new CompoundTag();
+            net.minecraft.nbt.ListTag members = new net.minecraft.nbt.ListTag();
+            members.add(new CompoundTag());
+            hiveTag.put("HiveMembers", members);
+            var loadedHive = com.github.alexthe666.iceandfire.entity.util.MyrmexHive.fromNBT(hiveTag);
+            check("hive without UUIDs saves", loadedHive.hiveUUID != null && saves(loadedHive::toNBT), "hive " + loadedHive.hiveUUID);
+
+            // hive: the wander radius is saved (read with the UUID codec, never loaded)
+            var wander = new com.github.alexthe666.iceandfire.entity.util.MyrmexHive();
+            wander.setWanderRadius(30);
+            int wanderLoaded = com.github.alexthe666.iceandfire.entity.util.MyrmexHive.fromNBT(wander.toNBT()).getWanderRadius();
+            check("hive wander radius saved", wanderLoaded == 30, wanderLoaded);
+
+            // staff edits of a hive: one room per edit (a client could send thousands, merged on the main thread)
+            player.setPos(base.getX() + 0.5, y, base.getZ() + 0.5);
+            var real = new com.github.alexthe666.iceandfire.entity.util.MyrmexHive();
+            int many = applyRooms(real, player, base, 1000);
+            check("hive edit with a thousand rooms refused", many == 0, many + " food rooms");
+            int one = applyRooms(real, player, base, 1);
+            check("hive edit with one room applied", one == 1, one + " food rooms");
+
+            // pathfinding: the configured number of threads (a pool with an unbounded queue never grew past one)
+            int threads = com.github.alexthe666.iceandfire.pathfinding.raycoms.Pathfinding.getExecutor().getCorePoolSize();
+            int expected = Math.max(1, Math.min(com.github.alexthe666.iceandfire.IafConfig.dragonPathfindingThreads, Runtime.getRuntime().availableProcessors()));
+            check("pathfinding threads", threads == expected, threads + " of " + expected);
+        } finally {
+            made.forEach(Entity::discard);
+            level.removeBlock(base.offset(3, 1, 0), false);
+        }
+    }
+
+    private static boolean saves(Runnable save) {
+        try {
+            save.run();
+            return true;
+        } catch (RuntimeException e) {
+            IceAndFire.LOGGER.error("[selftest] save failed", e);
+            return false;
+        }
+    }
+
+    /** A staff edit of the hive from the client that adds {@code count} food rooms near the player; returns its food rooms (all rooms count the center too). */
+    private static int applyRooms(com.github.alexthe666.iceandfire.entity.util.MyrmexHive real, net.minecraft.world.entity.player.Player player, BlockPos base, int count) {
+        CompoundTag edit = real.toNBT();
+        net.minecraft.nbt.ListTag rooms = new net.minecraft.nbt.ListTag();
+        for (int i = 0; i < count; i++) {
+            CompoundTag room = new CompoundTag();
+            room.putInt("X", base.getX() + i % 10);
+            room.putInt("Y", base.getY() - 2 - i / 100);
+            room.putInt("Z", base.getZ() + (i / 10) % 10);
+            rooms.add(room);
+        }
+        edit.put("FoodRooms", rooms);
+        real.applyStaffEdits(com.github.alexthe666.iceandfire.entity.util.MyrmexHive.fromNBT(edit), player);
+        return real.getRooms(com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive.RoomType.FOOD).size();
     }
 
     private static final int GEN_RADIUS = 20;
