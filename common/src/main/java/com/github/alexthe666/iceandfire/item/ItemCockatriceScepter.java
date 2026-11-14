@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 public class ItemCockatriceScepter extends Item {
 
     private final Random rand = new Random();
-    private int specialWeaponDmg;
+    // The wear of a use lives in the caster's MiscData (scepterWear): a field here was shared by all players
 
     public ItemCockatriceScepter() {
         super(dev.vladeezyy.iceandfire.platform.Registrar.itemProps()/*.tab(IceAndFire.TAB_ITEMS)*/.durability(700));
@@ -51,12 +51,13 @@ public class ItemCockatriceScepter extends Item {
 
     @Override
     public boolean releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity livingEntity, int timeLeft) {
-        if (specialWeaponDmg > 0) {
-            stack.hurtAndBreak(specialWeaponDmg, livingEntity, livingEntity.getUsedItemHand().asEquipmentSlot());
-            specialWeaponDmg = 0;
-        }
-
-        EntityDataProvider.getCapability(livingEntity).ifPresent(data -> data.miscData.getTargetedByScepter().clear());
+        EntityDataProvider.getExisting(livingEntity).ifPresent(data -> {
+            if (data.miscData.scepterWear > 0) {
+                stack.hurtAndBreak(data.miscData.scepterWear, livingEntity, livingEntity.getUsedItemHand().asEquipmentSlot());
+                data.miscData.scepterWear = 0;
+            }
+            data.miscData.getTargetedByScepter().clear();
+        });
         return true;
     }
 
@@ -123,7 +124,28 @@ public class ItemCockatriceScepter extends Item {
                     return;
                 }
 
-                EntityDataProvider.getCapability(player).ifPresent(data -> data.miscData.addScepterTarget(target));
+                Player caster = (Player) player;
+                EntityDataProvider.getCapability(player).ifPresent(data -> {
+                    // Other players' pets, PvP off and claims stop the beam. Asked once a target, a refusal again at most
+                    // once a second: the event every tick repeated a claim mod's refusal message 20 times a second
+                    var misc = data.miscData;
+                    if (misc.getTargetedByScepter().contains(target)) {
+                        return;
+                    }
+                    long now = level.getGameTime();
+                    if (now - misc.scepterRefusedAt >= 20 || now < misc.scepterRefusedAt) {
+                        misc.scepterRefused.clear();
+                        misc.scepterRefusedAt = now;
+                    }
+                    if (misc.scepterRefused.contains(target.getId())) {
+                        return;
+                    }
+                    if (com.github.alexthe666.iceandfire.entity.util.IafAttackRules.mayHarm(caster, target)) {
+                        misc.addScepterTarget(target);
+                    } else {
+                        misc.scepterRefused.add(target.getId());
+                    }
+                });
             }
 
             attackTargets(player);
@@ -143,8 +165,10 @@ public class ItemCockatriceScepter extends Item {
                 target.addEffect(new MobEffectInstance(MobEffects.WITHER, 40, 2));
 
                 if (caster.tickCount % 20 == 0) {
-                    specialWeaponDmg++;
-                    target.hurt(caster.level().damageSources().wither(), 2);
+                    data.miscData.scepterWear++;
+                    // with the caster as the attacker: without one, PvP off, kill credit and claim mods missed it
+                    target.hurt(new net.minecraft.world.damagesource.DamageSource(caster.level().registryAccess()
+                        .lookupOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getOrThrow(net.minecraft.world.damagesource.DamageTypes.WITHER), caster), 2);
                 }
 
                 drawParticleBeam(caster, target);

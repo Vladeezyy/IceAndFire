@@ -36,6 +36,7 @@ import com.github.alexthe666.iceandfire.world.MyrmexWorldData;
 import com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -103,6 +104,10 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
     private int animationTick;
     private Animation currentAnimation;
     private MyrmexHive hive;
+    // isInHive() of this game tick and position
+    private long inHiveTick = Long.MIN_VALUE;
+    private double inHiveX, inHiveY, inHiveZ;
+    private boolean inHive;
     private int timeUntilReset;
     private boolean leveledUp;
     @Nullable
@@ -590,6 +595,7 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
 
     public void setHive(MyrmexHive newHive) {
         hive = newHive;
+        this.inHiveTick = Long.MIN_VALUE;
         if (hive != null) {
             hive.addMyrmex(this);
         }
@@ -627,14 +633,81 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         return false;
     }
 
+    /**
+     * Several goals ask this in the same AI tick (forage, store items, enter and leave the hive): computed once per
+     * tick. Uses {@link #getInHiveDistanceSq()}.
+     */
     public boolean isInHive() {
-        if (getHive() != null) {
-            for (BlockPos pos : getHive().getAllRooms()) {
-                if (isCloseEnoughToTarget(MyrmexHive.getGroundedPos(level(), pos), 50))
-                    return true;
-            }
+        long now = level().getGameTime();
+        // also when moved since (a teleport or a test in the same tick)
+        if (now != this.inHiveTick || this.getX() != this.inHiveX || this.getY() != this.inHiveY || this.getZ() != this.inHiveZ) {
+            this.inHiveTick = now;
+            this.inHiveX = this.getX();
+            this.inHiveY = this.getY();
+            this.inHiveZ = this.getZ();
+            this.inHive = isNearHiveRoom(getInHiveDistanceSq());
+        }
+        return this.inHive;
+    }
+
+    /** Squared distance to the grounded centre of a room that counts as being in the hive. */
+    protected double getInHiveDistanceSq() {
+        return 50;
+    }
+
+    private boolean isNearHiveRoom(double distanceSq) {
+        MyrmexHive hive = getHive();
+        if (hive == null) {
+            return false;
+        }
+        // the lists themselves: getAllRooms() rebuilds a list on every call
+        if (isNearRoom(hive.getCenter(), distanceSq)) {
+            return true;
+        }
+        for (BlockPos pos : hive.getRooms(WorldGenMyrmexHive.RoomType.FOOD)) {
+            if (isNearRoom(pos, distanceSq)) return true;
+        }
+        for (BlockPos pos : hive.getRooms(WorldGenMyrmexHive.RoomType.NURSERY)) {
+            if (isNearRoom(pos, distanceSq)) return true;
+        }
+        // any other type gives the misc rooms
+        for (BlockPos pos : hive.getRooms(WorldGenMyrmexHive.RoomType.DEFAULT)) {
+            if (isNearRoom(pos, distanceSq)) return true;
         }
         return false;
+    }
+
+    private boolean isNearRoom(BlockPos room, double distanceSq) {
+        // Grounding moves a room only down, so a room farther than this sideways is out of range: no block reads for
+        // it (they also loaded the chunks of far rooms on the server thread)
+        double dx = this.getX() - (room.getX() + 0.5D);
+        double dz = this.getZ() - (room.getZ() + 0.5D);
+        if (dx * dx + dz * dz > distanceSq || !isLoadedAt(level(), room)) {
+            return false;
+        }
+        return isCloseEnoughToTarget(MyrmexHive.getGroundedPos(level(), room), distanceSq);
+    }
+
+    /** {@link MyrmexHive#getGroundedPos} that does not load a chunk: a target in an unloaded chunk is used as it is. */
+    public BlockPos groundedPos(BlockPos pos) {
+        return isLoadedAt(level(), pos) ? MyrmexHive.getGroundedPos(level(), pos) : pos;
+    }
+
+    /** Reading a block of an unloaded chunk loads it on the server thread; this only looks. */
+    public static boolean isLoadedAt(Level level, BlockPos pos) {
+        return level.getChunkSource().getChunkNow(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ())) != null;
+    }
+
+    /** True if every chunk of the block area is loaded (see {@link #isLoadedAt}). */
+    public static boolean isAreaLoaded(Level level, int minX, int minZ, int maxX, int maxZ) {
+        for (int cx = SectionPos.blockToSectionCoord(minX); cx <= SectionPos.blockToSectionCoord(maxX); cx++) {
+            for (int cz = SectionPos.blockToSectionCoord(minZ); cz <= SectionPos.blockToSectionCoord(maxZ); cz++) {
+                if (level.getChunkSource().getChunkNow(cx, cz) == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

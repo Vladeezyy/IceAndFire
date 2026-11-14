@@ -32,7 +32,6 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -46,6 +45,7 @@ public class EntityFireDragon extends EntityDragonBase {
     public static final ResourceKey<LootTable> FEMALE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/dragon/fire_dragon_female"));
     public static final ResourceKey<LootTable> MALE_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/dragon/fire_dragon_male"));
     public static final ResourceKey<LootTable> SKELETON_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("iceandfire", "entities/dragon/fire_dragon_skeleton"));
+    private final IafDragonDestructionManager.BreathState breath = new IafDragonDestructionManager.BreathState();
 
     public EntityFireDragon(Level worldIn) {
         this(IafEntityRegistry.FIRE_DRAGON.get(), worldIn);
@@ -419,11 +419,21 @@ public class EntityFireDragon extends EntityDragonBase {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        IafDragonDestructionManager.afterDragonTick(this, breath, EnumParticles.DragonFire);
+    }
+
+    @Override
     public void stimulateFire(double burnX, double burnY, double burnZ, int syncType) {
+        if (syncType == MessageDragonSyncFire.BREATH_STOPPED) {
+            IafDragonDestructionManager.onBreathStopped(breath);
+            return;
+        }
         if (dev.vladeezyy.iceandfire.bus.IafBus.post(new DragonFireEvent(this, burnX, burnY, burnZ))) return;
         if (syncType == 1 && !level().isClientSide()) {
-            //sync with client
-            IceAndFire.sendMSGToTracking(this, new MessageDragonSyncFire(this.getId(), burnX, burnY, burnZ, 0));
+            //sync with client, only when needed: the clients draw the flame in between
+            IafDragonDestructionManager.syncBreath(this, breath, burnX, burnY, burnZ);
         }
         if (syncType == 2 && level().isClientSide()) {
             //sync with server
@@ -465,38 +475,11 @@ public class EntityFireDragon extends EntityDragonBase {
         this.burnParticleX = burnX;
         this.burnParticleY = burnY;
         this.burnParticleZ = burnZ;
-        Vec3 headPos = getHeadPosition();
-        double d2 = burnX - headPos.x;
-        double d3 = burnY - headPos.y;
-        double d4 = burnZ - headPos.z;
-        double distance = Math.max(2.5F * this.distanceToSqr(burnX, burnY, burnZ), 0);
-        double conqueredDistance = burnProgress / 40D * distance;
-        int increment = (int) Math.ceil(conqueredDistance / 100);
-        int particleCount = this.getDragonStage() <= 3 ? 6 : 3;
-        for (int i = 0; i < conqueredDistance; i += increment) {
-            double progressX = headPos.x + d2 * (i / (float) distance);
-            double progressY = headPos.y + d3 * (i / (float) distance);
-            double progressZ = headPos.z + d4 * (i / (float) distance);
-            if (canPositionBeSeen(progressX, progressY, progressZ)) {
-                if (level().isClientSide() && random.nextInt(particleCount) == 0) {
-                    IceAndFire.PROXY.spawnDragonParticle(EnumParticles.DragonFire, headPos.x, headPos.y, headPos.z, 0, 0, 0, this);
-                }
-            } else {
-                if (!level().isClientSide()) {
-                    HitResult result = this.level().clip(new ClipContext(new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(progressX, progressY, progressZ), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
-                    Vec3 vec3 = result.getLocation();
-                    BlockPos pos = BlockPos.containing(vec3);
-                    IafDragonDestructionManager.destroyAreaBreath(level(), pos, this);
-                }
-            }
-        }
-        if (burnProgress >= 40D && canPositionBeSeen(burnX, burnY, burnZ)) {
-            double spawnX = burnX + (random.nextFloat() * 3.0) - 1.5;
-            double spawnY = burnY + (random.nextFloat() * 3.0) - 1.5;
-            double spawnZ = burnZ + (random.nextFloat() * 3.0) - 1.5;
-            if (!level().isClientSide()) {
-                IafDragonDestructionManager.destroyAreaBreath(level(), BlockPos.containing(spawnX, spawnY, spawnZ), this);
-            }
+        if (level().isClientSide()) {
+            // The flame is drawn every tick in tick(), not once per message
+            IafDragonDestructionManager.onBreathSync(breath);
+        } else {
+            IafDragonDestructionManager.breathServer(this, breath, burnX, burnY, burnZ);
         }
     }
 

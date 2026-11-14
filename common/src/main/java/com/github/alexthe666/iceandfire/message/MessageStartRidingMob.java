@@ -53,9 +53,14 @@ public class MessageStartRidingMob implements CustomPacketPayload {
 
             context.enqueueWork(() -> {
                 Player player = context.player();
+                boolean fromClient = context.flow() != net.minecraft.network.protocol.PacketFlow.CLIENTBOUND;
 
-                if (context.flow() == net.minecraft.network.protocol.PacketFlow.CLIENTBOUND) {
+                if (!fromClient) {
                     player = IceAndFire.PROXY.getClientSidePlayer();
+                } else if (message.ride) {
+                    // A client may only get off: it seated forced riders past the saddle, the passenger limit and walls.
+                    // Mounting goes through the click on the mob (mobInteract).
+                    return;
                 }
 
                 if (player != null) {
@@ -71,8 +76,10 @@ public class MessageStartRidingMob implements CustomPacketPayload {
                                 }
                             } else {
                                 if (message.baby) {
-                                    tamable.stopRiding();
-                                } else {
+                                    if (!fromClient || tamable.getVehicle() == player) {
+                                        tamable.stopRiding();
+                                    }
+                                } else if (!fromClient || player.getVehicle() == tamable) {
                                     player.stopRiding();
                                 }
                             }
