@@ -52,6 +52,10 @@ public class MessageGetMyrmexHive implements CustomPacketPayload {
         public static void handle(final MessageGetMyrmexHive message, final PacketContext context) {
 
             context.enqueueWork(() -> {
+                // an empty tag reads as null: fromNBT threw on the main thread
+                if (message.hive == null) {
+                    return;
+                }
                 MyrmexHive receivedHive = MyrmexHive.fromNBT(message.hive);
                 if (context.flow() == net.minecraft.network.protocol.PacketFlow.CLIENTBOUND) {
                     CompoundTag tag = new CompoundTag();
