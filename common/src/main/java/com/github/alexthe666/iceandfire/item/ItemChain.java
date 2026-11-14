@@ -34,19 +34,24 @@ public class ItemChain extends Item {
         this.sticky = sticky;
     }
 
+    /** Reach of the searches for mobs chained to a player or to a mob (a chain pulls back beyond 7 blocks) */
+    public static final double CHAIN_SEARCH = 16.0D;
+
     public static void attachToFence(Player player, Level worldIn, BlockPos fence) {
         // the server ties the knot: the wall click also fires on the client, where a knot made there has no entity id
         // (26.2 and newer crash on it) and only plays the placement sound a second time
         if (worldIn.isClientSide()) {
             return;
         }
-        double d0 = 30.0D;
+        // A chain holds within 7 blocks (ChainData): 16 is enough. 30 and getCapability walked a 60-block cube and gave
+        // mod data to every mob in it on any click at a wall
+        double d0 = CHAIN_SEARCH;
         int i = fence.getX();
         int j = fence.getY();
         int k = fence.getZ();
 
         for (LivingEntity livingEntity : worldIn.getEntitiesOfClass(LivingEntity.class, new AABB((double) i - d0, (double) j - d0, (double) k - d0, (double) i + d0, (double) j + d0, (double) k + d0))) {
-            EntityDataProvider.getCapability(livingEntity).ifPresent(data -> {
+            EntityDataProvider.getExisting(livingEntity).ifPresent(data -> {
                 if (data.chainData.isChainedTo(player)) {
                     EntityChainTie entityleashknot = EntityChainTie.getKnotForPosition(worldIn, fence);
 
@@ -73,13 +78,17 @@ public class ItemChain extends Item {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, @NotNull Player playerIn, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
+        // Not on players (tied to a wall they could not walk away) nor on other players' pets
+        if (target instanceof Player || com.github.alexthe666.iceandfire.entity.util.IafAttackRules.isForeignPet(target, playerIn)) {
+            return InteractionResult.PASS;
+        }
         EntityDataProvider.getCapability(target).ifPresent(targetData -> {
             if (targetData.chainData.isChainedTo(playerIn)) {
                 return;
             }
 
             if (sticky) {
-                double d0 = 60.0D;
+                double d0 = CHAIN_SEARCH;
                 double i = playerIn.getX();
                 double j = playerIn.getY();
                 double k = playerIn.getZ();
@@ -89,7 +98,7 @@ public class ItemChain extends Item {
                     targetData.chainData.clearChains();
 
                     for (LivingEntity livingEntity : nearbyEntities) {
-                        EntityDataProvider.getCapability(livingEntity).ifPresent(nearbyData -> nearbyData.chainData.removeChain(target));
+                        EntityDataProvider.getExisting(livingEntity).ifPresent(nearbyData -> nearbyData.chainData.removeChain(target));
                     }
 
                     return;
@@ -98,7 +107,7 @@ public class ItemChain extends Item {
                 AtomicBoolean flag = new AtomicBoolean(false);
 
                 for (LivingEntity livingEntity : nearbyEntities) {
-                    EntityDataProvider.getCapability(livingEntity).ifPresent(nearbyData -> {
+                    EntityDataProvider.getExisting(livingEntity).ifPresent(nearbyData -> {
                         if (nearbyData.chainData.isChainedTo(playerIn)) {
                             targetData.chainData.removeChain(playerIn);
                             nearbyData.chainData.removeChain(playerIn);

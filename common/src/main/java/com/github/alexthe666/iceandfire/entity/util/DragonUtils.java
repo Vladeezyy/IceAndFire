@@ -33,15 +33,33 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class DragonUtils {
+    /**
+     * Flight and move candidates can lie past the loaded area (80+ blocks out for an adult dragon, or around a far home):
+     * a heightmap or block read there loads, or even generates, the chunk on the main thread. True when the candidate's
+     * chunk and every chunk a raycast from the mob to it can cross are loaded.
+     */
+    private static boolean isLoadedTo(Entity from, BlockPos to) {
+        Level level = from.level();
+        if (!level.hasChunkAt(to)) {
+            return false;
+        }
+        int x = from.getBlockX();
+        int z = from.getBlockZ();
+        return level.hasChunksAt(Math.min(x, to.getX()), Math.min(z, to.getZ()), Math.max(x, to.getX()), Math.max(z, to.getZ()));
+    }
+
     public static BlockPos getBlockInViewEscort(EntityDragonBase dragon) {
         BlockPos escortPos = dragon.getEscortPosition();
+        if (!dragon.level().hasChunkAt(escortPos)) {
+            return null;
+        }
         BlockPos ground = dragon.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, escortPos);
         int distFromGround = escortPos.getY() - ground.getY();
         for (int i = 0; i < 10; i++) {
             BlockPos pos = new BlockPos(escortPos.getX() + dragon.getRandom().nextInt(IafConfig.dragonWanderFromHomeDistance) - IafConfig.dragonWanderFromHomeDistance / 2,
                 (distFromGround > 16 ? escortPos.getY() : escortPos.getY() + 8 + dragon.getRandom().nextInt(16)),
                 (escortPos.getZ() + dragon.getRandom().nextInt(IafConfig.dragonWanderFromHomeDistance) - IafConfig.dragonWanderFromHomeDistance / 2));
-            if (dragon.getDistanceSquared(Vec3.atCenterOf(pos)) > 6 && !dragon.isTargetBlocked(Vec3.atCenterOf(pos))) {
+            if (dragon.getDistanceSquared(Vec3.atCenterOf(pos)) > 6 && isLoadedTo(dragon, pos) && !dragon.isTargetBlocked(Vec3.atCenterOf(pos))) {
                 return pos;
             }
         }
@@ -57,7 +75,8 @@ public class DragonUtils {
             return dragon.blockPosition();
         }
         // Takes off if the escort position is no longer in water, mainly for using elytra to fly out of the water
-        if (inWaterEscortPos.getY() - dragon.getY() > 8 + dragon.getYNavSize() && !dragon.level().getFluidState(inWaterEscortPos.below()).is(FluidTags.WATER)) {
+        if (inWaterEscortPos.getY() - dragon.getY() > 8 + dragon.getYNavSize() && dragon.level().hasChunkAt(inWaterEscortPos)
+                && !dragon.level().getFluidState(inWaterEscortPos.below()).is(FluidTags.WATER)) {
             dragon.setHovering(true);
         }
         // Swim directly to the escort position
@@ -75,7 +94,7 @@ public class DragonUtils {
             for (int i = 0; i < 10; i++) {
                 BlockPos homePos = dragon.homePos.getPosition();
                 BlockPos pos = new BlockPos(homePos.getX() + dragon.getRandom().nextInt(IafConfig.dragonWanderFromHomeDistance * 2) - IafConfig.dragonWanderFromHomeDistance, (distFromGround > 16 ? (int) Math.min(IafConfig.maxDragonFlight, dragon.getY() + dragon.getRandom().nextInt(16) - 8) : (int) dragon.getY() + dragon.getRandom().nextInt(16) + 1), (homePos.getZ() + dragon.getRandom().nextInt(IafConfig.dragonWanderFromHomeDistance * 2) - IafConfig.dragonWanderFromHomeDistance));
-                if (dragon.getDistanceSquared(Vec3.atCenterOf(pos)) > 6 && !dragon.isTargetBlocked(Vec3.atCenterOf(pos))) {
+                if (dragon.getDistanceSquared(Vec3.atCenterOf(pos)) > 6 && isLoadedTo(dragon, pos) && !dragon.isTargetBlocked(Vec3.atCenterOf(pos))) {
                     return pos;
                 }
             }
@@ -84,6 +103,9 @@ public class DragonUtils {
         double extraX = radius * Mth.sin((float) (Math.PI + angle));
         double extraZ = radius * Mth.cos(angle);
         BlockPos radialPos = BlockPos.containing(dragon.getX() + extraX, 0, dragon.getZ() + extraZ);
+        if (!isLoadedTo(dragon, radialPos)) {
+            return null;
+        }
         BlockPos ground = dragon.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, radialPos);
         int distFromGround = (int) dragon.getY() - ground.getY();
         BlockPos newPos = radialPos.above(distFromGround > 16 ? (int) Math.min(IafConfig.maxDragonFlight, dragon.getY() + dragon.getRandom().nextInt(16) - 8) : (int) dragon.getY() + dragon.getRandom().nextInt(16) + 1);
@@ -101,6 +123,10 @@ public class DragonUtils {
         double extraX = radius * Mth.sin((float) (Math.PI + angle));
         double extraZ = radius * Mth.cos(angle);
         BlockPos radialPos = BlockPos.containing(dragon.getX() + extraX, 0, dragon.getZ() + extraZ);
+        // Reads only this column (no raycast)
+        if (!dragon.level().hasChunkAt(radialPos)) {
+            return null;
+        }
         BlockPos ground = dragon.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, radialPos);
         int distFromGround = (int) dragon.getY() - ground.getY();
         BlockPos newPos = radialPos.above(distFromGround > 16 ? (int) Math.min(IafConfig.maxDragonFlight, dragon.getY() + dragon.getRandom().nextInt(16) - 8) : (int) dragon.getY() + dragon.getRandom().nextInt(16) + 1);
@@ -168,12 +194,15 @@ public class DragonUtils {
             int distFromGround = (int) hippo.getY() - ground.getY();
             for (int i = 0; i < 10; i++) {
                 BlockPos pos = BlockPos.containing(hippo.homePos.getX() + hippo.getRandom().nextInt(IafConfig.dragonWanderFromHomeDistance) - IafConfig.dragonWanderFromHomeDistance, (distFromGround > 16 ? (int) Math.min(IafConfig.maxDragonFlight, hippo.getY() + hippo.getRandom().nextInt(16) - 8) : (int) hippo.getY() + hippo.getRandom().nextInt(16) + 1), (hippo.homePos.getZ() + hippo.getRandom().nextInt(IafConfig.dragonWanderFromHomeDistance * 2) - IafConfig.dragonWanderFromHomeDistance));
-                if (hippo.getDistanceSquared(Vec3.atCenterOf(pos)) > 6 && !hippo.isTargetBlocked(Vec3.atCenterOf(pos))) {
+                if (hippo.getDistanceSquared(Vec3.atCenterOf(pos)) > 6 && isLoadedTo(hippo, pos) && !hippo.isTargetBlocked(Vec3.atCenterOf(pos))) {
                     return pos;
                 }
             }
         }
         BlockPos radialPos = BlockPos.containing(hippo.getX() + extraX, 0, hippo.getZ() + extraZ);
+        if (!isLoadedTo(hippo, radialPos)) {
+            return null;
+        }
         BlockPos ground = hippo.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, radialPos);
         int distFromGround = (int) hippo.getY() - ground.getY();
         BlockPos newPos = radialPos.above(distFromGround > 16 ? (int) Math.min(IafConfig.maxDragonFlight, hippo.getY() + hippo.getRandom().nextInt(16) - 8) : (int) hippo.getY() + hippo.getRandom().nextInt(16) + 1);
@@ -192,6 +221,9 @@ public class DragonUtils {
         double extraX = radius * Mth.sin((float) (Math.PI + angle));
         double extraZ = radius * Mth.cos(angle);
         BlockPos radialPos = getStymphalianFearPos(bird, BlockPos.containing(bird.getX() + extraX, 0, bird.getZ() + extraZ));
+        if (!isLoadedTo(bird, radialPos)) {
+            return null;
+        }
         BlockPos ground = bird.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, radialPos);
         int distFromGround = (int) bird.getY() - ground.getY();
         int flightHeight = Math.min(IafConfig.stymphalianBirdFlightHeight, ground.getY() + bird.getRandom().nextInt(16));
@@ -235,6 +267,9 @@ public class DragonUtils {
         double extraX = radius * Mth.sin((float) (Math.PI + angle));
         double extraZ = radius * Mth.cos(angle);
         BlockPos radialPos = BlockPos.containing(target.getX() + extraX, 0, target.getZ() + extraZ);
+        if (!isLoadedTo(cockatrice, radialPos)) {
+            return target.blockPosition();
+        }
         BlockPos ground = target.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, radialPos);
         if (cockatrice.distanceToSqr(Vec3.atCenterOf(ground)) > 30 && !cockatrice.isTargetBlocked(Vec3.atCenterOf(ground))) {
             return ground;
@@ -262,7 +297,7 @@ public class DragonUtils {
         double extraX = radius * Mth.sin((float) (Math.PI + angle));
         double extraZ = radius * Mth.cos(angle);
         BlockPos radialPos = BlockPos.containing(target.getX() + extraX, target.getY(), target.getZ() + extraZ);
-        if (cockatrice.distanceToSqr(Vec3.atCenterOf(radialPos)) < 300 && !cockatrice.isTargetBlocked(Vec3.atCenterOf(radialPos).add(0, 0.75, 0))) {
+        if (cockatrice.distanceToSqr(Vec3.atCenterOf(radialPos)) < 300 && isLoadedTo(cockatrice, radialPos) && !cockatrice.isTargetBlocked(Vec3.atCenterOf(radialPos).add(0, 0.75, 0))) {
             return radialPos;
         }
         return target.blockPosition();
@@ -275,6 +310,9 @@ public class DragonUtils {
         double extraX = radius * Mth.sin((float) (Math.PI + angle));
         double extraZ = radius * Mth.cos(angle);
         BlockPos radialPos = BlockPos.containing(target.getX() + extraX, 0, target.getZ() + extraZ);
+        if (!target.level().hasChunkAt(radialPos)) {
+            return target.blockPosition();
+        }
         BlockPos ground = target.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, radialPos);
         if (serpent.distanceToSqr(Vec3.atCenterOf(ground)) > 30) {
             return ground;
@@ -306,8 +344,17 @@ public class DragonUtils {
         return false;
     }
 
+    // made once: a new TagKey per candidate went through the interner on every target search
+    private static final TagKey<net.minecraft.world.entity.EntityType<?>> FIRE_TARGETS = TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.FIRE_DRAGON_TARGETS);
+    private static final TagKey<net.minecraft.world.entity.EntityType<?>> ICE_TARGETS = TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.ICE_DRAGON_TARGETS);
+    private static final TagKey<net.minecraft.world.entity.EntityType<?>> LIGHTNING_TARGETS = TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.LIGHTNING_DRAGON_TARGETS);
+
     public static boolean isDragonTargetable(Entity entity, Identifier tag) {
-        return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, tag));
+        TagKey<net.minecraft.world.entity.EntityType<?>> key = tag == IafTagRegistry.FIRE_DRAGON_TARGETS ? FIRE_TARGETS
+            : tag == IafTagRegistry.ICE_DRAGON_TARGETS ? ICE_TARGETS
+            : tag == IafTagRegistry.LIGHTNING_DRAGON_TARGETS ? LIGHTNING_TARGETS
+            : TagKey.create(Registries.ENTITY_TYPE, tag);
+        return entity.getType().is(key);
     }
 
     public static String getDimensionName(Level world) {

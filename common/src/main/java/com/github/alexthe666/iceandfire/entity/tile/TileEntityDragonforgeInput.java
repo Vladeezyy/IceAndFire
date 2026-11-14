@@ -23,8 +23,11 @@ import javax.annotation.Nullable;
 
 public class TileEntityDragonforgeInput extends BlockEntity {
     private static final int LURE_DISTANCE = 50;
+    /** Ticks between two searches for a dragon to lure; the 100x100x100 box was searched every tick. */
+    private static final int LURE_INTERVAL = 20;
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
     private int ticksSinceDragonFire;
+    private int lureCooldown;
     private TileEntityDragonforge core = null;
 
     public TileEntityDragonforgeInput(BlockPos pos, BlockState state) {
@@ -55,8 +58,12 @@ public class TileEntityDragonforgeInput extends BlockEntity {
             }
         }
 
-        if (forgeInput.isAssembled()) {
-            forgeInput.lureDragons();
+        // A lured dragon keeps breathing on its own: EntityDragonBase.updateBurnTarget checks the forge every tick
+        if (--forgeInput.lureCooldown <= 0) {
+            forgeInput.lureCooldown = LURE_INTERVAL;
+            if (forgeInput.isAssembled()) {
+                forgeInput.lureDragons();
+            }
         }
     }
 
@@ -88,9 +95,10 @@ public class TileEntityDragonforgeInput extends BlockEntity {
         );
 
         boolean dragonSelected = false;
+        final int dragonType = getDragonType();
 
         for (EntityDragonBase dragon : level.getEntitiesOfClass(EntityDragonBase.class, searchArea)) {
-            if (!dragonSelected && /* Dragon Checks */ getDragonType() == dragon.dragonType.getIntFromType() && (dragon.isChained() || dragon.isTame()) && canSeeInput(dragon, targetPosition)) {
+            if (!dragonSelected && /* Dragon Checks */ dragonType == dragon.dragonType.getIntFromType() && (dragon.isChained() || dragon.isTame()) && canSeeInput(dragon, targetPosition)) {
                 dragon.burningTarget = this.worldPosition;
                 dragonSelected = true;
             } else if (dragon.burningTarget == this.worldPosition) {
@@ -105,6 +113,10 @@ public class TileEntityDragonforgeInput extends BlockEntity {
     }
 
     public void resetCore() {
+        // A neighbour changed: the shape around the core may have changed too
+        if (core != null) {
+            core.invalidateAssembly();
+        }
         core = null;
     }
 

@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.client.render.entity.layer;
 
+import com.github.alexthe666.iceandfire.client.render.entity.IafMobRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.vladeezyy.rampart.client.render.RampartLivingRenderState;
 import net.minecraft.client.model.EntityModel;
@@ -30,17 +31,24 @@ public abstract class IafEntityLayer<T extends LivingEntity, S extends RampartLi
 
 	protected abstract void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, S state, T entity);
 
-	/** The state the parent model was last posed for by a layer (one render state per entity and frame) */
-	private static Object posedFor;
+	/**
+	 * Counts parent posings by layers; a state keeps the count it was posed at. Same test as "last posed for this
+	 * state", without a static reference to a state (it holds the entity, and so the level after leaving it)
+	 */
+	private static long poseCount = 1;
 
 	/**
 	 * Poses the parent model for this state now, for layers that read its parts (1.21.1 posed it before the layers;
 	 * 26.x poses it when it is drawn, after the layers ran). Once per entity and frame, however many layers ask.
 	 */
 	protected void poseParent(S state) {
-		if (posedFor != state) {
+		if (state instanceof IafMobRenderState iafState) {
+			if (iafState.parentPosedAt != poseCount) {
+				this.getParentModel().setupAnim(state);
+				iafState.parentPosedAt = ++poseCount;
+			}
+		} else {
 			this.getParentModel().setupAnim(state);
-			posedFor = state;
 		}
 	}
 

@@ -38,14 +38,11 @@ public class DragonPosWorldData extends SavedData {
     }
 
     public static DragonPosWorldData get(Level world) {
-        if (world instanceof ServerLevel) {
-            ServerLevel overworld = world.getServer().getLevel(world.dimension());
-
-            DragonPosWorldData data = IafSavedData.get(overworld, TYPE, IDENTIFIER);
-            if (data != null) {
-                data.world = world;
-                data.setDirty();
-            }
+        if (world instanceof ServerLevel level) {
+            // the level's cached data (IafSavedData)
+            DragonPosWorldData data = IafSavedData.get(level, TYPE, IDENTIFIER);
+            data.world = world;
+            data.setDirty();
             return data;
         }
         return null;

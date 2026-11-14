@@ -2,15 +2,22 @@ package com.github.alexthe666.iceandfire.entity.ai;
 
 import com.github.alexthe666.iceandfire.entity.EntitySiren;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SirenAIFindWaterTarget extends Goal {
+    // Sampled instead of the whole 10x10x10 cube with a raycast for each of its ~1000 blocks (every ~4 ticks in water).
+    // The first visible hit is uniform over the visible spots, as the old random pick from the full lists.
+    private static final int SING_COLUMNS = 16;
+    private static final int WATER_PROBES = 16;
+    private static final int SING_RAYCASTS = 4;
+    private static final int WATER_RAYCASTS = 3;
     private final EntitySiren mob;
 
     public SirenAIFindWaterTarget(EntitySiren mob) {
@@ -50,37 +57,49 @@ public class SirenAIFindWaterTarget extends Goal {
     }
 
     public Vec3 findWaterTarget() {
-        if (this.mob.getTarget() == null || !this.mob.getTarget().isAlive()) {
-            List<Vec3> water = new ArrayList<>();
-            List<Vec3> singTargets = new ArrayList<>();
-            final int posX = (int) this.mob.getX();
-            final int posY = (int) this.mob.getY();
-            final int posZ = (int) this.mob.getZ();
-            for (int x = posX - 5; x < posX + 5; x++) {
-                for (int y = posY - 5; y < posY + 5; y++) {
-                    for (int z = posZ - 5; z < posZ + 5; z++) {
-                        if (mob.wantsToSing()) {
-                            if (this.mob.level().getBlockState(new BlockPos(x, y, z)).isSolid() && this.mob.level().isEmptyBlock(new BlockPos(x, y + 1, z)) && this.mob.isDirectPathBetweenPoints(this.mob.position(), new Vec3(x, y + 1, z))) {
-                                singTargets.add(new Vec3(x, y + 1, z));
-                            }
+        LivingEntity target = this.mob.getTarget();
+        if (target != null && target.isAlive()) {
+            BlockPos blockpos1 = target.blockPosition();
+            return new Vec3(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
+        }
+        final Level level = this.mob.level();
+        final RandomSource random = this.mob.getRandom();
+        final Vec3 from = this.mob.position();
+        final int posX = (int) this.mob.getX();
+        final int posY = (int) this.mob.getY();
+        final int posZ = (int) this.mob.getZ();
+        final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        if (this.mob.wantsToSing()) {
+            // A singing spot (solid block, air above) is a thin surface: sample columns, not points, or the shore is missed
+            int casts = 0;
+            for (int i = 0; i < SING_COLUMNS && casts < SING_RAYCASTS; i++) {
+                int x = posX - 5 + random.nextInt(10);
+                int z = posZ - 5 + random.nextInt(10);
+                boolean airAbove = level.getBlockState(pos.set(x, posY + 5, z)).isAir();
+                for (int y = posY + 4; y >= posY - 5; y--) {
+                    BlockState state = level.getBlockState(pos.set(x, y, z));
+                    if (airAbove && state.isSolid()) {
+                        casts++;
+                        Vec3 spot = new Vec3(x, y + 1, z);
+                        if (this.mob.isDirectPathBetweenPoints(from, spot)) {
+                            return spot;
                         }
-                        if (this.mob.level().getBlockState(new BlockPos(x, y, z)).is(Blocks.WATER) && this.mob.isDirectPathBetweenPoints(this.mob.position(), new Vec3(x, y, z))) {
-                            water.add(new Vec3(x, y, z));
-                        }
-
+                        break;
                     }
+                    airAbove = state.isAir();
                 }
             }
-            if (!singTargets.isEmpty()) {
-                return singTargets.get(this.mob.getRandom().nextInt(singTargets.size()));
-
+        }
+        int casts = 0;
+        for (int i = 0; i < WATER_PROBES && casts < WATER_RAYCASTS; i++) {
+            pos.set(posX - 5 + random.nextInt(10), posY - 5 + random.nextInt(10), posZ - 5 + random.nextInt(10));
+            if (level.getBlockState(pos).is(Blocks.WATER)) {
+                casts++;
+                Vec3 spot = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+                if (this.mob.isDirectPathBetweenPoints(from, spot)) {
+                    return spot;
+                }
             }
-            if (!water.isEmpty()) {
-                return water.get(this.mob.getRandom().nextInt(water.size()));
-            }
-        } else {
-            BlockPos blockpos1 = this.mob.getTarget().blockPosition();
-            return new Vec3(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
         }
         return null;
     }

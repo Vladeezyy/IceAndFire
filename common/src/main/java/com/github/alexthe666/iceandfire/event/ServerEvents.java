@@ -536,22 +536,23 @@ public class ServerEvents {
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getEntity() != null && (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof AbstractChestBlock) && !event.getEntity().isCreative()) {
+        // Once a click: the event fires for both hands and on the client, and every call walked big entity boxes
+        if (event.getEntity() == null || event.getLevel().isClientSide() || event.getHand() != net.minecraft.world.InteractionHand.MAIN_HAND) {
+            return;
+        }
+        net.minecraft.world.level.block.Block clicked = event.getLevel().getBlockState(event.getPos()).getBlock();
+        if (clicked instanceof AbstractChestBlock && !event.getEntity().isCreative()) {
             float dist = IafConfig.dragonGoldSearchLength;
-            final List<Entity> list = event.getLevel().getEntities(event.getEntity(), event.getEntity().getBoundingBox().inflate(dist, dist, dist));
-            if (!list.isEmpty()) {
-                for (final Entity entity : list) {
-                    if (entity instanceof EntityDragonBase dragon) {
-                        if (!dragon.isTame() && !dragon.isModelDead() && !dragon.isOwnedBy(event.getEntity())) {
-                            dragon.setInSittingPose(false);
-                            dragon.setOrderedToSit(false);
-                            dragon.setTarget(event.getEntity());
-                        }
-                    }
+            // by class: the walk over all entities of a 60-block box ran on every chest click
+            for (EntityDragonBase dragon : event.getLevel().getEntitiesOfClass(EntityDragonBase.class, event.getEntity().getBoundingBox().inflate(dist, dist, dist))) {
+                if (!dragon.isTame() && !dragon.isModelDead() && !dragon.isOwnedBy(event.getEntity())) {
+                    dragon.setInSittingPose(false);
+                    dragon.setOrderedToSit(false);
+                    dragon.setTarget(event.getEntity());
                 }
             }
         }
-        if (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof WallBlock) {
+        if (clicked instanceof WallBlock) {
             ItemChain.attachToFence(event.getEntity(), event.getLevel(), event.getPos());
         }
     }
@@ -559,17 +560,15 @@ public class ServerEvents {
     @SubscribeEvent
     public void onBreakBlock(BlockEvent.BreakEvent event) {
         if (event.getPlayer() != null && (event.getState().getBlock() instanceof AbstractChestBlock || event.getState().getBlock() == IafBlockRegistry.GOLD_PILE.get() || event.getState().getBlock() == IafBlockRegistry.SILVER_PILE.get() || event.getState().getBlock() == IafBlockRegistry.COPPER_PILE.get())) {
+            if (event.getPlayer().isCreative()) {
+                return;
+            }
             final float dist = IafConfig.dragonGoldSearchLength;
-            List<Entity> list = event.getLevel().getEntities(event.getPlayer(), event.getPlayer().getBoundingBox().inflate(dist, dist, dist));
-            if (list.isEmpty()) return;
-
-            for (Entity entity : list) {
-                if (entity instanceof EntityDragonBase dragon) {
-                    if (!dragon.isTame() && !dragon.isModelDead() && !dragon.isOwnedBy(event.getPlayer()) && !event.getPlayer().isCreative()) {
-                        dragon.setInSittingPose(false);
-                        dragon.setOrderedToSit(false);
-                        dragon.setTarget(event.getPlayer());
-                    }
+            for (EntityDragonBase dragon : event.getLevel().getEntitiesOfClass(EntityDragonBase.class, event.getPlayer().getBoundingBox().inflate(dist, dist, dist))) {
+                if (!dragon.isTame() && !dragon.isModelDead() && !dragon.isOwnedBy(event.getPlayer())) {
+                    dragon.setInSittingPose(false);
+                    dragon.setOrderedToSit(false);
+                    dragon.setTarget(event.getPlayer());
                 }
             }
         }

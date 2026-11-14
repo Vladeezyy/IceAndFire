@@ -48,6 +48,14 @@ public abstract class EntityMutlipartPart extends Entity {
     private boolean addedByParent;
     /** In a ticking section of its level (ServerLevelEntityCallbacksMixin; NeoForge's isAddedToLevel before) */
     private boolean trackedByLevel;
+    /** Pushes are done every this many ticks, each one this many times stronger (same push over time, half the queries) */
+    private static final int COLLIDE_INTERVAL = 2;
+    /** Server: the parent found by UUID, looked up again only once it is removed or the UUID changes */
+    @Nullable
+    private Entity cachedParent;
+    /** The scale the current dimensions were built from */
+    private float appliedScaleX = Float.NaN;
+    private float appliedScaleY = Float.NaN;
 
     protected EntityMutlipartPart(EntityType<?> t, Level world) {
         super(t, world);
@@ -111,6 +119,7 @@ public abstract class EntityMutlipartPart extends Entity {
 
     public void setParentId(@Nullable UUID uniqueId) {
         this.entityData.set(PARENT_UUID, (Optional.ofNullable(uniqueId)).map(EntityReference::of));
+        this.cachedParent = null;
     }
 
     private float getScaleX() {
@@ -153,7 +162,15 @@ public abstract class EntityMutlipartPart extends Entity {
         wasTouchingWater = false;
         if (this.tickCount > 10) {
             Entity parent = getParent();
-            refreshDimensions();
+            float scaleX = getScaleX();
+            float scaleY = getScaleY();
+            // The scale is set once per part: refreshing every tick only cost a bounding box, a position reapply and,
+            // on NeoForge, an EntityEvent.Size post for every part of every dragon
+            if (scaleX != this.appliedScaleX || scaleY != this.appliedScaleY) {
+                this.appliedScaleX = scaleX;
+                this.appliedScaleY = scaleY;
+                refreshDimensions();
+            }
             if (parent != null && !level().isClientSide()) {
                 float renderYawOffset = parent.getYRot();
                 if (parent instanceof LivingEntity) {
@@ -173,7 +190,9 @@ public abstract class EntityMutlipartPart extends Entity {
                 }
                 // No markHurt() here: it sent a motion packet for every part every tick to every player tracking it
                 // (200 packets per second per dragon); the position goes with the usual position updates
-                if (!this.level().isClientSide()) {
+
+                // Staggered by id so the parts of one mob do not all query on the same tick
+                if (!this.level().isClientSide() && Math.floorMod(this.tickCount + this.getId(), COLLIDE_INTERVAL) == 0) {
                     this.collideWithNearbyEntities();
                 }
                 if (parent.isRemoved() && !level().isClientSide()) {
@@ -218,17 +237,29 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
     public Entity getParent() {
-        UUID id = getParentId();
-
-        if (id != null && level() instanceof ServerLevel serverLevel) {
-            return serverLevel.getEntity(id);
+        // Client: no parent, as before (is() and interact rely on it)
+        if (!(level() instanceof ServerLevel serverLevel)) {
+            return null;
         }
-
-        return null;
+        // Asked every tick and by is()/hurt: the UUID lookup is done again only once the parent is removed. A live
+        // parent next to a ticking part is always in the level's lookup (its section is at least tracked), so this
+        // answers the same as the lookup did
+        Entity parent = this.cachedParent;
+        if (parent == null || parent.isRemoved()) {
+            UUID id = getParentId();
+            parent = id == null ? null : serverLevel.getEntity(id);
+            this.cachedParent = parent;
+        }
+        return parent;
     }
 
     public void setParent(Entity entity) {
-        this.setParentId(entity.getUUID());
+        // EntityUtil.updatePart calls this every tick: write only on a change (the parent's UUID changes once, when
+        // it is loaded from NBT after making its parts)
+        UUID uuid = entity.getUUID();
+        if (!uuid.equals(this.getParentId())) {
+            this.setParentId(uuid);
+        }
     }
 
     @Override
@@ -242,12 +273,19 @@ public abstract class EntityMutlipartPart extends Entity {
     }
 
 
+    /** Called every {@link #COLLIDE_INTERVAL} ticks: pushes that many times to keep the push per second */
     public void collideWithNearbyEntities() {
-        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(0.20000000298023224D, 0.0D, 0.20000000298023224D));
         Entity parent = this.getParent();
-        if (parent != null) {
-            entities.stream().filter(entity -> entity != parent && !sharesRider(parent, entity) && !(entity instanceof EntityMutlipartPart) && entity.isPushable()).forEach(entity -> entity.push(parent));
-
+        if (parent == null) {
+            return;
+        }
+        // Filtered in the query (cheap checks first): the box mostly holds the parent and its other parts
+        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(0.20000000298023224D, 0.0D, 0.20000000298023224D),
+            entity -> entity != parent && !(entity instanceof EntityMutlipartPart) && entity.isPushable() && !sharesRider(parent, entity));
+        for (Entity entity : entities) {
+            for (int i = 0; i < COLLIDE_INTERVAL; i++) {
+                entity.push(parent);
+            }
         }
     }
 

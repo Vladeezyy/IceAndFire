@@ -25,6 +25,8 @@ public class MyrmexWorldData extends SavedData {
     private final List<BlockPos> villagerPositionsList = Lists.newArrayList();
     // Worldgen threads add hives while the server thread goes through them (myrmex AI); hives are added rarely
     private final List<MyrmexHive> hiveList = new java.util.concurrent.CopyOnWriteArrayList<>();
+    /** A hive was added since the last save: the storage clears setDirty() after encoding, a hive added in between could miss the save */
+    private volatile boolean hiveAdded;
     private Level world;
     private int tickCounter;
 
@@ -41,14 +43,12 @@ public class MyrmexWorldData extends SavedData {
     }
 
     public static MyrmexWorldData get(Level world) {
-        if (world instanceof ServerLevel) {
-            ServerLevel overworld = world.getServer().getLevel(world.dimension());
-
-            MyrmexWorldData data = IafSavedData.get(overworld, TYPE, IDENTIFIER);
-            if (data != null) {
-                data.world = world;
-                data.setDirty();
-            }
+        if (world instanceof ServerLevel level) {
+            // the level's cached data: also asked by the worldgen threads (IafSavedData)
+            MyrmexWorldData data = IafSavedData.get(level, TYPE, IDENTIFIER);
+            data.world = world;
+            // hives change in place (AI) without telling: saved every autosave, as in the original
+            data.setDirty();
             return data;
         }
         //If the world is ClientLevel just return empty non significant data object
@@ -56,7 +56,14 @@ public class MyrmexWorldData extends SavedData {
     }
 
     public static void addHive(Level world, MyrmexHive hive) {
-        get(world).hiveList.add(hive);
+        MyrmexWorldData data = get(world);
+        data.hiveList.add(hive);
+        data.hiveAdded = true;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return hiveAdded || super.isDirty();
     }
 
     public void setWorldsForAll(Level worldIn) {
@@ -135,6 +142,8 @@ public class MyrmexWorldData extends SavedData {
 
     // 26.x: through IafSavedData (the 1.21.1 NBT)
     public @NotNull CompoundTag save(CompoundTag compound, @NotNull HolderLookup.Provider registries) {
+        // before the copy of the list below: a hive added after it sets the flag again
+        this.hiveAdded = false;
         compound.putInt("Tick", this.tickCounter);
         ListTag nbttaglist = new ListTag();
 

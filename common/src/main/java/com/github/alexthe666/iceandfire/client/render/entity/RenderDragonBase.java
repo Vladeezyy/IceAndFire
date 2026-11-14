@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.client.render.entity;
 
 import dev.vladeezyy.rampart.client.model.AdvancedEntityModel;
+import com.github.alexthe666.iceandfire.client.model.animator.DragonTabulaModelAnimator;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerDragonArmor;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerDragonBanner;
 import com.github.alexthe666.iceandfire.client.render.entity.layer.LayerDragonEyes;
@@ -42,6 +43,13 @@ public class RenderDragonBase extends IafMobRenderer<EntityDragonBase, AdvancedE
         double d1 = p_177110_2_ + LivingEntityIn.yOld + (LivingEntityIn.getY() - LivingEntityIn.yOld) * (double) p_177110_4_;
         double d2 = LivingEntityIn.zOld + (LivingEntityIn.getZ() - LivingEntityIn.zOld) * (double) p_177110_4_;
         return new Vec3(d0, d1, d2);
+    }
+
+    @Override
+    public void extractRenderState(EntityDragonBase entity, IafMobRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        // a new frame (or a dragon drawn again elsewhere): the poses the dragon animators cached are stale
+        DragonTabulaModelAnimator.newPoseEpoch();
     }
 
     @Override

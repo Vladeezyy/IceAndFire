@@ -10,17 +10,23 @@ import com.github.alexthe666.iceandfire.pathfinding.raycoms.PathFindingStatus;
 import com.github.alexthe666.iceandfire.pathfinding.raycoms.PathResult;
 import com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MyrmexAIStoreItems extends Goal {
+    // BlockPos.betweenClosed order: x fastest, then y, then z
+    private static final Comparator<BlockPos> SCAN_ORDER = Comparator.<BlockPos>comparingInt(BlockPos::getZ).thenComparingInt(BlockPos::getY).thenComparingInt(BlockPos::getX);
     private final EntityMyrmexBase myrmex;
     private final double movementSpeed;
     private BlockPos nextRoom = null;
@@ -54,9 +60,9 @@ public class MyrmexAIStoreItems extends Goal {
             return false;
         }
         first = true;
-        mainRoom = MyrmexHive.getGroundedPos(this.myrmex.level(), village.getCenter());
+        mainRoom = this.myrmex.groundedPos(village.getCenter());
 
-        nextRoom = MyrmexHive.getGroundedPos(this.myrmex.level(), village.getRandomRoom(WorldGenMyrmexHive.RoomType.FOOD, this.myrmex.getRandom(), this.myrmex.blockPosition()));
+        nextRoom = this.myrmex.groundedPos(village.getRandomRoom(WorldGenMyrmexHive.RoomType.FOOD, this.myrmex.getRandom(), this.myrmex.blockPosition()));
         nextCocoon = getNearbyCocoon(nextRoom);
         if (nextCocoon == null) {
             this.myrmex.setWaitTicks(20 + ThreadLocalRandom.current().nextInt(40));
@@ -138,28 +144,53 @@ public class MyrmexAIStoreItems extends Goal {
         first = true;
     }
 
+    /**
+     * A cocoon with room for the held item in the 31x15x31 box around the room centre, or null.
+     * <p>
+     * Goes through the block entities of the loaded chunks of the box (every cocoon has one, a chunk keeps them in a
+     * map) instead of a getBlockEntity call per block (14,415, and each one loaded an unloaded chunk). No cache to keep
+     * in step with placed, broken or pushed cocoons.
+     */
     public BlockPos getNearbyCocoon(BlockPos roomCenter) {
-        int RADIUS_XZ = 15;
-        int RADIUS_Y = 7;
+        final int RADIUS_XZ = 15;
+        final int RADIUS_Y = 7;
+        int minX = roomCenter.getX() - RADIUS_XZ, maxX = roomCenter.getX() + RADIUS_XZ;
+        int minY = roomCenter.getY() - RADIUS_Y, maxY = roomCenter.getY() + RADIUS_Y;
+        int minZ = roomCenter.getZ() - RADIUS_XZ, maxZ = roomCenter.getZ() + RADIUS_XZ;
+        Level level = this.myrmex.level();
+        ItemStack held = this.myrmex.getItemInHand(InteractionHand.MAIN_HAND);
         List<BlockPos> closeCocoons = new ArrayList<>();
-        BlockPos.betweenClosedStream(roomCenter.offset(-RADIUS_XZ, -RADIUS_Y, -RADIUS_XZ), roomCenter.offset(RADIUS_XZ, RADIUS_Y, RADIUS_XZ)).forEach(blockpos -> {
-            BlockEntity te = this.myrmex.level().getBlockEntity(blockpos);
-            if (te instanceof TileEntityMyrmexCocoon) {
-                if (!((TileEntityMyrmexCocoon) te).isFull(this.myrmex.getItemInHand(InteractionHand.MAIN_HAND))) {
-                    closeCocoons.add(te.getBlockPos());
+        for (int cx = SectionPos.blockToSectionCoord(minX); cx <= SectionPos.blockToSectionCoord(maxX); cx++) {
+            for (int cz = SectionPos.blockToSectionCoord(minZ); cz <= SectionPos.blockToSectionCoord(maxZ); cz++) {
+                LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+                if (chunk == null) {
+                    continue;
+                }
+                for (BlockEntity te : chunk.getBlockEntities().values()) {
+                    if (te instanceof TileEntityMyrmexCocoon cocoon && !te.isRemoved()) {
+                        BlockPos pos = te.getBlockPos();
+                        if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
+                            && pos.getZ() >= minZ && pos.getZ() <= maxZ && !cocoon.isFull(held)) {
+                            closeCocoons.add(pos);
+                        }
+                    }
                 }
             }
-        });
+        }
         if (closeCocoons.isEmpty()) {
             return null;
         }
+        // the order of the old block scan: the pick below never takes the last one, as before
+        closeCocoons.sort(SCAN_ORDER);
         return closeCocoons.get(myrmex.getRandom().nextInt(Math.max(closeCocoons.size() - 1, 1)));
     }
 
     public boolean isUseableCocoon(BlockPos blockpos) {
-        if (this.myrmex.level().getBlockState(blockpos).getBlock() instanceof BlockMyrmexCocoon && this.myrmex.level().getBlockEntity(blockpos) != null && this.myrmex.level().getBlockEntity(blockpos) instanceof TileEntityMyrmexCocoon) {
-            return !((TileEntityMyrmexCocoon) this.myrmex.level().getBlockEntity(blockpos)).isFull(this.myrmex.getItemInHand(InteractionHand.MAIN_HAND));
+        Level level = this.myrmex.level();
+        // asked every tick while the goal runs: one block entity lookup, none in an unloaded chunk
+        if (!EntityMyrmexBase.isLoadedAt(level, blockpos) || !(level.getBlockState(blockpos).getBlock() instanceof BlockMyrmexCocoon)) {
+            return false;
         }
-        return false;
+        return level.getBlockEntity(blockpos) instanceof TileEntityMyrmexCocoon cocoon && !cocoon.isFull(this.myrmex.getItemInHand(InteractionHand.MAIN_HAND));
     }
 }
