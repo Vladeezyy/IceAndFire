@@ -44,6 +44,10 @@ public class IafDragonDestructionManager {
     private static final int CLIENT_BREATH_HOLD = 2 * BREATH_SYNC_INTERVAL;
     /** The blocks of the breath area are attacked once per this many ticks, with the chances of the ticks in between. */
     private static final int BLOCK_PASS_INTERVAL = 5;
+    /** Spots along the strip a wall takes the breath on (the old walk cast one ray per step, from the eyes) */
+    private static final int MAX_STRIP_SPOTS = 6;
+    /** Spots waiting for the block pass; a full list is attacked at once */
+    private static final int MAX_PENDING_SPOTS = 12;
     private static final float FIRE_PLACE_CHANCE = 0.5F;
     private static final float ICE_PLACE_CHANCE = 1F / 9F;
     /** Lightning pushed once per blocked step; repeated knockback stops growing after a few. */
@@ -62,19 +66,23 @@ public class IafDragonDestructionManager {
         private boolean clientsBreathing;
         /** Game time of the next block pass (by time: breathAt may run more than once a tick) */
         private long nextBlockPass = Long.MIN_VALUE;
-        private int pendingBlockTrials;
-        /** Where the pending block hits landed */
-        @Nullable
-        private BlockPos pendingCenter;
+        /** The blocks the hits since the last block pass landed in, and how many hit each */
+        private final BlockPos[] pendingSpots = new BlockPos[MAX_PENDING_SPOTS];
+        private final int[] pendingTrials = new int[MAX_PENDING_SPOTS];
+        private int pendingCount;
         private int clientFlameTicks;
     }
 
     /**
      * The breath of one tick. {@code steps} and {@code visibleSteps} are the counts of the old walk: about 100
      * points over the part of the line the flame reached, each tested with its own ray. {@code blockedAt}: the wall
-     * the flame hit, or null.
+     * the flame hit, or null; {@code firstHidden}: the first step behind it.
      */
-    private record BreathTrace(Vec3 head, int steps, int visibleSteps, @Nullable Vec3 blockedAt) {
+    private record BreathTrace(Vec3 head, int steps, int visibleSteps, @Nullable Vec3 blockedAt, @Nullable Vec3 firstHidden) {
+    }
+
+    private static Vec3 eyes(final EntityDragonBase dragon) {
+        return new Vec3(dragon.getX(), dragon.getY() + dragon.getEyeHeight(), dragon.getZ());
     }
 
     /** One ray to the flame front instead of one per step (two per step behind a wall). */
@@ -93,11 +101,10 @@ public class IafDragonDestructionManager {
         final double dz = burnZ - head.z;
         final double progress = conquered / distance;
         final Vec3 front = new Vec3(head.x + dx * progress, head.y + dy * progress, head.z + dz * progress);
-        final Vec3 eyes = new Vec3(dragon.getX(), dragon.getY() + dragon.getEyeHeight(), dragon.getZ());
-        final HitResult hit = dragon.level().clip(new ClipContext(eyes, front, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, dragon));
+        final HitResult hit = dragon.level().clip(new ClipContext(eyes(dragon), front, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, dragon));
         // The test of canPositionBeSeen: a hit within a block of the point still sees it
         if (hit.getType() == HitResult.Type.MISS || hit.getLocation().distanceToSqr(front) <= 1.0D) {
-            return new BreathTrace(head, steps, steps, null);
+            return new BreathTrace(head, steps, steps, null, null);
         }
         final Vec3 wall = hit.getLocation();
         final double lengthSqr = dx * dx + dy * dy + dz * dz;
@@ -110,7 +117,8 @@ public class IafDragonDestructionManager {
                 visible = (int) Math.min(steps - 1, Math.floor(seenUpTo * distance / increment) + 1);
             }
         }
-        return new BreathTrace(head, steps, visible, wall);
+        final double hidden = (double) visible * increment / distance;
+        return new BreathTrace(head, steps, visible, wall, new Vec3(head.x + dx * hidden, head.y + dy * hidden, head.z + dz * hidden));
     }
 
     /**
@@ -143,14 +151,23 @@ public class IafDragonDestructionManager {
             return null;
         }
         if (trace.blockedAt() != null) {
-            // Every step behind the wall hit it on its own: their count keeps the old damage chances
-            breathAt(dragon.level(), BlockPos.containing(trace.blockedAt()), dragon, state, trace.steps() - trace.visibleSteps());
+            // Every step behind the wall hit it on its own: their count keeps the old damage chances. The ray of each
+            // step went from the eyes, so the hits made a strip on the wall: from the first hidden step's to the front's.
+            final int hidden = trace.steps() - trace.visibleSteps();
+            Vec3 stripStart = null;
+            if (hidden > 1 && trace.firstHidden() != null) {
+                final HitResult first = dragon.level().clip(new ClipContext(eyes(dragon), trace.firstHidden(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, dragon));
+                if (first.getType() != HitResult.Type.MISS) {
+                    stripStart = first.getLocation();
+                }
+            }
+            breathAt(dragon.level(), dragon, state, hidden, stripStart, trace.blockedAt());
             return trace.blockedAt();
         }
         if (dragon.burnProgress >= 40) {
             final RandomSource random = dragon.getRandom();
             final Vec3 spot = new Vec3(burnX + (random.nextFloat() * 3.0) - 1.5, burnY + (random.nextFloat() * 3.0) - 1.5, burnZ + (random.nextFloat() * 3.0) - 1.5);
-            breathAt(dragon.level(), BlockPos.containing(spot), dragon, state, 1);
+            breathAt(dragon.level(), dragon, state, 1, null, spot);
             return spot;
         }
         return new Vec3(burnX, burnY, burnZ);
@@ -183,12 +200,8 @@ public class IafDragonDestructionManager {
                 IceAndFire.sendMSGToTracking(dragon, new MessageDragonSyncFire(dragon.getId(), state.syncedX, state.syncedY, state.syncedZ, MessageDragonSyncFire.BREATH_STOPPED));
             }
             // The last hits of the breath still change their blocks; a new breath attacks blocks on its first tick
-            if (state.pendingCenter != null && state.pendingBlockTrials > 0) {
-                breathBlocks(dragon.level(), state.pendingCenter, dragon, state.pendingBlockTrials);
-            }
+            flushBlocks(dragon.level(), dragon, state);
             state.nextBlockPass = Long.MIN_VALUE;
-            state.pendingBlockTrials = 0;
-            state.pendingCenter = null;
         }
     }
 
@@ -224,33 +237,73 @@ public class IafDragonDestructionManager {
     }
 
     /**
-     * One tick of breath at {@code center}, {@code hits} times (once per step behind a wall). Entities and forge
-     * inputs are hit every tick as before; blocks once per {@link #BLOCK_PASS_INTERVAL} ticks with the chances of
-     * all hits since the last pass (were 125 or 343 blocks per hit, up to 100 hits per tick behind a wall).
+     * One tick of breath ending at {@code end}, {@code hits} times (once per step behind a wall). Entities and forge
+     * inputs at the end are hit every tick as before. Blocks: the hits are spread over the strip from
+     * {@code stripStart} (null: none) to the end, and attacked once per {@link #BLOCK_PASS_INTERVAL} ticks with the
+     * chances of all hits since the last pass (were 125 or 343 blocks per hit, up to 100 hits per tick behind a wall).
      */
-    private static void breathAt(final Level level, final BlockPos center, final EntityDragonBase dragon, final BreathState state, final int hits) {
+    private static void breathAt(final Level level, final EntityDragonBase dragon, final BreathState state, final int hits, @Nullable final Vec3 stripStart, final Vec3 end) {
+        final BlockPos center = BlockPos.containing(end);
         if (dev.vladeezyy.iceandfire.bus.IafBus.post(new DragonFireDamageWorldEvent(dragon, center.getX(), center.getY(), center.getZ()))) {
             return;
         }
-        // The flame moved on: the hits gathered at the old spot change its blocks there, so a sweep leaves a strip and
-        // not a patch every 5 ticks
-        final BlockPos pending = state.pendingCenter;
-        final int radius = blockRadius(dragon.getDragonStage());
-        if (pending != null && state.pendingBlockTrials > 0 && (Math.abs(pending.getX() - center.getX()) > radius
-                || Math.abs(pending.getY() - center.getY()) > radius || Math.abs(pending.getZ() - center.getZ()) > radius)) {
-            breathBlocks(level, pending, dragon, state.pendingBlockTrials);
-            state.pendingBlockTrials = 0;
+        // a spot per block of the strip (the hits of one tick fell into neighbouring blocks: a sphere shifted by one
+        // block adds a third to the broken area)
+        final double length = stripStart == null ? 0 : stripStart.distanceTo(end);
+        final int spots = length < 0.5D ? 1 : (int) Math.min(Math.min(MAX_STRIP_SPOTS, hits), Math.ceil(length) + 1);
+        for (int k = 0; k < spots; k++) {
+            final int trials = hits / spots + (k < hits % spots ? 1 : 0);
+            if (k == spots - 1) {
+                queueBlocks(level, dragon, state, center, trials);
+                continue;
+            }
+            final BlockPos spot = BlockPos.containing(stripStart.lerp(end, k / (double) (spots - 1)));
+            // each spot of the strip asks the protection mods on its own, as each hit did
+            if (spot.equals(center) || !dev.vladeezyy.iceandfire.bus.IafBus.post(new DragonFireDamageWorldEvent(dragon, spot.getX(), spot.getY(), spot.getZ()))) {
+                queueBlocks(level, dragon, state, spot, trials);
+            }
         }
-        state.pendingCenter = center.immutable();
-        state.pendingBlockTrials += hits;
-        int blockTrials = 0;
         final long now = level.getGameTime();
         if (now >= state.nextBlockPass || state.nextBlockPass - now > BLOCK_PASS_INTERVAL) {
             state.nextBlockPass = now + BLOCK_PASS_INTERVAL;
-            blockTrials = state.pendingBlockTrials;
-            state.pendingBlockTrials = 0;
+            flushBlocks(level, dragon, state);
         }
-        applyBreath(level, center, dragon, hits, blockTrials);
+        applyBreath(level, center, dragon, hits, 0);
+    }
+
+    /** Adds the hits of a spot to the pending block pass: to the same pending block, else as a new spot. */
+    private static void queueBlocks(final Level level, final EntityDragonBase dragon, final BreathState state, final BlockPos spot, final int trials) {
+        if (trials <= 0) {
+            return;
+        }
+        for (int i = 0; i < state.pendingCount; i++) {
+            if (state.pendingSpots[i].equals(spot)) {
+                state.pendingTrials[i] += trials;
+                return;
+            }
+        }
+        if (state.pendingCount == MAX_PENDING_SPOTS) {
+            // a sweeping flame: its strip is attacked now rather than lost
+            flushBlocks(level, dragon, state);
+        }
+        state.pendingSpots[state.pendingCount] = spot.immutable();
+        state.pendingTrials[state.pendingCount++] = trials;
+    }
+
+    /** Attacks the blocks of the pending spots. */
+    private static void flushBlocks(final Level level, final EntityDragonBase dragon, final BreathState state) {
+        final int count = state.pendingCount;
+        state.pendingCount = 0;
+        if (count == 0) {
+            return;
+        }
+        final boolean grief = dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canEntityGrief(level, dragon) && DragonUtils.canGrief(dragon);
+        for (int i = 0; i < count; i++) {
+            if (grief) {
+                attackBreathArea(level, state.pendingSpots[i], dragon, state.pendingTrials[i]);
+            }
+            state.pendingSpots[i] = null;
+        }
     }
 
     private static int blockRadius(final int stage) {
@@ -262,6 +315,10 @@ public class IafDragonDestructionManager {
         if (trials <= 0 || !dev.vladeezyy.iceandfire.platform.Platform.INSTANCE.canEntityGrief(level, dragon) || !DragonUtils.canGrief(dragon)) {
             return;
         }
+        attackBreathArea(level, center, dragon, trials);
+    }
+
+    private static void attackBreathArea(final Level level, final BlockPos center, final EntityDragonBase dragon, final int trials) {
         final int stage = dragon.getDragonStage();
         final int radius = blockRadius(stage);
         // Radius of the sphere of older dragons; young ones attack the whole 3x3x3 cube
