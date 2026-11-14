@@ -73,6 +73,15 @@ public class IceAndFire {
         return new CommonProxy();
     }
 
+    /**
+     * Static state that holds levels and players: kept past the server, the next world of the same game got a summon
+     * of the old one and the old players stayed in memory.
+     */
+    public static void onServerStopped() {
+        com.github.alexthe666.iceandfire.item.ItemSummoningCrystal.DELAYED_SUMMONS.clear();
+        com.github.alexthe666.iceandfire.pathfinding.raycoms.pathjobs.AbstractPathJob.trackingMap.clear();
+    }
+
     public static void onServerStarted() {
         LOGGER.info(IafWorldRegistry.LOADED_FEATURES);
         LOGGER.info(IafEntityRegistry.LOADED_ENTITIES);

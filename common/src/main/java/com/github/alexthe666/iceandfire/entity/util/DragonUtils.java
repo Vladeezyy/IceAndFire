@@ -295,8 +295,11 @@ public class DragonUtils {
         return true;
     }
 
+    // made once: target checks ask for every mob around
+    private static final TagKey<net.minecraft.world.entity.EntityType<?>> VILLAGERS = TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.VILLAGERS);
+
     public static boolean isVillager(Entity entity) {
-        return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, IafTagRegistry.VILLAGERS));
+        return entity.getType().is(VILLAGERS);
     }
 
     public static boolean isAnimaniaMob(Entity entity) {

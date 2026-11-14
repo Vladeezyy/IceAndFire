@@ -118,7 +118,7 @@ public class EntityChainTie extends BlockAttachedEntity {
         List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.getX() - d0, this.getY() - d0, this.getZ() - d0, this.getX() + d0, this.getY() + d0, this.getZ() + d0));
 
         for (LivingEntity livingEntity : list) {
-            EntityDataProvider.getCapability(livingEntity).ifPresent(data -> {
+            EntityDataProvider.getExisting(livingEntity).ifPresent(data -> {
                 if (data.chainData.isChainedTo(this)) {
                     data.chainData.removeChain(this);
                     ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), new ItemStack(IafItemRegistry.CHAIN.get()));
@@ -139,7 +139,7 @@ public class EntityChainTie extends BlockAttachedEntity {
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius, this.getX() + radius, this.getY() + radius, this.getZ() + radius));
 
             for (LivingEntity livingEntity : list) {
-                EntityDataProvider.getCapability(livingEntity).ifPresent(data -> {
+                EntityDataProvider.getExisting(livingEntity).ifPresent(data -> {
                     if (data.chainData.isChainedTo(player)) {
                         data.chainData.removeChain(player);
                         data.chainData.attachChain(this);

@@ -172,6 +172,7 @@ public final class IceAndFireNeoForge {
     private static void registerGameEvents(IEventBus bus) {
         bus.addListener((ServerAboutToStartEvent event) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.ServerAboutToStartEvent(event.getServer())));
         bus.addListener((ServerStartedEvent event) -> IceAndFire.onServerStarted());
+        bus.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> IceAndFire.onServerStopped());
         bus.addListener((RegisterBrewingRecipesEvent event) -> IafRecipeRegistry.registerBrewing(event.getBuilder()));
         // every listener wants living entities only
         bus.addListener((EntityTickEvent.Pre event) -> {

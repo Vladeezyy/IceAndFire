@@ -404,7 +404,10 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
             for (int i = 0; i < nbttaglist.size(); ++i) {
                 CompoundTag CompoundNBT = nbttaglist.getCompound(i);
                 int j = CompoundNBT.getByte("Slot") & 255;
-                this.inventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
+                // a slot past the storage (a chest item without the chest flag) threw and the mob was lost
+                if (j < this.inventory.getContainerSize()) {
+                    this.inventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), CompoundNBT));
+                }
             }
         }
     }
@@ -414,10 +417,20 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
     }
 
     protected void createInventory() {
+        createInventory(true);
+    }
+
+    /**
+     * @param detachOld false from inside the old container's own listener loop: removing the listener there threw
+     *                  ConcurrentModificationException ({@link #containerChanged} ignores the old container instead)
+     */
+    private void createInventory(boolean detachOld) {
         SimpleContainer simplecontainer = this.inventory;
         this.inventory = new SimpleContainer(this.getInventorySize());
         if (simplecontainer != null) {
-            simplecontainer.removeListener(this);
+            if (detachOld) {
+                simplecontainer.removeListener(this);
+            }
             int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
 
             for (int j = 0; j < i; ++j) {
@@ -711,8 +724,17 @@ public class EntityHippocampus extends TamableAnimal implements ISyncMount, IAni
 
     @Override
     public void containerChanged(@NotNull Container pInvBasic) {
+        // a replaced container (its menu closes on the next check) changes nothing any more
+        if (pInvBasic != this.inventory) {
+            return;
+        }
         boolean flag = this.isSaddled();
         this.updateContainerEquipment();
+        // A chest put in its slot: the storage at once (it stayed 3 slots until a reload). The open menu closes on the new
+        // container (stillValid), so no click reaches the old one
+        if (!this.level().isClientSide() && this.isChested() && this.inventory.getContainerSize() < 18) {
+            this.createInventory(false);
+        }
         if (this.tickCount > 20 && !flag && this.isSaddled()) {
             this.playSound(SoundEvents.HORSE_SADDLE, 0.5F, 1.0F);
         }

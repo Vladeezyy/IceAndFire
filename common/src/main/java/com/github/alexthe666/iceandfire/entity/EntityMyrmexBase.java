@@ -122,8 +122,11 @@ public abstract class EntityMyrmexBase extends Animal implements IAnimatedEntity
         return false;
     }
 
+    // made once: the AI asks for every block it looks at
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> MYRMEX_HARVESTABLES = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK, IafTagRegistry.MYRMEX_HARVESTABLES);
+
     public static boolean isEdibleBlock(BlockState blockState) {
-        return blockState.is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK, IafTagRegistry.MYRMEX_HARVESTABLES));
+        return blockState.is(MYRMEX_HARVESTABLES);
     }
 
     public static int getRandomCaste(Level world, RandomSource random, boolean royal) {

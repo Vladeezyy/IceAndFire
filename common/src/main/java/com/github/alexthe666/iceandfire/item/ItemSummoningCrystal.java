@@ -129,9 +129,14 @@ public class ItemSummoningCrystal extends Item {
             return InteractionResult.PASS;
         }
 
+        // getUUID threw on a crystal tag without the dragon's id
+        if (!dragonTag.hasUUID("DragonUUID")) {
+            displayClientError(summoningPlayer);
+            return InteractionResult.PASS;
+        }
         UUID dragonUuid = dragonTag.getUUID("DragonUUID");
 
-        IceAndFire.LOGGER.info("Trying to summon dragon {} {}", dragonUuid, dragonTag.getString("CustomName"));
+        IceAndFire.LOGGER.debug("Trying to summon dragon {} {}", dragonUuid, dragonTag.getString("CustomName"));
         Entity entity = serverWorld.getEntity(dragonUuid);
         // If the dragon is already loaded, summon it immediately
         if (entity != null) {
@@ -174,10 +179,14 @@ public class ItemSummoningCrystal extends Item {
     }
 
     public void summonEntity(Entity entity, Level worldIn, BlockPos offsetPos, float yaw, Player summoningPlayer, InteractionHand summoningHand, ItemStack stack) {
-        entity.moveTo(offsetPos.getX() + 0.5D, offsetPos.getY() + 0.5D, offsetPos.getZ() + 0.5D, yaw, 0);
-        if (entity instanceof EntityDragonBase) {
-            ((EntityDragonBase) entity).setCrystalBound(false);
+        // Only a dragon still bound to a crystal: a tag with any UUID moved players and mobs, and the second crystal of an
+        // already summoned dragon still pulled it
+        if (!(entity instanceof EntityDragonBase dragon) || !dragon.isBoundToCrystal()) {
+            displayClientError(summoningPlayer);
+            return;
         }
+        entity.moveTo(offsetPos.getX() + 0.5D, offsetPos.getY() + 0.5D, offsetPos.getZ() + 0.5D, yaw, 0);
+        dragon.setCrystalBound(false);
         if (IafConfig.chunkLoadSummonCrystal) {
             DragonPosWorldData data = DragonPosWorldData.get(worldIn);
             if (data != null) {

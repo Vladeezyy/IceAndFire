@@ -121,10 +121,14 @@ public class SirenData {
     }
 
     public void clearCharm() {
+        // tickCharmed clears an absent charm every tick: a sync only on a change (it sent the whole entity data of every
+        // player and villager with data to everyone tracking them, every tick)
+        if (isCharmed || charmedBy != null || charmTime != 0) {
+            triggerClientUpdate = true;
+        }
         charmTime = 0;
         isCharmed = false;
         charmedBy = null;
-        triggerClientUpdate = true;
     }
 
     public void serialize(final CompoundTag tag) {

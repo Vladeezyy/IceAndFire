@@ -298,7 +298,8 @@ public class MyrmexHive {
         }
         this.colonyName = compound.getString("ColonyName");
         this.villageRadius = compound.getInt("Radius");
-        if (compound.hasUUID("WanderRadius")) {
+        // an int: read as a UUID, the saved radius never loaded
+        if (compound.contains("WanderRadius", net.minecraft.nbt.Tag.TAG_ANY_NUMERIC)) {
             this.wanderRadius = compound.getInt("WanderRadius");
         }
         this.lastAddDoorTimestamp = compound.getInt("Stable");
@@ -310,7 +311,10 @@ public class MyrmexHive {
         this.myrmexList.clear();
         for (int i = 0; i < hiveMembers.size(); ++i) {
             CompoundTag CompoundNBT = hiveMembers.getCompound(i);
-            this.myrmexList.add(CompoundNBT.getUUID("MyrmexUUID"));
+            // a member without its UUID threw while loading the world
+            if (CompoundNBT.hasUUID("MyrmexUUID")) {
+                this.myrmexList.add(CompoundNBT.getUUID("MyrmexUUID"));
+            }
         }
         ListTag foodRoomList = compound.getList("FoodRooms", 10);
         this.foodRooms.clear();
@@ -343,7 +347,10 @@ public class MyrmexHive {
             CompoundTag CompoundNBT = entranceBottomsList.getCompound(i);
             this.entranceBottoms.put(new BlockPos(CompoundNBT.getInt("X"), CompoundNBT.getInt("Y"), CompoundNBT.getInt("Z")), Direction.from2DDataValue(CompoundNBT.getInt("Facing")));
         }
-        hiveUUID = compound.getUUID("HiveUUID");
+        // a hive without its id keeps the one it was made with (getUUID threw while loading the world)
+        if (compound.hasUUID("HiveUUID")) {
+            hiveUUID = compound.getUUID("HiveUUID");
+        }
         ListTag nbttaglist1 = compound.getList("Players", 10);
         this.playerReputation.clear();
         for (int j = 0; j < nbttaglist1.size(); ++j) {
@@ -382,6 +389,9 @@ public class MyrmexHive {
         compound.putInt("ACZ", this.centerHelper.getZ());
         ListTag hiveMembers = new ListTag();
         for (UUID memberUUID : this.myrmexList) {
+            if (memberUUID == null) {
+                continue;
+            }
             CompoundTag CompoundNBT = new CompoundTag();
             CompoundNBT.putUUID("MyrmexUUID", memberUUID);
             hiveMembers.add(CompoundNBT);
@@ -435,7 +445,10 @@ public class MyrmexHive {
             entranceBottomsList.add(CompoundNBT);
         }
         compound.put("EntranceBottoms", entranceBottomsList);
-        compound.putUUID("HiveUUID", this.hiveUUID);
+        // a hive without its id threw here on every autosave
+        if (this.hiveUUID != null) {
+            compound.putUUID("HiveUUID", this.hiveUUID);
+        }
         ListTag nbttaglist1 = new ListTag();
 
         for (UUID s : this.playerReputation.keySet()) {
@@ -614,6 +627,30 @@ public class MyrmexHive {
      * 1.20.1 replaced the whole hive with the data of the client (reputation, members, owner...).
      */
     public void applyStaffEdits(MyrmexHive edited, Player player) {
+        // The screens add one room or entrance per message: a bigger edit is not from them (a client could send thousands
+        // of rooms, merged on the main thread and kept in the save)
+        int current = this.foodRooms.size() + this.babyRooms.size() + this.miscRooms.size() + this.entrances.size() + this.entranceBottoms.size();
+        int sent = edited.foodRooms.size() + edited.babyRooms.size() + edited.miscRooms.size() + edited.entrances.size() + edited.entranceBottoms.size();
+        if (sent > current + 1) {
+            return;
+        }
+        Set<BlockPos> known = new HashSet<>(current);
+        known.addAll(this.foodRooms);
+        known.addAll(this.babyRooms);
+        known.addAll(this.miscRooms);
+        known.addAll(this.entrances.keySet());
+        known.addAll(this.entranceBottoms.keySet());
+        Set<BlockPos> added = new HashSet<>();
+        for (List<BlockPos> rooms : List.of(edited.foodRooms, edited.babyRooms, edited.miscRooms, List.copyOf(edited.entrances.keySet()), List.copyOf(edited.entranceBottoms.keySet()))) {
+            for (BlockPos pos : rooms) {
+                if (!known.contains(pos)) {
+                    added.add(pos);
+                }
+            }
+        }
+        if (added.size() > 1) {
+            return;
+        }
         this.reproduces = edited.reproduces;
         mergeRooms(this.foodRooms, edited.foodRooms, player);
         mergeRooms(this.babyRooms, edited.babyRooms, player);
@@ -628,9 +665,11 @@ public class MyrmexHive {
     }
 
     private static void mergeRooms(List<BlockPos> rooms, List<BlockPos> edited, Player player) {
-        rooms.removeIf(pos -> !edited.contains(pos));
+        Set<BlockPos> keep = new HashSet<>(edited);
+        rooms.removeIf(pos -> !keep.contains(pos));
+        Set<BlockPos> present = new HashSet<>(rooms);
         for (BlockPos pos : edited) {
-            if (!rooms.contains(pos) && canAddRoom(pos, player)) {
+            if (canAddRoom(pos, player) && present.add(pos)) {
                 rooms.add(pos);
             }
         }

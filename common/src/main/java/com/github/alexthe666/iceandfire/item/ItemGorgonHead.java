@@ -63,6 +63,13 @@ public class ItemGorgonHead extends Item {
         Vec3 Vector3d = entity.getEyePosition(1.0F);
         Vec3 Vector3d1 = entity.getViewVector(1.0F);
         Vec3 Vector3d2 = Vector3d.add(Vector3d1.x * dist, Vector3d1.y * dist, Vector3d1.z * dist);
+        // The look stops at the first block: through walls it removed tamed dragons, pets and villagers out of sight
+        net.minecraft.world.phys.HitResult blockHit = worldIn.clip(new net.minecraft.world.level.ClipContext(Vector3d, Vector3d2, net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, entity));
+        if (blockHit.getType() != net.minecraft.world.phys.HitResult.Type.MISS) {
+            Vector3d2 = blockHit.getLocation();
+            // above 0: a distance of 0 below means "the user stands in the mob"
+            dist = Math.max(Vector3d.distanceTo(Vector3d2), 1.0E-3);
+        }
         Entity pointedEntity = null;
         List<Entity> list = worldIn.getEntities(entity, entity.getBoundingBox().expandTowards(Vector3d1.x * dist, Vector3d1.y * dist, Vector3d1.z * dist).inflate(1.0D, 1.0D, 1.0D), new Predicate<Entity>() {
             @Override

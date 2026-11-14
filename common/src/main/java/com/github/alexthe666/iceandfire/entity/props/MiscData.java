@@ -105,7 +105,8 @@ public class MiscData {
                 ids[i] = targetedByScepter.get(i).getId();
             }
 
-            tag.putIntArray("targetedByScepterIds", ids);
+            // read back from miscData: written next to it, the targets never reached the client
+            miscData.putIntArray("targetedByScepterIds", ids);
         }
 
         tag.put("miscData", miscData);

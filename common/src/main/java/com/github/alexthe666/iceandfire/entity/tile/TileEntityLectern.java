@@ -226,10 +226,8 @@ public class TileEntityLectern extends BaseContainerBlockEntity implements World
         return 64;
     }
 
-    @Override
-    public boolean stillValid(@NotNull Player player) {
-        return true;
-    }
+    // stillValid of BaseContainerBlockEntity: this block entity, within reach (true kept the menu open from anywhere
+    // and after the block was gone: an item dupe)
 
     @Override
     public void clearContent() {

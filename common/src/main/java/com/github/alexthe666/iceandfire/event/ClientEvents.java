@@ -128,7 +128,7 @@ public class ClientEvents {
             if (player.level().isClientSide) {
                 GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
-                EntityDataProvider.getCapability(player).ifPresent(data -> {
+                EntityDataProvider.getExisting(player).ifPresent(data -> {
                     if (IafConfig.sirenShader && data.sirenData.charmedBy == null && renderer.currentEffect() != null) {
                         if (SIREN_SHADER.toString().equals(renderer.currentEffect().getName()))
                             renderer.shutdownEffect();
@@ -169,7 +169,7 @@ public class ClientEvents {
 
         LivingEntity entity = event.getEntity();
 
-        EntityDataProvider.getCapability(entity).ifPresent(data -> {
+        EntityDataProvider.getExisting(entity).ifPresent(data -> {
             for (LivingEntity target : data.miscData.getTargetedByScepter()) {
                 CockatriceBeamRender.render(entity, target, event.getPoseStack(), event.getMultiBufferSource(), event.getPartialTick());
             }
