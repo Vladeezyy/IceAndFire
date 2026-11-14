@@ -205,9 +205,12 @@ the rest by hand. Build from the 1.21.1 branch (Loom with Mojang mappings, Java 
 
 ## Unreleased (2026-11-14): code audit, batches 1 and 2
 
-Branch `mc/1.21.11`. This branch has batch 2: a86b16c (fixes), 6f9940f (breath strip fix), 0a663f2 (self-test). Batch 1 (b30a67f, b39840d) is on `mc/26.1.2` and is not merged here. The batch 2 fixes are the same as in the 26.1.2 log (multiplayer and PvP, `isChained()`, dragon breath, crystal summon on the next tick, pathfinding and server performance, client pose cache).
+Branch `mc/1.21.11`. Both batches are on this branch:
+- batch 1: f04a80b (self-test), 995451c (fixes), 3234a71 and 677c2f4 (self-test), 9542131 (gorgon temple worldgen fix);
+- batch 2: a86b16c (fixes), 6f9940f (breath strip fix), 0a663f2 (self-test).
+
+Batch 1 fixes are as in the 26.1.2 log (podium and lectern menus, siren sync, entity data reads, gorgon head, hippocampus, hive UUID, staff hive edits, scepter targets, pathfinding threads, crystal, pending summons, tag keys) and the gorgon temple worldgen fix (9542131). Batch 2 fixes are as in the 26.1.2 log (multiplayer and PvP, `isChained()`, dragon breath, crystal summon on the next tick, pathfinding and server performance, client pose cache; the pose cache's verifyPoseCache check ran on 26.1.2 only).
 
 - Fabric: `ServerWorldEvents` (LOAD/UNLOAD with `(MinecraftServer, ServerLevel)`) instead of `ServerLevelEvents`, which is the 26.x name.
 - Self-test: 72/72 on both loaders.
 - Measurements: see the 26.1.2 log.
-
