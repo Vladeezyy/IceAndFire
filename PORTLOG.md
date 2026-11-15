@@ -214,3 +214,20 @@ Batch 1 fixes are as in the 26.1.2 log (podium and lectern menus, siren sync, en
 - Fabric: `ServerWorldEvents` (LOAD/UNLOAD with `(MinecraftServer, ServerLevel)`) instead of `ServerLevelEvents`, which is the 26.x name.
 - Self-test: 72/72 on both loaders.
 - Measurements: see the 26.1.2 log.
+
+Death worm under a rider (2026-11-15):
+- Fix: a ridden death worm stood still under its rider on a server and was pulled back in sand.
+- Cause 1: since 1.21.2 a mob steered by a player has no server AI (`isEffectiveAi` is false on the server), so the worm's ride goal `EntityGroundAIRide` never ran. On 1.21.1 the goal ran but only set the worm's own input, and the server never moves a player-steered vehicle.
+- Fix 1: the worm moves on the rider's client (`tickRidden`, `getRiddenInput`, `getRiddenSpeed`; 1.8 x movement speed, a quarter sideways, 0.15 backwards, as the goal gave).
+- Cause 2: the server vehicle check (`isEntityCollidingWithAnythingNew` on 1.21.2+, `noCollision` in `handleMoveVehicle` on 1.21.1) counted the sand the worm passes through as collisions and sent the worm back every tick with no log line (641 vehicle corrections in 30 s).
+- Fix 2: mixin `VehiclePassThroughMixin` skips blocks an `ICustomCollisions` mob can pass through (runs only for such mobs, per vehicle move packet, over the mob's box).
+- The rider position limit in `MessageDragonControl` was not the cause and is unchanged.
+
+NetTest scene (dedicated server + real client): after the dragon flight the player rides a tame death worm in a walled 65x65 sand field for 30 s, turning slowly. All runs below: 0 vehicle corrections from the server, 0 "moved wrongly", rider stayed on, dragon flight 0 corrections, dismount OK.
+
+| Version | Loader | Horizontal path in 30 s | Position jumps > 2 blocks |
+|---|---|---|---|
+| 1.21.11 | NeoForge | 162.6 | 0 |
+| 1.21.11 | Fabric | 159.1 (1 jump of 2.26), rerun 123.5 | 1, rerun 0 |
+
+- One "moved too quickly" line for the player itself in each run comes from the test teleporting the player 400-650 blocks back to the start after the flight; it is not about the vehicle.
