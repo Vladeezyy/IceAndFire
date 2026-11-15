@@ -222,6 +222,8 @@ Death worm under a rider (2026-11-15):
 - Cause 2: the server vehicle check (`isEntityCollidingWithAnythingNew` on 1.21.2+, `noCollision` in `handleMoveVehicle` on 1.21.1) counted the sand the worm passes through as collisions and sent the worm back every tick with no log line (641 vehicle corrections in 30 s).
 - Fix 2: mixin `VehiclePassThroughMixin` skips blocks an `ICustomCollisions` mob can pass through (runs only for such mobs, per vehicle move packet, over the mob's box).
 - The rider position limit in `MessageDragonControl` was not the cause and is unchanged.
+- Cause 3: `EntityDeathWorm` adds +0.08 upward motion every tick while `isInSandStrict()` (original 1.20 code, also on the server). At the sand's surface the server's float switched on and off, and each change went to the rider's client as `ClientboundSetEntityMotionPacket`, which replaced the client's own motion. Measured on 26.3 (same code): 206 motion packets for the worm in 30 s in a slow run, 3 in a fast run; not measured here before the fix.
+- Fix 3: the float runs only on the side that moves the worm: `isInSandStrict() && canSimulateMovement()`. It also removes the needless motion packets. NetTest after the fix (30 s worm ride, NeoForge): 169.7 blocks, 0-1 motion packets for the worm, 0 vehicle corrections, 0 position jumps, dismount OK.
 
 NetTest scene (dedicated server + real client): after the dragon flight the player rides a tame death worm in a walled 65x65 sand field for 30 s, turning slowly. All runs below: 0 vehicle corrections from the server, 0 "moved wrongly", rider stayed on, dragon flight 0 corrections, dismount OK.
 
