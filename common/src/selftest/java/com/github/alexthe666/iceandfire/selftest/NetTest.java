@@ -356,7 +356,7 @@ public class NetTest {
                 mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
             }
             if (wormTicks == 350) {
-                Screenshot.grab(new File("."), "nettest_worm.png", mc.getMainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
+                Screenshot.grab(new File("."), "nettest_worm.png", mc.gameRenderer.mainRenderTarget(), 1, c -> IceAndFire.LOGGER.info("[nettest] screenshot"));
             }
             if (wormTicks == 360) {
                 mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
