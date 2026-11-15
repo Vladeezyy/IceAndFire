@@ -171,9 +171,20 @@ public class NetTest {
         private static int dragonVehicleCorrections;
         private static int riderOffMount;
         private static volatile int vehicleCorrections;
+        /** Motion packets the server sends for the player's own vehicle: they overwrite the client's own motion */
+        private static volatile int vehicleId = -1;
+        private static volatile int vehicleMotions;
+        private static volatile String lastVehicleMotion = "-";
 
         private static final java.util.Map<String, Integer> PACKETS = new java.util.concurrent.ConcurrentHashMap<>();
         private static boolean counterInstalled;
+
+        private static void countVehicleMotion(Object packet) {
+            if (packet instanceof net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket motion && motion.id() == vehicleId) {
+                vehicleMotions++;
+                lastVehicleMotion = motion.movement().toString();
+            }
+        }
 
         /** Counts the packets by type before the vanilla handler (bundles are counted by their content). */
         private static void installCounter(Minecraft mc) {
@@ -186,6 +197,12 @@ public class NetTest {
                 public void channelRead(io.netty.channel.ChannelHandlerContext ctx, Object msg) throws Exception {
                     if (msg instanceof net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket) {
                         vehicleCorrections++;
+                    }
+                    countVehicleMotion(msg);
+                    if (msg instanceof net.minecraft.network.protocol.BundlePacket<?> motionBundle) {
+                        for (Object packet : motionBundle.subPackets()) {
+                            countVehicleMotion(packet);
+                        }
                     }
                     if (msg instanceof net.minecraft.network.protocol.BundlePacket<?> bundle) {
                         for (Object packet : bundle.subPackets()) {
@@ -365,8 +382,12 @@ public class NetTest {
                         mc.level.getGameTime(), String.format("%.2f %.2f %.2f", mc.player.getX(), mc.player.getY(), mc.player.getZ()));
                 }
             }
+            if (riding) {
+                vehicleId = vehicle.getId();
+            }
             if (riding && wormTicks % 100 == 50) {
-                IceAndFire.LOGGER.info("[nettest] client worm state {}", rideState((net.minecraft.world.entity.LivingEntity) vehicle, mc.player));
+                IceAndFire.LOGGER.info("[nettest] client worm state {}, motion packets for the worm so far {} (last {})", rideState((net.minecraft.world.entity.LivingEntity) vehicle, mc.player),
+                    vehicleMotions, lastVehicleMotion);
             }
             if (wormTicks == 330) {
                 mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
@@ -384,8 +405,8 @@ public class NetTest {
                 if (!moved || !steady) {
                     fails++;
                 }
-                IceAndFire.LOGGER.info("[nettest] CHECK {} worm ride: path {} blocks in 30 s, still riding {}, position jumps over 2 blocks {} (max {}), rider ticks away from the worm {}, vehicle position corrections from the server {}",
-                    moved && steady ? "OK" : "FAIL", String.format("%.1f", wormPath), riding, wormJumps, String.format("%.2f", wormMaxJump), riderOffMount, wormVehicleCorrections);
+                IceAndFire.LOGGER.info("[nettest] CHECK {} worm ride: path {} blocks in 30 s, still riding {}, position jumps over 2 blocks {} (max {}), rider ticks away from the worm {}, vehicle position corrections from the server {}, motion packets for the worm {}",
+                    moved && steady ? "OK" : "FAIL", String.format("%.1f", wormPath), riding, wormJumps, String.format("%.2f", wormMaxJump), riderOffMount, wormVehicleCorrections, vehicleMotions);
             }
             // off the worm: the dismount key of the mod is the shift key here too
             mc.options.keyShift.setDown(wormTicks >= 660 && wormTicks < 680);
