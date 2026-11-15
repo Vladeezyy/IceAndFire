@@ -292,8 +292,13 @@ Death worm under a rider (2026-11-15):
 - Cause 2: the server vehicle check (`isEntityCollidingWithAnythingNew` on 1.21.2+, `noCollision` in `handleMoveVehicle` on 1.21.1) counted the sand the worm passes through as collisions and sent the worm back every tick with no log line (641 vehicle corrections in 30 s).
 - Fix 2: mixin `VehiclePassThroughMixin` skips blocks an `ICustomCollisions` mob can pass through (runs only for such mobs, per vehicle move packet, over the mob's box).
 - The rider position limit in `MessageDragonControl` was not the cause and is unchanged.
+- Cause 3 (seen on 26.3 in about half of the runs, possible on every version): `EntityDeathWorm` adds +0.08 upward motion every tick while `isInSandStrict()` (the float of the original 1.20 code; it ran on the server too). Under a rider the client moves the worm. At the sand's surface the server's float switched on and off every tick, `ServerEntity` sent each change as `ClientboundSetEntityMotionPacket` to the tracking players, the rider included, and the client's `lerpMotion` overwrote the worm's own motion with (0, 0, 0) or (0, 0.08, 0). Slow 26.3 run: 206 motion packets for the worm in 30 s (path 30.4); fast run: 3 (path 169.7, worm submerged, the server value never changed).
+- Fix 3: the float runs only on the side that moves the worm: `isInSandStrict() && canSimulateMovement()` on 26.x and 1.21.11, `isControlledByLocalInstance()` on 1.21.1. It also removes the needless motion packets.
+- The yellow swirls over the rider and the sword effect icon seen in the slow runs were the vanilla Strength effect from the tame dragon's roar (`EntityDragonBase.roar` gives the owner Strength, as in the original 1.20 with DAMAGE_BOOST): intended, not the cause.
 
 NetTest scene (dedicated server + real client): after the dragon flight the player rides a tame death worm in a walled 65x65 sand field for 30 s, turning slowly. All runs below: 0 vehicle corrections from the server, 0 "moved wrongly", rider stayed on, dragon flight 0 corrections, dismount OK.
+
+Before Cause 3 / Fix 3 (the sand float motion packets):
 
 | Version | Loader | Horizontal path in 30 s | Position jumps > 2 blocks |
 |---|---|---|---|
@@ -301,12 +306,24 @@ NetTest scene (dedicated server + real client): after the dragon flight the play
 | 26.1.2 | Fabric | 98.4 | 0 |
 | 26.3 | NeoForge | 30.5 | 0 |
 | 1.21.11 | NeoForge | 162.6 | 0 |
-| 1.21.11 | Fabric | 159.1 (1 jump of 2.26), rerun 123.5 | 1, rerun 0 |
+| 1.21.11 | Fabric | 159.1 (1 jump of 2.26 at the mount: the client catching up with the worm after the mount teleport; the NetTest no longer counts the first 3 ticks after a mount), rerun 123.5 | 1, rerun 0 |
 | 1.21.1 | NeoForge | 142.9 | 0 |
 | 1.21.1 | Fabric | 142.9 | 0 |
+
+After Cause 3 / Fix 3 (2026-11-15, same NetTest). Motion packets for the ridden worm: 0-1 in every run. Every run: 0 vehicle corrections, 0 position jumps, 0 "moved wrongly", rider stayed on, dismount OK.
+
+| Version | Loader | Horizontal path in 30 s |
+|---|---|---|
+| 26.3 | NeoForge (3 runs) | 169.7 / 169.6 / 169.9 |
+| 26.3 | Fabric | 169.7 |
+| 26.2 | NeoForge (control) | 169.7 |
+| 1.21.11 | NeoForge | 169.7 |
+| 1.21.1 | NeoForge | 142.9 |
+
+The NetTest gained diagnostics: worm state (height, ground, health, speed attribute and modifiers, effects on worm and rider, block), a count of motion packets for the ridden worm, and no jump count in the first 3 ticks after the mount.
 
 Before the fix (26.1.2 NeoForge): the server worm did not move at all; with only the mixin missing the client sank it into sand and got 641 corrections in 30 s.
 
 Not checked / open:
-- On 26.3 the worm moved about 5 times slower than on the other versions (30.5 blocks); its body stayed above the sand and the rider showed yellow swirls over the head and an effect icon. Not investigated.
+- Resolved 2026-11-15: the slow death worm on 26.3 (30.5 blocks) was the sand float motion packets (Cause 3 / Fix 3 above). The yellow swirls and the effect icon were the Strength effect from the tame dragon's roar, intended.
 - One "moved too quickly" line for the player itself in each run comes from the test teleporting the player 400-650 blocks back to the start after the flight; it is not about the vehicle.
