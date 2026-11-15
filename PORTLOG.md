@@ -230,6 +230,6 @@ NetTest scene (dedicated server + real client): after the dragon flight the play
 | Version | Loader | Horizontal path in 30 s | Position jumps > 2 blocks |
 |---|---|---|---|
 | 1.21.11 | NeoForge | 162.6 | 0 |
-| 1.21.11 | Fabric | 159.1 (1 jump of 2.26), rerun 123.5 | 1, rerun 0 |
+| 1.21.11 | Fabric | 159.1, rerun 123.5 | 1 (2.26 blocks on the first tick after the mount: the client catching up after the mount teleport, no longer counted), rerun 0 |
 
 - One "moved too quickly" line for the player itself in each run comes from the test teleporting the player 400-650 blocks back to the start after the flight; it is not about the vehicle.
