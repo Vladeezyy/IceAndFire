@@ -80,8 +80,8 @@ public class NetTest {
     /** What slows a ridden mob: effects on it and its rider, its speed attribute with modifiers, the block it stands in */
     static String rideState(net.minecraft.world.entity.LivingEntity mob, net.minecraft.world.entity.LivingEntity rider) {
         net.minecraft.world.entity.ai.attributes.AttributeInstance speed = mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
-        return String.format("speed attr %.3f (base %.3f, modifiers %s), getSpeed %.3f, mob effects %s, rider effects %s, in block %s, on block %s, in wall %s, eye in fluid %s, delta %s, rider shift %s",
-            speed.getValue(), speed.getBaseValue(), speed.getModifiers(), mob.getSpeed(), mob.getActiveEffects(), rider.getActiveEffects(),
+        return String.format("y %.2f, on ground %s, health %.1f, speed attr %.3f (base %.3f, modifiers %s), getSpeed %.3f, mob effects %s, rider effects %s, in block %s, on block %s, in wall %s, eye in fluid %s, delta %s, rider shift %s",
+            mob.getY(), mob.onGround(), mob.getHealth(), speed.getValue(), speed.getBaseValue(), speed.getModifiers(), mob.getSpeed(), mob.getActiveEffects(), rider.getActiveEffects(),
             mob.level().getBlockState(mob.blockPosition()).getBlock(), mob.level().getBlockState(mob.blockPosition().below()).getBlock(), mob.isInWall(),
             mob.isEyeInFluid(net.minecraft.tags.FluidTags.WATER), mob.getDeltaMovement(), rider.isShiftKeyDown());
     }
@@ -349,7 +349,8 @@ public class NetTest {
                 // the path counts horizontal steps only: a worm that sinks and is pushed back up goes nowhere
                 wormPath += Math.hypot(pos.x - lastWormPos.x, pos.z - lastWormPos.z);
                 wormMaxJump = Math.max(wormMaxJump, jump);
-                if (jump > 2) {
+                // the first ticks after the mount the client catches up with the worm's position after the teleport
+                if (jump > 2 && wormTicks > 3) {
                     wormJumps++;
                     IceAndFire.LOGGER.info("[nettest] worm jump {} blocks at worm tick {}: {} -> {}, on ground {}, in wall {}", String.format("%.2f", jump), wormTicks,
                         String.format("%.2f %.2f %.2f", lastWormPos.x, lastWormPos.y, lastWormPos.z), String.format("%.2f %.2f %.2f", pos.x, pos.y, pos.z),
