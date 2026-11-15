@@ -53,14 +53,17 @@ public class NetTest {
     private static void buildWormField() {
         net.minecraft.server.level.ServerLevel level = rider.serverLevel();
         BlockPos base = fieldBase;
-        int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING, base.getX(), base.getZ()) - 1;
+        // not below the sea, and walled in with stone: a shore or an ocean nearby drowned the worm
+        int top = Math.max(level.getHeight(Heightmap.Types.MOTION_BLOCKING, base.getX(), base.getZ()) - 1, level.getSeaLevel());
         sandCenter = new BlockPos(base.getX(), top, base.getZ());
         BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
-        for (int x = -32; x <= 32; x++) {
-            for (int z = -32; z <= 32; z++) {
-                for (int dy = -5; dy <= 8; dy++) {
-                    level.setBlock(at.set(sandCenter.getX() + x, top + dy, sandCenter.getZ() + z),
-                        dy <= 0 ? net.minecraft.world.level.block.Blocks.SAND.defaultBlockState() : net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        for (int x = -33; x <= 33; x++) {
+            for (int z = -33; z <= 33; z++) {
+                boolean wall = Math.abs(x) == 33 || Math.abs(z) == 33;
+                for (int dy = -6; dy <= 8; dy++) {
+                    net.minecraft.world.level.block.state.BlockState state = wall || dy == -6 ? net.minecraft.world.level.block.Blocks.STONE.defaultBlockState()
+                        : dy <= 0 ? net.minecraft.world.level.block.Blocks.SAND.defaultBlockState() : net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
+                    level.setBlock(at.set(sandCenter.getX() + x, top + dy, sandCenter.getZ() + z), state, 2);
                 }
             }
         }
