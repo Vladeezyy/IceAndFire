@@ -336,6 +336,9 @@ public class NetTest {
                 wormMaxJump = Math.max(wormMaxJump, jump);
                 if (jump > 2) {
                     wormJumps++;
+                    IceAndFire.LOGGER.info("[nettest] worm jump {} blocks at worm tick {}: {} -> {}, on ground {}, in wall {}", String.format("%.2f", jump), wormTicks,
+                        String.format("%.2f %.2f %.2f", lastWormPos.x, lastWormPos.y, lastWormPos.z), String.format("%.2f %.2f %.2f", pos.x, pos.y, pos.z),
+                        vehicle.onGround(), vehicle.isInWall());
                 }
                 lastWormPos = pos;
                 if (mc.player.position().distanceTo(pos) > 6) {
