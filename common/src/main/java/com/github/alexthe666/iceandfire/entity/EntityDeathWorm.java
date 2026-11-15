@@ -883,6 +883,32 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         return isInSand() ? 1.5F : 1F;
     }
 
+    /*
+     * Ridden movement runs on the rider's client: since 1.21.2 a mob with a player at the reins has no server AI
+     * (isEffectiveAi is false there), so EntityGroundAIRide never ticks and the worm stood still under its rider.
+     * Same speed as the ride goal gave it: 1.8 times the movement speed, a quarter sideways, 0.15 backwards.
+     */
+    @Override
+    protected void tickRidden(@NotNull Player player, @NotNull Vec3 travelVector) {
+        super.tickRidden(player, travelVector);
+        this.setRot(player.getYRot(), 0);
+        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+    }
+
+    @Override
+    protected @NotNull Vec3 getRiddenInput(@NotNull Player player, @NotNull Vec3 travelVector) {
+        float forward = player.zza;
+        if (forward < 0) {
+            forward *= 0.15F;
+        }
+        return new Vec3(player.xxa * 0.25F, 0, forward);
+    }
+
+    @Override
+    protected float getRiddenSpeed(@NotNull Player player) {
+        return (float) (1.8F * this.getAttributeValue(Attributes.MOVEMENT_SPEED) * this.getRideSpeedModifier());
+    }
+
     public double processRiderY(double y) {
         return this.isInSand() ? y + 0.2F : y;
     }
