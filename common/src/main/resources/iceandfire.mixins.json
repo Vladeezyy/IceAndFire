@@ -7,6 +7,7 @@
     "LivingEntityFrictionMixin",
     "ServerExplosionBlocksMixin",
     "ServerLevelEntityCallbacksMixin",
+    "VehiclePassThroughMixin",
     "gen.NoLakesInStructuresMixin",
     "gen.WorldGenRegionMixin"
   ],
