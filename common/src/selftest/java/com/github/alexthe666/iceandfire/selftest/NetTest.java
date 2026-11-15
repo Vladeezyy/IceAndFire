@@ -77,6 +77,15 @@ public class NetTest {
         level.addFreshEntity(worm);
     }
 
+    /** What slows a ridden mob: effects on it and its rider, its speed attribute with modifiers, the block it stands in */
+    static String rideState(net.minecraft.world.entity.LivingEntity mob, net.minecraft.world.entity.LivingEntity rider) {
+        net.minecraft.world.entity.ai.attributes.AttributeInstance speed = mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        return String.format("y %.2f, on ground %s, health %.1f, speed attr %.3f (base %.3f, modifiers %s), getSpeed %.3f, mob effects %s, rider effects %s, in block %s, on block %s, in wall %s, eye in fluid %s, delta %s, rider shift %s",
+            mob.getY(), mob.onGround(), mob.getHealth(), speed.getValue(), speed.getBaseValue(), speed.getModifiers(), mob.getSpeed(), mob.getActiveEffects(), rider.getActiveEffects(),
+            mob.level().getBlockState(mob.blockPosition()).getBlock(), mob.level().getBlockState(mob.blockPosition().below()).getBlock(), mob.isInWall(),
+            mob.isEyeInFluid(net.minecraft.tags.FluidTags.WATER), mob.getDeltaMovement(), rider.isShiftKeyDown());
+    }
+
     public static void onServerTick(net.minecraft.server.MinecraftServer server) {
         if (serverTicks < 0 || rider == null) {
             return;
@@ -129,6 +138,9 @@ public class NetTest {
                 String.format("%.1f", server.getAverageTickTimeNanos() / 1.0E6), vehicle != null,
                 dragon == null ? "-" : dragon.blockPosition().toShortString(), dragon != null && dragon.isFlying(),
                 dragon != null && dragon.isHovering(), dragon == null ? 0 : dragon.getControlState());
+            if (worm != null && rider.getVehicle() == worm && serverTicks % 100 == 0) {
+                IceAndFire.LOGGER.info("[nettest] server worm state {}", rideState(worm, rider));
+            }
             if (worm != null && rider.getVehicle() == worm) {
                 IceAndFire.LOGGER.info("[nettest] server worm at {} gameTime {} in sand {} rider at {}", String.format("%.2f %.2f %.2f", worm.getX(), worm.getY(), worm.getZ()),
                     server.overworld().getGameTime(), worm.isInSandStrict(), String.format("%.2f %.2f %.2f", rider.getX(), rider.getY(), rider.getZ()));
@@ -159,9 +171,20 @@ public class NetTest {
         private static int dragonVehicleCorrections;
         private static int riderOffMount;
         private static volatile int vehicleCorrections;
+        /** Motion packets the server sends for the player's own vehicle: they overwrite the client's own motion */
+        private static volatile int vehicleId = -1;
+        private static volatile int vehicleMotions;
+        private static volatile String lastVehicleMotion = "-";
 
         private static final java.util.Map<String, Integer> PACKETS = new java.util.concurrent.ConcurrentHashMap<>();
         private static boolean counterInstalled;
+
+        private static void countVehicleMotion(Object packet) {
+            if (packet instanceof net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket motion && motion.id() == vehicleId) {
+                vehicleMotions++;
+                lastVehicleMotion = motion.movement().toString();
+            }
+        }
 
         /** Counts the packets by type before the vanilla handler (bundles are counted by their content). */
         private static void installCounter(Minecraft mc) {
@@ -174,6 +197,12 @@ public class NetTest {
                 public void channelRead(io.netty.channel.ChannelHandlerContext ctx, Object msg) throws Exception {
                     if (msg instanceof net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket) {
                         vehicleCorrections++;
+                    }
+                    countVehicleMotion(msg);
+                    if (msg instanceof net.minecraft.network.protocol.BundlePacket<?> motionBundle) {
+                        for (Object packet : motionBundle.subPackets()) {
+                            countVehicleMotion(packet);
+                        }
                     }
                     if (msg instanceof net.minecraft.network.protocol.BundlePacket<?> bundle) {
                         for (Object packet : bundle.subPackets()) {
@@ -337,7 +366,8 @@ public class NetTest {
                 // the path counts horizontal steps only: a worm that sinks and is pushed back up goes nowhere
                 wormPath += Math.hypot(pos.x - lastWormPos.x, pos.z - lastWormPos.z);
                 wormMaxJump = Math.max(wormMaxJump, jump);
-                if (jump > 2) {
+                // the first ticks after the mount the client catches up with the worm's position after the teleport
+                if (jump > 2 && wormTicks > 3) {
                     wormJumps++;
                     IceAndFire.LOGGER.info("[nettest] worm jump {} blocks at worm tick {}: {} -> {}, on ground {}, in wall {}", String.format("%.2f", jump), wormTicks,
                         String.format("%.2f %.2f %.2f", lastWormPos.x, lastWormPos.y, lastWormPos.z), String.format("%.2f %.2f %.2f", pos.x, pos.y, pos.z),
@@ -351,6 +381,13 @@ public class NetTest {
                     IceAndFire.LOGGER.info("[nettest] client worm at {} gameTime {} rider at {}", String.format("%.2f %.2f %.2f", pos.x, pos.y, pos.z),
                         mc.level.getGameTime(), String.format("%.2f %.2f %.2f", mc.player.getX(), mc.player.getY(), mc.player.getZ()));
                 }
+            }
+            if (riding) {
+                vehicleId = vehicle.getId();
+            }
+            if (riding && wormTicks % 100 == 50) {
+                IceAndFire.LOGGER.info("[nettest] client worm state {}, motion packets for the worm so far {} (last {})", rideState((net.minecraft.world.entity.LivingEntity) vehicle, mc.player),
+                    vehicleMotions, lastVehicleMotion);
             }
             if (wormTicks == 330) {
                 mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
@@ -368,8 +405,8 @@ public class NetTest {
                 if (!moved || !steady) {
                     fails++;
                 }
-                IceAndFire.LOGGER.info("[nettest] CHECK {} worm ride: path {} blocks in 30 s, still riding {}, position jumps over 2 blocks {} (max {}), rider ticks away from the worm {}, vehicle position corrections from the server {}",
-                    moved && steady ? "OK" : "FAIL", String.format("%.1f", wormPath), riding, wormJumps, String.format("%.2f", wormMaxJump), riderOffMount, wormVehicleCorrections);
+                IceAndFire.LOGGER.info("[nettest] CHECK {} worm ride: path {} blocks in 30 s, still riding {}, position jumps over 2 blocks {} (max {}), rider ticks away from the worm {}, vehicle position corrections from the server {}, motion packets for the worm {}",
+                    moved && steady ? "OK" : "FAIL", String.format("%.1f", wormPath), riding, wormJumps, String.format("%.2f", wormMaxJump), riderOffMount, wormVehicleCorrections, vehicleMotions);
             }
             // off the worm: the dismount key of the mod is the shift key here too
             mc.options.keyShift.setDown(wormTicks >= 660 && wormTicks < 680);
