@@ -77,6 +77,15 @@ public class NetTest {
         level.addFreshEntity(worm);
     }
 
+    /** What slows a ridden mob: effects on it and its rider, its speed attribute with modifiers, the block it stands in */
+    static String rideState(net.minecraft.world.entity.LivingEntity mob, net.minecraft.world.entity.LivingEntity rider) {
+        net.minecraft.world.entity.ai.attributes.AttributeInstance speed = mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        return String.format("speed attr %.3f (base %.3f, modifiers %s), getSpeed %.3f, mob effects %s, rider effects %s, in block %s, on block %s, in wall %s, eye in fluid %s, delta %s, rider shift %s",
+            speed.getValue(), speed.getBaseValue(), speed.getModifiers(), mob.getSpeed(), mob.getActiveEffects(), rider.getActiveEffects(),
+            mob.level().getBlockState(mob.blockPosition()).getBlock(), mob.level().getBlockState(mob.blockPosition().below()).getBlock(), mob.isInWall(),
+            mob.isEyeInFluid(net.minecraft.tags.FluidTags.WATER), mob.getDeltaMovement(), rider.isShiftKeyDown());
+    }
+
     public static void onServerTick(net.minecraft.server.MinecraftServer server) {
         if (serverTicks < 0 || rider == null) {
             return;
@@ -129,6 +138,9 @@ public class NetTest {
                 String.format("%.1f", server.getAverageTickTimeNanos() / 1.0E6), vehicle != null,
                 dragon == null ? "-" : dragon.blockPosition().toShortString(), dragon != null && dragon.isFlying(),
                 dragon != null && dragon.isHovering(), dragon == null ? 0 : dragon.getControlState());
+            if (worm != null && rider.getVehicle() == worm && serverTicks % 100 == 0) {
+                IceAndFire.LOGGER.info("[nettest] server worm state {}", rideState(worm, rider));
+            }
             if (worm != null && rider.getVehicle() == worm) {
                 IceAndFire.LOGGER.info("[nettest] server worm at {} gameTime {} in sand {} rider at {}", String.format("%.2f %.2f %.2f", worm.getX(), worm.getY(), worm.getZ()),
                     server.overworld().getGameTime(), worm.isInSandStrict(), String.format("%.2f %.2f %.2f", rider.getX(), rider.getY(), rider.getZ()));
@@ -351,6 +363,9 @@ public class NetTest {
                     IceAndFire.LOGGER.info("[nettest] client worm at {} gameTime {} rider at {}", String.format("%.2f %.2f %.2f", pos.x, pos.y, pos.z),
                         mc.level.getGameTime(), String.format("%.2f %.2f %.2f", mc.player.getX(), mc.player.getY(), mc.player.getZ()));
                 }
+            }
+            if (riding && wormTicks % 100 == 50) {
+                IceAndFire.LOGGER.info("[nettest] client worm state {}", rideState((net.minecraft.world.entity.LivingEntity) vehicle, mc.player));
             }
             if (wormTicks == 330) {
                 mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
