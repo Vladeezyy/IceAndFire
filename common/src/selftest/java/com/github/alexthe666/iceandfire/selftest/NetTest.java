@@ -180,9 +180,9 @@ public class NetTest {
         private static boolean counterInstalled;
 
         private static void countVehicleMotion(Object packet) {
-            if (packet instanceof net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket motion && motion.id() == vehicleId) {
+            if (packet instanceof net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket motion && motion.getId() == vehicleId) {
                 vehicleMotions++;
-                lastVehicleMotion = motion.movement().toString();
+                lastVehicleMotion = String.format("(%.3f, %.3f, %.3f)", motion.getXa(), motion.getYa(), motion.getZa());
             }
         }
 
