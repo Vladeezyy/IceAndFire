@@ -322,5 +322,28 @@ Scene "new-chunks": a player without a client flies east at 1.5 blocks a tick (1
 Self-tests (server, both loaders):
 - 26.1.2 72/72; 26.2 72/72; 26.3 73/73; 1.21.11 72/72; 1.21.1 69/69 (68/69 before c11f693).
 
-Not done:
-- The rider position limit was not tested against "moved wrongly" of a death worm in sand with a real client.
+Death worm under a rider (2026-11-15):
+- Fix: a ridden death worm stood still under its rider on a server and was pulled back in sand.
+- Cause 1: since 1.21.2 a mob steered by a player has no server AI (`isEffectiveAi` is false on the server), so the worm's ride goal `EntityGroundAIRide` never ran. On 1.21.1 the goal ran but only set the worm's own input, and the server never moves a player-steered vehicle.
+- Fix 1: the worm moves on the rider's client (`tickRidden`, `getRiddenInput`, `getRiddenSpeed`; 1.8 x movement speed, a quarter sideways, 0.15 backwards, as the goal gave).
+- Cause 2: the server vehicle check (`isEntityCollidingWithAnythingNew` on 1.21.2+, `noCollision` in `handleMoveVehicle` on 1.21.1) counted the sand the worm passes through as collisions and sent the worm back every tick with no log line (641 vehicle corrections in 30 s).
+- Fix 2: mixin `VehiclePassThroughMixin` skips blocks an `ICustomCollisions` mob can pass through (runs only for such mobs, per vehicle move packet, over the mob's box).
+- The rider position limit in `MessageDragonControl` was not the cause and is unchanged.
+
+NetTest scene (dedicated server + real client): after the dragon flight the player rides a tame death worm in a walled 65x65 sand field for 30 s, turning slowly. All runs below: 0 vehicle corrections from the server, 0 "moved wrongly", rider stayed on, dragon flight 0 corrections, dismount OK.
+
+| Version | Loader | Horizontal path in 30 s | Position jumps > 2 blocks |
+|---|---|---|---|
+| 26.1.2 | NeoForge | 170.1 | 0 |
+| 26.1.2 | Fabric | 98.4 | 0 |
+| 26.3 | NeoForge | 30.5 | 0 |
+| 1.21.11 | NeoForge | 162.6 | 0 |
+| 1.21.11 | Fabric | 159.1 (1 jump of 2.26), rerun 123.5 | 1, rerun 0 |
+| 1.21.1 | NeoForge | 142.9 | 0 |
+| 1.21.1 | Fabric | 142.9 | 0 |
+
+Before the fix (26.1.2 NeoForge): the server worm did not move at all; with only the mixin missing the client sank it into sand and got 641 corrections in 30 s.
+
+Not checked / open:
+- On 26.3 the worm moved about 5 times slower than on the other versions (30.5 blocks); its body stayed above the sand and the rider showed yellow swirls over the head and an effect icon. Not investigated.
+- One "moved too quickly" line for the player itself in each run comes from the test teleporting the player 400-650 blocks back to the start after the flight; it is not about the vehicle.
