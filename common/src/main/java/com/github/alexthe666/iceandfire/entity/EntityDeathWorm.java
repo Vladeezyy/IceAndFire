@@ -618,7 +618,9 @@ public class EntityDeathWorm extends TamableAnimal implements ISyncMount, ICusto
         if (this.tickCount == 1) {
             initSegments(this.getIafScale());
         }
-        if (isInSandStrict()) {
+        // Floats in sand only on the side that moves the worm: under a rider the server toggled this at the sand's surface
+        // and sent the motion to the rider's client every tick, wiping out the worm's speed there
+        if (isInSandStrict() && this.canSimulateMovement()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.08D, 0));
         }
         if (growthCounter > 1000 && this.getWormAge() < 5) {
