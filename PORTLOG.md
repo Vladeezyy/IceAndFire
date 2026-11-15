@@ -299,10 +299,28 @@ Behaviour evidence:
 
 Pregeneration with C2ME (Fabric 26.1.2, C2ME 0.4.0-alpha.0.71+26.1.2, Chunky 1.5.66, radius 1000 = 16129 chunks): before (0409e29) 0:00:57, after 0:01:02, one run each, the same within run noise. No ERROR, "Caused by", ConcurrentModificationException, "Accessing PalettedContainer from multiple threads", "off the server thread" or saved-data warnings in either state; a restart of the same world is clean. Only noise: C2ME's mixin WARN `ca/spottedleaf/starlight/...` (ClassNotFoundException), the same in both states.
 
+Stress scenes, `tools/stresstest.sh`, seed 1234567, one run per state and loader, 700 ticks a scene, 2026-11-15. Released 2.1.13-beta.11 against this batch (the "before" 0409e29 already had batch 1, which held the siren fix).
+
+Scene "packets": 5 players without a client (a listener counts the packets) and 30 villagers, all with mod entity data; 150 player-villager pairs in range.
+
+| | SyncEntityData per second | packets to the 5 players per second | MSPT |
+|---|---|---|---|
+| NeoForge beta.11 | 1636.6 (villagers 53780, players 3500 in 35 s) | 2009 | 7.70 |
+| NeoForge after | 0.9 | 214 | 7.71 |
+| Fabric beta.11 | 1652.3 | 1891 | 8.44 |
+| Fabric after | 0.6 | 222 | 7.98 |
+
+The tick time does not change. The cost of the old packets is the network threads and the clients' bandwidth: about 20 full mod-data packets per second per entity and observer.
+
+Scene "new-chunks": a player without a client flies east at 1.5 blocks a tick (1050 blocks in 700 ticks) over chunks never generated.
+- MSPT: NeoForge 3.90 (beta.11), 4.04 (after); Fabric 3.67 (beta.11), 3.71 (after). Within run noise.
+- Maximum tick: 138-164 ms in all runs.
+- Full chunks along the path: +189 in every run.
+- Generation fell behind the player the same way in all four runs. No errors.
+- The lake check runs on the worldgen threads, so it does not show in the server tick.
+
 Self-tests (server, both loaders):
 - 26.1.2 72/72; 26.2 72/72; 26.3 73/73; 1.21.11 72/72; 1.21.1 69/69 (68/69 before c11f693).
 
 Not done:
-- Stress scene "5 players and 30 villagers, packets per second".
-- Stress scene "flight over new chunks with lakes".
 - The rider position limit was not tested against "moved wrongly" of a death worm in sand with a real client.
