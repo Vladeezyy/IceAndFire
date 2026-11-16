@@ -14,6 +14,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import com.github.alexthe666.iceandfire.item.ItemAmphithereMacuahuitl;
+import com.github.alexthe666.iceandfire.item.ItemTrollWeapon;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-/** NeoForge's living entity events: tick, incoming damage, fall, item use tick and death drops */
+/** NeoForge's living entity events: tick, incoming damage, fall, item use tick and death drops; item hooks canDisableShield and onEntitySwing */
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @Shadow
@@ -85,6 +89,26 @@ public abstract class LivingEntityMixin {
         }
         if (drops != null && !IafBus.post(new LivingDropsEvent(self, source, drops, this.lastHurtByPlayerTime > 0))) {
             drops.forEach(level::addFreshEntity);
+        }
+    }
+
+    @Shadow
+    public abstract ItemStack getItemInHand(InteractionHand hand);
+
+    // NeoForge's IItemExtension#canDisableShield: vanilla disables shields only for axes
+    @Inject(method = "canDisableShield", at = @At("HEAD"), cancellable = true)
+    private void iceandfire$disableShield(CallbackInfoReturnable<Boolean> cir) {
+        if (((LivingEntity) (Object) this).getWeaponItem().getItem() instanceof ItemAmphithereMacuahuitl) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    // NeoForge's IItemExtension#onEntitySwing: the troll weapon swings only when charged
+    @Inject(method = "swing(Lnet/minecraft/world/InteractionHand;Z)V", at = @At("HEAD"), cancellable = true)
+    private void iceandfire$swing(InteractionHand hand, boolean updateSelf, CallbackInfo ci) {
+        ItemStack stack = this.getItemInHand(hand);
+        if (stack.getItem() instanceof ItemTrollWeapon weapon && weapon.onEntitySwing(stack, (LivingEntity) (Object) this)) {
+            ci.cancel();
         }
     }
 }

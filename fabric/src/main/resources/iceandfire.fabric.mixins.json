@@ -7,7 +7,9 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MobMixin",
-    "ProjectileMixin"
+    "ProjectileMixin",
+    "ProjectileWeaponItemMixin",
+    "ReequipItemMixin"
   ],
   "client": [
     "client.CameraMixin",

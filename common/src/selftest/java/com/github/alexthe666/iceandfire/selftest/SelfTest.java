@@ -391,6 +391,9 @@ public class SelfTest {
             // the on/off switches of creatures and structures: switched off, a feature places nothing even when its chance is 1
             checkSwitchedOff(level, base.offset(0, 30, 0));
 
+            // item and block hooks that NeoForge asks the item for and Fabric gets through mixins and its API
+            checkItemHooks(level, base.offset(0, 40, 0));
+
             // hippocampus: a chest put in through the menu opens the storage at once (its slots threw and ate the items)
             var hippo = IafEntityRegistry.HIPPOCAMPUS.get().create(level);
             hippo.inventory.setItem(com.github.alexthe666.iceandfire.entity.EntityHippocampus.INV_SLOT_CHEST, new ItemStack(net.minecraft.world.level.block.Blocks.CHEST));
@@ -873,6 +876,56 @@ public class SelfTest {
 
     private static void crystalTicketExpired(ServerLevel level) {
         check("crystal ticket expires", !level.hasChunk(CRYSTAL_CHUNK.x, CRYSTAL_CHUNK.z), CRYSTAL_CHUNK);
+    }
+
+    /** Infinity keeps dragonbone arrows, the macuahuitl disables shields, a hopper takes pixie dust out of a jar */
+    private static void checkItemHooks(ServerLevel level, BlockPos pos) {
+        var skeleton = EntityType.SKELETON.create(level);
+        skeleton.moveTo(pos.getX() + 0.5, pos.getY() + 3, pos.getZ() + 0.5);
+        ItemStack bow = new ItemStack(net.minecraft.world.item.Items.BOW);
+        ItemStack plainBow = bow.copy();
+        bow.enchant(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.INFINITY), 1);
+        int kept = -1;
+        int used = -1;
+        try {
+            java.lang.reflect.Method useAmmo = net.minecraft.world.item.ProjectileWeaponItem.class.getDeclaredMethod("useAmmo", ItemStack.class, ItemStack.class,
+                net.minecraft.world.entity.LivingEntity.class, boolean.class);
+            useAmmo.setAccessible(true);
+            ItemStack arrows = new ItemStack(IafItemRegistry.DRAGONBONE_ARROW.get(), 5);
+            useAmmo.invoke(null, bow, arrows, skeleton, false);
+            kept = arrows.getCount();
+            ItemStack plain = new ItemStack(IafItemRegistry.DRAGONBONE_ARROW.get(), 5);
+            useAmmo.invoke(null, plainBow, plain, skeleton, false);
+            used = plain.getCount();
+        } catch (ReflectiveOperationException e) {
+            IceAndFire.LOGGER.error("self-test: useAmmo", e);
+        }
+        check("Infinity keeps dragonbone arrows", kept == 5 && used == 4, "with Infinity 5 -> " + kept + ", without 5 -> " + used);
+
+        skeleton.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new ItemStack(IafItemRegistry.AMPHITHERE_MACUAHUITL.get()));
+        boolean macuahuitl = skeleton.canDisableShield();
+        skeleton.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new ItemStack(net.minecraft.world.item.Items.IRON_SWORD));
+        boolean sword = skeleton.canDisableShield();
+        check("amphithere macuahuitl disables shields", macuahuitl && !sword, "macuahuitl " + macuahuitl + ", iron sword " + sword);
+
+        BlockPos jarPos = pos.above();
+        level.setBlock(pos, net.minecraft.world.level.block.Blocks.HOPPER.defaultBlockState(), 2);
+        level.setBlock(jarPos, com.github.alexthe666.iceandfire.block.IafBlockRegistry.JAR_PIXIE_0.get().defaultBlockState(), 2);
+        boolean took = false;
+        boolean emptied = false;
+        if (level.getBlockEntity(jarPos) instanceof com.github.alexthe666.iceandfire.entity.tile.TileEntityJar jar
+            && level.getBlockEntity(pos) instanceof net.minecraft.world.level.block.entity.HopperBlockEntity hopper) {
+            jar.hasProduced = true;
+            net.minecraft.world.level.block.entity.HopperBlockEntity.suckInItems(level, hopper);
+            for (int i = 0; i < hopper.getContainerSize(); i++) {
+                took |= hopper.getItem(i).is(IafItemRegistry.PIXIE_DUST.get());
+            }
+            emptied = !jar.hasProduced;
+            hopper.clearContent();
+        }
+        level.setBlock(jarPos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        level.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        check("hopper takes pixie dust out of a jar", took && emptied, "dust in hopper " + took + ", jar emptied " + emptied);
     }
 
     private static void checkSwitchedOff(ServerLevel level, BlockPos pos) {

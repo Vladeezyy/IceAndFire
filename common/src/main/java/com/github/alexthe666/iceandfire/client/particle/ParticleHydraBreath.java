@@ -24,6 +24,7 @@ public class ParticleHydraBreath extends TextureSheetParticle {
 
     protected ParticleHydraBreath(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float scale, float red, float green, float blue) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
+        this.setSprite(IafParticleSprites.get(HYDRA_POISON));
         this.xd *= 0.10000000149011612D;
         this.yd *= 0.10000000149011612D;
         this.zd *= 0.10000000149011612D;
@@ -39,7 +40,6 @@ public class ParticleHydraBreath extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-        Vec3 inerp = renderInfo.getPosition();
         float scaley = ((float) this.age + partialTicks) / (float) this.lifetime * 32.0F;
         scaley = Mth.clamp(scaley, 0.0F, 1.0F);
         this.quadSize = this.reddustParticleScale * scaley;
@@ -49,44 +49,7 @@ public class ParticleHydraBreath extends TextureSheetParticle {
             this.remove();
         }
 
-        Vec3 Vector3d = renderInfo.getPosition();
-        float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - Vector3d.x());
-        float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - Vector3d.y());
-        float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - Vector3d.z());
-        Quaternionf quaternion;
-        if (this.roll == 0.0F) {
-            quaternion = renderInfo.rotation();
-        } else {
-            quaternion = new Quaternionf(renderInfo.rotation());
-            float f3 = Mth.lerp(partialTicks, this.oRoll, this.roll);
-            quaternion.mul(Axis.ZP.rotation(f3));
-        }
-
-        Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-        vector3f1 = quaternion.transform(vector3f1);
-        Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float f4 = this.getQuadSize(partialTicks);
-
-        for (int i = 0; i < 4; ++i) {
-            Vector3f vector3f = avector3f[i];
-            vector3f = quaternion.transform(vector3f);
-            vector3f.mul(f4);
-            vector3f.add(f, f1, f2);
-        }
-        float f7 = 0;
-        float f8 = 1;
-        float f5 = 0;
-        float f6 = 1;
-        RenderSystem.setShaderTexture(0, HYDRA_POISON);
-        int j = this.getLightColor(partialTicks);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        // counter-clockwise as the camera sees it, like vanilla quads: the original order was culled as a back face (1.21.1)
-        vertexbuffer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        vertexbuffer.addVertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(j);
-        BufferUploader.drawWithShader(vertexbuffer.buildOrThrow());
+        super.render(buffer, renderInfo, partialTicks);
     }
 
 
@@ -123,6 +86,6 @@ public class ParticleHydraBreath extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.CUSTOM;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 }
