@@ -5,6 +5,7 @@
   "mixins": [
     "EntityRidePlayerMixin",
     "LivingEntityFrictionMixin",
+    "ProjectileWeaponItemMixin",
     "ServerExplosionBlocksMixin",
     "ServerLevelEntityCallbacksMixin",
     "VehiclePassThroughMixin",

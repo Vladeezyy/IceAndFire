@@ -67,7 +67,8 @@ public final class Pathfinding {
             }
             final Thread thread = new Thread(runnable, "Ice and Fire Pathfinding Worker #" + (id++));
             thread.setDaemon(true);
-            thread.setPriority(Thread.MAX_PRIORITY);
+            // below the server thread: paths can wait a tick, the tick cannot
+            thread.setPriority(Thread.NORM_PRIORITY - 1);
             if (thread.getContextClassLoader() != classLoader) {
                 IceAndFire.LOGGER.info("Corrected CCL of new Ice and Fire Pathfinding Thread, was: " + thread.getContextClassLoader().toString());
                 thread.setContextClassLoader(classLoader);
