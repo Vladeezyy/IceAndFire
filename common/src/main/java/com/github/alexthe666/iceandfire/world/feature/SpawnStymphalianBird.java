@@ -18,6 +18,9 @@ public class SpawnStymphalianBird extends IafFeature {
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.spawnStymphalianBirds) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

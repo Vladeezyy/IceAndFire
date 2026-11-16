@@ -18,6 +18,9 @@ public class SpawnHippocampus extends IafFeature {
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.spawnHippocampi) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

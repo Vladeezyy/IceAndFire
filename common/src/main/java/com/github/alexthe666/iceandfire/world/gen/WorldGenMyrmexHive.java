@@ -64,6 +64,9 @@ public class WorldGenMyrmexHive extends IafFeature implements TypedFeature {
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.generateMyrmexColonies) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos pos = context.origin();

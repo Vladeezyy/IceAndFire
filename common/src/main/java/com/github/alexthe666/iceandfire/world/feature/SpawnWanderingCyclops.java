@@ -21,6 +21,9 @@ public class SpawnWanderingCyclops extends IafFeature {
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.spawnWanderingCyclops) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

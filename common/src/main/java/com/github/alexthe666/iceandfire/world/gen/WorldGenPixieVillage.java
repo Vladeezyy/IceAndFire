@@ -22,6 +22,9 @@ public class WorldGenPixieVillage extends IafFeature implements TypedFeature {
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.generatePixieVillages) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

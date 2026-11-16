@@ -37,6 +37,9 @@ public class WorldGenCyclopsCave extends IafFeature implements TypedFeature {
 
     @Override
     public boolean place(final IafFeature.Context context) {
+        if (!IafConfig.generateCyclopsCaves) {
+            return false;
+        }
         if (!WorldUtil.canGenerate(IafConfig.spawnCyclopsCaveChance, context.level(), context.random(), context.origin(), getId(), true)) {
             return false;
         }

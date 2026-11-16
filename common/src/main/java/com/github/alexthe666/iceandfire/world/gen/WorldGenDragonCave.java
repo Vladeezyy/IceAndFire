@@ -54,6 +54,9 @@ public abstract class WorldGenDragonCave extends IafFeature implements TypedFeat
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.generateDragonCaves) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

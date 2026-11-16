@@ -46,6 +46,9 @@ public abstract class WorldGenDragonRoosts extends IafFeature implements TypedFe
 
     @Override
     public boolean place(@NotNull final IafFeature.Context context) {
+        if (!IafConfig.generateDragonRoosts) {
+            return false;
+        }
         if (!WorldUtil.canGenerate(IafConfig.generateDragonRoostChance, context.level(), context.random(), context.origin(), getId(), true)) {
             return false;
         }

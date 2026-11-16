@@ -21,6 +21,9 @@ public class WorldGenSirenIsland extends IafFeature implements TypedFeature {
 
     @Override
     public boolean place(final IafFeature.Context context) {
+        if (!IafConfig.generateSirenIslands) {
+            return false;
+        }
         if (!WorldUtil.canGenerate(IafConfig.generateSirenChance, context.level(), context.random(), context.origin(), getId(), false)) {
             return false;
         }

@@ -38,6 +38,9 @@ public class WorldGenHydraCave extends IafFeature implements TypedFeature {
 
     @Override
     public boolean place(IafFeature.Context context) {
+        if (!IafConfig.generateHydraCaves) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();
