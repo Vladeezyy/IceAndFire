@@ -383,6 +383,56 @@ public class SelfTest {
         check("crystal ticket expires", !level.hasChunk(CRYSTAL_CHUNK.x, CRYSTAL_CHUNK.z), CRYSTAL_CHUNK);
     }
 
+    /** Infinity keeps dragonbone arrows, the macuahuitl disables shields, a hopper takes pixie dust out of a jar */
+    private static void checkItemHooks(ServerLevel level, BlockPos pos) {
+        var skeleton = EntityType.SKELETON.create(level, EntitySpawnReason.COMMAND);
+        skeleton.snapTo(pos.getX() + 0.5, pos.getY() + 3, pos.getZ() + 0.5, 0, 0);
+        ItemStack bow = new ItemStack(net.minecraft.world.item.Items.BOW);
+        ItemStack plainBow = bow.copy();
+        bow.enchant(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.INFINITY), 1);
+        int kept = -1;
+        int used = -1;
+        try {
+            java.lang.reflect.Method useAmmo = net.minecraft.world.item.ProjectileWeaponItem.class.getDeclaredMethod("useAmmo", ItemStack.class, ItemStack.class,
+                net.minecraft.world.entity.LivingEntity.class, boolean.class);
+            useAmmo.setAccessible(true);
+            ItemStack arrows = new ItemStack(IafItemRegistry.DRAGONBONE_ARROW.get(), 5);
+            useAmmo.invoke(null, bow, arrows, skeleton, false);
+            kept = arrows.getCount();
+            ItemStack plain = new ItemStack(IafItemRegistry.DRAGONBONE_ARROW.get(), 5);
+            useAmmo.invoke(null, plainBow, plain, skeleton, false);
+            used = plain.getCount();
+        } catch (ReflectiveOperationException e) {
+            IceAndFire.LOGGER.error("self-test: useAmmo", e);
+        }
+        check("Infinity keeps dragonbone arrows", kept == 5 && used == 4, "with Infinity 5 -> " + kept + ", without 5 -> " + used);
+
+        var weapon = new ItemStack(IafItemRegistry.AMPHITHERE_MACUAHUITL.get()).get(DataComponents.WEAPON);
+        var sword = new ItemStack(net.minecraft.world.item.Items.IRON_SWORD).get(DataComponents.WEAPON);
+        boolean macuahuitl = weapon != null && weapon.disableBlockingForSeconds() > 0;
+        boolean plainSword = sword != null && sword.disableBlockingForSeconds() > 0;
+        check("amphithere macuahuitl disables shields", macuahuitl && !plainSword, "macuahuitl " + macuahuitl + ", iron sword " + plainSword);
+
+        BlockPos jarPos = pos.above();
+        level.setBlock(pos, net.minecraft.world.level.block.Blocks.HOPPER.defaultBlockState(), 2);
+        level.setBlock(jarPos, com.github.alexthe666.iceandfire.block.IafBlockRegistry.JAR_PIXIE_0.get().defaultBlockState(), 2);
+        boolean took = false;
+        boolean emptied = false;
+        if (level.getBlockEntity(jarPos) instanceof com.github.alexthe666.iceandfire.entity.tile.TileEntityJar jar
+            && level.getBlockEntity(pos) instanceof net.minecraft.world.level.block.entity.HopperBlockEntity hopper) {
+            jar.hasProduced = true;
+            net.minecraft.world.level.block.entity.HopperBlockEntity.suckInItems(level, hopper);
+            for (int i = 0; i < hopper.getContainerSize(); i++) {
+                took |= hopper.getItem(i).is(IafItemRegistry.PIXIE_DUST.get());
+            }
+            emptied = !jar.hasProduced;
+            hopper.clearContent();
+        }
+        level.setBlock(jarPos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        level.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        check("hopper takes pixie dust out of a jar", took && emptied, "dust in hopper " + took + ", jar emptied " + emptied);
+    }
+
     private static void checkSwitchedOff(ServerLevel level, BlockPos pos) {
         var c = com.github.alexthe666.iceandfire.IafConfig.class;
         String[][] switches = {
@@ -630,6 +680,9 @@ public class SelfTest {
 
             // the on/off switches of creatures and structures: switched off, a feature places nothing even when its chance is 1
             checkSwitchedOff(level, base.offset(0, 30, 0));
+
+            // item and block hooks that NeoForge asks the item for and Fabric gets through mixins and its API
+            checkItemHooks(level, base.offset(0, 40, 0));
 
             // hippocampus: a chest put in through the menu opens the storage at once (its slots threw and ate the items)
             var hippo = IafEntityRegistry.HIPPOCAMPUS.get().create(level, EntitySpawnReason.COMMAND);

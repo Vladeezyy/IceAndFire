@@ -166,6 +166,9 @@ public final class IceAndFireFabric implements ModInitializer {
             TileEntityDragonforge core = input.getCore();
             return core != null ? InventoryStorage.of(core, side) : null;
         }, IafTileEntityRegistry.DRAGONFORGE_INPUT.get());
+        // the podium, lectern and forge core are containers, which hoppers use as they are; the jar is not
+        ItemStorage.SIDED.registerForBlockEntity((jar, side) -> side == net.minecraft.core.Direction.DOWN ? new PixieJarStorage(jar) : null,
+            IafTileEntityRegistry.PIXIE_JAR.get());
     }
 
     /** VillagerTradesEvent per level: the listener fills one map, only the list of the level Fabric asks for is kept */
@@ -191,8 +194,24 @@ public final class IceAndFireFabric implements ModInitializer {
     private static void registerGameEvents() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.EntityJoinLevelEvent(entity, level)));
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> !IafBus.post(new dev.vladeezyy.iceandfire.bus.LivingDeathEvent(entity, source)));
-        AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) ->
-            IafBus.post(new dev.vladeezyy.iceandfire.bus.AttackEntityEvent(player, entity)) ? InteractionResult.FAIL : InteractionResult.PASS);
+        AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) -> {
+            // NeoForge's IItemExtension#onLeftClickEntity: an uncharged troll weapon does not hit
+            net.minecraft.world.item.ItemStack held = player.getMainHandItem();
+            if (held.getItem() instanceof com.github.alexthe666.iceandfire.item.ItemTrollWeapon weapon && weapon.onLeftClickEntity(held, player, entity)) {
+                return InteractionResult.FAIL;
+            }
+            return IafBus.post(new dev.vladeezyy.iceandfire.bus.AttackEntityEvent(player, entity)) ? InteractionResult.FAIL : InteractionResult.PASS;
+        });
+        // NeoForge's supportsEnchantment / isPrimaryItemFor: the tide trident takes Piercing
+        net.fabricmc.fabric.api.item.v1.EnchantmentEvents.ALLOW_ENCHANTING.register((enchantment, stack, context) -> {
+            if (stack.getItem() instanceof com.github.alexthe666.iceandfire.item.ItemTideTrident trident) {
+                boolean allowed = context == net.fabricmc.fabric.api.item.v1.EnchantingContext.PRIMARY ? trident.isPrimaryItemFor(stack, enchantment) : trident.supportsEnchantment(stack, enchantment);
+                if (allowed) {
+                    return net.fabricmc.fabric.api.util.TriState.TRUE;
+                }
+            }
+            return net.fabricmc.fabric.api.util.TriState.DEFAULT;
+        });
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) ->
             !IafBus.post(new dev.vladeezyy.iceandfire.bus.BlockEvent.BreakEvent(level, pos, state, player)));
         EntityTrackingEvents.START_TRACKING.register((target, player) -> IafBus.post(new dev.vladeezyy.iceandfire.bus.PlayerEvent.StartTracking(player, target)));

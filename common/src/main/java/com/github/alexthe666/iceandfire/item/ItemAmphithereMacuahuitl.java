@@ -25,7 +25,8 @@ public class ItemAmphithereMacuahuitl extends Item implements IafTieredItem {
     private final CustomToolMaterial tier;
 
     public ItemAmphithereMacuahuitl() {
-        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL), 3, -2.4F), IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL));
+        super(IafToolMaterials.properties(dev.vladeezyy.iceandfire.platform.Registrar.itemProps().sword(IafToolMaterials.vanilla(IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL), 3, -2.4F)
+            .component(net.minecraft.core.component.DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(1, net.minecraft.world.item.component.Weapon.AXE_DISABLES_BLOCKING_FOR_SECONDS)), IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL));
         this.tier = IafItemRegistry.AMPHITHERE_SWORD_TOOL_MATERIAL;
     }
 

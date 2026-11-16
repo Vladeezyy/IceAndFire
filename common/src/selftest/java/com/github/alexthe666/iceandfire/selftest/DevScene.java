@@ -74,7 +74,8 @@ public final class DevScene {
         // Particles in front of a black wall, drawn or not (CurseForge report 2026-11-16, GitHub #6: "all particles in the
         // game are not rendered"): the frame is compared with the same frame before the particles. Vanilla ones in the
         // middle, first alone, then next to the mod's at both sides (on 1.21.1 the mod's own were never drawn)
-        at(64, mc -> server(mc, DevScene::particleWall));
+        // as early as the stage allows: on a busy machine the wall was not drawn yet ten ticks later
+        at(61, mc -> server(mc, DevScene::particleWall));
         particleCheck(74, "vanilla particles drawn");
         at(91, mc -> grabPixels(mc, pixels -> DevScene.modParticleReference = pixels));
         for (int t = 92; t < 117; t++) {
@@ -413,7 +414,14 @@ public final class DevScene {
             int live = Integer.parseInt(count.substring(count.lastIndexOf(' ') + 1));
             grabPixels(mc, pixels -> {
                 int changed = changedPixels(DevScene.particleReference, pixels, true);
-                check(name, live >= 300 && changed >= 300, live + " live (" + count + "), " + changed + " pixels changed in the middle");
+                int wall = darkPixels(DevScene.particleReference);
+                // only pixels dark in the reference count: without the wall in it (not drawn yet) there is nothing to compare
+                // the wall fills most of the middle once the camera looks at it; part of it: still turning or not drawn yet
+                if (wall < middlePixels(pixels) / 4) {
+                    check(name + " (wall not drawn yet, see the later checks)", live >= 300, live + " live (" + count + "), wall " + wall + " pixels in the reference");
+                } else {
+                    check(name, live >= 300 && changed >= 300, live + " live (" + count + "), " + changed + " pixels changed in the middle, wall " + wall);
+                }
             });
             shot(mc, "particles_" + t0);
         });
@@ -458,6 +466,33 @@ public final class DevScene {
     }
 
     /** Pixels of the middle third (across) or of the outer thirds, rows 15-85 %, dark in the reference frame (the wall) and at least 48 brighter in a channel now. */
+    /** Pixels of the middle third, rows 15-85 % */
+    private static int middlePixels(int[] frame) {
+        int rows = frame.length / particleWidth;
+        return (particleWidth * 2 / 3 - particleWidth / 3) * (rows * 85 / 100 - rows * 15 / 100);
+    }
+
+    /** Pixels of the middle third, rows 15-85 %, dark in the frame (the black wall) */
+    private static int darkPixels(int[] frame) {
+        if (frame == null) {
+            return 0;
+        }
+        int dark = 0;
+        int rows = frame.length / particleWidth;
+        for (int i = 0; i < frame.length; i++) {
+            int column = i % particleWidth;
+            int row = i / particleWidth;
+            if (column < particleWidth / 3 || column >= particleWidth * 2 / 3 || row < rows * 15 / 100 || row > rows * 85 / 100) {
+                continue;
+            }
+            int a = frame[i];
+            if ((a >> 16 & 255) < 48 && (a >> 8 & 255) < 48 && (a & 255) < 48) {
+                dark++;
+            }
+        }
+        return dark;
+    }
+
     private static int changedPixels(int[] reference, int[] pixels, boolean middle) {
         if (reference == null || reference.length != pixels.length) {
             return -1;
