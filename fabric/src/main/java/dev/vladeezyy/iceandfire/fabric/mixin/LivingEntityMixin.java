@@ -94,11 +94,13 @@ public abstract class LivingEntityMixin {
     public abstract ItemStack getItemInHand(InteractionHand hand);
 
     // NeoForge's IItemExtension#onEntitySwing: the troll weapon swings only when charged
-    @Inject(method = "swing(Lnet/minecraft/world/InteractionHand;Z)V", at = @At("HEAD"), cancellable = true)
-    private void iceandfire$swing(InteractionHand hand, boolean updateSelf, CallbackInfo ci) {
+    // 26.3: swing(hand, animation, updateSelf) returns whether it swung
+    @Inject(method = "swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z", at = @At("HEAD"), cancellable = true)
+    private void iceandfire$swing(InteractionHand hand, net.minecraft.world.item.component.SwingAnimation animation, boolean updateSelf,
+                                  org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getItemInHand(hand);
         if (stack.getItem() instanceof ItemTrollWeapon weapon && weapon.onEntitySwing(stack, (LivingEntity) (Object) this, hand)) {
-            ci.cancel();
+            cir.setReturnValue(false);
         }
     }
 }
