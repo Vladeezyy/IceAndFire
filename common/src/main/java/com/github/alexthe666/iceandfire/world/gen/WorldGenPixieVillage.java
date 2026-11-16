@@ -27,6 +27,9 @@ public class WorldGenPixieVillage extends Feature<NoneFeatureConfiguration> impl
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (!IafConfig.generatePixieVillages) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

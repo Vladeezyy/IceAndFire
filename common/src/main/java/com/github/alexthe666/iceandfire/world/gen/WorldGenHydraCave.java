@@ -43,6 +43,9 @@ public class WorldGenHydraCave extends Feature<NoneFeatureConfiguration> impleme
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (!IafConfig.generateHydraCaves) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

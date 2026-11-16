@@ -22,6 +22,9 @@ public class SpawnSeaSerpent extends Feature<NoneFeatureConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (!IafConfig.spawnSeaSerpents) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos position = context.origin();

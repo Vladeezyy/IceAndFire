@@ -71,6 +71,38 @@ public final class DevScene {
         at(40, mc -> server(mc, DevScene::setup));
         at(45, mc -> mc.options.hideGui = true);
         at(60, mc -> server(mc, DevScene::buildStage));
+        // Vanilla particles in front of a black wall, drawn or not (CurseForge report 2026-11-16, GitHub #6: "all particles
+        // in the game are not rendered", with Sodium): the middle of the frame is compared with the same frame before
+        // the particles; first alone, then with every particle of the mod alive at the sides of the wall
+        at(64, mc -> server(mc, DevScene::particleWall));
+        particleCheck(70, "vanilla particles drawn");
+        for (int t = 89; t < 117; t++) {
+            at(t, DevScene::spawnModParticles);
+        }
+        particleCheck(95, "vanilla particles drawn next to the mod's");
+        // a ghost's scare drawn in front of the camera (the appearance group with a model in it)
+        at(100, mc -> server(mc, p -> place(level(p), IafEntityRegistry.GHOST.get(), particleWallAt().offset(-5, 0, 2), 0)));
+        at(112, mc -> {
+            for (Entity e : mc.level.entitiesForRendering()) {
+                if (e instanceof com.github.alexthe666.iceandfire.entity.EntityGhost) {
+                    IceAndFire.PROXY.spawnParticle(com.github.alexthe666.iceandfire.enums.EnumParticles.Ghost_Appearance, mc.player.getX(), mc.player.getY(), mc.player.getZ(), e.getId(), 0, 0);
+                }
+            }
+        });
+        at(116, mc -> shot(mc, "particles_ghost"));
+        at(117, mc -> {
+            mc.particleEngine.setLevel(mc.level); // 1.21.1: clearParticles is private, setLevel clears
+            server(mc, p -> {
+                particleWallRemove(level(p));
+                level(p).getEntities(IafEntityRegistry.GHOST.get(), new net.minecraft.world.phys.AABB(particleWallAt()).inflate(10), e -> true).forEach(Entity::discard);
+            });
+        });
+        if ("particles".equals(System.getenv("SCENE_ONLY"))) {
+            at(119, mc -> {
+                IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
+                mc.stop();
+            });
+        }
         at(120, mc -> server(mc, DevScene::dragons));
         at(130, mc -> server(mc, p -> look(p, stage.offset(0, 8, 38), stage.offset(0, 3, 20))));
         at(220, mc -> shot(mc, "dragons"));
@@ -162,7 +194,14 @@ public final class DevScene {
         at(END + 160, mc -> server(mc, DevScene::chainSetup));
         at(END + 185, DevScene::chainClick);
         at(END + 205, mc -> server(mc, DevScene::checkChain));
-        at(END + 225, mc -> {
+        // the same vanilla particles after everything else the scene showed
+        at(END + 206, mc -> server(mc, DevScene::particleWall));
+        particleCheck(END + 212, "vanilla particles drawn at the end");
+        at(END + 229, mc -> {
+            mc.particleEngine.setLevel(mc.level); // 1.21.1: clearParticles is private, setLevel clears
+            server(mc, p -> particleWallRemove(level(p)));
+        });
+        at(END + 235, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
         });
@@ -326,6 +365,105 @@ public final class DevScene {
         check("one knot on the wall", knots.size() == 1, knots.size());
         knots.forEach(Entity::discard);
         chainedPig.discard();
+    }
+
+    private static int[] particleReference;
+
+    private static BlockPos particleWallAt() {
+        return stage.offset(0, 0, -40);
+    }
+
+    /** A black wall 13 x 9 at the far end of the stage, the camera 8 blocks in front of it. */
+    private static void particleWall(ServerPlayer player) {
+        ServerLevel level = level(player);
+        for (int dx = -6; dx <= 6; dx++) {
+            for (int dy = 0; dy < 9; dy++) {
+                level.setBlock(particleWallAt().offset(dx, dy, 0), Blocks.COAL_BLOCK.defaultBlockState(), 2);
+            }
+        }
+        hover(player);
+        look(player, particleWallAt().offset(0, 4, 8), particleWallAt().offset(0, 4, 0));
+    }
+
+    private static void particleWallRemove(ServerLevel level) {
+        for (int dx = -6; dx <= 6; dx++) {
+            for (int dy = 0; dy < 9; dy++) {
+                level.setBlock(particleWallAt().offset(dx, dy, 0), Blocks.AIR.defaultBlockState(), 2);
+            }
+        }
+    }
+
+    /** Reference frame at t0, vanilla particles for 15 ticks, then the check (16 ticks in all). */
+    private static void particleCheck(int t0, String name) {
+        at(t0, mc -> grabPixels(mc, pixels -> DevScene.particleReference = pixels));
+        for (int t = t0 + 1; t < t0 + 16; t++) {
+            at(t, DevScene::spawnParticles);
+        }
+        at(t0 + 16, mc -> {
+            String count = mc.particleEngine.countParticles();
+            int live = Integer.parseInt(count.substring(count.lastIndexOf(' ') + 1));
+            grabPixels(mc, pixels -> {
+                int changed = changedPixels(DevScene.particleReference, pixels);
+                check(name, live >= 300 && changed >= 300, live + " live (" + count + "), " + changed + " pixels changed in the middle");
+            });
+            shot(mc, "particles_" + t0);
+        });
+    }
+
+    /** End rods and flames on a grid 2 blocks in front of the wall, straight into the engine (no particle option filter). */
+    private static void spawnParticles(Minecraft mc) {
+        BlockPos wall = particleWallAt();
+        for (int i = -4; i <= 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                double x = wall.getX() + 0.5 + i * 0.6;
+                double y = wall.getY() + 2.5 + j * 0.6;
+                double z = wall.getZ() + 2.5;
+                mc.particleEngine.createParticle(j % 2 == 0 ? net.minecraft.core.particles.ParticleTypes.END_ROD : net.minecraft.core.particles.ParticleTypes.FLAME, x, y, z, 0, 0, 0);
+            }
+        }
+    }
+
+    /** One of each particle of the mod at both sides of the wall, out of the middle of the frame. */
+    private static void spawnModParticles(Minecraft mc) {
+        BlockPos wall = particleWallAt();
+        for (com.github.alexthe666.iceandfire.enums.EnumParticles type : com.github.alexthe666.iceandfire.enums.EnumParticles.values()) {
+            for (int side = -1; side <= 1; side += 2) {
+                double x = wall.getX() + 0.5 + side * 5.5;
+                double y = wall.getY() + 1 + type.ordinal() * 0.6;
+                // the appearances (ghost, siren) need the id of their mob; any id makes the engine create their group
+                IceAndFire.PROXY.spawnParticle(type, x, y, wall.getZ() + 1.5, type.name().endsWith("Appearance") ? mc.player.getId() : 0, 0, 0, 1);
+            }
+        }
+    }
+
+    private static int particleWidth;
+
+    /** The pixels of the last frame (1.21.1 reads the frame buffer at once). */
+    private static void grabPixels(Minecraft mc, Consumer<int[]> sink) {
+        try (com.mojang.blaze3d.platform.NativeImage image = Screenshot.takeScreenshot(mc.getMainRenderTarget())) {
+            particleWidth = image.getWidth();
+            sink.accept(image.getPixelsRGBA());
+        }
+    }
+
+    /** Pixels of the middle third (across) with a channel at least 48 brighter or darker than in the reference frame. */
+    private static int changedPixels(int[] reference, int[] pixels) {
+        if (reference == null || reference.length != pixels.length) {
+            return -1;
+        }
+        int changed = 0;
+        for (int i = 0; i < pixels.length; i++) {
+            int column = i % particleWidth;
+            if (column < particleWidth / 3 || column >= particleWidth * 2 / 3) {
+                continue;
+            }
+            int a = reference[i];
+            int b = pixels[i];
+            if (Math.abs((a >> 16 & 255) - (b >> 16 & 255)) >= 48 || Math.abs((a >> 8 & 255) - (b >> 8 & 255)) >= 48 || Math.abs((a & 255) - (b & 255)) >= 48) {
+                changed++;
+            }
+        }
+        return changed;
     }
 
     private static ServerLevel level(ServerPlayer player) {

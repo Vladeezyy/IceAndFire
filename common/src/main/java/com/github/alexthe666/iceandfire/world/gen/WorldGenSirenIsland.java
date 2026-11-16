@@ -26,6 +26,9 @@ public class WorldGenSirenIsland extends Feature<NoneFeatureConfiguration> imple
 
     @Override
     public boolean place(final FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (!IafConfig.generateSirenIslands) {
+            return false;
+        }
         if (!WorldUtil.canGenerate(IafConfig.generateSirenChance, context.level(), context.random(), context.origin(), getId(), false)) {
             return false;
         }
