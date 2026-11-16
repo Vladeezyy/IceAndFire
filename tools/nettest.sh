@@ -1,6 +1,8 @@
 #!/bin/sh
 # Riding a dragon on a dedicated server (src/selftest NetTest, issues #5192/#5208): the server runs in run-netserver,
-# a client joins it, rides an adult dragon and gets off. Prints the per-second stats of both sides and the errors.
+# a client joins it, rides an adult dragon and gets off, rides a death worm, then checks a dragon corpse the client
+# receives again (#5297: out of tracking range and back, reconnect, unloaded and loaded from disk).
+# Prints the per-second stats of both sides and the errors. IAF_NETTEST=corpse runs only the corpse check.
 cd "$(dirname "$0")/.."
 . tools/common.sh
 kill_runs 'nettest|Netserver|Netclient'

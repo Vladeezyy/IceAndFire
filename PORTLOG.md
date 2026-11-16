@@ -299,8 +299,17 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
 ## TODO
 
 - [#5297](https://github.com/AlexModGuy/Ice_and_Fire/issues/5297) dragon corpses standing on servers: not reproduced
-  (the client ticks every entity of loaded chunks in 1.21.1, the dead flag is synced data; a dragon received dead
-  starts in the pose since beta.1). Needs a report with the server mods.
+  on 1.21.1 (NeoForge and Fabric). `tools/nettest.sh` now checks it on a dedicated server with a real client
+  (`IAF_NETTEST=corpse` runs only this part): a dragon killed in view, then the client gets the corpse fresh three
+  times: out of tracking range and back while its chunk stays loaded (the corpse keeps its in-memory `DYING` pose),
+  after a reconnect, and after the server unloaded it with its chunk and loaded it from disk. Every copy: dead flag,
+  death progress 20 on the first look, same age, model posed dead by the animator (0.33 rad off the dead pose over all
+  cubes, 34.4 rad off the standing pose). Without the beta.1 `onSyncedDataUpdated` start (as in the original) all
+  three copies fail the first look: progress 0.5, the model in the standing pose (34.6 rad off the dead pose), and the
+  corpse falls over within 2 s; that is the only server-only case found in the mod itself. The issue's screenshot
+  shows a corpse with open eyes (not the dead texture), so the client had the dead flag false: its synced data did not
+  arrive or was misread, which fits the reporter's guess that another mod in their pack caused it. Needs a report
+  with the server mods.
 - Next: play-test feedback.
 
 ## Multiloader split (branch `multiloader`, 2026-10-24)
