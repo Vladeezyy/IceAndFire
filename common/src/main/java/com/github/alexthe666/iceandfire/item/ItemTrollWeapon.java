@@ -35,7 +35,8 @@ public class ItemTrollWeapon extends Item implements IafTieredItem {
         return player.getAttackStrengthScale(0) < 0.95 || player.attackAnim != 0;
     }
 
-    public boolean onEntitySwing(LivingEntity LivingEntity, ItemStack stack) {
+    // NeoForge extension method (no vanilla override); the arguments were in the wrong order, so it never ran
+    public boolean onEntitySwing(ItemStack stack, LivingEntity LivingEntity, net.minecraft.world.InteractionHand hand) {
         if (LivingEntity instanceof Player) {
             Player player = (Player) LivingEntity;
             if (player.getAttackStrengthScale(0) < 1 && player.attackAnim > 0) {
