@@ -69,6 +69,9 @@ public class WorldGenMyrmexHive extends Feature<NoneFeatureConfiguration> implem
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (!IafConfig.generateMyrmexColonies) {
+            return false;
+        }
         WorldGenLevel worldIn = context.level();
         RandomSource rand = context.random();
         BlockPos pos = context.origin();
