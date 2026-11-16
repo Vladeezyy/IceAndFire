@@ -383,6 +383,64 @@ public class SelfTest {
         check("crystal ticket expires", !level.hasChunk(CRYSTAL_CHUNK.x(), CRYSTAL_CHUNK.z()), CRYSTAL_CHUNK);
     }
 
+    private static void checkSwitchedOff(ServerLevel level, BlockPos pos) {
+        var c = com.github.alexthe666.iceandfire.IafConfig.class;
+        String[][] switches = {
+            {"generateDragonCaves", "generateDragonDenChance"}, {"generateDragonRoosts", "generateDragonRoostChance"},
+            {"generatePixieVillages", "spawnPixiesChance"}, {"generateCyclopsCaves", "spawnCyclopsCaveChance"},
+            {"spawnWanderingCyclops", "spawnWanderingCyclopsChance"}, {"generateSirenIslands", "generateSirenChance"},
+            {"spawnDeathWorms", "deathWormSpawnRate"}, {"spawnStymphalianBirds", "stymphalianBirdSpawnChance"},
+            {"generateMyrmexColonies", "myrmexColonyGenChance"}, {"spawnSeaSerpents", "seaSerpentSpawnChance"},
+            {"spawnHippocampi", "hippocampusSpawnChance"}, {"generateHydraCaves", "generateHydraChance"}};
+        Class<?>[] features = {
+            com.github.alexthe666.iceandfire.world.gen.WorldGenDragonCave.class, com.github.alexthe666.iceandfire.world.gen.WorldGenDragonRoosts.class,
+            com.github.alexthe666.iceandfire.world.gen.WorldGenPixieVillage.class, com.github.alexthe666.iceandfire.world.gen.WorldGenCyclopsCave.class,
+            com.github.alexthe666.iceandfire.world.feature.SpawnWanderingCyclops.class, com.github.alexthe666.iceandfire.world.gen.WorldGenSirenIsland.class,
+            com.github.alexthe666.iceandfire.world.feature.SpawnDeathWorm.class, com.github.alexthe666.iceandfire.world.feature.SpawnStymphalianBird.class,
+            com.github.alexthe666.iceandfire.world.gen.WorldGenMyrmexHive.class, com.github.alexthe666.iceandfire.world.feature.SpawnSeaSerpent.class,
+            com.github.alexthe666.iceandfire.world.feature.SpawnHippocampus.class, com.github.alexthe666.iceandfire.world.gen.WorldGenHydraCave.class};
+        int[] chances = new int[switches.length];
+        List<String> placed = new ArrayList<>();
+        java.util.Set<Class<?>> seen = new java.util.HashSet<>();
+        int entitiesBefore = level.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(pos).inflate(48)).size();
+        try {
+            for (int i = 0; i < switches.length; i++) {
+                c.getField(switches[i][0]).setBoolean(null, false);
+                chances[i] = c.getField(switches[i][1]).getInt(null);
+                c.getField(switches[i][1]).setInt(null, 1);
+            }
+            for (var feature : net.minecraft.core.registries.BuiltInRegistries.FEATURE) {
+                for (Class<?> type : features) {
+                    if (type.isInstance(feature)) {
+                        seen.add(type);
+                        @SuppressWarnings("unchecked")
+                        var f = (net.minecraft.world.level.levelgen.feature.Feature<net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration>) feature;
+                        boolean did = f.place(new net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<>(java.util.Optional.empty(), level,
+                            level.getChunkSource().getGenerator(), net.minecraft.util.RandomSource.create(1), pos,
+                            net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.INSTANCE));
+                        if (did) {
+                            placed.add(net.minecraft.core.registries.BuiltInRegistries.FEATURE.getKey(feature).toString());
+                        }
+                    }
+                }
+            }
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            placed.add(e.toString());
+        } finally {
+            try {
+                for (int i = 0; i < switches.length; i++) {
+                    c.getField(switches[i][0]).setBoolean(null, true);
+                    c.getField(switches[i][1]).setInt(null, chances[i]);
+                }
+            } catch (ReflectiveOperationException e) {
+                placed.add("restore: " + e);
+            }
+        }
+        int entitiesAfter = level.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(pos).inflate(48)).size();
+        check("switched-off creatures and structures place nothing", placed.isEmpty() && seen.size() == features.length && entitiesAfter == entitiesBefore,
+            "features of " + seen.size() + "/" + features.length + " kinds, placed " + placed + ", entities " + entitiesBefore + " -> " + entitiesAfter);
+    }
+
     private static void checkSpawned(ServerLevel level) {
         // 200 ticks of AI, pathfinding and multipart updates went by without crashing the server
         long alive = SPAWNED.stream().filter(Entity::isAlive).count();
@@ -569,6 +627,9 @@ public class SelfTest {
             level.setBlock(wetIn, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
             level.setBlock(wetOut, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
             check("gorgon temple clears water only in its chunk", clearedIn && keptOut, "inside cleared " + clearedIn + ", outside kept " + keptOut);
+
+            // the on/off switches of creatures and structures: switched off, a feature places nothing even when its chance is 1
+            checkSwitchedOff(level, base.offset(0, 30, 0));
 
             // hippocampus: a chest put in through the menu opens the storage at once (its slots threw and ate the items)
             var hippo = IafEntityRegistry.HIPPOCAMPUS.get().create(level, EntitySpawnReason.COMMAND);

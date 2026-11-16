@@ -51,6 +51,9 @@ public abstract class WorldGenDragonRoosts extends Feature<NoneFeatureConfigurat
 
     @Override
     public boolean place(@NotNull final FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (!IafConfig.generateDragonRoosts) {
+            return false;
+        }
         if (!WorldUtil.canGenerate(IafConfig.generateDragonRoostChance, context.level(), context.random(), context.origin(), getId(), true)) {
             return false;
         }

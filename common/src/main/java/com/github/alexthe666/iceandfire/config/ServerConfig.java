@@ -6,7 +6,9 @@ public class ServerConfig {
 
     public final ConfigSpec.BooleanValue generateDragonSkeletons;
     public final ConfigSpec.IntValue generateDragonSkeletonChance;
+    public final ConfigSpec.BooleanValue generateDragonCaves;
     public final ConfigSpec.IntValue generateDragonDenChance;
+    public final ConfigSpec.BooleanValue generateDragonRoosts;
     public final ConfigSpec.IntValue generateDragonRoostChance;
     public final ConfigSpec.IntValue dragonDenGoldAmount;
     public final ConfigSpec.BooleanValue spawnGlaciers;
@@ -39,10 +41,13 @@ public class ServerConfig {
     public final ConfigSpec.IntValue hippogryphSpawnRate;
     public final ConfigSpec.BooleanValue generateGorgonTemple;
     public final ConfigSpec.DoubleValue gorgonMaxHealth;
+    public final ConfigSpec.BooleanValue generatePixieVillages;
     public final ConfigSpec.IntValue spawnPixiesChance;
     public final ConfigSpec.IntValue pixieVillageSize;
     public final ConfigSpec.BooleanValue pixiesStealItems;
+    public final ConfigSpec.BooleanValue spawnWanderingCyclops;
     public final ConfigSpec.IntValue spawnWanderingCyclopsChance;
+    public final ConfigSpec.BooleanValue generateCyclopsCaves;
     public final ConfigSpec.IntValue spawnCyclopsCaveChance;
     public final ConfigSpec.IntValue cyclopesSheepSearchLength;
     public final ConfigSpec.DoubleValue cyclopsMaxHealth;
@@ -53,12 +58,15 @@ public class ServerConfig {
     public final ConfigSpec.BooleanValue sirenShader;
     public final ConfigSpec.IntValue sirenMaxSingTime;
     public final ConfigSpec.IntValue sirenTimeBetweenSongs;
+    public final ConfigSpec.BooleanValue generateSirenIslands;
     public final ConfigSpec.IntValue generateSirenChance;
+    public final ConfigSpec.BooleanValue spawnHippocampi;
     public final ConfigSpec.IntValue hippocampusSpawnChance;
     public final ConfigSpec.IntValue deathWormTargetSearchLength;
     public final ConfigSpec.DoubleValue deathWormMaxHealth;
     public final ConfigSpec.DoubleValue deathWormAttackStrength;
     public final ConfigSpec.BooleanValue deathWormAttackMonsters;
+    public final ConfigSpec.BooleanValue spawnDeathWorms;
     public final ConfigSpec.IntValue deathWormSpawnRate;
     public final ConfigSpec.IntValue cockatriceChickenSearchLength;
     public final ConfigSpec.IntValue cockatriceEggChance;
@@ -73,6 +81,7 @@ public class ServerConfig {
     public final ConfigSpec.IntValue stymphalianBirdFlightHeight;
     public final ConfigSpec.BooleanValue stymphalianBirdsDataTagDrops;
     public final ConfigSpec.BooleanValue stympahlianBirdAttackAnimals;
+    public final ConfigSpec.BooleanValue spawnStymphalianBirds;
     public final ConfigSpec.IntValue stymphalianBirdSpawnChance;
     public final ConfigSpec.BooleanValue spawnTrolls;
     public final ConfigSpec.IntValue trollSpawnRate;
@@ -84,6 +93,7 @@ public class ServerConfig {
     public final ConfigSpec.IntValue myrmexPregnantTicks;
     public final ConfigSpec.IntValue myrmexEggTicks;
     public final ConfigSpec.IntValue myrmexLarvaTicks;
+    public final ConfigSpec.BooleanValue generateMyrmexColonies;
     public final ConfigSpec.IntValue myrmexColonyGenChance ;
     public final ConfigSpec.IntValue myrmexColonySize;
     public final ConfigSpec.DoubleValue myrmexBaseAttackStrength ;
@@ -96,6 +106,7 @@ public class ServerConfig {
     public final ConfigSpec.DoubleValue amphithereFlightSpeed;
     public final ConfigSpec.DoubleValue amphithereMaxHealth;
     public final ConfigSpec.DoubleValue amphithereAttackStrength;
+    public final ConfigSpec.BooleanValue spawnSeaSerpents;
     public final ConfigSpec.IntValue seaSerpentSpawnChance;
     public final ConfigSpec.BooleanValue seaSerpentGriefing;
     public final ConfigSpec.DoubleValue seaSerpentBaseHealth;
@@ -114,6 +125,7 @@ public class ServerConfig {
     public final ConfigSpec.IntValue lichSpawnRate;
     public final ConfigSpec.IntValue lichSpawnChance;
     public final ConfigSpec.DoubleValue hydraMaxHealth;
+    public final ConfigSpec.BooleanValue generateHydraCaves;
     public final ConfigSpec.IntValue generateHydraChance;
     public final ConfigSpec.BooleanValue explosiveDragonBreath;
     public final ConfigSpec.DoubleValue weezerTinkersDisarmChance; // FIXME :: Unused
@@ -141,7 +153,9 @@ public class ServerConfig {
         builder.push("Dragon");
         this.generateDragonSkeletons = buildBoolean(builder, "Generate Dragon Skeletons", "all", true, "Whether to generate dragon skeletons or not");
         this.generateDragonSkeletonChance = buildInt(builder, "Generate Dragon Skeleton Chance", "all", 300, 1, 10000, "1 out of this number chance per chunk for generation");
+        this.generateDragonCaves = buildBoolean(builder, "Generate Dragon Caves", "all", true, "Whether to generate dragon caves (with their sleeping dragons) or not");
         this.generateDragonDenChance = buildInt(builder, "Generate Dragon Cave Chance", "all", 180, 1, 10000, "1 out of this number chance per chunk for generation");
+        this.generateDragonRoosts = buildBoolean(builder, "Generate Dragon Roosts", "all", true, "Whether to generate dragon roosts (with their dragons) or not");
         this.generateDragonRoostChance = buildInt(builder, "Generate Dragon Roost Chance", "all", 360, 1, 10000, "1 out of this number chance per chunk for generation");
         this.dragonDenGoldAmount = buildInt(builder, "Dragon Den Gold Amount", "all", 4, 1, 10000, "1 out of this number chance per block that gold will generate in dragon lairs.");
         this.oreToStoneRatioForDragonCaves = buildInt(builder, "Dragon Cave Ore Ratio", "all", 45, 1, 10000, "Ratio of Stone(this number) to Ores in Dragon Caves");
@@ -202,12 +216,15 @@ public class ServerConfig {
         builder.push("Mobs");
 
         builder.push("Pixies");
+        this.generatePixieVillages = buildBoolean(builder, "Generate Pixie Villages", "all", true, "Whether to generate pixie villages or not");
         this.spawnPixiesChance = buildInt(builder, "Spawn Pixies Chance", "all", 60, 1, 10000, "1 out of this number chance per chunk for generation");
         this.pixieVillageSize = buildInt(builder, "Pixie Village Size", "all", 5, 1, 10000, "size of pixie villages");
         this.pixiesStealItems = buildBoolean(builder, "Pixies Steal Items", "all", true, "True if pixies are allowed to steal from players");
         builder.pop();
         builder.push("Cyclops");
+        this.generateCyclopsCaves = buildBoolean(builder, "Generate Cyclops Caves", "all", true, "Whether to generate cyclops caves or not");
         this.spawnCyclopsCaveChance = buildInt(builder, "Spawn Cyclops Cave Chance", "all", 100, 1, 10000, "1 out of this number chance per chunk for generation");
+        this.spawnWanderingCyclops = buildBoolean(builder, "Spawn Wandering Cyclops", "all", true, "Whether wandering cyclopes spawn or not");
         this.spawnWanderingCyclopsChance = buildInt(builder, "Spawn Wandering Cyclops Chance", "all", 100, 1, 10000, "1 out of this number chance per chunk for generation");
         this.cyclopsMaxHealth = buildDouble(builder, "Cyclops Max Health", "all", 150, 1, 10000, "Maximum cyclops health (Minecraft limits max health to 1024: higher values need a mod that raises the limit, e.g. AttributeFix)");
         this.cyclopesSheepSearchLength = buildInt(builder, "Cyclopes Sheep Search Length", "all", 17, 1, 10000, "How many blocks away can cyclopes detect sheep. Note that increasing this could cause lag.");
@@ -218,6 +235,7 @@ public class ServerConfig {
         builder.push("Sirens");
         this.sirenMaxHealth = buildDouble(builder, "Siren Max Health", "all", 50, 1, 10000, "Maximum siren health (Minecraft limits max health to 1024: higher values need a mod that raises the limit, e.g. AttributeFix)");
         this.sirenShader = buildBoolean(builder, "Use Siren Shader", "all", true, "True to make the screen pink when sirens attract players");
+        this.generateSirenIslands = buildBoolean(builder, "Generate Siren Islands", "all", true, "Whether to generate siren islands (with their sirens) or not");
         this.generateSirenChance = buildInt(builder, "Spawn Sirens Chance", "all", 400, 1, 10000, "1 out of this number chance per chunk for generation");
         this.sirenMaxSingTime = buildInt(builder, "Siren Max Sing Time", "all", 12000, 100, 24000, "how long(in ticks) can a siren use its sing effect on a player, without a cooldown.");
         this.sirenTimeBetweenSongs = buildInt(builder, "Siren Time Between Songs", "all", 2000, 100, 24000, "how long(in ticks) a siren has to wait after failing to lure in a player");
@@ -227,6 +245,7 @@ public class ServerConfig {
         this.deathWormMaxHealth = buildDouble(builder, "Death Worm Base Health", "all", 10, 1, 10000, "Default deathworm health, this is scaled to the worm's particular size (Minecraft limits max health to 1024: higher values need a mod that raises the limit, e.g. AttributeFix)");
         this.deathWormAttackStrength = buildDouble(builder, "Death Worm Base Attack Strength", "all", 3, 1, 10000, "Default deathworm attack strength, this is scaled to the worm's particular size");
         this.deathWormAttackMonsters = buildBoolean(builder, "Death Worms Target Monsters", "all", true, "True if wild deathworms are allowed to target and attack monsters");
+        this.spawnDeathWorms = buildBoolean(builder, "Spawn Death Worms", "all", true, "Whether death worms spawn or not");
         this.deathWormSpawnRate = buildInt(builder, "Death Worm Spawn Weight", "all", 30, 1, 10000, "Deathworm spawn weight. Higher = lower chance to spawn");
         builder.pop();
         builder.push("Cockatrice");
@@ -245,6 +264,7 @@ public class ServerConfig {
         this.stymphalianBirdFlightHeight = buildInt(builder, "Max Stymphalian Bird Flight Height", "all", 80, 10, Integer.MAX_VALUE, "How high stymphalian birds can fly, in Y height.");
         this.stymphalianBirdsDataTagDrops = buildBoolean(builder, "Stymphalian Birds drop ore dict items", "all", true, "True if stymphalian birds can drop items registered in the ore dictionary to ingotCopper, ingotBronze, nuggetCopper, nuggetBronze.");
         this.stympahlianBirdAttackAnimals = buildBoolean(builder, "Stymphalian Birds Target Animals", "all", false, "True if stymphalian birds are allowed to target and attack animals");
+        this.spawnStymphalianBirds = buildBoolean(builder, "Spawn Stymphalian Birds", "all", true, "Whether stymphalian birds spawn or not");
         this.stymphalianBirdSpawnChance = buildInt(builder, "Spawn Stymhphalian Bird Chance", "all", 100, 1, 10000, "1 out of this number chance per chunk for generation");
         builder.pop();
         builder.push("Trolls");
@@ -258,6 +278,7 @@ public class ServerConfig {
         this.myrmexPregnantTicks = buildInt(builder, "Myrmex Gestation Length", "all", 2500, 1, 10000, "How many ticks it takes for a Myrmex Queen to produce an egg.");
         this.myrmexEggTicks = buildInt(builder, "Myrmex Hatch Length", "all", 3000, 1, 10000, "How many ticks it takes for a Myrmex Egg to hatch.");
         this.myrmexLarvaTicks = buildInt(builder, "Myrmex Hatch Length", "all", 35000, 1, 100000, "How many ticks it takes for a Myrmex to move from a larva to a pupa, and from a pupa to an adult.");
+        this.generateMyrmexColonies = buildBoolean(builder, "Generate Myrmex Colonies", "all", true, "Whether to generate myrmex hives or not");
         this.myrmexColonyGenChance = buildInt(builder, "Myrmex Colony Gen Chance", "all", 150, 1, 10000, "One out of this number chance per chunk to generate a myrmex hive.");
         this.myrmexColonySize = buildInt(builder, "Myrmex Colony Max Size", "all", 80, 10, 10000, "How many maximum individuals a myrmex colony can have.");
         this.myrmexBaseAttackStrength = buildDouble(builder, "Myrmex Base Attack Strength", "all", 3, 1, 10000, "Base Myrmex(worker) attack strength");
@@ -274,12 +295,14 @@ public class ServerConfig {
         this.amphithereAttackStrength = buildDouble(builder, "Amphithere Attack Strength", "all", 7, 1, 10000, "Amphithere attack strength");
         builder.pop();
         builder.push("SeaSerpents");
+        this.spawnSeaSerpents = buildBoolean(builder, "Spawn Sea Serpents", "all", true, "Whether sea serpents spawn or not");
         this.seaSerpentSpawnChance = buildInt(builder, "Spawn Sea Serpent Chance", "all", 250, 1, 10000, "1 out of this number chance per chunk for generation");
         this.seaSerpentGriefing = buildBoolean(builder, "Sea Serpent Griefing", "all", true, "Whether or not sea serpents can break weak blocks in their way");
         this.seaSerpentBaseHealth = buildDouble(builder, "Sea Serpent Base Health", "all", 20, 1, 10000, "Default sea serpent health, this is scaled to the sea serpent's particular size (Minecraft limits max health to 1024: higher values need a mod that raises the limit, e.g. AttributeFix)");
         this.seaSerpentAttackStrength = buildDouble(builder, "Sea Serpent Base Attack Strength", "all", 4, 1, 10000, "Default sea serpent attack strength, this is scaled to the sea serpent's particular size");
         builder.pop();
         builder.push("Hippocampus");
+        this.spawnHippocampi = buildBoolean(builder, "Spawn Hippocampi", "all", true, "Whether hippocampi spawn or not");
         this.hippocampusSpawnChance = buildInt(builder, "Spawn Hippocampus Chance", "all", 40, 1, 10000, "1 out of this number chance per chunk for generation");
         this.hippocampusSwimSpeedMod = buildDouble(builder, "Hippocampus Swim Speed Modifier", "all", 1F, 0.0F, 2.0F, "Change this to slow down or speed up hippocampus swimming.");
         builder.pop();
@@ -297,6 +320,7 @@ public class ServerConfig {
         this.lichSpawnChance = buildInt(builder, "Lich Spawn Chance", "all", 30, 1, 10000, "Dread Lich spawn chance. Lower = higher chance to spawn");
 
         this.hydraMaxHealth = buildDouble(builder, "Hydra Max Health", "all", 250, 1, 10000, "Maximum hydra health (Minecraft limits max health to 1024: higher values need a mod that raises the limit, e.g. AttributeFix)");
+        this.generateHydraCaves = buildBoolean(builder, "Generate Hydra Caves", "all", true, "Whether to generate hydra caves or not");
         this.generateHydraChance = buildInt(builder, "Hydra Caves Gen Chance", "all", 60, 1, 10000, "One out of this number chance per chunk to generate a hydra cave.");
 
         this.ghostMaxHealth = buildDouble(builder, "Ghost Max Health", "all", 30F, 1.0F, 10000.0F, "Maximum ghost health. (Minecraft limits max health to 1024: higher values need a mod that raises the limit, e.g. AttributeFix)");
