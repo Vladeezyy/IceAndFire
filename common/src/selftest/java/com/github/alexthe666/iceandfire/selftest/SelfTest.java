@@ -386,7 +386,7 @@ public class SelfTest {
 
     /** Infinity keeps dragonbone arrows, the macuahuitl disables shields, a hopper takes pixie dust out of a jar */
     private static void checkItemHooks(ServerLevel level, BlockPos pos) {
-        var skeleton = EntityType.SKELETON.create(level, EntitySpawnReason.COMMAND);
+        var skeleton = net.minecraft.world.entity.EntityTypes.SKELETON.create(level, EntitySpawnReason.COMMAND);
         skeleton.snapTo(pos.getX() + 0.5, pos.getY() + 3, pos.getZ() + 0.5, 0, 0);
         ItemStack bow = new ItemStack(net.minecraft.world.item.Items.BOW);
         ItemStack plainBow = bow.copy();
