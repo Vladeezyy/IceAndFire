@@ -47,6 +47,20 @@ public class ParticleSirenAppearance extends Particle {
         VertexConsumer ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderType.entityTranslucent(RenderSiren.getSirenOverlayTexture(sirenType)));
         this.model.renderToBuffer(matrixstack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
         irendertypebuffer$impl.endBatch();
+        restoreParticleState();
+    }
+
+    /**
+     * endBatch leaves the state of the model's render type (entity shader, no depth test, no lightmap): the particles of
+     * the CUSTOM pass drawn after an appearance (all the mod's own) drew with it and were not seen. Back to what
+     * ParticleEngine.render and CUSTOM.begin set.
+     */
+    static void restoreParticleState() {
+        com.mojang.blaze3d.systems.RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getParticleShader);
+        Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
+        com.mojang.blaze3d.systems.RenderSystem.enableDepthTest();
+        com.mojang.blaze3d.systems.RenderSystem.depthMask(true);
+        com.mojang.blaze3d.systems.RenderSystem.disableBlend();
     }
 }
 

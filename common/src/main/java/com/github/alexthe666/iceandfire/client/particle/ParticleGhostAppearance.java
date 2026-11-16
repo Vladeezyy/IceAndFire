@@ -63,6 +63,7 @@ public class ParticleGhostAppearance extends Particle {
             this.model.setupAnim(ghostEntity, 0, 0, entity.tickCount + partialTicks, 0, 0);
             this.model.renderToBuffer(matrixstack, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.colorFromFloat(f1, 1.0F, 1.0F, 1.0F));
             irendertypebuffer$impl.endBatch();
+            ParticleSirenAppearance.restoreParticleState();
         }
 
     }
