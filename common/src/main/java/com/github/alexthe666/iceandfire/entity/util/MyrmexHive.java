@@ -42,7 +42,8 @@ public class MyrmexHive {
     private final Map<BlockPos, Direction> entranceBottoms = Maps.newHashMap();
     private final Map<UUID, Integer> playerReputation = Maps.newHashMap();
     private final List<HiveAggressor> villageAgressors = Lists.newArrayList();
-    private final List<UUID> myrmexList = Lists.newArrayList();
+    // Copy on write: worldgen threads add the myrmexes of a new hive while the server thread may save the hives
+    private final List<UUID> myrmexList = new java.util.concurrent.CopyOnWriteArrayList<>();
     public UUID hiveUUID;
     public String colonyName = "";
     public boolean reproduces = true;
