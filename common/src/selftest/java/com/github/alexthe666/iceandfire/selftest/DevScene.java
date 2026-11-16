@@ -435,7 +435,8 @@ public final class DevScene {
                 int changed = changedPixels(DevScene.particleReference, pixels, true);
                 int wall = darkPixels(DevScene.particleReference);
                 // only pixels dark in the reference count: without the wall in it (not drawn yet) there is nothing to compare
-                if (wall < 2000) {
+                // the wall fills most of the middle once the camera looks at it; part of it: still turning or not drawn yet
+                if (wall < middlePixels(pixels) / 4) {
                     check(name + " (wall not drawn yet, see the later checks)", live >= 300, live + " live (" + count + "), wall " + wall + " pixels in the reference");
                 } else {
                     check(name, live >= 300 && changed >= 300, live + " live (" + count + "), " + changed + " pixels changed in the middle, wall " + wall);
@@ -484,6 +485,12 @@ public final class DevScene {
     }
 
     /** Pixels of the middle third (across) or of the outer thirds, rows 15-85 %, dark in the reference frame (the wall) and at least 48 brighter in a channel now. */
+    /** Pixels of the middle third, rows 15-85 % */
+    private static int middlePixels(int[] frame) {
+        int rows = frame.length / particleWidth;
+        return (particleWidth * 2 / 3 - particleWidth / 3) * (rows * 85 / 100 - rows * 15 / 100);
+    }
+
     /** Pixels of the middle third, rows 15-85 %, dark in the frame (the black wall) */
     private static int darkPixels(int[] frame) {
         if (frame == null) {
