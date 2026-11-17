@@ -639,6 +639,9 @@ public final class DevScene {
         hydra.setNoAi(false);
         hydra.setHeadCount(9);
         hydra.setTarget(player);
+        // without the heart: it regenerates the player from the hotbar (ItemHydraHeart.inventoryTick)
+        player.getInventory().setItem(4, ItemStack.EMPTY);
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(net.minecraft.world.item.Items.NETHERITE_SWORD));
         player.removeAllEffects();
         player.setHealth(2);
     }
