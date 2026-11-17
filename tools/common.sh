@@ -15,7 +15,8 @@ kill_runs() {
     powershell -NoProfile -Command "Get-CimInstance Win32_Process -Filter \"Name='java.exe'\" | Where-Object { \$_.CommandLine -match 'IceFire' -and \$_.CommandLine -match '$1' -and \$_.CommandLine -notmatch 'GradleDaemon' } | ForEach-Object { Stop-Process -Id \$_.ProcessId -Force }" 2>/dev/null
   else
     # only java processes: the shell running this script has the same words in its command line
-    ps -axo pid=,comm=,command= | awk '$2 ~ /java$/' | grep -i -E 'icefire|iceandfire' | grep -E "$1" | grep -v GradleDaemon | awk '{print $1}' | xargs kill -9 2>/dev/null
+    # and only of this checkout: worktrees of other versions run their own tests at the same time
+    ps -axo pid=,comm=,command= | awk '$2 ~ /java$/' | grep -i -E 'icefire|iceandfire' | grep -F "$(pwd -P)/" | grep -E "$1" | grep -v GradleDaemon | awk '{print $1}' | xargs kill -9 2>/dev/null
   fi
   return 0
 }

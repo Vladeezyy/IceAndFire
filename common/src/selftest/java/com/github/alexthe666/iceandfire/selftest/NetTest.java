@@ -23,6 +23,8 @@ import java.io.File;
  */
 public class NetTest {
     private static final String MODE = System.getProperty("iceandfire.nettest", "");
+    /** The test server: IAF_NETPORT=<port> when 25570 is taken (tools/nettest.sh) */
+    static final String ADDRESS = "localhost:" + System.getenv().getOrDefault("IAF_NETPORT", "25570");
 
     // Server
     private static ServerPlayer rider;
@@ -35,6 +37,10 @@ public class NetTest {
     private static boolean wasOnDragon;
 
     public static void onLogin(net.minecraft.world.entity.player.Player joined) {
+        if (MODE.equals("server") && NetTestHydra.ACTIVE && joined instanceof ServerPlayer player) {
+            NetTestHydra.onLogin(player);
+            return;
+        }
         if (MODE.equals("server") && joined instanceof ServerPlayer player) {
             rider = player;
             serverTicks = 0;
@@ -42,6 +48,10 @@ public class NetTest {
     }
 
     public static void onLogout(net.minecraft.world.entity.player.Player player) {
+        if (MODE.equals("server") && NetTestHydra.ACTIVE) {
+            NetTestHydra.onLogout(player);
+            return;
+        }
         if (MODE.equals("server") && player == rider) {
             IceAndFire.LOGGER.info("[nettest] server DONE");
             rider.level().getServer().halt(false);
@@ -87,6 +97,10 @@ public class NetTest {
     }
 
     public static void onServerTick(net.minecraft.server.MinecraftServer server) {
+        if (NetTestHydra.ACTIVE) {
+            NetTestHydra.serverTick(server);
+            return;
+        }
         if (serverTicks < 0 || rider == null) {
             return;
         }
@@ -254,11 +268,14 @@ public class NetTest {
             tickMsMax = Math.max(tickMsMax, ms);
             clientTicks++;
             if (mc.player == null || mc.level == null || mc.getConnection() == null) {
+                if (NetTestHydra.ACTIVE && NetTestHydra.Client.offline(mc)) {
+                    return;
+                }
                 // --quickPlayMultiplayer does not always join (seen on macOS): after 10 s on the title screen join from here
                 if (!joinTried && clientTicks > 200 && mc.gui.screen() instanceof net.minecraft.client.gui.screens.TitleScreen) {
                     joinTried = true;
                     IceAndFire.LOGGER.info("[nettest] quick play did not join, connecting from the title screen");
-                    String address = "localhost:25570";
+                    String address = ADDRESS;
                     net.minecraft.client.gui.screens.ConnectScreen.startConnecting(mc.gui.screen(), mc, net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
                         new net.minecraft.client.multiplayer.ServerData("nettest", address, net.minecraft.client.multiplayer.ServerData.Type.OTHER), false, null);
                 }
@@ -285,6 +302,10 @@ public class NetTest {
                 tickMsSum = 0;
                 tickMsMax = 0;
                 clientTicks = 0;
+            }
+            if (NetTestHydra.ACTIVE) {
+                NetTestHydra.Client.tick(mc);
+                return;
             }
             if (riddenTicks < 0) {
                 if (mc.player.getVehicle() instanceof EntityDragonBase) {
