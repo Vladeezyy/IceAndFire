@@ -51,6 +51,9 @@ public final class DevScene {
 
     private static final boolean ENABLED = Boolean.getBoolean("iceandfire.scene");
     private static final String WORLD = "iaf_scene";
+    /** SCENE_ONLY=hydra: only the setup, the stage and the hydra fight */
+    private static final boolean HYDRA_ONLY = "hydra".equals(System.getenv("SCENE_ONLY"));
+    private static boolean registeringHydra;
     private static final List<Pair<Integer, Consumer<Minecraft>>> STEPS = new ArrayList<>();
     /** The close-ups start at tick 800, one creature every 30 ticks; END leaves room for 40 of them. */
     private static final int END = 800 + 40 * 30;
@@ -109,6 +112,16 @@ public final class DevScene {
                 IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
                 mc.stop();
             });
+        }
+        // SCENE_ONLY=hydra: the hydra fight alone, right after the stage
+        if (HYDRA_ONLY) {
+            int end = hydraFight(120);
+            registeringHydra = true;
+            at(end, mc -> {
+                IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
+                mc.stop();
+            });
+            registeringHydra = false;
         }
         at(120, mc -> server(mc, DevScene::dragons));
         at(130, mc -> server(mc, p -> look(p, stage.offset(0, 8, 38), stage.offset(0, 3, 20))));
@@ -208,7 +221,8 @@ public final class DevScene {
             mc.particleEngine.setLevel(mc.level); // 1.21.1: clearParticles is private, setLevel clears
             server(mc, p -> particleWallRemove(level(p)));
         });
-        at(END + 235, mc -> {
+        int hydraEnd = hydraFight(END + 240);
+        at(hydraEnd, mc -> {
             IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
             mc.stop();
         });
@@ -514,6 +528,250 @@ public final class DevScene {
         return changed;
     }
 
+    // The hydra fight (GitHub #8, Fabric: "hydras crashing your game", near a hydra in a fight)
+    private static com.github.alexthe666.iceandfire.entity.EntityHydra fightHydra;
+    private static final java.util.Set<Integer> hydraHeadCounts = new java.util.TreeSet<>();
+    private static int hydraBreaths;
+    private static int hydraSevered;
+    private static int hydraStrikes;
+    private static int hydraHits;
+    private static int playerHurt;
+    private static int hydraArrows;
+    private static boolean hydraDying;
+    private static final java.util.Set<Integer> seenBreaths = new java.util.HashSet<>();
+
+    /** A survival player the hydra fights from tick t0: breath from afar, bites up close, heads cut off and grown back,
+     *  hydra arrows both ways, the hydra heart in hand, then its death in front of the camera. Returns the tick after it. */
+    private static int hydraFight(int t0) {
+        boolean previous = registeringHydra;
+        registeringHydra = true;
+        at(t0, mc -> server(mc, DevScene::hydraSetup));
+        for (int t = t0 + 1; t < t0 + 470; t++) {
+            at(t, DevScene::hydraObserve);
+        }
+        for (int t = t0 + 10; t < t0 + 350; t += 10) {
+            at(t, mc -> server(mc, p -> {
+                if (p.isAlive()) {
+                    p.setHealth(p.getMaxHealth());
+                }
+            }));
+        }
+        // the camera after the hydra (it walks and is knocked back)
+        for (int t = t0 + 25; t < t0 + 350; t += 20) {
+            at(t, mc -> server(mc, p -> {
+                if (fightHydra != null && fightHydra.isAlive()) {
+                    BlockPos h = fightHydra.blockPosition();
+                    look(p, p.blockPosition().above(2), h.above());
+                }
+            }));
+        }
+        // up close: the player cuts at the heads (the client's attack on the client copy of a part, as a click does)
+        for (int t = t0 + 30; t < t0 + 150; t += 13) {
+            at(t, mc -> hydraAttack(mc, true));
+        }
+        at(t0 + 20, mc -> server(mc, p -> hydraStand(p, 3)));
+        // afar: it breathes; all nine heads, then one (which grows into two at once)
+        at(t0 + 150, mc -> server(mc, p -> {
+            hydraStand(p, 11);
+            fightHydra.setHeadCount(9);
+        }));
+        // every head breathes, so every head stops breathing (GitHub #8: the stop of the fourth head is entity event 63,
+        // which the vanilla client takes for a sniffer's and casts the hydra to Sniffer)
+        at(t0 + 152, mc -> server(mc, p -> {
+            for (int i = 0; i < fightHydra.getHeadCount(); i++) {
+                fightHydra.isBreathing[i] = true;
+                level(p).broadcastEntityEvent(fightHydra, (byte) (50 + i));
+            }
+        }));
+        at(t0 + 165, mc -> server(mc, DevScene::hydraArrows));
+        at(t0 + 200, mc -> shot(mc, "hydra_breath"));
+        // the nine breaths are over (60 ticks each); without a target no new one starts: the client got every head's end
+        at(t0 + 216, mc -> server(mc, p -> {
+            fightHydra.setNoAi(true);
+            fightHydra.setTarget(null);
+        }));
+        at(t0 + 228, mc -> {
+            StringBuilder breathing = new StringBuilder();
+            for (Entity e : mc.level.entitiesForRendering()) {
+                if (e instanceof com.github.alexthe666.iceandfire.entity.EntityHydra hydra) {
+                    for (int i = 0; i < com.github.alexthe666.iceandfire.entity.EntityHydra.HEADS; i++) {
+                        if (hydra.isBreathing[i]) {
+                            breathing.append(i).append(' ');
+                        }
+                    }
+                }
+            }
+            check("hydra breath ends on the client", breathing.isEmpty(), "still breathing: " + breathing);
+        });
+        at(t0 + 230, mc -> server(mc, p -> {
+            fightHydra.setNoAi(false);
+            fightHydra.setTarget(p);
+            fightHydra.setHeadCount(1);
+        }));
+        // up close again with the heart in hand, the hydra on fire (heads drop instead of growing back)
+        at(t0 + 250, mc -> server(mc, p -> {
+            hydraStand(p, 3);
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(IafItemRegistry.HYDRA_HEART.get()));
+            fightHydra.setHeadCount(5);
+            fightHydra.igniteForSeconds(6);
+        }));
+        for (int t = t0 + 260; t < t0 + 340; t += 13) {
+            at(t, mc -> hydraAttack(mc, false));
+        }
+        at(t0 + 300, mc -> shot(mc, "hydra_fight"));
+        at(t0 + 345, mc -> server(mc, DevScene::hydraKill));
+        at(t0 + 355, mc -> shot(mc, "hydra_death"));
+        // a second hydra kills the player, who respawns
+        at(t0 + 380, mc -> server(mc, DevScene::hydraKillsPlayer));
+        at(t0 + 440, mc -> {
+            check("player killed by the hydra", hydraKilledPlayer, mc.player.getHealth());
+            mc.player.respawn();
+        });
+        at(t0 + 470, mc -> {
+            check("player respawned", mc.player.isAlive(), mc.player.getHealth());
+            check("hydra breathed at the player", hydraBreaths > 0, hydraBreaths + " breaths on the client");
+            check("hydra bit the player", hydraStrikes > 0 && playerHurt > 0, hydraStrikes + " strikes, player hurt " + playerHurt + " ticks");
+            check("hydra hit by the player", hydraHits >= 5, hydraHits);
+            check("hydra head cut off", hydraSevered > 0, hydraSevered + " ticks with a severed head");
+            check("hydra head counts changed", hydraHeadCounts.size() >= 4 && hydraHeadCounts.contains(9), hydraHeadCounts);
+            check("hydra arrows on the client", hydraArrows > 0, hydraArrows);
+            check("hydra died on the client", hydraDying && (fightHydra == null || mc.level.getEntity(fightHydra.getId()) == null), hydraDying);
+            server(mc, DevScene::hydraCleanup);
+        });
+        registeringHydra = previous;
+        return t0 + 480;
+    }
+
+    private static void hydraSetup(ServerPlayer player) {
+        ServerLevel level = level(player);
+        level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(40, 20, 40), e -> !(e instanceof ServerPlayer)).forEach(Entity::discard);
+        level.setDayTime(6000);
+        player.setGameMode(GameType.SURVIVAL);
+        player.getAbilities().flying = false;
+        player.onUpdateAbilities();
+        player.setHealth(10);
+        // hurt and poisoned for real (healed every second by the scene until the last part, where it kills the player)
+        player.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.SATURATION, 1200, 0, false, false));
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(net.minecraft.world.item.Items.NETHERITE_SWORD));
+        // the heart in the hotbar regenerates the player (ItemHydraHeart.inventoryTick)
+        player.getInventory().setItem(4, new ItemStack(IafItemRegistry.HYDRA_HEART.get()));
+        Entity entity = place(level, IafEntityRegistry.HYDRA.get(), stage, 0);
+        fightHydra = (com.github.alexthe666.iceandfire.entity.EntityHydra) entity;
+        fightHydra.setNoAi(false);
+        hydraStand(player, 9);
+        fightHydra.setTarget(player);
+    }
+
+    /** The player {@code distance} blocks south of the hydra, looking at it; the hydra after the player again. */
+    private static void hydraStand(ServerPlayer player, int distance) {
+        if (fightHydra == null || !fightHydra.isAlive()) {
+            return;
+        }
+        BlockPos at = fightHydra.blockPosition();
+        look(player, at.offset(0, 2, distance), at.offset(0, 1, 0));
+        fightHydra.setTarget(player);
+    }
+
+    /** Every client tick of the fight: what the client sees of the hydra and its breath. */
+    private static void hydraObserve(Minecraft mc) {
+        if (mc.player.isDeadOrDying()) {
+            hydraKilledPlayer = true;
+        }
+        if (mc.player.hurtTime > 0) {
+            playerHurt++;
+        }
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (e instanceof com.github.alexthe666.iceandfire.entity.EntityHydra hydra) {
+                hydraHeadCounts.add(hydra.getHeadCount());
+                if (hydra.getSeveredHead() != -1) {
+                    hydraSevered++;
+                }
+                for (int i = 0; i < com.github.alexthe666.iceandfire.entity.EntityHydra.HEADS; i++) {
+                    if (hydra.isStriking[i]) {
+                        hydraStrikes++;
+                    }
+                }
+                if (hydra.deathTime > 0) {
+                    hydraDying = true;
+                }
+            } else if (e instanceof com.github.alexthe666.iceandfire.entity.EntityHydraBreath && seenBreaths.add(e.getId())) {
+                hydraBreaths++;
+            } else if (e instanceof com.github.alexthe666.iceandfire.entity.EntityHydraArrow && seenBreaths.add(e.getId())) {
+                hydraArrows++;
+            }
+        }
+    }
+
+    /** The client attacks a head part of the hydra (heads only: necks and heads alternate) or the hydra itself. */
+    private static void hydraAttack(Minecraft mc, boolean parts) {
+        Entity target = null;
+        double best = Double.MAX_VALUE;
+        for (Entity e : mc.level.entitiesForRendering()) {
+            boolean fits = parts ? e instanceof com.github.alexthe666.iceandfire.entity.EntityHydraHead : e instanceof com.github.alexthe666.iceandfire.entity.EntityHydra;
+            double d = e.distanceToSqr(mc.player);
+            if (fits && e.isAlive() && d < best) {
+                best = d;
+                target = e;
+            }
+        }
+        if (target == null) {
+            check("hydra target for the player's attack", false, parts ? "no head part on the client" : "no hydra on the client");
+            return;
+        }
+        mc.gameMode.attack(mc.player, target);
+        hydraHits++;
+    }
+
+    /** Hydra arrows from the player at the hydra and from the hydra at the player. */
+    private static void hydraArrows(ServerPlayer player) {
+        ServerLevel level = level(player);
+        for (int i = 0; i < 3; i++) {
+            com.github.alexthe666.iceandfire.entity.EntityHydraArrow arrow = new com.github.alexthe666.iceandfire.entity.EntityHydraArrow(IafEntityRegistry.HYDRA_ARROW.get(), level, player);
+            arrow.shootFromRotation(player, player.getXRot(), player.getYRot() + (i - 1) * 4, 0, 2.5F, 0);
+            level.addFreshEntity(arrow);
+        }
+        com.github.alexthe666.iceandfire.entity.EntityHydraArrow back = new com.github.alexthe666.iceandfire.entity.EntityHydraArrow(IafEntityRegistry.HYDRA_ARROW.get(), level, fightHydra);
+        back.setPos(fightHydra.getX(), fightHydra.getY() + 2, fightHydra.getZ() + 2);
+        back.shoot(player.getX() - back.getX(), player.getEyeY() - back.getY(), player.getZ() - back.getZ(), 2.0F, 0);
+        level.addFreshEntity(back);
+    }
+
+    /** Killed by the player: GENERIC_KILL gets past the hydra's "never below 5 health while it has heads". */
+    private static void hydraKill(ServerPlayer player) {
+        if (fightHydra == null || !fightHydra.isAlive()) {
+            check("hydra alive before its death", false, fightHydra);
+            return;
+        }
+        ServerLevel level = level(player);
+        net.minecraft.world.damagesource.DamageSource kill = new net.minecraft.world.damagesource.DamageSource(
+            level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getOrThrow(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL), player);
+        fightHydra.hurt(kill, Float.MAX_VALUE);
+        check("hydra died on the server", fightHydra.isDeadOrDying(), fightHydra.getHealth());
+    }
+
+    private static boolean hydraKilledPlayer;
+
+    private static void hydraKillsPlayer(ServerPlayer player) {
+        ServerLevel level = level(player);
+        Entity entity = place(level, IafEntityRegistry.HYDRA.get(), player.blockPosition().offset(0, 0, -4), 0);
+        com.github.alexthe666.iceandfire.entity.EntityHydra hydra = (com.github.alexthe666.iceandfire.entity.EntityHydra) entity;
+        hydra.setNoAi(false);
+        hydra.setHeadCount(9);
+        hydra.setTarget(player);
+        player.removeAllEffects();
+        player.setHealth(2);
+    }
+
+    private static void hydraCleanup(ServerPlayer player) {
+        ServerLevel level = level(player);
+        level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(stage).inflate(40, 20, 40), e -> !(e instanceof ServerPlayer)).forEach(Entity::discard);
+        player.removeAllEffects();
+        player.setHealth(player.getMaxHealth());
+        player.setGameMode(GameType.CREATIVE);
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        player.getInventory().setItem(4, ItemStack.EMPTY);
+    }
+
     private static ServerLevel level(ServerPlayer player) {
         return player.serverLevel();
     }
@@ -544,6 +802,9 @@ public final class DevScene {
     }
 
     private static void at(int t, Consumer<Minecraft> action) {
+        if (HYDRA_ONLY && t > 60 && !registeringHydra) {
+            return;
+        }
         STEPS.add(Pair.of(t, action));
     }
 
@@ -571,6 +832,14 @@ public final class DevScene {
                 LevelSettings settings = new LevelSettings(WORLD, GameType.CREATIVE, false, Difficulty.NORMAL, true, new GameRules(), WorldDataConfiguration.DEFAULT);
                 mc.createWorldOpenFlows().createFreshLevel(WORLD, settings, new WorldOptions(1234L, false, false), WorldPresets::createNormalWorldDimensions, new TitleScreen());
             }
+            return;
+        }
+        // Thrown out of the world (a packet the client failed to handle: "Network Protocol Error"): fail now, not at the watchdog
+        if (tick > 0 && mc.player == null && mc.screen instanceof net.minecraft.client.gui.screens.DisconnectedScreen) {
+            tick = -1_000_000;
+            check("client still in the world", false, "disconnected");
+            IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
+            mc.stop();
             return;
         }
         if (mc.player == null || mc.getSingleplayerServer() == null) {
