@@ -317,7 +317,17 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
   away) disconnected the client. Now 70-78; 60 (vanilla death poof) is no longer taken as head 0. Reproduced and
   checked by the hydra fight of the client scene (`SCENE_ONLY=hydra`): Fabric on all five versions, NeoForge and
   Fabric with the compat mods on 26.3, 0 failed. Not checked: a dedicated server, NeoForge on the other versions.
-  A beta.13 server still sends 63, so server and client need the same version.
+  A beta.13 server still sends 63, so server and client need the same version. Later: the dedicated server net test
+  `IAF_NETTEST=hydra` (9 heads, every breath ended over the network, bites, the player's hits on heads, death) passes
+  on all five versions and both loaders; with the old id 60 it fails with `disconnect.packetError`.
+- [#11](https://github.com/Vladeezyy/IceAndFire/issues/11) Fabric: hits on dragon parts and hydra heads never reached
+  the server (found by the hydra net test: 0 of 31 hits on 26.3 Fabric). Fabric asks `AttackEntityCallback` on the client
+  before it sends the attack, and the part handler cancelled it there; the client now passes part hits on. Fixed for
+  the next beta, all versions. Also fixed (bug of the original): a hit on a hydra head hurt the head of the previous
+  hit (`triggerHeadFlags` after the attack). Self-test: hydra and cyclops caves (creature, chests, loot), a hydra after
+  a fight through NBT and a chunk reload, a hit on head 2 hurts head 2.
+- Self-test `dragons alive` failed once (2 of 3, 26.1.2 NeoForge, not again in the rerun); the check now names the
+  dragon that is gone and its last damage.
 - [#9](https://github.com/Vladeezyy/IceAndFire/issues/9) cyclops without a cave (CurseForge question, Raileen,
   2026-11-16): not a bug. As in the original, wandering cyclopes spawn alone in plains; caves are a beach feature, one
   try per chunk at its corner, chance 1 in 100, 800+ blocks from spawn, 300 from the last surface structure. 1.21.1
