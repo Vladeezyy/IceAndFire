@@ -310,13 +310,19 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
   shows a corpse with open eyes (not the dead texture), so the client had the dead flag false: its synced data did not
   arrive or was misread, which fits the reporter's guess that another mod in their pack caused it. Needs a report
   with the server mods.
-- [#8](https://github.com/Vladeezyy/IceAndFire/issues/8) hydras crash the game on Fabric (CurseForge, 2026-11-16, two
-  players): no version or crash report yet. Maybe the hydra breath `ClientLevel cannot be cast to ServerLevel` fixed in
-  beta.10 (#4) on an older build. Ask for the crash report; meanwhile check a hydra fight (breath, heads, death) in the
-  client scene on Fabric on every version.
+- [#8](https://github.com/Vladeezyy/IceAndFire/issues/8) hydras threw players out of the world ("Network Protocol Error",
+  CurseForge 2026-11-16, two players): fixed for the next beta, all versions and both loaders. The hydra sent the end
+  of a head's breath as entity event 60 + head; the vanilla client handles 63 itself before the entity (the sniffer's
+  digging sound) and casts the entity to `Sniffer`, so the fourth head ending its breath (4+ heads, target 6+ blocks
+  away) disconnected the client. Now 70-78; 60 (vanilla death poof) is no longer taken as head 0. Reproduced and
+  checked by the hydra fight of the client scene (`SCENE_ONLY=hydra`): Fabric on all five versions, NeoForge and
+  Fabric with the compat mods on 26.3, 0 failed. Not checked: a dedicated server, NeoForge on the other versions.
+  A beta.13 server still sends 63, so server and client need the same version.
 - [#9](https://github.com/Vladeezyy/IceAndFire/issues/9) cyclops without a cave (CurseForge question, Raileen,
-  2026-11-16): as in the original, wandering cyclopes spawn alone in plains and caves are a separate beach structure
-  (800+ blocks from spawn). Check that cyclops caves generate on every version and loader, then answer.
+  2026-11-16): not a bug. As in the original, wandering cyclopes spawn alone in plains; caves are a beach feature, one
+  try per chunk at its corner, chance 1 in 100, 800+ blocks from spawn, 300 from the last surface structure. 1.21.1
+  probe over 6561 chunks: with the chance set to 1, 37 caves on NeoForge and 33 on Fabric; with the default chance
+  about one cave per 3000-5000 chunks (estimate).
 - Next: play-test feedback.
 
 ## Multiloader split (branch `multiloader`, 2026-10-24)
