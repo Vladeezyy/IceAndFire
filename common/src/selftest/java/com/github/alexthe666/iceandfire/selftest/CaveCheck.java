@@ -261,6 +261,7 @@ final class CaveCheck {
             return;
         }
         EntityHydra hydra = hydraBefore;
+        hitHead(level, hydra);
         List<EntityHydraHead> heads = level.getEntitiesOfClass(EntityHydraHead.class, hydra.getBoundingBox().inflate(8), p -> p.getParent() == hydra && p.headIndex == 1);
         boolean hit = !heads.isEmpty() && heads.get(0).hurt(level.damageSources().generic(), 30);
         hydra.setHeadCount(6);
@@ -271,6 +272,29 @@ final class CaveCheck {
         String after = hydraState(copy);
         SelfTest.check("hydra after a fight through NBT", hit && hydra.getSeveredHead() == 1 && hydra.getHealth() < hydra.getMaxHealth() && before.equals(after),
             "head hit " + hit + ", " + before + (before.equals(after) ? "" : " -> loaded " + after));
+    }
+
+    /** A player's hit on head 2 through the mod's attack handler hurts head 2 (the original told the hydra the head after the
+     *  attack, so the damage went on the head of the previous hit, here head 0). */
+    private static void hitHead(ServerLevel level, EntityHydra hydra) {
+        List<EntityHydraHead> heads = level.getEntitiesOfClass(EntityHydraHead.class, hydra.getBoundingBox().inflate(8), p -> p.getParent() == hydra && p.headIndex == 2);
+        if (heads.isEmpty()) {
+            SelfTest.check("a hit on a hydra head hurts that head", false, "no head 2");
+            return;
+        }
+        net.minecraft.server.level.ServerPlayer player = new net.minecraft.server.level.ServerPlayer(level.getServer(), level,
+            new com.mojang.authlib.GameProfile(UUID.randomUUID(), "iaf_selftest_hydra"), net.minecraft.server.level.ClientInformation.createDefault());
+        player.setPos(hydra.getX(), hydra.getY(), hydra.getZ() + 3);
+        float[] before = hydra.headDamageTracker.clone();
+        new com.github.alexthe666.iceandfire.event.ServerEvents().onPlayerAttackMob(new dev.vladeezyy.iceandfire.bus.AttackEntityEvent(player, heads.get(0)));
+        float[] after = hydra.headDamageTracker;
+        boolean onlyTwo = after[2] > before[2];
+        for (int i = 0; i < after.length; i++) {
+            onlyTwo &= i == 2 || after[i] == before[i];
+        }
+        SelfTest.check("a hit on a hydra head hurts that head", onlyTwo, "head damage " + java.util.Arrays.toString(before) + " -> " + java.util.Arrays.toString(after));
+        System.arraycopy(before, 0, hydra.headDamageTracker, 0, before.length);
+        hydra.invulnerableTime = 0;
     }
 
     private static void unloaded(ServerLevel level) {

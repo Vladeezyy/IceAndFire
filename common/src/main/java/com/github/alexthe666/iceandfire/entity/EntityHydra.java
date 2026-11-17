@@ -362,7 +362,7 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
-        if (lastHitHead > this.getHeadCount()) {
+        if (lastHitHead >= this.getHeadCount()) {
             lastHitHead = this.getHeadCount() - 1;
         }
         int headIndex = lastHitHead;
