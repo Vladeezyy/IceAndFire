@@ -310,6 +310,13 @@ CustomCollisionsNavigator), spawn biome configs, CustomToolMaterial, CitadelItem
   shows a corpse with open eyes (not the dead texture), so the client had the dead flag false: its synced data did not
   arrive or was misread, which fits the reporter's guess that another mod in their pack caused it. Needs a report
   with the server mods.
+- [#8](https://github.com/Vladeezyy/IceAndFire/issues/8) hydras crash the game on Fabric (CurseForge, 2026-11-16, two
+  players): no version or crash report yet. Maybe the hydra breath `ClientLevel cannot be cast to ServerLevel` fixed in
+  beta.10 (#4) on an older build. Ask for the crash report; meanwhile check a hydra fight (breath, heads, death) in the
+  client scene on Fabric on every version.
+- [#9](https://github.com/Vladeezyy/IceAndFire/issues/9) cyclops without a cave (CurseForge question, Raileen,
+  2026-11-16): as in the original, wandering cyclopes spawn alone in plains and caves are a separate beach structure
+  (800+ blocks from spawn). Check that cyclops caves generate on every version and loader, then answer.
 - Next: play-test feedback.
 
 ## Multiloader split (branch `multiloader`, 2026-10-24)
