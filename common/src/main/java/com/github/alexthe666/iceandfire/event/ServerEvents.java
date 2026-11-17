@@ -220,17 +220,17 @@ public class ServerEvents {
         if (event.getTarget() instanceof EntityMutlipartPart && event.getEntity() instanceof Player) {
             event.setCanceled(true);
             Entity parent = ((EntityMutlipartPart) event.getTarget()).getParent();
+            // the hydra takes the damage on the head it was told about last, so the head goes first (the original told it
+            // after the attack, and every hit landed on the head of the previous hit)
+            if (event.getTarget() instanceof EntityHydraHead && parent instanceof EntityHydra) {
+                ((EntityHydra) parent).triggerHeadFlags(((EntityHydraHead) event.getTarget()).headIndex);
+            }
             try {
                 //If the attacked entity is the parent itself parent will be null and also doesn't have to be attacked
                 if (parent != null)
                     ((Player) event.getEntity()).attack(parent);
             } catch (Exception e) {
                 IceAndFire.LOGGER.warn("Exception thrown while interacting with entity.", e);
-            }
-            int extraData = 0;
-            if (event.getTarget() instanceof EntityHydraHead && parent instanceof EntityHydra) {
-                extraData = ((EntityHydraHead) event.getTarget()).headIndex;
-                ((EntityHydra) parent).triggerHeadFlags(extraData);
             }
         }
     }
