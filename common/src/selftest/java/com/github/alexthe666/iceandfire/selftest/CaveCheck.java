@@ -280,6 +280,9 @@ final class CaveCheck {
         }
         SelfTest.check("a hit on a hydra head hurts that head", onlyTwo, "head damage " + java.util.Arrays.toString(before) + " -> " + java.util.Arrays.toString(after));
         System.arraycopy(before, 0, hydra.headDamageTracker, 0, before.length);
+        // the fake player has no connection: the hydra must not go after it (it bit it on its next tick, NPE in hurtServer)
+        hydra.setTarget(null);
+        hydra.setLastHurtByMob(null);
         hydra.setInvulnerableTime(0);
     }
 
