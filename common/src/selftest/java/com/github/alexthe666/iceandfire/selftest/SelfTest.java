@@ -504,7 +504,13 @@ public class SelfTest {
         long mobs = SPAWNED.stream().filter(e -> e instanceof Mob).count();
         check("entities ticked 200 ticks", alive > 0, alive + " alive of " + SPAWNED.size() + " (" + mobs + " mobs)");
         long dragons = SPAWNED.stream().filter(e -> e instanceof EntityDragonBase && e.isAlive()).count();
-        check("dragons alive", dragons == 3, dragons);
+        // a dragon gone: which one and what got it (once 2 of 3 on 26.1.2 NeoForge with nothing in the log)
+        String gone = SPAWNED.stream().filter(e -> e instanceof EntityDragonBase && !e.isAlive()).map(e -> {
+            net.minecraft.world.damagesource.DamageSource last = ((EntityDragonBase) e).getLastDamageSource();
+            return e.getClass().getSimpleName() + " removed " + e.getRemovalReason() + " health " + ((EntityDragonBase) e).getHealth()
+                + " last damage " + (last == null ? "none" : last.getMsgId() + " by " + (last.getEntity() == null ? "-" : last.getEntity().getClass().getSimpleName()));
+        }).collect(java.util.stream.Collectors.joining("; "));
+        check("dragons alive", dragons == 3, dragons + (gone.isEmpty() ? "" : " (" + gone + ")"));
 
         // Entity data attachment survives saving (frozen state)
         Zombie zombie = EntityTypes.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
