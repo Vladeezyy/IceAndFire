@@ -201,6 +201,13 @@ public final class IceAndFireFabric implements ModInitializer {
             if (held.getItem() instanceof com.github.alexthe666.iceandfire.item.ItemTrollWeapon weapon && weapon.onLeftClickEntity(held, player, entity)) {
                 return InteractionResult.FAIL;
             }
+            // A hit on a part (dragon, hydra head) goes to the server as a vanilla attack, where the mod's handler turns it
+            // into a hit on the parent. Fabric asks this callback on the client before it sends the attack, and a FAIL
+            // there drops the packet: the client has no parent of a part, the handler cancelled every such hit and no hit
+            // on a part reached the server (NeoForge asks its event after the packet is sent)
+            if (level.isClientSide() && entity instanceof com.github.alexthe666.iceandfire.entity.EntityMutlipartPart) {
+                return InteractionResult.PASS;
+            }
             return IafBus.post(new dev.vladeezyy.iceandfire.bus.AttackEntityEvent(player, entity)) ? InteractionResult.FAIL : InteractionResult.PASS;
         });
         // NeoForge's supportsEnchantment / isPrimaryItemFor: the tide trident takes Piercing
