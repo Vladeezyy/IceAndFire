@@ -111,7 +111,7 @@ loom {
             name 'Net Client'
             source sourceSets.selftest
             vmArg '-Diceandfire.nettest=client'
-            programArgs '--quickPlayMultiplayer', 'localhost:25570', '--username', 'NetTester'
+            programArgs '--quickPlayMultiplayer', "localhost:${System.getenv('IAF_NETPORT') ?: '25570'}", '--username', 'NetTester'
             runDir('run')
         }
     }
