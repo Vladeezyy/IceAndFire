@@ -2,7 +2,8 @@
 # Riding a dragon on a dedicated server (src/selftest NetTest, issues #5192/#5208): the server runs in run-netserver,
 # a client joins it, rides an adult dragon and gets off, rides a death worm, then checks a dragon corpse the client
 # receives again (#5297: out of tracking range and back, reconnect, unloaded and loaded from disk).
-# Prints the per-second stats of both sides and the errors. IAF_NETTEST=corpse runs only the corpse check.
+# Prints the per-second stats of both sides and the errors. IAF_NETTEST=corpse runs only the corpse check, IAF_NETTEST=hydra
+# only the hydra fight (#8). IAF_NETPORT=<port>: another server port than 25570 (another checkout may be testing).
 cd "$(dirname "$0")/.."
 . tools/common.sh
 kill_runs 'nettest|Netserver|Netclient'
@@ -11,7 +12,7 @@ mkdir -p $LOADER/run-netserver
 printf 'eula=true\n' > $LOADER/run-netserver/eula.txt
 # A typical server: simulation distance 6
 # 26.3 servers turn the white list on by default; 26.x pauses an empty server after 60 s
-printf 'online-mode=false\nserver-port=25570\nsimulation-distance=6\nview-distance=10\nlevel-seed=1234\nspawn-protection=0\nmax-tick-time=-1\nwhite-list=false\nenforce-whitelist=false\npause-when-empty-seconds=0\n' > $LOADER/run-netserver/server.properties
+printf 'online-mode=false\nserver-port=%s\nsimulation-distance=6\nview-distance=10\nlevel-seed=1234\nspawn-protection=0\nmax-tick-time=-1\nwhite-list=false\nenforce-whitelist=false\npause-when-empty-seconds=0\n' "${IAF_NETPORT:-25570}" > $LOADER/run-netserver/server.properties
 timed 900 ./gradlew :$LOADER:runNetserver --console=plain > build-netserver.log 2>&1 < /dev/null &
 wait_started build-netserver.log 'Failed to start|Failed to initialize'
 if ! grep -q 'Done (' build-netserver.log; then

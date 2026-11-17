@@ -65,7 +65,7 @@ neoForge {
         netclient {
             client()
             systemProperty 'iceandfire.nettest', 'client'
-            programArguments.addAll '--quickPlayMultiplayer', 'localhost:25570', '--username', 'NetTester'
+            programArguments.addAll '--quickPlayMultiplayer', "localhost:${System.getenv('IAF_NETPORT') ?: '25570'}", '--username', 'NetTester'
         }
         // the generated data into common/src/generated/resources (both loaders use them)
         data {

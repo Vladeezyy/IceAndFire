@@ -24,6 +24,8 @@ import java.io.File;
  */
 public class NetTest {
     private static final String MODE = System.getProperty("iceandfire.nettest", "");
+    /** The test server: IAF_NETPORT=<port> when 25570 is taken (tools/nettest.sh) */
+    static final String ADDRESS = "localhost:" + System.getenv().getOrDefault("IAF_NETPORT", "25570");
     /** IAF_NETTEST=corpse: only the dragon corpse check (#5297), without the rides before it */
     static final boolean CORPSE_ONLY = "corpse".equals(System.getenv("IAF_NETTEST"));
 
@@ -52,6 +54,10 @@ public class NetTest {
     private static int corpseLogouts;
 
     public static void onLogin(net.minecraft.world.entity.player.Player joined) {
+        if (MODE.equals("server") && NetTestHydra.ACTIVE && joined instanceof ServerPlayer player) {
+            NetTestHydra.onLogin(player);
+            return;
+        }
         if (MODE.equals("server") && joined instanceof ServerPlayer player) {
             rider = player;
             if (corpseTicks >= 0) {
@@ -65,6 +71,10 @@ public class NetTest {
     }
 
     public static void onLogout(net.minecraft.world.entity.player.Player player) {
+        if (MODE.equals("server") && NetTestHydra.ACTIVE) {
+            NetTestHydra.onLogout(player);
+            return;
+        }
         if (MODE.equals("server") && player == rider) {
             // the corpse check reconnects once: the first logout in it is not the end
             if (corpseTicks >= 0 && corpseLogouts++ == 0) {
@@ -230,6 +240,10 @@ public class NetTest {
     }
 
     public static void onServerTick(net.minecraft.server.MinecraftServer server) {
+        if (NetTestHydra.ACTIVE) {
+            NetTestHydra.serverTick(server);
+            return;
+        }
         if (serverTicks < 0 || rider == null) {
             return;
         }
@@ -433,18 +447,21 @@ public class NetTest {
                 && !(mc.screen instanceof net.minecraft.client.gui.screens.ConnectScreen)) {
                 reconnectAt = -1;
                 IceAndFire.LOGGER.info("[nettest] corpse: connecting again");
-                String address = "localhost:25570";
+                String address = ADDRESS;
                 net.minecraft.client.gui.screens.ConnectScreen.startConnecting(new net.minecraft.client.gui.screens.TitleScreen(), mc,
                     net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
                     new net.minecraft.client.multiplayer.ServerData("nettest", address, net.minecraft.client.multiplayer.ServerData.Type.OTHER), false, null);
                 return;
             }
             if (mc.player == null || mc.level == null || mc.getConnection() == null) {
+                if (NetTestHydra.ACTIVE && NetTestHydra.Client.offline(mc)) {
+                    return;
+                }
                 // --quickPlayMultiplayer does not always join (seen on macOS): after 10 s on the title screen join from here
                 if (!joinTried && clientTicks > 200 && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen) {
                     joinTried = true;
                     IceAndFire.LOGGER.info("[nettest] quick play did not join, connecting from the title screen");
-                    String address = "localhost:25570";
+                    String address = ADDRESS;
                     net.minecraft.client.gui.screens.ConnectScreen.startConnecting(mc.screen, mc, net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
                         new net.minecraft.client.multiplayer.ServerData("nettest", address, net.minecraft.client.multiplayer.ServerData.Type.OTHER), false, null);
                 }
@@ -471,6 +488,10 @@ public class NetTest {
                 tickMsSum = 0;
                 tickMsMax = 0;
                 clientTicks = 0;
+            }
+            if (NetTestHydra.ACTIVE) {
+                NetTestHydra.Client.tick(mc);
+                return;
             }
             if (watchCorpses(mc)) {
                 return;
