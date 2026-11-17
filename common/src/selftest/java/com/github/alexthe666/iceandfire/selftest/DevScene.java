@@ -753,7 +753,7 @@ public final class DevScene {
 
     private static void hydraKillsPlayer(ServerPlayer player) {
         ServerLevel level = level(player);
-        Entity entity = place(level, IafEntityRegistry.HYDRA.get(), player.blockPosition().offset(0, 0, -4), 0);
+        Entity entity = place(level, IafEntityRegistry.HYDRA.get(), player.blockPosition().offset(0, 0, -2), 0);
         com.github.alexthe666.iceandfire.entity.EntityHydra hydra = (com.github.alexthe666.iceandfire.entity.EntityHydra) entity;
         hydra.setNoAi(false);
         hydra.setHeadCount(9);
@@ -761,8 +761,10 @@ public final class DevScene {
         // without the heart: it regenerates the player from the hotbar (ItemHydraHeart.inventoryTick)
         player.getInventory().setItem(4, ItemStack.EMPTY);
         player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(net.minecraft.world.item.Items.NETHERITE_SWORD));
+        // one bite or one breath, no regeneration from a full food bar
         player.removeAllEffects();
-        player.setHealth(2);
+        player.getFoodData().setFoodLevel(0);
+        player.setHealth(1);
     }
 
     private static void hydraCleanup(ServerPlayer player) {
