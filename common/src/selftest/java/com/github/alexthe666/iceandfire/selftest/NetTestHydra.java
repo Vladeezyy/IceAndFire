@@ -277,7 +277,7 @@ final class NetTestHydra {
             if (finished) {
                 return;
             }
-            if (hydra == null || hydra.isRemoved() && removedAt < 0 && !sawDying) {
+            if (hydra == null && removedAt < 0) {
                 for (Entity entity : mc.level.entitiesForRendering()) {
                     if (entity instanceof EntityHydra found && !found.isRemoved()) {
                         hydra = found;
@@ -324,8 +324,14 @@ final class NetTestHydra {
                 sawDying = true;
             }
             if (hydra.isRemoved()) {
-                removedAt = ticks;
                 IceAndFire.LOGGER.info("[nettest] client: hydra removed ({}), seen dying {}", hydra.getRemovalReason(), sawDying);
+                if (!sawDying) {
+                    // out of view, not dead: right after the teleport the client still drops the old area (and a hydra
+                    // seen there); look for the hydra again instead of ending the test
+                    hydra = null;
+                    return;
+                }
+                removedAt = ticks;
                 return;
             }
             // close to it: hit the nearest head part (or the body) with the sword every second, as a player does
