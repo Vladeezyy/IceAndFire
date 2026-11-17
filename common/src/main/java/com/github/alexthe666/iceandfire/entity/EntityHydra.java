@@ -41,6 +41,13 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(EntityHydra.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HEAD_COUNT = SynchedEntityData.defineId(EntityHydra.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SEVERED_HEAD = SynchedEntityData.defineId(EntityHydra.class, EntityDataSerializers.INT);
+    /** Entity events of a head (+ its index): strike, breath start, breath end. The end was 60 + index: the vanilla client
+     *  reads event 63 before the entity does (the sniffer's digging sound) and casts the entity to Sniffer, so the fourth
+     *  head ending its breath threw the player out of the world, "Network Protocol Error" (GitHub #8); 60 is also the
+     *  vanilla death poof, which the hydra took as head 0's breath end. 70 - 78 are free in the client and in LivingEntity. */
+    private static final byte EVENT_STRIKE = 40;
+    private static final byte EVENT_BREATH = 50;
+    private static final byte EVENT_BREATH_END = 70;
     private static final float[][] ROTATE = new float[][]{
         {0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},// 1 total heads
         {10F, -10F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},// 2 total heads
@@ -128,13 +135,13 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
                     if (strikeCooldown == 0 && strikingProgress[index] == 0) {
                         isBreathing[index] = false;
                         isStriking[index] = true;
-                        this.level().broadcastEntityEvent(this, (byte) (40 + index));
+                        this.level().broadcastEntityEvent(this, (byte) (EVENT_STRIKE + index));
                         strikeCooldown = 3;
                     }
                 } else if (random.nextBoolean() && breathCooldown == 0) {
                     isBreathing[index] = true;
                     isStriking[index] = false;
-                    this.level().broadcastEntityEvent(this, (byte) (50 + index));
+                    this.level().broadcastEntityEvent(this, (byte) (EVENT_BREATH + index));
                     breathCooldown = 15;
                 }
 
@@ -176,7 +183,7 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
                     isBreathing[i] = false;
                     breathTicks[i] = 0;
                     breathCooldown = 15;
-                    this.level().broadcastEntityEvent(this, (byte) (60 + i));
+                    this.level().broadcastEntityEvent(this, (byte) (EVENT_BREATH_END + i));
                 }
                 breathTicks[i]++;
             } else {
@@ -447,15 +454,12 @@ public class EntityHydra extends Monster implements IAnimatedEntity, IMultipartE
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id >= 40 && id <= 48) {
-            int index = id - 40;
-            isStriking[Mth.clamp(index, 0, 8)] = true;
-        } else if (id >= 50 && id <= 58) {
-            int index = id - 50;
-            isBreathing[Mth.clamp(index, 0, 8)] = true;
-        } else if (id >= 60 && id <= 68) {
-            int index = id - 60;
-            isBreathing[Mth.clamp(index, 0, 8)] = false;
+        if (id >= EVENT_STRIKE && id < EVENT_STRIKE + HEADS) {
+            isStriking[id - EVENT_STRIKE] = true;
+        } else if (id >= EVENT_BREATH && id < EVENT_BREATH + HEADS) {
+            isBreathing[id - EVENT_BREATH] = true;
+        } else if (id >= EVENT_BREATH_END && id < EVENT_BREATH_END + HEADS) {
+            isBreathing[id - EVENT_BREATH_END] = false;
         } else {
             super.handleEntityEvent(id);
         }
