@@ -46,7 +46,7 @@ public class SelfTest {
     private static int fail;
     private static final List<Entity> SPAWNED = new ArrayList<>();
 
-    private static void check(String name, boolean result, Object detail) {
+    static void check(String name, boolean result, Object detail) {
         if (result) {
             ok++;
             IceAndFire.LOGGER.info("[selftest] CHECK OK {} {}", name, detail);
@@ -90,6 +90,12 @@ public class SelfTest {
                 tick--;
                 return;
             }
+            if (CaveCheck.hold(tick, level)) {
+                // the caves wait for their chunks: entity ticking, unloaded, loaded again
+                tick--;
+                return;
+            }
+            CaveCheck.onTick(tick, level);
             switch (tick) {
                 case 20 -> registries(server);
                 case 30 -> groundBlastChunks(level, true);
