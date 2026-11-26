@@ -1324,5 +1324,13 @@
   "iceandfire.sound.subtitle.icedragon_death": "Ледяной дракон умирает",
   "iceandfire.sound.subtitle.dragonegg_hatch": "Драконье яйцо вылупилось",
   "iceandfire.sound.subtitle.dragonflute": "Играет драконья флейта",
-  "bestiary_gui": "Бестиарий"
+  "bestiary_gui": "Бестиарий",
+  "aspect.iceandfire.draco": "Draco",
+  "aspect.iceandfire.draco.desc": "Дракон, змей",
+  "aspect.iceandfire.draco.help": "драконы и всё, что от них остаётся",
+  "aspect.iceandfire.fulgur": "Fulgur",
+  "aspect.iceandfire.fulgur.desc": "Молния, гроза",
+  "aspect.iceandfire.fulgur.help": "молния",
+  "pack.iceandfire.thaumaturge.title": "Ice and Fire: Thaumaturge",
+  "pack.iceandfire.thaumaturge": "Аспекты Ice and Fire для Thaumaturge: Draco (дракон), Fulgur (молния) и аспекты предметов и мобов Ice and Fire"
 }

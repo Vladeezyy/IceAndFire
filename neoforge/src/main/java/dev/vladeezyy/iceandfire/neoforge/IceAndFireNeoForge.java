@@ -94,6 +94,7 @@ public final class IceAndFireNeoForge {
         modBus.addListener(IceAndFireNeoForge::onConfigReload);
         modBus.addListener(IceAndFireNeoForge::registerPayloads);
         modBus.addListener(IafCapabilities::register);
+        modBus.addListener(dev.vladeezyy.iceandfire.neoforge.compat.ThaumaturgeCompat::addPack);
         modBus.addListener((EntityAttributeCreationEvent event) -> IafEntityRegistry.bakeAttributes(event::put));
         modBus.addListener((RegisterSpawnPlacementsEvent event) -> IafEntityRegistry.registerSpawnPlacements(new IafEntityRegistry.SpawnPlacementSink() {
             @Override

@@ -1324,5 +1324,13 @@
   "iceandfire.sound.subtitle.icedragon_death": "Ice Dragon dies",
   "iceandfire.sound.subtitle.dragonegg_hatch": "Dragon egg hatches",
   "iceandfire.sound.subtitle.dragonflute": "Dragon flute plays",
-  "bestiary_gui": "Bestiary"
+  "bestiary_gui": "Bestiary",
+  "aspect.iceandfire.draco": "Draco",
+  "aspect.iceandfire.draco.desc": "Dragon, Wyrm",
+  "aspect.iceandfire.draco.help": "dragons and what they leave behind",
+  "aspect.iceandfire.fulgur": "Fulgur",
+  "aspect.iceandfire.fulgur.desc": "Lightning, Storm",
+  "aspect.iceandfire.fulgur.help": "lightning",
+  "pack.iceandfire.thaumaturge.title": "Ice and Fire: Thaumaturge",
+  "pack.iceandfire.thaumaturge": "Ice and Fire aspects for Thaumaturge: Draco (dragon), Fulgur (lightning) and the aspects of Ice and Fire items and mobs"
 }

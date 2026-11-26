@@ -1324,5 +1324,13 @@
   "iceandfire.sound.subtitle.icedragon_death": "Dragón de hielo muere",
   "iceandfire.sound.subtitle.dragonegg_hatch": "Huevo de dragón eclosiona",
   "iceandfire.sound.subtitle.dragonflute": "Flauta de hueso de dragón suena",
-  "bestiary_gui": "Bestiario"
+  "bestiary_gui": "Bestiario",
+  "aspect.iceandfire.draco": "Draco",
+  "aspect.iceandfire.draco.desc": "Dragón, sierpe",
+  "aspect.iceandfire.draco.help": "los dragones y todo lo que dejan",
+  "aspect.iceandfire.fulgur": "Fulgur",
+  "aspect.iceandfire.fulgur.desc": "Rayo, tormenta",
+  "aspect.iceandfire.fulgur.help": "rayos",
+  "pack.iceandfire.thaumaturge.title": "Ice and Fire: Thaumaturge",
+  "pack.iceandfire.thaumaturge": "Aspectos de Ice and Fire para Thaumaturge: Draco (dragón), Fulgur (rayo) y los aspectos de los objetos y criaturas de Ice and Fire"
 }

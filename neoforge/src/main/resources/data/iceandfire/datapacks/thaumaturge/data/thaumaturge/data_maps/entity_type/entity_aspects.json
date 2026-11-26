@@ -1,0 +1,476 @@
+{
+  "values": {
+    "iceandfire:fire_dragon": [
+      {
+        "aspect": "iceandfire:draco",
+        "amount": 50
+      },
+      {
+        "aspect": "thaumaturge:ignis",
+        "amount": 40
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 15
+      }
+    ],
+    "iceandfire:ice_dragon": [
+      {
+        "aspect": "iceandfire:draco",
+        "amount": 50
+      },
+      {
+        "aspect": "thaumaturge:gelum",
+        "amount": 40
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 15
+      }
+    ],
+    "iceandfire:lightning_dragon": [
+      {
+        "aspect": "iceandfire:draco",
+        "amount": 50
+      },
+      {
+        "aspect": "iceandfire:fulgur",
+        "amount": 40
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 15
+      }
+    ],
+    "iceandfire:hippogryph": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:aer",
+        "amount": 5
+      }
+    ],
+    "iceandfire:gorgon": [
+      {
+        "aspect": "thaumaturge:humanus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:mortuus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:terra",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:sensus",
+        "amount": 5
+      }
+    ],
+    "iceandfire:pixie": [
+      {
+        "aspect": "thaumaturge:praecantatio",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:lux",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:desiderium",
+        "amount": 3
+      }
+    ],
+    "iceandfire:cyclops": [
+      {
+        "aspect": "thaumaturge:humanus",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:sensus",
+        "amount": 5
+      }
+    ],
+    "iceandfire:siren": [
+      {
+        "aspect": "thaumaturge:humanus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aqua",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:sensus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:praecantatio",
+        "amount": 5
+      }
+    ],
+    "iceandfire:hippocampus": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aqua",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:motus",
+        "amount": 5
+      }
+    ],
+    "iceandfire:deathworm": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:terra",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 5
+      }
+    ],
+    "iceandfire:cockatrice": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:sensus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:mortuus",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 2
+      }
+    ],
+    "iceandfire:stymphalian_bird": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:metallum",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 5
+      }
+    ],
+    "iceandfire:troll": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:terra",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      }
+    ],
+    "iceandfire:myrmex_worker": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:terra",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:fabrico",
+        "amount": 5
+      }
+    ],
+    "iceandfire:myrmex_soldier": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:praemunio",
+        "amount": 5
+      }
+    ],
+    "iceandfire:myrmex_sentinel": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:praemunio",
+        "amount": 5
+      }
+    ],
+    "iceandfire:myrmex_royal": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:ordo",
+        "amount": 5
+      }
+    ],
+    "iceandfire:myrmex_queen": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 25
+      },
+      {
+        "aspect": "thaumaturge:victus",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:ordo",
+        "amount": 10
+      }
+    ],
+    "iceandfire:myrmex_swarmer": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 3
+      }
+    ],
+    "iceandfire:amphithere": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:volatus",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:aer",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:herba",
+        "amount": 5
+      }
+    ],
+    "iceandfire:sea_serpent": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 30
+      },
+      {
+        "aspect": "thaumaturge:aqua",
+        "amount": 30
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      }
+    ],
+    "iceandfire:dread_thrall": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:humanus",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:tenebrae",
+        "amount": 5
+      }
+    ],
+    "iceandfire:dread_ghoul": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 5
+      },
+      {
+        "aspect": "thaumaturge:tenebrae",
+        "amount": 5
+      }
+    ],
+    "iceandfire:dread_beast": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:tenebrae",
+        "amount": 5
+      }
+    ],
+    "iceandfire:dread_scuttler": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:terra",
+        "amount": 5
+      }
+    ],
+    "iceandfire:dread_lich": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 25
+      },
+      {
+        "aspect": "thaumaturge:praecantatio",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:tenebrae",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:gelum",
+        "amount": 5
+      }
+    ],
+    "iceandfire:dread_knight": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 25
+      },
+      {
+        "aspect": "thaumaturge:humanus",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:praemunio",
+        "amount": 10
+      }
+    ],
+    "iceandfire:dread_horse": [
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 15
+      },
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:motus",
+        "amount": 5
+      }
+    ],
+    "iceandfire:hydra": [
+      {
+        "aspect": "thaumaturge:bestia",
+        "amount": 30
+      },
+      {
+        "aspect": "thaumaturge:victus",
+        "amount": 30
+      },
+      {
+        "aspect": "thaumaturge:aqua",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:aversio",
+        "amount": 10
+      }
+    ],
+    "iceandfire:ghost": [
+      {
+        "aspect": "thaumaturge:spiritus",
+        "amount": 20
+      },
+      {
+        "aspect": "thaumaturge:exanimis",
+        "amount": 10
+      },
+      {
+        "aspect": "thaumaturge:tenebrae",
+        "amount": 5
+      }
+    ]
+  }
+}

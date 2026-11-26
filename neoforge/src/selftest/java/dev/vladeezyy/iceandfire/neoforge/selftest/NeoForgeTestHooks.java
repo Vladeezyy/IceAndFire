@@ -21,6 +21,10 @@ import java.util.List;
 /** The common tests (common/src/selftest) on NeoForge's events; dev runs only */
 @EventBusSubscriber(modid = IceAndFire.MODID)
 public final class NeoForgeTestHooks {
+    static {
+        SelfTest.thaumaturge = ThaumaturgeCheck::run;
+    }
+
     private NeoForgeTestHooks() {
     }
 

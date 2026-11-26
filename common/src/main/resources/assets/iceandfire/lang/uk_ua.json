@@ -1324,5 +1324,13 @@
   "iceandfire.sound.subtitle.icedragon_death": "Крижаний дракон гине",
   "iceandfire.sound.subtitle.dragonegg_hatch": "Яйце дракона вилуплюється",
   "iceandfire.sound.subtitle.dragonflute": "Грає драконяча флейта",
-  "bestiary_gui": "Бестіарій"
+  "bestiary_gui": "Бестіарій",
+  "aspect.iceandfire.draco": "Draco",
+  "aspect.iceandfire.draco.desc": "Дракон, змій",
+  "aspect.iceandfire.draco.help": "дракони та все, що від них лишається",
+  "aspect.iceandfire.fulgur": "Fulgur",
+  "aspect.iceandfire.fulgur.desc": "Блискавка, гроза",
+  "aspect.iceandfire.fulgur.help": "блискавка",
+  "pack.iceandfire.thaumaturge.title": "Ice and Fire: Thaumaturge",
+  "pack.iceandfire.thaumaturge": "Аспекти Ice and Fire для Thaumaturge: Draco (дракон), Fulgur (блискавка) та аспекти предметів і мобів Ice and Fire"
 }
