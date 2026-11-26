@@ -45,6 +45,10 @@ public class SelfTest {
     private static int ok;
     private static int fail;
     private static final List<Entity> SPAWNED = new ArrayList<>();
+    /** NeoForge only (Thaumaturge is a NeoForge mod): the compat check, set by the loader's test wiring; null on Fabric */
+    public static java.util.function.Predicate<MinecraftServer> thaumaturge;
+    /** SELFTEST_ONLY=thaumaturge: the registries and the Thaumaturge check, then stop */
+    private static final boolean THAUMATURGE_ONLY = "thaumaturge".equals(System.getenv("SELFTEST_ONLY"));
 
     static void check(String name, boolean result, Object detail) {
         if (result) {
@@ -97,7 +101,16 @@ public class SelfTest {
             }
             CaveCheck.onTick(tick, level);
             switch (tick) {
-                case 20 -> registries(server);
+                case 20 -> {
+                    registries(server);
+                    // Thaumaturge builds its aspect index on the first server tick
+                    if (thaumaturge != null) {
+                        check("Thaumaturge: Draco, Fulgur and the Ice and Fire aspects with it, no compat pack without it", thaumaturge.test(server), "");
+                    }
+                    if (THAUMATURGE_ONLY) {
+                        finish(server);
+                    }
+                }
                 case 40 -> spawnAll(level);
                 case 240 -> checkSpawned(level);
                 case 250 -> auditChunks(level, true);

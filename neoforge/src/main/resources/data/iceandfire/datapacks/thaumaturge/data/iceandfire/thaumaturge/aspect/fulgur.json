@@ -1,0 +1,9 @@
+{
+  "tag": "fulgur",
+  "color": 9338111,
+  "components": [
+    "thaumaturge:potentia",
+    "thaumaturge:motus"
+  ],
+  "texture": "iceandfire:textures/aspects/fulgur.png"
+}

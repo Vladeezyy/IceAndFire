@@ -15,6 +15,12 @@ validation() {
   [ -f $RUN/config/neoforge-client.toml ] && perl -pi -e "s/^(\s*enableB3DValidationLayer\s*=\s*).*/\${1}$1/" $RUN/config/neoforge-client.toml
 }
 case "$*" in *with_compat*) validation false ;; esac
+# SCENE_ONLY=thaumaturge -Pwith_thaumaturge: Thaumaturge draws the aspects on every tooltip (no Shift needed)
+if [ "$SCENE_ONLY" = thaumaturge ]; then
+  mkdir -p $RUN/config && printf '[tooltip]\nshow_aspects_by_default = true\n' > $RUN/config/thaumaturge-client.toml
+else
+  rm -f $RUN/config/thaumaturge-client.toml
+fi
 run_watched build-scene.log 900 ./gradlew :$LOADER:runScene --console=plain "$@" < /dev/null
 status=$?
 validation true

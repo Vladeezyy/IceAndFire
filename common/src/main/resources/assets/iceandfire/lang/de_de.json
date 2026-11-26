@@ -1324,5 +1324,13 @@
   "iceandfire.sound.subtitle.icedragon_death": "Eisdrache stirbt",
   "iceandfire.sound.subtitle.dragonegg_hatch": "Drachenei schlüpft",
   "iceandfire.sound.subtitle.dragonflute": "Drachenflöte spielt",
-  "bestiary_gui": "Bestiarium"
+  "bestiary_gui": "Bestiarium",
+  "aspect.iceandfire.draco": "Draco",
+  "aspect.iceandfire.draco.desc": "Drache, Lindwurm",
+  "aspect.iceandfire.draco.help": "Drachen und alles, was von ihnen bleibt",
+  "aspect.iceandfire.fulgur": "Fulgur",
+  "aspect.iceandfire.fulgur.desc": "Blitz, Gewitter",
+  "aspect.iceandfire.fulgur.help": "Blitze",
+  "pack.iceandfire.thaumaturge.title": "Ice and Fire: Thaumaturge",
+  "pack.iceandfire.thaumaturge": "Ice-and-Fire-Aspekte für Thaumaturge: Draco (Drache), Fulgur (Blitz) und die Aspekte der Gegenstände und Kreaturen aus Ice and Fire"
 }

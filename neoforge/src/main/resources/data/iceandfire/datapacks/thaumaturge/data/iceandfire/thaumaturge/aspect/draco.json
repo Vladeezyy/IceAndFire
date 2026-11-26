@@ -1,0 +1,9 @@
+{
+  "tag": "draco",
+  "color": 11544636,
+  "components": [
+    "thaumaturge:bestia",
+    "thaumaturge:praecantatio"
+  ],
+  "texture": "iceandfire:textures/aspects/draco.png"
+}

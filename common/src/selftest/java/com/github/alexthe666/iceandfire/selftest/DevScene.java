@@ -54,6 +54,9 @@ public final class DevScene {
     /** SCENE_ONLY=hydra: only the setup, the stage and the hydra fight */
     private static final boolean HYDRA_ONLY = "hydra".equals(System.getenv("SCENE_ONLY"));
     private static boolean registeringHydra;
+    /** SCENE_ONLY=thaumaturge (NeoForge, -Pwith_thaumaturge): only the setup and the Thaumaturge tooltips (ThaumaturgeScene) */
+    private static final boolean THAUMATURGE_ONLY = "thaumaturge".equals(System.getenv("SCENE_ONLY"));
+    private static boolean registeringThaumaturge;
     private static final List<Pair<Integer, Consumer<Minecraft>>> STEPS = new ArrayList<>();
     /** The close-ups start at tick 800, one creature every 30 ticks; END leaves room for 40 of them. */
     private static final int END = 800 + 40 * 30;
@@ -71,6 +74,15 @@ public final class DevScene {
         () -> new ItemStack(IafItemRegistry.DEATHWORM_YELLOW_HELMET.get()));
 
     static {
+        if (THAUMATURGE_ONLY) {
+            registeringThaumaturge = true;
+            at(40, mc -> server(mc, DevScene::setup));
+            at(ThaumaturgeScene.steps(60), mc -> {
+                IceAndFire.LOGGER.info("[scene] DONE, failed checks: {}", failures);
+                mc.stop();
+            });
+            registeringThaumaturge = false;
+        }
         at(40, mc -> server(mc, DevScene::setup));
         at(45, mc -> mc.options.hideGui = true);
         at(60, mc -> server(mc, DevScene::buildStage));
@@ -806,8 +818,8 @@ public final class DevScene {
         look(player, stage.offset(distance / 3, Math.max(2, (int) (entity.getBbHeight() * 0.8F) + 1), distance), stage.offset(0, (int) (entity.getBbHeight() / 2), 0));
     }
 
-    private static void at(int t, Consumer<Minecraft> action) {
-        if (HYDRA_ONLY && t > 60 && !registeringHydra) {
+    static void at(int t, Consumer<Minecraft> action) {
+        if (HYDRA_ONLY && t > 60 && !registeringHydra || THAUMATURGE_ONLY && !registeringThaumaturge) {
             return;
         }
         STEPS.add(Pair.of(t, action));
@@ -873,7 +885,7 @@ public final class DevScene {
         }
     }
 
-    private static void server(Minecraft mc, Consumer<ServerPlayer> action) {
+    static void server(Minecraft mc, Consumer<ServerPlayer> action) {
         MinecraftServer server = mc.getSingleplayerServer();
         server.execute(() -> {
             try {
@@ -885,14 +897,14 @@ public final class DevScene {
         });
     }
 
-    private static void check(String name, boolean ok, Object detail) {
+    static void check(String name, boolean ok, Object detail) {
         if (!ok) {
             failures++;
         }
         IceAndFire.LOGGER.info("[scene] CHECK {} {} ({})", ok ? "OK  " : "FAIL", name, detail);
     }
 
-    private static void shot(Minecraft mc, String name) {
+    static void shot(Minecraft mc, String name) {
         mc.getToasts().clear();
         Screenshot.grab(mc.gameDirectory, "scene_" + name + ".png", mc.getMainRenderTarget(), message -> IceAndFire.LOGGER.info("[scene] screenshot {}", name));
     }
