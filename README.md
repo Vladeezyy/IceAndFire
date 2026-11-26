@@ -56,6 +56,15 @@ Please report bugs of this port here, not to the original author.
 - Only one hydra neck had a hitbox; deathworm armor repaired with the wrong chitin; Stymphalian feathers and hydra
   arrows damaged the wrong item.
 
+## Thaumaturge
+
+With [Thaumaturge](https://www.curseforge.com/projects/1628024) installed (NeoForge 1.21.1 and 26.1.2,
+the versions Thaumaturge exists for), Ice and Fire items and creatures have aspects. Two new aspects: **Draco**
+(dragon, Bestia + Praecantatio) and **Fulgur** (lightning, Potentia + Motus); fire and ice dragons use Thaumaturge's
+Ignis and Gelum. Drops, ores and world blocks have their own aspects, everything crafted from them gets its aspects
+from the recipe, and the thaumometer reads all 30 creatures. Without Thaumaturge nothing changes. Data:
+`tools/gen_thaumaturge.py`; check: `SELFTEST_ONLY=thaumaturge tools/selftest.sh -Pwith_thaumaturge`.
+
 ## Tested with
 
 A client scene (every creature, armor, the creative tabs, the bestiary and the mod's screens) with these mods, on
