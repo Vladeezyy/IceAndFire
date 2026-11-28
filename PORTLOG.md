@@ -81,6 +81,18 @@ Collected from open issues of `AlexModGuy/Ice_and_Fire` (sorted by reactions and
 - Charges (dragon fire, hydra breath, pixie, bubbles) keep their own `xPower/yPower/zPower` fields:
   `AbstractHurtingProjectile` lost them in 1.20.5, their tick never used the vanilla acceleration.
 
+## 2.1.13-beta.16 (2026-11-28, 1.21.1 only): lightning dragon charge crash
+
+- CurseForge report 2026-11-28 (no log): the game crashed when a lightning dragon charge was rendered. On 1.21.1 the
+  renderer took `getBuffer(eyes)` and `getBuffer(energySwirl)` first and drew into the first one afterwards: both types use
+  the shared buffer, the second `getBuffer` ended the first batch, `IllegalStateException: Not building!` at the first core
+  vertex. The original (1.20) did not crash, its shared `BufferBuilder` restarted. 1.21.11 and 26.x draw through
+  `IafBufferSource` (a buffer per type), not affected. Fix: each buffer right before drawing into it.
+- Scene: fire, ice and lightning dragon charges hang in front of the camera (`scene_dragon_charges`). The old renderer
+  crashed the NeoForge scene the same way; with the fix NeoForge and Fabric pass with 0 failed checks.
+- Released: GitHub pre-release `v2.1.13-beta.16+1.21.1`, CurseForge files 9859130 (Fabric) and 9859132 (NeoForge).
+  1.21.11, 26.2, 26.3 stay on beta.14, 26.1.2 on beta.15.
+
 ## Next release (2026-11-14, 1.21.11 and 26.x): death worm blast with PuzzlesLib
 
 - CurseForge report 2026-11-11 (2.1.13-beta.10, Fabric 26.3, PuzzlesLib 26.3.17): the server crashed whenever a death worm
