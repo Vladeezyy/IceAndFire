@@ -31,8 +31,9 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
     public void render(EntityDragonLightningCharge entity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         float f = (float) entity.tickCount + partialTicks;
         float yaw = entity.yRotO + (entity.getYRot() - entity.yRotO) * partialTicks;
+        // each buffer right before drawing into it: in 1.21.1 eyes and energySwirl share one buffer, and asking for the
+        // second type ends the first one's batch (IllegalStateException: Not building! on the first core vertex)
         VertexConsumer ivertexbuilder2 = bufferIn.getBuffer(RenderType.eyes(TEXTURE_CORE));
-        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.energySwirl(TEXTURE, f * 0.01F, f * 0.01F));
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0F, 0.5F, 0F);
@@ -42,6 +43,8 @@ public class RenderDragonLightningCharge extends EntityRenderer<EntityDragonLigh
         matrixStackIn.translate(0F, 0.25F, 0F);
         MODEL_SPIRIT.renderToBuffer(matrixStackIn, ivertexbuilder2, packedLightIn, OverlayTexture.NO_OVERLAY, -1);
         matrixStackIn.popPose();
+
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.energySwirl(TEXTURE, f * 0.01F, f * 0.01F));
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0F, 0.5F, 0F);

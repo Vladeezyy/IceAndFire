@@ -220,6 +220,9 @@ public final class DevScene {
         // crashed the client, "ClientLevel cannot be cast to ServerLevel"; the hydra breath and the sea serpent bubbles
         // the same way on 1.21.11 and newer)
         at(END + 20, mc -> server(mc, DevScene::projectiles));
+        // the dragons' charges hanging in front of the camera (CurseForge report 2026-11-28: the lightning charge crashed
+        // the client on 1.21.1, "Not building!", two buffers taken before drawing into the first)
+        at(END + 40, mc -> shot(mc, "dragon_charges"));
         at(END + 150, mc -> server(mc, DevScene::checkProjectiles));
         // A mob on a chain tied to a wall by a click with an empty hand (crash audit 2026-11-08): the click fires on the client
         // too, which made a knot of its own, without an entity id on 26.2 and newer, and crashed on it at the second hand
@@ -342,6 +345,12 @@ public final class DevScene {
             shot.setPos(pos.getX() + 0.5, pos.getY() + 0.4, pos.getZ() + 0.5);
             shot.setDeltaMovement(0, -0.1, 0);
         }
+        // without an owner and a power they stay where they are put
+        x = -4;
+        for (EntityType<?> type : List.<EntityType<?>>of(IafEntityRegistry.FIRE_DRAGON_CHARGE.get(), IafEntityRegistry.ICE_DRAGON_CHARGE.get(), IafEntityRegistry.LIGHTNING_DRAGON_CHARGE.get())) {
+            place(level, type, top(level, at.offset(x, 0, -6)), 0).setDeltaMovement(0, 0, 0);
+            x += 4;
+        }
     }
 
     private static void checkProjectiles(ServerPlayer player) {
@@ -354,6 +363,7 @@ public final class DevScene {
         items.forEach(Entity::discard);
         level.getEntities(IafEntityRegistry.STYMPHALIAN_FEATHER.get(), new net.minecraft.world.phys.AABB(player.blockPosition()).inflate(100), e -> true).forEach(Entity::discard);
         level.getEntities(EntityType.PIG, box, e -> true).forEach(Entity::discard);
+        level.getEntities((Entity) null, box, e -> e instanceof com.github.alexthe666.iceandfire.entity.EntityDragonCharge).forEach(Entity::discard);
     }
 
     private static BlockPos chainWall;
